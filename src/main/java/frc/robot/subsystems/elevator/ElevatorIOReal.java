@@ -10,5 +10,8 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.util.Units;
 
-public class ElevatorIOReal implements ElevatorIOInputs {
+public class ElevatorIOReal implements ElevatorIO {
+
+    private TalonFX topElevatorMotor = new TalonFX(0);
+    private TalonFX bottomElevatorMotor = new TalonFX(1);   
 }
