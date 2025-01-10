@@ -8,16 +8,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
 public class RobotContainer {
-  private StateManagerGeneric stateManager = new StateManagerGeneric();
+  private StateManagerClassic stateManager = new StateManagerClassic();
   
   public RobotContainer() {
-    stateManager.addState("Stow", 
-      new StateManagerGeneric.State(
-        () -> System.out.println("testing")
-      )
-    );
-    
-    stateManager.setState("Stow");
+    StateManagerClassic.State robotState = new StateManagerClassic.State("SHUTTLE", -Math.PI / 3, 0);
+    stateManager.setState(robotState);
     configureBindings();
   }
 

@@ -8,6 +8,7 @@ import org.littletonrobotics.junction.AutoLogOutput;
 // This one just takes a list of generic runnables and calls them when the state is changed.
 // Pros: Resuable, doesn't require inputs for every subsystem
 // Cons: doesn't ensure that subsystem inputs are applied. States are not necessarily unique for every subsystem.
+// defining states is also pretty ugly 
 
 public class StateManagerGeneric {
     private Map<String, State> stateMap = new HashMap<String, State>(){};
