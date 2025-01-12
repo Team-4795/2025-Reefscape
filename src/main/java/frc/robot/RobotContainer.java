@@ -11,7 +11,7 @@ public class RobotContainer {
   private StateManagerClassic stateManager = new StateManagerClassic();
   
   public RobotContainer() {
-    StateManagerClassic.State robotState = new StateManagerClassic.State("SHUTTLE", -Math.PI / 3, 0);
+    StateManagerClassic.State robotState = new StateManagerClassic.State("SHUTTLE", () -> true, -Math.PI / 3, null);
     stateManager.setState(robotState);
     configureBindings();
   }
