@@ -55,14 +55,15 @@ public class Drive extends SubsystemBase {
 
     private final GyroIO gyroIO;
     private final GyroIOInputsAutoLogged gyroIOInputs = new GyroIOInputsAutoLogged();
-    private final ModuleIOInputs inputs = new ModuleIOInputs();
+    private final ModuleIOInputsAutoLogged inputs = new ModuleIOInputsAutoLogged();
     private final Module[] modules = new Module[4];
     private final SysIdRoutine sysId;
     private final MutableMeasure<VoltageUnit,Voltage,MutVoltage> m_appliedVoltage = new MutVoltage(0, 0, Volt);
     private final MutableMeasure<AngleUnit,Angle,MutAngle> m_position = new MutAngle(0,0, Radian);
     private final MutableMeasure<AngularVelocityUnit, AngularVelocity,MutAngularVelocity> m_velocity = new MutAngularVelocity(0, 0, RadiansPerSecond);
+    private static SwerveDriveKinematics Modulekinematics = new SwerveDriveKinematics(getModuleTranslation2d());
 
-    private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(getModuleTranslations2d());
+    private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(getModuleTranslation2d());
     private Rotation2d rawGyroRotation2d = new Rotation2d();
     private SwerveModulePosition[] lastModulePositions = 
         new SwerveModulePosition[] {
@@ -141,8 +142,8 @@ public class Drive extends SubsystemBase {
         }
         
         public void periodic() {
-            gyroIO.updateInputs(Inputs);
-            Logger.processInputs("Drive/Gyro", gyroInputs);
+            gyroIO.updateInputs(inputs);
+            Logger.processInputs("Drive/Gyro", gyroIOInputs);
             for (var module : modules) {
                 module.periodic();
             }
@@ -170,7 +171,7 @@ public class Drive extends SubsystemBase {
         lastModulePositions[moduleIndex] = modulePositions[moduleIndex];
     }
 
-    if (gyr.connected) {
+    if (gyro.connected) {
 
         rawGyroRotation2d = gyroInputs.yawPosition;
     } else {
@@ -184,7 +185,7 @@ poseEstimator.update(rawGyroRotation2d, modulePositions);
         }
 
 
-public void runVelocity(chassisSpeeds speeds){
+public void runVelocity(ChassisSpeeds speeds){
 
     ChassisSpeeds discreteSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
     SwerveModuleState[] setpointStates = Kinematics.toSwerveModuleStates(discreteSpeeds);
@@ -199,7 +200,7 @@ public void runVelocity(chassisSpeeds speeds){
     Logger.recordOutput("SwerveStates/SetpointsOptimized", optimizedSetpointStates);
 }
 
-public void (){
+public void stop(){
     runVelocity(new ChassisSpeeds());
 }
 
@@ -211,7 +212,7 @@ public void stopWithx() {
     for (int i = 0; i < 4; i++) {
         headings[i] = getModuleTranslations()[i].getAngle();
     }
-    Kinematics.resetHeadings(headings);
+    Modulekinematics.resetHeadings();
     stop();
 }
 
@@ -276,7 +277,7 @@ public void stopWithx() {
         }
 
 
-        public static Translation2d[] getModuleTranslation2ds(){
+        public static Translation2d[] getModuleTranslation2d(){
             return new Translation2d[]{
                 new Translation2d(TRACK_WIDTH_X/2.0, TRACK_WIDTH_Y/2.0),
                 new Translation2d(TRACK_WIDTH_X/2.0, TRACK_WIDTH_Y/2.0),
