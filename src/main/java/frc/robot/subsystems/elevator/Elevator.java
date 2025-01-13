@@ -61,7 +61,7 @@ public class Elevator extends SubsystemBase {
 
     private Elevator(ElevatorIO elevatorIO){
         io = elevatorIO;
-        io.updateInputs(inputs);
+        io.updateElevatorIOInputs(inputs);
     }
 
     public void setMovingSpeedRPM(double leftSpeed, double rightSpeed){
@@ -89,12 +89,15 @@ public class Elevator extends SubsystemBase {
         return getPosition();
     }
 
+    public double getPosition(){
+        
+    }
+
     public double getVelocity() {
-        return inputs.elevatorMotorVelocityRadPerSec;
     }
 
     public void reset() {
-        controller.reset(getPosition());
+        controller.reset();
         io.resetEncoders();
         this.setGoal(getPosition());
     }
