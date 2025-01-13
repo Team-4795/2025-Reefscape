@@ -9,7 +9,7 @@ import edu.wpi.first.math.system.plant.LinearSystemId;
 
 public class IntakeIOSim implements IntakeIO {
   // not done
-  private final DCMotorSim motor = new DCMotorSim(LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60(1), 0.5, 0.1), null, 0.2);
+  private final DCMotorSim motor = new DCMotorSim(LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60(1), 0.5, 0.1), DCMotor.getKrakenX60(1), 0.0, 0.0);
 
   @Override
   public void updateInputs(IntakeIOInputs inputs) {

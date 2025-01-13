@@ -16,7 +16,6 @@ public class RobotContainer {
   private final Intake intake;
 
   public RobotContainer() {
-    System.out.println("Hello World");
     configureBindings();
     switch (Constants.currentMode) {
       case REAL:

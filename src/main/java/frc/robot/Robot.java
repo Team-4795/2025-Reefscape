@@ -48,7 +48,6 @@ public class Robot extends LoggedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    System.out.println("Hello World");
   }
 
   @Override
