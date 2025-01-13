@@ -1,4 +1,4 @@
-package frc.robot.subsystems.vision;
+package frc.robot.subsystems.vision.AprilTag;
 
 import org.littletonrobotics.junction.Logger;
 
@@ -7,8 +7,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.vision.AprilTag.VisionIOInputsAutoLogged;
 
-import static frc.robot.subsystems.vision.VisionConstants.*;
+import static frc.robot.subsystems.vision.AprilTag.VisionConstants.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +49,19 @@ public class Vision extends SubsystemBase{
 
     public void toggleShouldUpdate(int id) {
         shouldUpdate[id] = !shouldUpdate[id];
+    }
+
+    public void toggleReefMode() {
+        io[0].switchPipeline();
+        toggleShouldUpdate(0);
+    }
+
+    public void targetLeftReef() {
+        io[0].targetLeftReef();;
+    }
+
+    public void targetRightReef() {
+        io[0].targetRightReef();
     }
 
     public void periodic() {

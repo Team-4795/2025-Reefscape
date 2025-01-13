@@ -1,4 +1,4 @@
-package frc.robot.subsystems.vision;
+package frc.robot.subsystems.vision.AprilTag;
 
 import org.littletonrobotics.junction.AutoLog;
 
@@ -11,9 +11,20 @@ public interface VisionIO {
         Pose3d[] pose = new Pose3d[] {};
         double[] timestamp = new double[] {};
         int[] tags = new int[] {};
+
+        double roll = 0.0;
+        double pitch = 0.0;
+        double yaw = 0.0;
+        double area = 0.0;
     }
 
     public default void updateInputs(VisionIOInputs inputs) {}
 
     public default void setReferencePose(Pose2d reference) {}
+
+    public default void switchPipeline() {}
+
+    public default void targetLeftReef() {}
+
+    public default void targetRightReef() {}
 }

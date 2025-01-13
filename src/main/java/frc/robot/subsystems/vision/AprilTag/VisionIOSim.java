@@ -1,4 +1,4 @@
-package frc.robot.subsystems.vision;
+package frc.robot.subsystems.vision.AprilTag;
 
 import org.photonvision.PhotonCamera;
 import org.photonvision.estimation.TargetModel;
