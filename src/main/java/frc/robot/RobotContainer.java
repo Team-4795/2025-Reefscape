@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.intake.Intake;
@@ -14,10 +16,11 @@ public class RobotContainer {
   private final Intake intake;
 
   public RobotContainer() {
+    System.out.println("Hello World");
     configureBindings();
     switch (Constants.currentMode) {
       case REAL:
-        intake = Intake.initialize(new IntakeIOReal());
+        intake = Intake.initialize(new IntakeIOSim());
         break;
       case SIM:
         intake = Intake.initialize(new IntakeIOSim());
@@ -28,7 +31,9 @@ public class RobotContainer {
     }
   }
 
-  private void configureBindings() {}
+  private void configureBindings() {
+
+  }
 
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");
