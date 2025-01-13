@@ -12,6 +12,8 @@ import edu.wpi.first.math.util.Units;
 
 public class ElevatorIOReal implements ElevatorIO {
 
-    private TalonFX leftElevatorMotor = new TalonFX(0);
-    private TalonFX rightElevatorMotor = new TalonFX(1);   
+    private TalonFX rightElevatorMotor = new TalonFX(0);
+    private TalonFX leftElevatorMotor = new TalonFX(1);   
+
+
 }

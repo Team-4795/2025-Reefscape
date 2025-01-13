@@ -25,5 +25,6 @@ public interface ElevatorIO {
         public default void setIdleMode(boolean mode) {}
     
         public default void resetEncoders() {}
+
     } 
     

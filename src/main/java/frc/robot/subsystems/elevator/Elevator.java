@@ -1,42 +1,17 @@
 package frc.robot.subsystems.elevator;
 
-import static edu.wpi.first.units.Units.Seconds;
-import static edu.wpi.first.units.Units.Volts;
 
-import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.AutoLogOutput;
-import org.littletonrobotics.junction.Logger;
 
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.google.flatbuffers.Constants;
-
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.geometry.*;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.numbers.N2;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.util.CircularBuffer;
-import edu.wpi.first.wpilibj.AnalogPotentiometer;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.motorcontrol.PWMTalonSRX;
-import edu.wpi.first.wpilibj.motorcontrol.PWMVictorSPX;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.PIDSubsystem;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.math.controller.PIDController;
 
 
 public class Elevator extends SubsystemBase {
     private ElevatorIO io;
-    private ElevatorIOInputs inputs = new ElevatorIOInputs();
+    private ElevatorIOInputsAutoLogged inputs = new ElevatorIOInputsAutoLogged();
 
     @AutoLogOutput
     private double leftMovingSpeed = 0.0;
@@ -47,9 +22,22 @@ public class Elevator extends SubsystemBase {
     private double maxDistance = ElevatorConstants.maxDistance;
 
     private static Elevator instance;
+
+    private  PIDController controller = new PIDController(
+        ElevatorConstants.kP,
+        ElevatorConstants.kI,
+        ElevatorConstants.kD,
+        ElevatorConstants.constraints);
+
+    private ElevatorFeedforward feedforward = new ElevatorFeedforward(rightMovingSpeed, maxDistance, leftMovingSpeed);
+
     
     public static Elevator getInstance(){
         return instance;
+    }
+
+    public void periodic () {
+
     }
 
     public static Elevator initialize(ElevatorIO io){
@@ -61,7 +49,7 @@ public class Elevator extends SubsystemBase {
 
     private Elevator(ElevatorIO elevatorIO){
         io = elevatorIO;
-        io.updateElevatorIOInputs(inputs);
+        io.updateInputs(inputs);
     }
 
     public void setMovingSpeedRPM(double leftSpeed, double rightSpeed){
@@ -69,20 +57,9 @@ public class Elevator extends SubsystemBase {
         rightMovingSpeed = rightSpeed;
     }
 
-    private ElevatorFeedforward feedFoward = new ElevatorFeedforward(rightMovingSpeed, maxDistance, leftMovingSpeed);
-
-    private  PIDController controller = new PIDController(
-        ElevatorConstants.kP,
-        ElevatorConstants.kI,
-        ElevatorConstants.kD,
-        ElevatorConstants.constraints);
 
     public void setGoal(double goal){
 
-    }
-
-    private void setElevatorMode(Elevator mode){
-        
     }
 
     public double getTruePosition() {
@@ -90,10 +67,13 @@ public class Elevator extends SubsystemBase {
     }
 
     public double getPosition(){
+        return maxDistance; //change later
         
     }
 
     public double getVelocity() {
+        return maxDistance; //change later
+        
     }
 
     public void reset() {
@@ -102,7 +82,9 @@ public class Elevator extends SubsystemBase {
         this.setGoal(getPosition());
     }
 
+    
     }
+
 
 
 
