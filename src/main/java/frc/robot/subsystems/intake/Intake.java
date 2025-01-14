@@ -42,7 +42,10 @@ public class Intake extends SubsystemBase {
     public Command reverse() {
         return startEnd(() -> setIntakeSpeed(IntakeSetpoints.reverse), () -> setIntakeSpeed(0));
     }
-
+    public boolean isIntaking() {
+        return inputs.currentAmps > IntakeConstants.intakeCurrent && inputs.angularVelocityRPM > 2400;
+    }
+    
     @Override
     public void periodic(){
         io.updateInputs(inputs);

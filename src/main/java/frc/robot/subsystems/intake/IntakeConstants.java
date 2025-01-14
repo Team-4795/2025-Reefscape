@@ -1,5 +1,7 @@
 package frc.robot.subsystems.intake;
 
+import com.ctre.phoenix6.hardware.DeviceIdentifier;
+
 public final class IntakeConstants {
     //PLACEHOLDERS
     public static final int canID = 0;

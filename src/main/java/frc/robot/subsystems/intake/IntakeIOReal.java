@@ -4,7 +4,9 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -16,14 +18,14 @@ public class IntakeIOReal implements IntakeIO {
     private final TalonFX intakeMotor = new TalonFX(IntakeConstants.canID);
     
     private TalonFXConfiguration talonFXConfig = new TalonFXConfiguration();
-
+    // private TalonFXConfigurator taIonFXConfig = new TalonFXConfigurator(IntakeConstants.canID)
 
     private final StatusSignal<Current> current = intakeMotor.getStatorCurrent();
     private final StatusSignal<Voltage> voltage = intakeMotor.getMotorVoltage();
     private final StatusSignal<AngularVelocity> velocity = intakeMotor.getVelocity();
 
     public IntakeIOReal() {
-        intakeMotor.setInverted(true);
+        talonFXConfig.MotorOutput.withInverted(InvertedValue.Clockwise_Positive);
 
         talonFXConfig.CurrentLimits.StatorCurrentLimitEnable = true;
         talonFXConfig.CurrentLimits.StatorCurrentLimit = IntakeConstants.currentLimit;
