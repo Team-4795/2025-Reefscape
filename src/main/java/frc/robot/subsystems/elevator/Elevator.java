@@ -51,6 +51,7 @@ public class Elevator extends SubsystemBase {
         io = elevatorIO;
         io.updateInputs(inputs);
     }
+    
 
     public void setMovingSpeedRPM(double leftSpeed, double rightSpeed){
         leftMovingSpeed = leftSpeed;
