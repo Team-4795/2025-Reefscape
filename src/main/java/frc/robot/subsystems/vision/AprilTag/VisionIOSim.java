@@ -6,6 +6,7 @@ import org.photonvision.simulation.PhotonCameraSim;
 import org.photonvision.simulation.SimCameraProperties;
 import org.photonvision.simulation.VisionSystemSim;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -34,6 +35,7 @@ public class VisionIOSim implements VisionIO {
         cameraProperties.setLatencyStdDevMs(5);
 
         camera = new PhotonCamera(VisionConstants.cameraIds[cameraId]);
+        // camera.setPipelineIndex(1);
 
         cameraSim = new PhotonCameraSim(camera, cameraProperties);
 
@@ -57,7 +59,8 @@ public class VisionIOSim implements VisionIO {
 
         // Uncomment once drive is done
         //visionSim.update(Drive.getInstance().getPose());
-
+        
+        visionSim.update(new Pose2d(12, 12, new Rotation2d(45)));
         visionSim.getDebugField();
     }
 }

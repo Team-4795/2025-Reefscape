@@ -6,6 +6,9 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.vision.AprilTag.VisionIOInputsAutoLogged;
 
@@ -51,17 +54,32 @@ public class Vision extends SubsystemBase{
         shouldUpdate[id] = !shouldUpdate[id];
     }
 
-    public void toggleReefMode() {
-        io[0].switchPipeline();
-        toggleShouldUpdate(0);
+    // public void toggleReefMode() {
+    //     io[0].switchPipeline();
+    //     toggleShouldUpdate(0);
+    // }
+
+    // public void targetLeftReef() {
+    //     io[0].targetLeftReef();
+    // }
+
+    // public void targetRightReef() {
+    //     io[0].targetRightReef();
+    // }
+
+    public Command toggleReefMode() {
+        return Commands.parallel(
+            new RunCommand(() -> io[0].switchPipeline()), 
+            new RunCommand(() -> toggleShouldUpdate(0))
+        );
     }
 
-    public void targetLeftReef() {
-        io[0].targetLeftReef();;
+    public Command targetLeftReef() { 
+        return Commands.run(() -> io[0].targetLeftReef());
     }
 
-    public void targetRightReef() {
-        io[0].targetRightReef();
+    public Command targetRightReef() { 
+        return Commands.run(() -> io[0].targetRightReef());
     }
 
     public void periodic() {

@@ -25,7 +25,6 @@ public class VisionIOReal implements VisionIO {
         camera = new PhotonCamera(VisionConstants.cameraIds[camIndex]); 
 
         poseEstimator = new PhotonPoseEstimator(VisionConstants.aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, VisionConstants.cameraPoses[camIndex]);
-        
         poseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
     } 
 
@@ -36,12 +35,11 @@ public class VisionIOReal implements VisionIO {
 
     @Override
     public void switchPipeline() {
-        // Change later
-        if(camera.getPipelineIndex() == 0)
-            camera.setPipelineIndex(1);
+        if(camera.getPipelineIndex() == VisionConstants.aprilTagPipelineID && camera.getName().equals(VisionConstants.cameraIds[0]))
+            camera.setPipelineIndex(VisionConstants.reefDetectionPipelineID);
 
-        else if(camera.getPipelineIndex() == 1)
-            camera.setPipelineIndex(0);
+        else if(camera.getPipelineIndex() == VisionConstants.reefDetectionPipelineID && camera.getName().equals(VisionConstants.cameraIds[0]))
+            camera.setPipelineIndex(VisionConstants.aprilTagPipelineID);
     }
 
     @Override
@@ -54,10 +52,14 @@ public class VisionIOReal implements VisionIO {
         sortMode = PhotonTargetSortMode.Rightmost;
     }
 
+
     @Override
     public void updateInputs(VisionIOInputs inputs) {
-        if(camera.getPipelineIndex() == 0) { // April tag pipeline index? Change later
-            result = camera.getAllUnreadResults();
+        inputs.pipelineIndex = camera.getPipelineIndex();
+        inputs.sortMode = sortMode.toString();
+
+        result = camera.getAllUnreadResults();
+        if(camera.getPipelineIndex() == VisionConstants.aprilTagPipelineID) { // April tag pipeline index? Change later
 
             for(int i = 0; i < result.size(); i++) {
                 poseEstimator.update(result.get(i), camera.getCameraMatrix(), camera.getDistCoeffs()).ifPresentOrElse((pose) -> {
@@ -72,9 +74,8 @@ public class VisionIOReal implements VisionIO {
             }
         }
 
-        else if(camera.getPipelineIndex() == 1) { // Reef detection pippeline index? Change later
-            result = camera.getAllUnreadResults();
-
+        else if(camera.getPipelineIndex() == VisionConstants.reefDetectionPipelineID) { // Reef detection pippeline index? Change later
+         
             for(int i = 0; i < result.size(); i++)
             {
                 result.get(i).targets.sort(sortMode.getComparator());
