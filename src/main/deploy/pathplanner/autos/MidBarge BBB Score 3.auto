@@ -1,0 +1,50 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "MidBarge to BackReef"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "BackReef to Algae3"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Algae 3 to BackReef"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "BackReef to Algae2"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Algae2 to BackReef"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}
