@@ -4,7 +4,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import frc.robot.Drive.ModuleIO.ModuleIOInputs;
 
 public class ModuleIOSim implements ModuleIO {
     private static final double LOOP_PERIOD_SECS = 0.02;

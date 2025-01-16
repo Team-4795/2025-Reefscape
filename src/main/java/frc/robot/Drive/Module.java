@@ -6,12 +6,8 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.util.Units;
 import org.littletonrobotics.junction.Logger;
 
 public class Module {
@@ -32,7 +28,7 @@ public class Module {
         this.io = io;
         this.index = index;
 
-        switch (DriveConstants.currentMode):
+        switch (DriveConstants.currentMode) {
             case REAL:
                 drivFeedforward = new SimpleMotorFeedforward(0.1, 0.13);
                 driveFeddbackPidController = new PIDController(0.05, 0.0, 0.0);
@@ -53,11 +49,12 @@ public class Module {
                 driveFeddbackPidController = new PIDController(0.0, 0.0, 0.0);
                 turnFeePidController = new PIDController(0.0, 0.0, 0.0);
                 break;
-    }
-
-    turnFeedback.enableContinuousInput(-Math.PI,Math.PI);
-    setBrakeMode(ture);
+        }
     
+
+    turnFeePidController.enableContinuousInput(-Math.PI,Math.PI);
+    setBrakeMode(true);
+    }
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Drive/Module"+ Integer.toString(index), inputs);
@@ -71,7 +68,7 @@ public class Module {
 
         if (angleSetpoint != null) {
             io.setTurnVoltage(
-                turnFeePidController.calculate(getAngle(), angleSetpoint.getRadians()));
+                turnFeePidController.calculate(getAngle().getRadians(), angleSetpoint.getRadians()));
             
 
         if (speedSetPoint != null) {
@@ -79,7 +76,7 @@ public class Module {
 
 
 
-            double adjustSpeedSetpoint = adjustSpeedSetpoint*Math.cos(turnFeePidController.getPositionError());
+            double adjustSpeedSetpoint = speedSetPoint*Math.cos(turnFeePidController.getPositionError());
 
             double velocityRadPerSec = adjustSpeedSetpoint / WHEEL_RADIUS;
             io.setDriveVoltage(
@@ -90,13 +87,9 @@ public class Module {
     }
 
 
-    public SwerveModuleState runSetpoint(SwerveModulePosition state) {
 
-
+    public SwerveModuleState runSetpoint(SwerveModuleState state) {
         var optimizedState = SwerveModuleState.optimize(state, getAngle());
-
-
-
         angleSetpoint = optimizedState.angle;
         speedSetPoint = optimizedState.speedMetersPerSecond;
 
@@ -142,6 +135,10 @@ public class Module {
         return inputs.driveVelocityRadPerSec*WHEEL_RADIUS;
     }
 
+
+    public double getPositionMeters() {
+        return inputs.drivePositionRad*WHEEL_RADIUS;
+    }
 
     public SwerveModulePosition getPosition() {
         return new SwerveModulePosition(getPositionMeters(), getAngle());
