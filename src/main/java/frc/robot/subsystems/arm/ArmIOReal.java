@@ -11,33 +11,31 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.Constants.CurrentLimits;
-import frc.robot.util.KrakenLogger;
 
 public class ArmIOReal implements ArmIO {
-    private final TalonFX armMotor = new TalonFX(ArmConstants.canID);
+    public final TalonFX armMotor = new TalonFX(ArmConstants.canID);
 
-    private TalonFXConfiguration talonnFXConfig = new TalonFXConfiguration();
+    public TalonFXConfiguration talonFXConfig = new TalonFXConfiguration();
 
 
-    private final StatusSignal<Current> current = armMotor.getStatorCurrent();
-    private final StatusSignal<Voltage> voltage = armMotor.getMotorVoltage();
-    private final StatusSignal<AngularVelocity> velocity = armMotor.getVelocity();
+    public final StatusSignal<Current> current = armMotor.getStatorCurrent();
+    public final StatusSignal<Voltage> voltage = armMotor.getMotorVoltage();
+    public final StatusSignal<AngularVelocity> velocity = armMotor.getVelocity();
 
     public ArmIOReal(){
-        TalonFXConfiguration talonFXConfig;
-                talonFXConfig.CurrentLimits.StatorCurrentLimitEnable = true;
-        Object talonFX;
-                talonFX.Config.CurrentLimits.StatorCurrentLimit = CurrentLimits.armKraken;
+        talonFXConfig.CurrentLimits.StatorCurrentLimitEnable = true;
+        talonFXConfig.CurrentLimits.StatorCurrentLimit = CurrentLimits.armKraken;
 
         talonFXConfig.Audio.BeepOnBoot = true;
 
-        talonFXConfig.MotorOutput.NeutralMode = NeutralModeValue.coast;
+        talonFXConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
         armMotor.clearStickyFaults();
 
         BaseStatusSignal.setUpdateFrequencyForAll (50,velocity, voltage, current );
 
-        armMotor.optimizeBusUtilization(1.0);
+        //random number for optimizedfreqhz
+        armMotor.optimizeBusUtilization(9,1.0);
 
         StatusCode response = armMotor.getConfigurator().apply(talonFXConfig);
         if(!response.isOK()){
@@ -48,13 +46,14 @@ public class ArmIOReal implements ArmIO {
                     + response.toString());
         }
     }
-
+    @Override
     public void updateInputs(ArmIOInputs inputs) {
         BaseStatusSignal.refreshAll(velocity, voltage, current);
 
         inputs.angularVelocity = velocity.getValueAsDouble()*60;
         inputs.current = current.getValueAsDouble();
         inputs.voltage = voltage.getValueAsDouble();
+        inputs.angularPosition = armMotor.getPosition().getValueAsDouble()*2*Math.PI;
     }
 
     @Override
@@ -65,4 +64,6 @@ public class ArmIOReal implements ArmIO {
     public void setVoltage(double voltage) {
         armMotor.set(-voltage);
     }
+
+     
 }
