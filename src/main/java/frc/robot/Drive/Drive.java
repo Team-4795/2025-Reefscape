@@ -290,7 +290,12 @@ public void stopWithx() {
             return states;
         }
     
-
+        public void setModuleStates(SwerveModuleState[] desiredStates) {
+            SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, null); // DriveConstants.kMaxSpeedMetersPerSecond
+            for (int i = 0; i < 4; i++) {
+                modules[i].setDesiredState(desiredStates[i]);
+            }
+        }
 
         @AutoLogOutput(key = "odometry/Robot")
         public Pose2d getPose(){

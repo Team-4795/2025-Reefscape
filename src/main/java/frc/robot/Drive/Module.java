@@ -153,4 +153,8 @@ public class Module {
     public double getCharacterizationVelocity() {
         return inputs.driveVelocityRadPerSec;
     }
+
+    public void setDesiredState(SwerveModuleState desiredState) {
+        this.io.setDesiredState(desiredState);
+    }
 }
