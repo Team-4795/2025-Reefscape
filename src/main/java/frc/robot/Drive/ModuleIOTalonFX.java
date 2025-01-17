@@ -23,7 +23,7 @@ import com.revrobotics.REVLibError;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.ExternalEncoderConfig;
-import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -46,8 +46,8 @@ import edu.wpi.first.math.util.Units;
 public class ModuleIOTalonFX implements ModuleIO {
   final VelocityVoltage m_request = new VelocityVoltage(0).withSlot(0);
   // Gear ratios for SDS MK4i L2, adjust as necessary
-  private static final double DRIVE_GEAR_RATIO = 5.46; //needs to change
-  private static final double TURN_GEAR_RATIO = 11.3142; // needs to change
+ 
+ 
 
   private final TalonFX driveTalonFX;
   private final SparkFlex turnSparkMax;
@@ -146,28 +146,28 @@ public class ModuleIOTalonFX implements ModuleIO {
   @Override
   public void updateInputs(ModuleIOInputs inputs) {
     inputs.drivePositionRad =
-        Units.rotationsToRadians(driveTalonFX.getPosition().getValueAsDouble()) / DRIVE_GEAR_RATIO;
+        Units.rotationsToRadians(driveTalonFX.getPosition().getValueAsDouble()) / DriveConstants.DriveGearing;
     inputs.driveVelocityRadPerSec =
         Units.rotationsPerMinuteToRadiansPerSecond(driveTalonFX.getVelocity().getValueAsDouble())
-            / DRIVE_GEAR_RATIO;
+            / DriveConstants.DriveGearing;
     inputs.driveAppliedVolts = driveTalonFX.getMotorVoltage().getValueAsDouble();
     inputs.driveCurrentAmps = new double[] {driveTalonFX.getSupplyCurrent().getValueAsDouble()};
 
     inputs.turnAbsolutePosition = Rotation2d.fromRadians(turnAbsoluteEncoder.getPosition());
     inputs.turnPosition =
-        Rotation2d.fromRotations(turnRelativeEncoder.getPosition() / TURN_GEAR_RATIO);
+        Rotation2d.fromRotations(turnRelativeEncoder.getPosition() / DriveConstants.TurnGearing);
     inputs.turnVelocityRadPerSec =
         Units.rotationsPerMinuteToRadiansPerSecond(turnRelativeEncoder.getVelocity())
-            / TURN_GEAR_RATIO;
+            / DriveConstants.TurnGearing;
     inputs.turnAppliedVolts = turnSparkMax.getAppliedOutput() * turnSparkMax.getBusVoltage();
     inputs.turnCurrentAmps = new double[] {turnSparkMax.getOutputCurrent()};
   }
 
-  private SparkMaxConfig configSpark(IdleMode idle) {
-    var turningConfig = new SparkMaxConfig();
+  private SparkFlexConfig configSpark(IdleMode idle) {
+    var turningConfig = new SparkFlexConfig();
 
-    turningConfig.smartCurrentLimit(30);
-    turningConfig.voltageCompensation(12.0);
+    turningConfig.smartCurrentLimit(DriveConstants.turnCurrentLimit);
+    // turningConfig.voltageCompensation(12.0);
 
     if (idle != null) {
       turningConfig.idleMode(idle);
