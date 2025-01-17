@@ -46,8 +46,8 @@ import edu.wpi.first.math.util.Units;
 public class ModuleIOTalonFX implements ModuleIO {
   final VelocityVoltage m_request = new VelocityVoltage(0).withSlot(0);
   // Gear ratios for SDS MK4i L2, adjust as necessary
-  private static final double DRIVE_GEAR_RATIO = 5.46;
-  private static final double TURN_GEAR_RATIO = 11.3142;
+  private static final double DRIVE_GEAR_RATIO = 5.46; //needs to change
+  private static final double TURN_GEAR_RATIO = 11.3142; // needs to change
 
   private final TalonFX driveTalonFX;
   private final SparkFlex turnSparkMax;

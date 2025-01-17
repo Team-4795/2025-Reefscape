@@ -5,13 +5,10 @@ import static edu.wpi.first.units.Units.*;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
-import com.ctre.phoenix6.swerve.SwerveModule;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.pathplanner.lib.pathfinding.LocalADStar;
-import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -20,43 +17,32 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.Kinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.AngleUnit;
 import edu.wpi.first.units.AngularVelocityUnit;
-import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.MutableMeasure;
-import edu.wpi.first.units.VelocityUnit;
 import edu.wpi.first.units.VoltageUnit;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.MutAngle;
 import edu.wpi.first.units.measure.MutAngularVelocity;
 import edu.wpi.first.units.measure.MutVoltage;
-import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.units.measure.Voltage;
-import edu.wpi.first.units.mutable.MutableMeasureBase;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive.WheelSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Drive.DriveConstants.Mode;
-import frc.robot.Drive.GyroIO.GyroIOInputs;
-import frc.robot.Drive.ModuleIO.ModuleIOInputs;
 
 
 public class Drive extends SubsystemBase {
     private static Drive instance;
-    private static final double MAX_LINEAR_SPEED = Units.feetToMeters(5);
-    private static final double TRACK_WIDTH_X = Units.inchesToMeters(21.25);
-    private static final double TRACK_WIDTH_Y = Units.inchesToMeters(21.25);
     private static final double DRIVE_BASE_RADIUS = 
-        Math.hypot(TRACK_WIDTH_X / 2.0, TRACK_WIDTH_Y / 2.0);
-    private static final double MAX_ANGULAR_SPEED = MAX_LINEAR_SPEED / DRIVE_BASE_RADIUS;
+        Math.hypot(DriveConstants.TRACK_LENGTH / 2.0, DriveConstants.TRACK_WIDTH / 2.0);
+    private static final double MAX_ANGULAR_SPEED = DriveConstants.MAX_LINEAR_SPEED / DRIVE_BASE_RADIUS;
     private static final SwerveDriveKinematics K_DRIVE_KINEMATICS = new SwerveDriveKinematics(getModuleTranslation2d());
     private final GyroIO gyroIO;
     private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
@@ -225,7 +211,7 @@ public void runVelocity(ChassisSpeeds speeds){
 
     ChassisSpeeds discreteSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
     SwerveModuleState[] setpointStates = K_DRIVE_KINEMATICS.toSwerveModuleStates(discreteSpeeds);
-    SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates,MAX_LINEAR_SPEED);
+    SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates,DriveConstants.MAX_LINEAR_SPEED);
 
     SwerveModuleState[] optimizedSetpointStates = new SwerveModuleState[4];
     for (int i = 0; i < 4; i++) {
@@ -329,7 +315,7 @@ public void stopWithx() {
      
         
         public double getMaxLinearSpeedMeterPerSec(){
-            return MAX_LINEAR_SPEED;
+            return DriveConstants.MAX_LINEAR_SPEED;
         }
 
 
@@ -340,10 +326,10 @@ public void stopWithx() {
 
         public static Translation2d[] getModuleTranslation2d(){
             return new Translation2d[]{
-                new Translation2d(TRACK_WIDTH_X/2.0, TRACK_WIDTH_Y/2.0),
-                new Translation2d(TRACK_WIDTH_X/2.0, TRACK_WIDTH_Y/2.0),
-                new Translation2d(TRACK_WIDTH_X/2.0, TRACK_WIDTH_Y/2.0),
-                new Translation2d(TRACK_WIDTH_X/2.0, TRACK_WIDTH_Y/2.0),  
+                new Translation2d(DriveConstants.TRACK_LENGTH/2.0, DriveConstants.TRACK_WIDTH/2.0),
+                new Translation2d(DriveConstants.TRACK_LENGTH/2.0, DriveConstants.TRACK_WIDTH/2.0),
+                new Translation2d(DriveConstants.TRACK_LENGTH/2.0, DriveConstants.TRACK_WIDTH/2.0),
+                new Translation2d(DriveConstants.TRACK_LENGTH/2.0, DriveConstants.TRACK_WIDTH/2.0),  
             };
         }
 
@@ -352,15 +338,15 @@ public void stopWithx() {
         }
 
         public static double getMaxLinearSpeed() {
-            return MAX_LINEAR_SPEED;
+            return DriveConstants.MAX_LINEAR_SPEED;
         }
 
         public static double getTrackWidthX() {
-            return TRACK_WIDTH_X;
+            return DriveConstants.TRACK_LENGTH;
         }
 
         public static double getTrackWidthY() {
-            return TRACK_WIDTH_Y;
+            return DriveConstants.TRACK_WIDTH;
         }
 
         public static double getDriveBaseRadius() {

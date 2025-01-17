@@ -1,8 +1,6 @@
 package frc.robot.Drive;
 
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive.WheelSpeeds;
+import edu.wpi.first.math.util.Units;
 
 public class DriveConstants {
     public static final Mode currentMode = Mode.REAL;
@@ -14,6 +12,11 @@ public class DriveConstants {
 
         REPLAY,
     }
+
+    public static final double MAX_LINEAR_SPEED = Units.feetToMeters(5);
+    public static final double TRACK_LENGTH = Units.inchesToMeters(21.25);
+    public static final double TRACK_WIDTH = Units.inchesToMeters(21.25);
+    
 }
 
     
