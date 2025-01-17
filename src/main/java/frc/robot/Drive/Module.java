@@ -3,13 +3,12 @@ package frc.robot.Drive;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import org.littletonrobotics.junction.Logger;
 
 public class Module {
-    private static final double WHEEL_RADIUS = Units.inchesToMeters(2.0);
+
 
     private final ModuleIO io;
     private final ModuleIOInputsAutoLogged inputs = new ModuleIOInputsAutoLogged();
@@ -76,7 +75,7 @@ public class Module {
 
             double adjustSpeedSetpoint = speedSetPoint*Math.cos(turnFeePidController.getPositionError());
 
-            double velocityRadPerSec = adjustSpeedSetpoint / WHEEL_RADIUS;
+            double velocityRadPerSec = adjustSpeedSetpoint / DriveConstants.WHEEL_RADIUS;
             io.setDriveVoltage(
                 drivFeedforward.calculate(velocityRadPerSec)
                     + driveFeddbackPidController.calculate(inputs.driveVelocityRadPerSec, velocityRadPerSec));  
@@ -130,12 +129,12 @@ public class Module {
 
 
     public double getVelocityRadPerSec(){
-        return inputs.driveVelocityRadPerSec*WHEEL_RADIUS;
+        return inputs.driveVelocityRadPerSec*DriveConstants.WHEEL_RADIUS;
     }
 
 
     public double getPositionMeters() {
-        return inputs.drivePositionRad*WHEEL_RADIUS;
+        return inputs.drivePositionRad*DriveConstants.WHEEL_RADIUS;
     }
 
     public SwerveModulePosition getPosition() {

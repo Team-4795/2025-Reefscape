@@ -20,7 +20,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.AngleUnit;
 import edu.wpi.first.units.AngularVelocityUnit;
 import edu.wpi.first.units.MutableMeasure;
@@ -40,9 +39,6 @@ import frc.robot.Drive.DriveConstants.Mode;
 
 public class Drive extends SubsystemBase {
     private static Drive instance;
-    private static final double DRIVE_BASE_RADIUS = 
-        Math.hypot(DriveConstants.TRACK_LENGTH / 2.0, DriveConstants.TRACK_WIDTH / 2.0);
-    private static final double MAX_ANGULAR_SPEED = DriveConstants.MAX_LINEAR_SPEED / DRIVE_BASE_RADIUS;
     private static final SwerveDriveKinematics K_DRIVE_KINEMATICS = new SwerveDriveKinematics(getModuleTranslation2d());
     private final GyroIO gyroIO;
     private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
@@ -106,8 +102,8 @@ public class Drive extends SubsystemBase {
                     this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
                     this::runVelocity, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
                     new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
-                            new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-                            new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
+                            new PIDConstants(DriveConstants.TranslationKP, DriveConstants.TranslationKI, DriveConstants.TranslationKD), // Translation PID constants
+                            new PIDConstants(DriveConstants.RotationKP, DriveConstants.RotationKI, DriveConstants.RotationKD) // Rotation PID constants
                     ),
                     config, // The robot configuration
                     () -> {
@@ -320,7 +316,7 @@ public void stopWithx() {
 
 
         public double getMaxAngluarSpeeddRadPerSec(){
-            return MAX_ANGULAR_SPEED;
+            return DriveConstants.MAX_ANGULAR_SPEED;
         }
 
 
@@ -350,11 +346,11 @@ public void stopWithx() {
         }
 
         public static double getDriveBaseRadius() {
-            return DRIVE_BASE_RADIUS;
+            return DriveConstants.DRIVE_BASE_RADIUS;
         }
 
         public static double getMaxAngularSpeed() {
-            return MAX_ANGULAR_SPEED;
+            return DriveConstants.MAX_ANGULAR_SPEED;
         }
 
         public static SwerveDriveKinematics getkDriveKinematics() {
