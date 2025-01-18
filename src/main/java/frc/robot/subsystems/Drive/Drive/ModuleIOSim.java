@@ -1,5 +1,6 @@
 package frc.robot.subsystems.Drive.Drive;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
@@ -19,5 +20,29 @@ public class ModuleIOSim implements ModuleIO {
     public void updateInputs(ModuleIOInputs inputs){
         driveSim.update(LOOP_PERIOD_SECS);
         turnSim.update(LOOP_PERIOD_SECS);
+
+        inputs.drivePositionRad = driveSim.getAngularPositionRad();
+        inputs.driveVelocityRadPerSec = driveSim.getAngularPositionRad();
+        inputs.driveAppliedVolts = driveAppliedVolts;
+        inputs.driveCurrentAmps = new double[] {Math.abs(driveSim.getCurrentDrawAmps())};
+
+
+        inputs.turnAbsolutePosition =
+            new Rotation2d(turnSim.getAngularPositionRad()).plus(turnAbsoluteInitPositon);
+        inputs.turnPosition = new Rotation2d(turnSim.getAngularPosition());
+        inputs.turnAppliedVolts = turnAppliedVolts;
+        inputs.turnCurrentAmps = new double[] {Math.abs(turnSim.getCurrentDrawAmps())};
+    }
+
+    @Override
+    public void setDriveVoltage(double volts){
+        driveAppliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
+        driveSim.setInputVoltage(driveAppliedVolts);
+    }
+
+    @Override
+    public void setTurnVoltage(double volts) {
+        turnAppliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
+        turnSim.setInputVoltage(turnAppliedVolts);
     }
 }
