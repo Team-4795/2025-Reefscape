@@ -5,7 +5,10 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import frc.robot.Constants;
+
 import org.littletonrobotics.junction.Logger;
+
 
 public class Module {
 
@@ -25,7 +28,7 @@ public class Module {
         this.io = io;
         this.index = index;
 
-        switch (DriveConstants.currentMode) {
+        switch (Constants.currentMode) {
             case REAL:
                 drivFeedforward = new SimpleMotorFeedforward(0.1, 0.13);
                 driveFeddbackPidController = new PIDController(0.05, 0.0, 0.0);
@@ -64,7 +67,8 @@ public class Module {
 
 
         if (angleSetpoint != null) {      
-            io.setTurnVoltage(turnFeePidController.calculate(getAngle().getRadians(), angleSetpoint.getRadians()));            
+            io.setTurnVoltage(turnFeePidController.calculate(getAngle().getRadians(), angleSetpoint.getRadians()));   
+
 
         if (speedSetPoint != null) {
 

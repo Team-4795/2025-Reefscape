@@ -37,7 +37,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.subsystems.Drive.Drive.DriveConstants.Mode;
+import frc.robot.Constants;
 
 
 public class Drive extends SubsystemBase {
@@ -240,7 +240,7 @@ public void stopWithx() {
 }
 
     public void zeroHeading() {
-        if (DriveConstants.currentMode == Mode.SIM){
+        if (Constants.currentMode == frc.robot.Constants.Mode.SIM){
             poseEstimator.resetPosition(
                 new Rotation2d(),
                 new SwerveModulePosition[]{
