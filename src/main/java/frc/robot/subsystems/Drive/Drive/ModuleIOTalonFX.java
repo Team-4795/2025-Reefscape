@@ -11,7 +11,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 
-package frc.robot.Drive;
+package frc.robot.subsystems.Drive.Drive;
 
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -45,7 +45,6 @@ import edu.wpi.first.math.util.Units;
  */
 public class ModuleIOTalonFX implements ModuleIO {
   final VelocityVoltage m_request = new VelocityVoltage(0).withSlot(0);
-  // Gear ratios for SDS MK4i L2, adjust as necessary
  
  
 

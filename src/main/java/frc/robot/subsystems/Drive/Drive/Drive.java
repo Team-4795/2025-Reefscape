@@ -1,4 +1,4 @@
-package frc.robot.Drive;
+package frc.robot.subsystems.Drive.Drive;
 
 import static edu.wpi.first.units.Units.*;
 
@@ -34,7 +34,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.Drive.DriveConstants.Mode;
+import frc.robot.Drive.GyroIOInputsAutoLogged;
+import frc.robot.Drive.ModuleIOInputsAutoLogged;
+import frc.robot.subsystems.Drive.Drive.DriveConstants.Mode;
 
 
 public class Drive extends SubsystemBase {
