@@ -7,37 +7,34 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
-import frc.robot.Constants.CurrentLimits;
 
 public class ArmIOReal implements ArmIO {
-    public final TalonFX armMotor = new TalonFX(ArmConstants.canID);
-
-    public TalonFXConfiguration talonFXConfig = new TalonFXConfiguration();
-
-
-    public final StatusSignal<Current> current = armMotor.getStatorCurrent();
-    public final StatusSignal<Voltage> voltage = armMotor.getMotorVoltage();
-    public final StatusSignal<AngularVelocity> velocity = armMotor.getVelocity();
+    private final TalonFX armMotor = new TalonFX(ArmConstants.CAN_ID);
+    private TalonFXConfiguration talonFXConfig = new TalonFXConfiguration();
+    private final StatusSignal<Current> current = armMotor.getStatorCurrent();
+    private final StatusSignal<Voltage> voltage = armMotor.getMotorVoltage();
+    private final StatusSignal<AngularVelocity> velocity = armMotor.getVelocity();
+    private final StatusSignal<Angle> position = armMotor.getPosition();
+    private final ArmFeedforward ffmodel = new ArmFeedforward(0.1, 0.1, 0.1);
 
     public ArmIOReal(){
         talonFXConfig.CurrentLimits.StatorCurrentLimitEnable = true;
-        talonFXConfig.CurrentLimits.StatorCurrentLimit = CurrentLimits.armKraken;
-
+        talonFXConfig.CurrentLimits.StatorCurrentLimit = ArmConstants.CURRENT_LIMIT;
         talonFXConfig.Audio.BeepOnBoot = true;
-
-        talonFXConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-
+        talonFXConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         armMotor.clearStickyFaults();
 
-        BaseStatusSignal.setUpdateFrequencyForAll (50,velocity, voltage, current );
+        BaseStatusSignal.setUpdateFrequencyForAll(50,velocity, voltage, current);
 
-        //random number for optimizedfreqhz
-        armMotor.optimizeBusUtilization(9,1.0);
+        armMotor.optimizeBusUtilization(50, 1);
 
         StatusCode response = armMotor.getConfigurator().apply(talonFXConfig);
+        
         if(!response.isOK()){
             System.out.println(
                 "Talon ID"
@@ -46,11 +43,13 @@ public class ArmIOReal implements ArmIO {
                     + response.toString());
         }
     }
+
     @Override
     public void updateInputs(ArmIOInputs inputs) {
         BaseStatusSignal.refreshAll(velocity, voltage, current);
 
-        inputs.angularVelocity = velocity.getValueAsDouble()*60;
+        inputs.angularPosition = position.getValueAsDouble() * 2 * Math.PI;
+        inputs.angularVelocity = velocity.getValueAsDouble() * 2 * Math.PI;
         inputs.current = current.getValueAsDouble();
         inputs.voltage = voltage.getValueAsDouble();
         inputs.angularPosition = armMotor.getPosition().getValueAsDouble()*2*Math.PI;
@@ -58,11 +57,11 @@ public class ArmIOReal implements ArmIO {
 
     @Override
     public void setVelocity(double velocity) {
-        armMotor.set(-velocity);
+        setVoltage(ffmodel.calculate(position.getValueAsDouble() * 2 * Math.PI, velocity));
     }
 
     public void setVoltage(double voltage) {
-        armMotor.set(-voltage);
+        armMotor.setVoltage(-voltage);
     }
 
      

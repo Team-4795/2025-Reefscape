@@ -6,13 +6,33 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.Constants.OIConstants;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.ArmIOReal;
+import frc.robot.subsystems.arm.ArmIOSim;
 
-public class RobotContainer {
+public class RobotContainer {  
   public RobotContainer() {
+    switch (Constants.currentMode) {
+      case REAL:
+        Arm.initialize(new ArmIOReal());
+        break;
+      case SIM:
+        Arm.initialize(new ArmIOSim());
+        break;
+      default:  
+        Arm.initialize(new ArmIOReal());
+        break;
+
+    }
     configureBindings();
   }
 
-  private void configureBindings() {}
+  private void configureBindings() {
+    OIConstants.driverController.povUp().onTrue(Commands.runOnce(() -> Arm.getInstance().setGoal(Math.PI / 2)));
+    OIConstants.driverController.povDown().onTrue(Commands.runOnce(() -> Arm.getInstance().setGoal(0)));
+  }
 
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");

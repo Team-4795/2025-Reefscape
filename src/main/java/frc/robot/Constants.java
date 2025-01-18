@@ -1,16 +1,16 @@
 package frc.robot;
 
-import frc.robot.subsystems.arm.CurrentLimits;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class Constants {
-    public static Mode currentMode = Mode.REAL;
+    public static Mode currentMode = Mode.SIM;
     public static enum Mode {
         REAL,
         SIM,
         REPLAY
     }
-    public static class CurrentLimits {
-        public static int armKraken = 40;
-        //for now
+
+    public static class OIConstants {
+        public static final CommandXboxController driverController = new CommandXboxController(0);
     }
 }
