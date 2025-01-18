@@ -6,17 +6,21 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.vision.AprilTag.*;;
 
 public class RobotContainer {
   private final Vision vision;
 
   public RobotContainer() {
+    vision = Vision.initialize(new VisionIOReal(0));
     configureBindings();
-    vision = Vision.initialize(new VisionIOSim());
+    
   }
 
-  private void configureBindings() {}
+  private void configureBindings() {
+    OIConstants.operatorController.a().onTrue(Commands.runOnce(() -> vision.toggleReefMode(), vision));
+  }
 
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");

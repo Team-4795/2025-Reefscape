@@ -26,6 +26,8 @@ public class VisionIOReal implements VisionIO {
 
         poseEstimator = new PhotonPoseEstimator(VisionConstants.aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, VisionConstants.cameraPoses[camIndex]);
         poseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+        sortMode = PhotonTargetSortMode.Largest;
+        
     } 
 
     @Override
