@@ -6,7 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Commands.DriveCommands;
 import frc.robot.subsystems.Drive.Drive.Drive;
 import frc.robot.subsystems.Drive.Drive.GyroIO;
 import frc.robot.subsystems.Drive.Drive.GyroIOPigeon;
@@ -16,7 +16,7 @@ import frc.robot.subsystems.Drive.Drive.ModuleIOTalonFX;
 
 public class RobotContainer {
   
-  private final Drive drive;
+  private  Drive drive;
    
     public RobotContainer() {
   
@@ -34,7 +34,7 @@ public class RobotContainer {
   
       case SIM:
        
-      // drive =
+      drive =
         new Drive(
           new GyroIO() {}, 
           new ModuleIOSim(), 
@@ -44,7 +44,7 @@ public class RobotContainer {
       
         default:
         
-        drive =
+      drive =
         new Drive(
           new GyroIO() {}, 
           new ModuleIO() {}, 
@@ -62,10 +62,15 @@ public class RobotContainer {
     drive.setDefaultCommand(
       DriveCommands.joystickDrive(
         drive,
-        () -> -controller.getLeftY(),
-        () -> -controller.getLeftX(),
-        () -> -controller.getRightX()));
-  }
+        () -> -Constants.OIConstants.driverController.getLeftY(),
+        () -> -Constants.OIConstants.driverController.getLeftX(),
+        () -> -Constants.OIConstants.driverController.getRightX()));
+
+    Constants.OIConstants.driverController.a().whileTrue(Commands.runOnce(()-> drive.zeroHeading(), drive));
+
+      }
+
+  
 
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");

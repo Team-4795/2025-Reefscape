@@ -34,8 +34,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.Drive.GyroIOInputsAutoLogged;
-import frc.robot.Drive.ModuleIOInputsAutoLogged;
 import frc.robot.subsystems.Drive.Drive.DriveConstants.Mode;
 
 
@@ -312,12 +310,12 @@ public void stopWithx() {
 
      
         
-        public double getMaxLinearSpeedMeterPerSec(){
+        public double getMaxLinearSpeedMetersPerSec(){
             return DriveConstants.MAX_LINEAR_SPEED;
         }
 
 
-        public double getMaxAngluarSpeeddRadPerSec(){
+        public double getMaxAngularSpeedRadPerSec(){
             return DriveConstants.MAX_ANGULAR_SPEED;
         }
 
