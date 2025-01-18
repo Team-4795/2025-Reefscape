@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import java.io.IOException;
+
+import org.json.simple.parser.ParseException;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -22,7 +25,7 @@ public class Robot extends LoggedRobot {
 
   private final RobotContainer m_robotContainer;
 
-  public Robot() {
+  public Robot() throws IOException, ParseException {
     Logger.recordMetadata("ProjectName", "2025-Reefscape");
     switch (Constants.currentMode) {
       case REAL:

@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import java.io.IOException;
+
+import org.json.simple.parser.ParseException;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Commands.DriveCommands;
@@ -18,7 +22,7 @@ public class RobotContainer {
   
   private  Drive drive;
    
-    public RobotContainer() {
+    public RobotContainer() throws IOException, ParseException {
   
       switch (Constants.currentMode) {
         case REAL:
@@ -45,12 +49,13 @@ public class RobotContainer {
         default:
         
       drive =
-        new Drive(
-          new GyroIO() {}, 
-          new ModuleIO() {}, 
-          new ModuleIO(){}, 
-          new ModuleIO() {}, 
-          new ModuleIO() {});
+      new Drive(
+        new GyroIO() {}, 
+        new ModuleIOSim(), 
+        new ModuleIOSim(), 
+        new ModuleIOSim(), 
+        new ModuleIOSim());
+    
         break;
     }
 
@@ -62,9 +67,11 @@ public class RobotContainer {
     drive.setDefaultCommand(
       DriveCommands.joystickDrive(
         drive,
-        () -> -Constants.OIConstants.driverController.getLeftY(),
-        () -> -Constants.OIConstants.driverController.getLeftX(),
-        () -> -Constants.OIConstants.driverController.getRightX()));
+        () -> Constants.OIConstants.driverController.getLeftY(),
+        () -> Constants.OIConstants.driverController.getLeftX(),
+        () -> -Constants.OIConstants.driverController.getRightX() 
+        // () -> -Constants.OIConstants.driverController.getRightY()
+        ));
 
     Constants.OIConstants.driverController.a().whileTrue(Commands.runOnce(()-> drive.zeroHeading(), drive));
 

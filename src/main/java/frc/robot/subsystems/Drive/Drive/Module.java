@@ -63,10 +63,8 @@ public class Module {
         }
 
 
-        if (angleSetpoint != null) {
-            io.setTurnVoltage(
-                turnFeePidController.calculate(getAngle().getRadians(), angleSetpoint.getRadians()));
-            
+        if (angleSetpoint != null) {      
+            io.setTurnVoltage(turnFeePidController.calculate(getAngle().getRadians(), angleSetpoint.getRadians()));            
 
         if (speedSetPoint != null) {
 
@@ -86,11 +84,10 @@ public class Module {
 
 
     public SwerveModuleState runSetpoint(SwerveModuleState state) {
-        var optimizedState = SwerveModuleState.optimize(state, getAngle());
-        angleSetpoint = optimizedState.angle;
-        speedSetPoint = optimizedState.speedMetersPerSecond;
-
-        return optimizedState;
+        state.optimize(getAngle());
+        angleSetpoint = state.angle;
+        speedSetPoint = state.speedMetersPerSecond;
+        return state;
     }
 
     public void runCharacterization(double volts) {

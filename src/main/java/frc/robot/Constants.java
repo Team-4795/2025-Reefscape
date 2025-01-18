@@ -2,7 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 public class Constants {
-    public static Mode currentMode = Mode.REAL;
+    public static Mode currentMode = Mode.SIM;
     public static enum Mode {
         REAL,
         SIM,

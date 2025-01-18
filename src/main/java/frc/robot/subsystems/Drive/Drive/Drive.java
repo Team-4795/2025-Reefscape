@@ -2,6 +2,9 @@ package frc.robot.subsystems.Drive.Drive;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.io.IOException;
+
+import org.json.simple.parser.ParseException;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -59,14 +62,14 @@ public class Drive extends SubsystemBase {
             new SwerveModulePosition()
         };
 
-    private SwerveDrivePoseEstimator poseEstimator =
+    private SwerveDrivePoseEstimator    poseEstimator =
         new SwerveDrivePoseEstimator(kinematics, rawGyroRotation2d, lastModulePositions, new Pose2d());
     
     public static Drive getInstance(){
         return instance;
     }
 
-    public static Drive initialize (GyroIO gyro, ModuleIO fl, ModuleIO fr, ModuleIO bl, ModuleIO br) {
+    public static Drive initialize (GyroIO gyro, ModuleIO fl, ModuleIO fr, ModuleIO bl, ModuleIO br) throws IOException, ParseException {
         if (instance == null) {
             instance = new Drive(gyro, fl, fr, bl, br);
         }
@@ -78,7 +81,7 @@ public class Drive extends SubsystemBase {
         ModuleIO flModuleIO,
         ModuleIO frModuleIO,
         ModuleIO blModuleIO,
-        ModuleIO brModuleIO) {
+        ModuleIO brModuleIO) throws IOException, ParseException {
             this.gyroIO = gyroIO;
             modules[0] = new Module(flModuleIO, 0);
             modules[1] = new Module(frModuleIO, 1);
@@ -86,14 +89,17 @@ public class Drive extends SubsystemBase {
             modules[3] = new Module(brModuleIO, 3);
 
             RobotConfig config;
+
+            config = RobotConfig.fromGUISettings();
+
             try{
               config = RobotConfig.fromGUISettings();
             } catch (Exception e) {
               // Handle exception as needed
-              e.printStackTrace();
-            } finally {
-                config = null; // if something went horribly wrong
-            }
+              e.printStackTrace(); } 
+            // } finally {
+            //     config = null; // if something went horribly wrong
+            // }
         
             // Configure AutoBuilder last
             AutoBuilder.configure(
@@ -198,13 +204,12 @@ public class Drive extends SubsystemBase {
         rawGyroRotation2d = rawGyroRotation2d.plus(new Rotation2d(twist.dtheta));
     }
 
-poseEstimator.update(rawGyroRotation2d, modulePositions);
+            poseEstimator.update(rawGyroRotation2d, modulePositions);
 
         }
 
 
 public void runVelocity(ChassisSpeeds speeds){
-
     ChassisSpeeds discreteSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
     SwerveModuleState[] setpointStates = K_DRIVE_KINEMATICS.toSwerveModuleStates(discreteSpeeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates,DriveConstants.MAX_LINEAR_SPEED);
@@ -273,7 +278,7 @@ public void stopWithx() {
         }
     
         public void setModuleStates(SwerveModuleState[] desiredStates) {
-            SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, null); // DriveConstants.kMaxSpeedMetersPerSecond
+            SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, 4.8); // DriveConstants.kMaxSpeedMetersPerSecond
             for (int i = 0; i < 4; i++) {
                 modules[i].setDesiredState(desiredStates[i]);
             }
