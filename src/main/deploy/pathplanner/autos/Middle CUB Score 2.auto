@@ -11,7 +11,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Middle to FrontReef"
+                  "pathName": "Middle to CenterReef"
                 }
               },
               {
@@ -23,7 +23,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Feeder to UpFrontReef"
+                  "pathName": "Feeder to UpBackReef"
                 }
               }
             ]

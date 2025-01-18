@@ -1,0 +1,43 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MidBarge to UpFrontReef"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "UpFrontReef to Feeder"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Feeder to UpBackReef"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "UpBackReef to Feeder"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Feeder to BackReef"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}
