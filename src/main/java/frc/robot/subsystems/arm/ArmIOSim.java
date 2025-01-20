@@ -1,15 +1,14 @@
 package frc.robot.subsystems.arm;
 
-import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.units.measure.AngularMomentum;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
-import frc.robot.subsystems.arm.ArmIO.ArmIOInputs;
 
 public class ArmIOSim implements ArmIO {
     private final SingleJointedArmSim armSim = new SingleJointedArmSim(
-        DCMotor.getKrakenX60(2),
+        DCMotor.getNeoVortex(2),
         ArmConstants.Sim.GEARING,
         ArmConstants.Sim.MOI,
         ArmConstants.Sim.LENGTH,
@@ -19,40 +18,43 @@ public class ArmIOSim implements ArmIO {
         ArmConstants.Sim.INIT_ANGLE
     );
     private double voltage = 0;
-    private final ArmFeedforward ffmodel = new ArmFeedforward(0.1, 0.1, 0.1);
-    private final PIDController controller = new PIDController(0.01, 0.02, 0);
-    private double goal = ArmConstants.Sim.INIT_ANGLE;
+    private final SimpleMotorFeedforward ffmodel = new SimpleMotorFeedforward(0.03, 1.65);
+    private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(1, 2);
+    private final PIDController controller = new PIDController(0.02, 0,0.00);
+    private final TrapezoidProfile profile = new TrapezoidProfile(constraints);
+    private TrapezoidProfile.State goal = new TrapezoidProfile.State(ArmConstants.Sim.INIT_ANGLE + 0.5, 0);
+    private TrapezoidProfile.State setpoint = new TrapezoidProfile.State();
+
+    public ArmIOSim() {
+
+    }
 
     @Override
     public void setVoltage(double voltage) {
-        this.voltage = voltage;
         armSim.setInputVoltage(voltage);
-    }
-
-    @Override 
-    public void setVelocity(double velocity) {
-        setVoltage(ffmodel.calculate(armSim.getAngleRads(), velocity));
+        this.voltage = voltage;
     }
 
     @Override
     public void setGoal(double angle) {
-        goal = angle;
-
+        goal = new TrapezoidProfile.State(angle + 0.5, 0);
     }
-
-    @Override
-    public void updateLoop() {
-        setVoltage(controller.calculate(armSim.getAngleRads(), goal));
-    }
-
 
     @Override
     public void updateInputs(ArmIOInputs inputs) {
+        if(!inputs.openLoop) {
+            setpoint = profile.calculate(0.02, setpoint, goal);
+            setVoltage(
+             ffmodel.calculate(setpoint.velocity)
+            );
+        }
+
         inputs.angularPosition = armSim.getAngleRads();
         inputs.angularVelocity = armSim.getVelocityRadPerSec();
         inputs.current = armSim.getCurrentDrawAmps();
         inputs.voltage = voltage;
-        inputs.goal = goal;
+        inputs.goalAngle = goal.position - 0.5;
+        inputs.setpointVelocity = setpoint.velocity;
         armSim.update(0.02);
     }
 }

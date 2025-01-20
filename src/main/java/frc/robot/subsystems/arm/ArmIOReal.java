@@ -55,11 +55,6 @@ public class ArmIOReal implements ArmIO {
         inputs.angularPosition = armMotor.getPosition().getValueAsDouble()*2*Math.PI;
     }
 
-    @Override
-    public void setVelocity(double velocity) {
-        setVoltage(ffmodel.calculate(position.getValueAsDouble() * 2 * Math.PI, velocity));
-    }
-
     public void setVoltage(double voltage) {
         armMotor.setVoltage(-voltage);
     }

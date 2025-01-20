@@ -5,7 +5,7 @@ public class ArmConstants {
     public static double CURRENT_LIMIT = 40;
 
     public static class Sim {
-        public static double GEARING = 6;
+        public static double GEARING = 100;
         public static double MOI = 2;
         public static double LENGTH = 0.5;
         public static double MIN_ANGLE = -Math.PI / 6;

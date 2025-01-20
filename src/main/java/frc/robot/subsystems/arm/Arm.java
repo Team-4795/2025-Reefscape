@@ -3,7 +3,6 @@ package frc.robot.subsystems.arm;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.arm.ArmIO.ArmIOInputs;
 
 public class Arm extends SubsystemBase {
     private ArmIOInputsAutoLogged inputs = new ArmIOInputsAutoLogged();
@@ -34,12 +33,7 @@ public class Arm extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if(!openLoop) {
-            io.updateLoop();
-        }
-
         this.inputs.openLoop = openLoop;
-
         io.updateInputs(inputs);
         Logger.processInputs(getName(), inputs);
     }

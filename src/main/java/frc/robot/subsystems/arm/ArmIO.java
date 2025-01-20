@@ -9,8 +9,9 @@ public interface ArmIO {
         public double angularPosition = 0.0;
         public double angularVelocity = 0.0;
         public double current = 0.0;
-        public double goal = 0.0;
+        public double goalAngle = 0.0;
         public boolean openLoop = false;
+        public double setpointVelocity = 0.0;
     }
 
     public default void updateInputs(ArmIOInputs inputs) {
@@ -19,13 +20,8 @@ public interface ArmIO {
     public default void setVoltage(double voltage) {
 
     }
-    public default void setVelocity(double velocity){
-        
-    }
+    
     public default void setGoal(double angle) {
-
-    }
-    public default void updateLoop() {
 
     }
 }
