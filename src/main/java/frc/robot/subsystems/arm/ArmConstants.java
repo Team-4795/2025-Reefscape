@@ -4,6 +4,7 @@ public class ArmConstants {
     public static int CAN_ID = 10;
     public static double CURRENT_LIMIT = 40;
 
+    // need to be tuned
     public static class Sim {
         public static double GEARING = 100;
         public static double MOI = 2;

@@ -1,8 +1,13 @@
 package frc.robot.subsystems.arm;
 
+import com.revrobotics.sim.SparkFlexSim;
+import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 
@@ -18,7 +23,7 @@ public class ArmIOSim implements ArmIO {
         ArmConstants.Sim.INIT_ANGLE
     );
     private double voltage = 0;
-    private final SimpleMotorFeedforward ffmodel = new SimpleMotorFeedforward(0.03, 1.65);
+    private final SimpleMotorFeedforward ffmodel = new SimpleMotorFeedforward(0.04, 1.65);
     private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(1, 2);
     private final PIDController controller = new PIDController(0.02, 0,0.00);
     private final TrapezoidProfile profile = new TrapezoidProfile(constraints);
@@ -43,10 +48,8 @@ public class ArmIOSim implements ArmIO {
     @Override
     public void updateInputs(ArmIOInputs inputs) {
         if(!inputs.openLoop) {
+            setVoltage(ffmodel.calculate(setpoint.velocity) + controller.calculate(armSim.getVelocityRadPerSec(), setpoint.velocity));
             setpoint = profile.calculate(0.02, setpoint, goal);
-            setVoltage(
-             ffmodel.calculate(setpoint.velocity)
-            );
         }
 
         inputs.angularPosition = armSim.getAngleRads();
