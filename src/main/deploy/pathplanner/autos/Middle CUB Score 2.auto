@@ -23,6 +23,18 @@
               {
                 "type": "path",
                 "data": {
+                  "pathName": "Feeder to UpFrontReef"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "UpFrontReef to Feeder"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
                   "pathName": "Feeder to UpBackReef"
                 }
               }
