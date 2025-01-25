@@ -2,6 +2,8 @@ package frc.robot.subsystems.arm;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
@@ -26,6 +28,7 @@ public class ArmIOReal implements ArmIO {
         config.smartCurrentLimit(ArmConstants.CURRENT_LIMIT);
         config.idleMode(IdleMode.kBrake);
         armMotor.clearFaults();
+        armMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
     @Override
