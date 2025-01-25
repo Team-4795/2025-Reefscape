@@ -1,63 +1,52 @@
 package frc.robot.subsystems.arm;
 
-import com.ctre.phoenix6.BaseStatusSignal;
-import com.ctre.phoenix6.StatusCode;
-import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkFlexConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.units.measure.Current;
-import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
 public class ArmIOReal implements ArmIO {
-    private final TalonFX armMotor = new TalonFX(ArmConstants.CAN_ID);
-    private TalonFXConfiguration talonFXConfig = new TalonFXConfiguration();
-    private final StatusSignal<Current> current = armMotor.getStatorCurrent();
-    private final StatusSignal<Voltage> voltage = armMotor.getMotorVoltage();
-    private final StatusSignal<AngularVelocity> velocity = armMotor.getVelocity();
-    private final StatusSignal<Angle> position = armMotor.getPosition();
-    private final ArmFeedforward ffmodel = new ArmFeedforward(0.1, 0.1, 0.1);
+    private final SparkFlex armMotor = new SparkFlex(ArmConstants.CAN_ID, MotorType.kBrushless);
+    private SparkFlexConfig config = new SparkFlexConfig();
+    private AbsoluteEncoder armEncoder = armMotor.getAbsoluteEncoder();
+
+    private final ArmFeedforward ffmodel = new ArmFeedforward(0, 0, 0);
+    private final PIDController controller = new PIDController(0.02, 0,0.00);
+    private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(1, 2);
+    private final TrapezoidProfile profile = new TrapezoidProfile(constraints);
+    private TrapezoidProfile.State goal = new TrapezoidProfile.State(ArmConstants.Sim.INIT_ANGLE, 0);
+    private TrapezoidProfile.State setpoint = new TrapezoidProfile.State();
 
     public ArmIOReal(){
-        talonFXConfig.CurrentLimits.StatorCurrentLimitEnable = true;
-        talonFXConfig.CurrentLimits.StatorCurrentLimit = ArmConstants.CURRENT_LIMIT;
-        talonFXConfig.Audio.BeepOnBoot = true;
-        talonFXConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-        armMotor.clearStickyFaults();
+        config.smartCurrentLimit(ArmConstants.CURRENT_LIMIT);
+        config.idleMode(IdleMode.kBrake);
+        armMotor.clearFaults();
+    }
 
-        BaseStatusSignal.setUpdateFrequencyForAll(50,velocity, voltage, current);
-
-        armMotor.optimizeBusUtilization(50, 1);
-
-        StatusCode response = armMotor.getConfigurator().apply(talonFXConfig);
-        
-        if(!response.isOK()){
-            System.out.println(
-                "Talon ID"
-                    + armMotor.getDeviceID()
-                    + "failed config with error"
-                    + response.toString());
-        }
+    @Override
+    public void setGoal(double angle) {
+        goal = new TrapezoidProfile.State(angle, 0);
     }
 
     @Override
     public void updateInputs(ArmIOInputs inputs) {
-        BaseStatusSignal.refreshAll(velocity, voltage, current);
+        if(!inputs.openLoop) {
+            setVoltage(ffmodel.calculate(setpoint.velocity, setpoint.position) + controller.calculate(setpoint.velocity));
+            setpoint = profile.calculate(0.02, setpoint, goal);
+        }
 
-        inputs.angularPosition = position.getValueAsDouble() * 2 * Math.PI;
-        inputs.angularVelocity = velocity.getValueAsDouble() * 2 * Math.PI;
-        inputs.current = current.getValueAsDouble();
-        inputs.voltage = voltage.getValueAsDouble();
-        inputs.angularPosition = armMotor.getPosition().getValueAsDouble()*2*Math.PI;
+        inputs.angularPosition = armEncoder.getPosition() * 2 * Math.PI;
+        inputs.angularVelocity = armEncoder.getVelocity() * 2 * Math.PI / 60;
+        inputs.current = armMotor.getOutputCurrent();
+        inputs.voltage = armMotor.getAppliedOutput();
     }
 
     public void setVoltage(double voltage) {
         armMotor.setVoltage(-voltage);
     }
-
-     
 }
