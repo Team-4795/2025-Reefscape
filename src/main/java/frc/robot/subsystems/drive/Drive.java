@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Drive.Drive;
+package frc.robot.subsystems.drive;
 
 import static edu.wpi.first.units.Units.*;
 
@@ -200,12 +200,10 @@ public class Drive extends SubsystemBase {
         rawGyroRotation2d = gyroInputs.yawPosition;
     } else {
 
-        Twist2d twist = K_DRIVE_KINEMATICS.toTwist2d(moduleDeltas, moduleDeltas);
+        Twist2d twist = K_DRIVE_KINEMATICS.toTwist2d(moduleDeltas);
         rawGyroRotation2d = rawGyroRotation2d.plus(new Rotation2d(twist.dtheta));
     }
-
             poseEstimator.update(rawGyroRotation2d, modulePositions);
-
         }
 
 
@@ -216,7 +214,6 @@ public void runVelocity(ChassisSpeeds speeds){
 
     SwerveModuleState[] optimizedSetpointStates = new SwerveModuleState[4];
     for (int i = 0; i < 4; i++) {
-
         optimizedSetpointStates[i] = modules[i].runSetpoint(setpointStates[i]);
     }
     Logger.recordOutput("SwerveStates/Setpoints", setpointStates);
@@ -328,9 +325,9 @@ public void stopWithx() {
         public static Translation2d[] getModuleTranslation2d(){
             return new Translation2d[]{
                 new Translation2d(DriveConstants.TRACK_LENGTH/2.0, DriveConstants.TRACK_WIDTH/2.0),
-                new Translation2d(DriveConstants.TRACK_LENGTH/2.0, DriveConstants.TRACK_WIDTH/2.0),
-                new Translation2d(DriveConstants.TRACK_LENGTH/2.0, DriveConstants.TRACK_WIDTH/2.0),
-                new Translation2d(DriveConstants.TRACK_LENGTH/2.0, DriveConstants.TRACK_WIDTH/2.0),  
+                new Translation2d(DriveConstants.TRACK_LENGTH/2.0, -DriveConstants.TRACK_WIDTH/2.0),
+                new Translation2d(-DriveConstants.TRACK_LENGTH/2.0, DriveConstants.TRACK_WIDTH/2.0),
+                new Translation2d(-DriveConstants.TRACK_LENGTH/2.0, -DriveConstants.TRACK_WIDTH/2.0),  
             };
         }
 

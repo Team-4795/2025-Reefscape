@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Drive.Drive;
+package frc.robot.subsystems.drive;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -66,22 +66,18 @@ public class Module {
         }
 
 
-        if (angleSetpoint != null) {      
+        if (angleSetpoint != null) {
             io.setTurnVoltage(turnFeePidController.calculate(getAngle().getRadians(), angleSetpoint.getRadians()));   
+        }
 
 
         if (speedSetPoint != null) {
-
-
-
-
             double adjustSpeedSetpoint = speedSetPoint*Math.cos(turnFeePidController.getPositionError());
 
             double velocityRadPerSec = adjustSpeedSetpoint / DriveConstants.WHEEL_RADIUS;
             io.setDriveVoltage(
                 drivFeedforward.calculate(velocityRadPerSec)
                     + driveFeddbackPidController.calculate(inputs.driveVelocityRadPerSec, velocityRadPerSec));  
-            }
         }
     }
 

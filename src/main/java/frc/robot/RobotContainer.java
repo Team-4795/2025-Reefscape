@@ -10,13 +10,12 @@ import org.json.simple.parser.ParseException;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.Commands.DriveCommands;
-import frc.robot.subsystems.Drive.Drive.Drive;
-import frc.robot.subsystems.Drive.Drive.GyroIO;
-import frc.robot.subsystems.Drive.Drive.GyroIOPigeon;
-import frc.robot.subsystems.Drive.Drive.ModuleIO;
-import frc.robot.subsystems.Drive.Drive.ModuleIOSim;
-import frc.robot.subsystems.Drive.Drive.ModuleIOTalonFX;
+import frc.robot.commands.DriveCommands;
+import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.drive.GyroIO;
+import frc.robot.subsystems.drive.GyroIOPigeon;
+import frc.robot.subsystems.drive.ModuleIOSim;
+import frc.robot.subsystems.drive.ModuleIOTalonFX;
 
 public class RobotContainer {
   
@@ -70,7 +69,6 @@ public class RobotContainer {
         () -> Constants.OIConstants.driverController.getLeftY(),
         () -> Constants.OIConstants.driverController.getLeftX(),
         () -> -Constants.OIConstants.driverController.getRightX() 
-        // () -> -Constants.OIConstants.driverController.getRightY()
         ));
 
     Constants.OIConstants.driverController.a().whileTrue(Commands.runOnce(()-> drive.zeroHeading(), drive));
