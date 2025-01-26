@@ -8,6 +8,7 @@ import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.revrobotics.spark.SparkLimitSwitch;
 
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
@@ -18,7 +19,6 @@ public class IntakeIOReal implements IntakeIO {
     private final TalonFX intakeMotor = new TalonFX(IntakeConstants.canID);
     
     private TalonFXConfiguration talonFXConfig = new TalonFXConfiguration();
-    // private TalonFXConfigurator taIonFXConfig = new TalonFXConfigurator(IntakeConstants.canID)
 
     private final StatusSignal<Current> current = intakeMotor.getStatorCurrent();
     private final StatusSignal<Voltage> voltage = intakeMotor.getMotorVoltage();
@@ -30,7 +30,6 @@ public class IntakeIOReal implements IntakeIO {
         talonFXConfig.CurrentLimits.StatorCurrentLimitEnable = true;
         talonFXConfig.CurrentLimits.StatorCurrentLimit = IntakeConstants.currentLimit;
 
-        // talonFXConfig.
 
         talonFXConfig.Audio.BeepOnBoot = true;
         
@@ -40,7 +39,7 @@ public class IntakeIOReal implements IntakeIO {
 
         BaseStatusSignal.setUpdateFrequencyForAll(50, velocity, voltage, current);
 
-        intakeMotor.optimizeBusUtilization(1.0);
+        intakeMotor.optimizeBusUtilization(4, 1);
 
         StatusCode response = intakeMotor.getConfigurator().apply(talonFXConfig);
         if (!response.isOK()) {
@@ -58,7 +57,12 @@ public class IntakeIOReal implements IntakeIO {
         inputs.angularVelocityRPM = velocity.getValueAsDouble() * 60;
         inputs.angularPositionRot = intakeMotor.getPosition().getValueAsDouble();
         inputs.currentAmps = current.getValueAsDouble();
-    inputs.voltage = voltage.getValueAsDouble();
+        inputs.voltage = voltage.getValueAsDouble();
+    }
+
+    @Override
+    public boolean hasGamepiece() {
+        return current.getValueAsDouble() > IntakeConstants.currentThreshold;
     }
 
     @Override

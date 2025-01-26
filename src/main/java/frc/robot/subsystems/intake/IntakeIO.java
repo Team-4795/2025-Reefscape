@@ -17,4 +17,8 @@ public interface IntakeIO {
 
     public default void setMotorSpeed(double speed) {
     }
+
+    public default boolean hasGamepiece() {
+        return false;
+    }
 }

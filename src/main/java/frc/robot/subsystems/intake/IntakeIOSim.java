@@ -10,7 +10,7 @@ import edu.wpi.first.math.system.plant.LinearSystemId;
 public class IntakeIOSim implements IntakeIO {
   // not done
   private final DCMotorSim motor = new DCMotorSim(LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60(1), 0.5, 0.1), DCMotor.getKrakenX60(1), 0.0, 0.0);
-
+  private boolean isGamepieceDetected = false; 
   @Override
   public void updateInputs(IntakeIOInputs inputs) {
     motor.update(0.02);
@@ -18,6 +18,11 @@ public class IntakeIOSim implements IntakeIO {
     inputs.angularPositionRot = motor.getAngularPositionRotations();
     inputs.angularVelocityRPM = motor.getAngularVelocityRPM();
     inputs.currentAmps = motor.getCurrentDrawAmps();
+    isGamepieceDetected = inputs.currentAmps > IntakeConstants.currentThreshold;
+  }
+  @Override
+  public boolean hasGamepiece(){
+    return isGamepieceDetected;
   }
 
   @Override

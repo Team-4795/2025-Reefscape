@@ -42,8 +42,8 @@ public class Intake extends SubsystemBase {
     public Command reverse() {
         return startEnd(() -> setIntakeSpeed(IntakeSetpoints.reverse), () -> setIntakeSpeed(0));
     }
-    public boolean isIntaking() {
-        return inputs.currentAmps > IntakeConstants.intakeCurrent && inputs.angularVelocityRPM > 2400;
+    public boolean hasGamepiece() {
+        return io.hasGamepiece();
     }
     
     @Override
@@ -52,6 +52,7 @@ public class Intake extends SubsystemBase {
         Logger.processInputs("Intake", inputs);
         io.setMotorSpeed(intakeSpeed);
         Logger.recordOutput("Intake/Intake speed", intakeSpeed);
+        Logger.recordOutput("Intake/Gamepiece detected", hasGamepiece());
     }
 }
 

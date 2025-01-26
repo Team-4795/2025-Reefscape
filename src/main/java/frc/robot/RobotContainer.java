@@ -24,7 +24,7 @@ public class RobotContainer {
     
     switch (Constants.currentMode) {
       case REAL:
-        intake = Intake.initialize(new IntakeIOSim());
+        intake = Intake.initialize(new IntakeIOReal());
         break;
       case SIM:
         intake = Intake.initialize(new IntakeIOSim());
