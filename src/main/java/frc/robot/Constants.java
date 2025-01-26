@@ -7,4 +7,10 @@ public class Constants {
         SIM,
         REPLAY
     }
+
+
+
+    public static final class CurrentLimits {
+        public static final int elevator = 30;
+    }
 }
