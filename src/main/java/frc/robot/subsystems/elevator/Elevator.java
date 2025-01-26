@@ -29,7 +29,7 @@ public class Elevator extends SubsystemBase {
         ElevatorConstants.kD,
         ElevatorConstants.constraints);
 
-    private ElevatorFeedforward feedforward = new ElevatorFeedforward(rightMovingSpeed, maxDistance, leftMovingSpeed);
+    private ElevatorFeedforward feedforward = new ElevatorFeedforward(ElevatorConstants.ks, ElevatorConstants.kg, ElevatorConstants.kv);
 
     
     public static Elevator getInstance(){

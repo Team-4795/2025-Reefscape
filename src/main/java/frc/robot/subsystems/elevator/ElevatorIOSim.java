@@ -20,26 +20,25 @@ public class ElevatorIOSim implements ElevatorIO {
 
 @Override 
 public void updateInputs(ElevatorIOInputs inputs) {
-    elevatorSim.update(ElevatorConstants.kDt);
-    inputs.elevatorPositionRads = elevatorSim.getAngleRads();
-    inputs.elevatorMotorPositionRads = elevatorSim.getAngleRads();
-    inputs.elevatorMotorVelocityRadPerSec = elevatorSim.getVelocityRadPerSec();
+    elevatorSim.update(0.02);
+    inputs.elevatorPositionMetersPerSecond = elevatorSim.getPositionMeters();
+    inputs.elevatorMotorPositionMeters = elevatorSim.getPositionMeters();
+    inputs.elevatorMotorVelocityMetersPerSecond = elevatorSim.getVelocityMetersPerSecond();
     inputs.elevatorCurrent = elevatorSim.getCurrentDrawAmps();
     inputs.elevatorAppliedVolts = elevatorAppliedVolts;
+}
 
 @Override
 public void moveElevator(double speed) {
-    ElevatorAppliedVolts = MathUtil.clamp(speed, speed, speed);
-    elevatorSim.setInputVoltage(elevatorAppliedVolts)
-  
+    elevatorAppliedVolts = MathUtil.clamp(speed, -1, 1);
+    elevatorSim.setInputVoltage(elevatorAppliedVolts);
 }
 
 @Override
 public void setVoltage(double volts){
-    ElevatorAppliedVolts = volts;
-    Logger.recordOutput("Setting output", volts);
-        elevatorSim.setInputVoltage(elevatorAppliedVolts - (voltage, voltage, voltage));
+    elevatorAppliedVolts = volts;
+    // Logger.recordOutput("Setting output", volts);
+    elevatorSim.setInputVoltage(volts);
 }
         
-    }
 }

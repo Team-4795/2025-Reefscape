@@ -5,19 +5,23 @@ import org.littletonrobotics.junction.AutoLog;
 public interface ElevatorIO {
     @AutoLog
     public static class ElevatorIOInputs {
-        public double ElevatorInputVolts = 0.0;
-        public double ElevatorAppliedVolts = 0.0;
-        public double ElevatorPositionRads = 0.0;
-        public double ElevatorVelocityRads = 0.0;
-        public double ElevatorCurrent = 0.0;
+        public double elevatorInputVolts = 0.0;
+        public double elevatorAppliedVolts = 0.0;
+        public double elevatorPositionMetersPerSecond = 0.0;
+        public double elevatorVelocityMetersPerSecond = 0.0;
+        public double elevatorCurrent = 0.0;
     
-        public double ElevatorMotorVelocityRadPerSec = 0.0;
-        public double ElevatorMotorPositionRads = 0.0;
+        public double elevatorMotorVelocityMetersPerSecond = 0.0;
+        public double elevatorMotorPositionMeters = 0.0;
     }
     
-        public default void updateInputs(ElevatorIOInputs inputs) {}
+        public default void updateInputs(ElevatorIOInputs inputs) {
+            
+        }
     
-        public default void moveElevator(double speed) {}
+        public default void moveElevator(double speed) {
+
+        }
     
         public default void setVoltage(double volts) {}   
         

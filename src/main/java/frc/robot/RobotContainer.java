@@ -36,7 +36,9 @@ public class RobotContainer {
 
   private void configureBindings() {
     CommandXboxController xboxController = new CommandXboxController(0);
-    xboxController.x().onTrue(Commands.run(() -> elevator.setMovingSpeedRPM(0, 0)));
+    xboxController.leftTrigger().onTrue(Commands.run(() -> elevator.setMovingSpeedRPM(0, 0)));
+    xboxController.rightTrigger().onTrue(Commands.run(() -> elevator.setMovingSpeedRPM(0,0)));
+
   }
 
   public Command getAutonomousCommand() {
