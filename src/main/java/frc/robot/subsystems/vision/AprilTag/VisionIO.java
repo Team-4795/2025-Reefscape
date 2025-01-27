@@ -12,6 +12,9 @@ public interface VisionIO {
         double[] timestamp = new double[] {};
         int[] tags = new int[] {};
 
+        int bestTag = 0;
+        Pose3d reefPose = new Pose3d();
+
         double roll = 0.0;
         double pitch = 0.0;
         double yaw = 0.0;
@@ -30,4 +33,6 @@ public interface VisionIO {
     public default void targetLeftReef() {}
 
     public default void targetRightReef() {}
+
+    public default void targetAprilTag() {}
 }

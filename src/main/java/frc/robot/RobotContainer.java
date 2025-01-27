@@ -20,17 +20,15 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.vision.AprilTag.*;;
 
 public class RobotContainer {
-  
-  private  Drive drive;
-   
-    private final Vision vision;
+  private Drive drive;
+  private Vision vision;
 
   public RobotContainer() throws IOException, ParseException {
   
       switch (Constants.currentMode) {
-        case REAL:
-          
-        drive = 
+      case REAL:
+      vision = Vision.initialize(new VisionIOReal[0]);
+      drive = 
           new Drive(
             new GyroIOPigeon(), 
             new ModuleIOTalonFX(0),
@@ -40,7 +38,7 @@ public class RobotContainer {
           break;
   
       case SIM:
-       
+      vision = Vision.initialize(new VisionIOSim());
       drive =
         new Drive(
           new GyroIO() {}, 
@@ -49,8 +47,8 @@ public class RobotContainer {
           new ModuleIOSim(), 
           new ModuleIOSim());
       
-        default:
-        
+      default:
+      vision = Vision.initialize(new VisionIOSim());
       drive =
       new Drive(
         new GyroIO() {}, 
@@ -62,8 +60,6 @@ public class RobotContainer {
         break;
     }
 
-
-    vision = Vision.initialize(new VisionIOReal(0));
     configureBindings();
     
   }

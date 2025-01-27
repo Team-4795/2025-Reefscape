@@ -2,11 +2,16 @@ package frc.robot.subsystems.vision.AprilTag;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.FieldConstants;
+import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.AprilTag.VisionIOInputsAutoLogged;
 
 import static frc.robot.subsystems.vision.AprilTag.VisionConstants.*;
@@ -51,6 +56,16 @@ public class Vision extends SubsystemBase{
         shouldUpdate[id] = !shouldUpdate[id];
     }
 
+    public Pose3d getBestReefPose() {
+        for(int i = 0; i < io.length; i++) {
+            if(inputs[i].reefPose != new Pose3d())
+            {
+                return inputs[i].reefPose;
+            }
+        }
+        return new Pose3d();
+    }
+
     // public void toggleReefMode() {
     //     io[0].switchPipeline();
     //     toggleShouldUpdate(0);
@@ -85,8 +100,7 @@ public class Vision extends SubsystemBase{
             Logger.processInputs("Vision/" + VisionConstants.cameraIds[i], inputs[i]);
         }
 
-        // Uncomment once drive subsystem is done
-        /* 
+
         for (int i = 0; i < io.length; i++) {
             for (int p = 0; p < inputs[i].pose.length; p++) {
                 Pose3d robotPose = inputs[i].pose[p];
@@ -123,6 +137,5 @@ public class Vision extends SubsystemBase{
                 }
             }
         }
-        */
     }
 }

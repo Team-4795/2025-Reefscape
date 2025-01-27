@@ -21,6 +21,9 @@ public class VisionConstants {
     public static final int aprilTagPipelineID = 0;
     public static final int reefDetectionPipelineID = 1;
 
+    public static final int[] redReefIds = {6, 7, 8, 9, 10, 11};
+    public static final int[] blueReefIds = {17, 18, 19, 20, 21, 22};
+
     public static final String[] cameraIds =
     new String[] {
         "Jermaine Coral",

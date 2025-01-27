@@ -54,6 +54,10 @@ public class VisionIOReal implements VisionIO {
         sortMode = PhotonTargetSortMode.Rightmost;
     }
 
+    @Override
+    public void targetAprilTag() {
+        sortMode = PhotonTargetSortMode.Largest;
+    }
 
     @Override
     public void updateInputs(VisionIOInputs inputs) {
@@ -61,8 +65,8 @@ public class VisionIOReal implements VisionIO {
         inputs.sortMode = sortMode.toString();
 
         result = camera.getAllUnreadResults();
-        if(camera.getPipelineIndex() == VisionConstants.aprilTagPipelineID) { // April tag pipeline index? Change later
 
+        if(camera.getPipelineIndex() == VisionConstants.aprilTagPipelineID) { // April tag pipeline index? Change later
             for(int i = 0; i < result.size(); i++) {
                 poseEstimator.update(result.get(i), camera.getCameraMatrix(), camera.getDistCoeffs()).ifPresentOrElse((pose) -> {
                     inputs.pose = new Pose3d[] {pose.estimatedPose};
@@ -74,6 +78,29 @@ public class VisionIOReal implements VisionIO {
                     inputs.tags = new int[] {};
                 });
             }
+
+            for(int i = 0; i < result.size(); i++)
+            {
+                result.get(i).targets.sort(sortMode.getComparator());
+                target = result.get(i).getBestTarget();
+
+                if(target != null) {
+                    inputs.bestTag = target.getFiducialId();
+
+                    for(int j = 0; j < VisionConstants.redReefIds.length; j++)
+                    {
+                        if(inputs.bestTag == VisionConstants.redReefIds[j])
+                        {
+                            VisionConstants.aprilTagFieldLayout.getTagPose(inputs.bestTag).ifPresentOrElse((pose) -> {
+                                inputs.reefPose = pose;
+                            }, () -> {
+                                inputs.reefPose = new Pose3d();
+                            });
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
         else if(camera.getPipelineIndex() == VisionConstants.reefDetectionPipelineID) { // Reef detection pippeline index? Change later
@@ -83,10 +110,12 @@ public class VisionIOReal implements VisionIO {
                 result.get(i).targets.sort(sortMode.getComparator());
                 target = result.get(i).getBestTarget();
 
-                inputs.roll = target.getSkew();
-                inputs.pitch = target.getPitch();
-                inputs.yaw = target.getYaw();
-                inputs.area = target.getArea();
+                if(target != null) {
+                    inputs.roll = target.getSkew();
+                    inputs.pitch = target.getPitch();
+                    inputs.yaw = target.getYaw();
+                    inputs.area = target.getArea();
+                }
             }
         }
     }

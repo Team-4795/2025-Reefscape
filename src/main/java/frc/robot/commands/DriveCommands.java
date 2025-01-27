@@ -2,18 +2,25 @@ package frc.robot.commands;
 
 import java.util.function.DoubleSupplier;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathConstraints;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.vision.AprilTag.Vision;
+import frc.robot.subsystems.vision.AprilTag.VisionConstants;
+import frc.robot.subsystems.vision.AprilTag.VisionIO.VisionIOInputs;
 
 public class DriveCommands {
     private DriveCommands() {}
@@ -31,10 +38,10 @@ public class DriveCommands {
           // Apply deadband
           double linearMagnitude =
               MathUtil.applyDeadband(
-                  Math.hypot(xSupplier.getAsDouble(), ySupplier.getAsDouble()), Constants.OIConstants.KAxisDeadband);
+                  Math.hypot(xSupplier.getAsDouble(), ySupplier.getAsDouble()), Constants.OIConstants.kAxisDeadband);
           Rotation2d linearDirection =
               new Rotation2d(xSupplier.getAsDouble(), ySupplier.getAsDouble());
-          double omega = MathUtil.applyDeadband(omegaSupplier.getAsDouble(), Constants.OIConstants.KAxisDeadband);
+          double omega = MathUtil.applyDeadband(omegaSupplier.getAsDouble(), Constants.OIConstants.kAxisDeadband);
 
           // Square values
           linearMagnitude = linearMagnitude * linearMagnitude;
@@ -61,5 +68,20 @@ public class DriveCommands {
         },
         drive);
   }
+
+  public static Command driveToBestReefPos(Drive drive) {
+    Pose2d reefPose = Vision.getInstance().getBestReefPose().toPose2d();
+    DoubleSupplier distance = () -> drive.getPose().getTranslation().getDistance(reefPose.getTranslation());
+
+    PathConstraints constraints = new PathConstraints(
+        3.0, 4.0,
+        Units.degreesToRadians(540), Units.degreesToRadians(720));
+
+    return AutoBuilder.pathfindToPose(
+        reefPose,
+        constraints,
+        0.0
+        ).until(() -> distance.getAsDouble() < 0.5);
+    }
 }
 
