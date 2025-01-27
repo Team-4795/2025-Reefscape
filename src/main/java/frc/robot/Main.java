@@ -4,12 +4,23 @@
 
 package frc.robot;
 
+import java.io.IOException;
+import java.text.ParseException;
+
 import edu.wpi.first.wpilibj.RobotBase;
 
-public final class Main {
+public final class Main  {
   private Main() {}
 
   public static void main(String... args) {
-    RobotBase.startRobot(Robot::new);
+    RobotBase.startRobot(() -> {
+      try {
+        return new Robot();
+      } catch (IOException | org.json.simple.parser.ParseException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+            return null;
+    });
   }
 }
