@@ -1,5 +1,7 @@
 package frc.robot.subsystems.elevator;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.REVLibError;
@@ -20,14 +22,17 @@ import edu.wpi.first.wpilibj.motorcontrol.Spark;
 
 public class ElevatorIOReal implements ElevatorIO {
 
-    private SparkFlex rightElevatorMotor = new SparkFlex(1, MotorType.kBrushless);
-    private SparkFlex leftElevatorMotor = new SparkFlex(2, MotorType.kBrushless); 
+    private SparkFlex rightElevatorMotor = new SparkFlex(ElevatorConstants.rightDeviceID, MotorType.kBrushless);
+    private SparkFlex leftElevatorMotor = new SparkFlex(ElevatorConstants.leftDeviceID, MotorType.kBrushless); 
 
-    private SparkFlexConfig config= new SparkFlexConfig();
+    private RelativeEncoder leftEncoder = leftElevatorMotor.getEncoder();
+    private RelativeEncoder rightEncoder = rightElevatorMotor.getEncoder();
+
+    private SparkFlexConfig config = new SparkFlexConfig();
      
     private double inputVolts = 0.0;
 
-    final VelocityVoltage m_request = new VelocityVoltage(0).withSlot(0);
+    //final VelocityVoltage m_request = new VelocityVoltage(0).withSlot(0);
 
     private boolean isEnabled;
     private boolean hasPlayed = false;
@@ -44,10 +49,24 @@ public class ElevatorIOReal implements ElevatorIO {
     rightElevatorMotor.clearFaults();
 }
 
-    
+    @Override
+    public void setVoltage(double voltage) {
+        inputVolts = voltage; 
+        leftElevatorMotor.setVoltage(voltage);
+        rightElevatorMotor.setVoltage(-voltage);
+    }
 
     @Override
     public void updateInputs(ElevatorIOInputs inputs) {
-        
+        //might want to separate by motor or you can average if they don't need to be ran in reverse
+        inputs.elevatorCurrent = leftElevatorMotor.getOutputCurrent();
+        inputs.elevatorAppliedVolts = leftElevatorMotor.getAppliedOutput() * leftElevatorMotor.getBusVoltage();
+
+        inputs.elevatorMotorPositionMeters = (leftEncoder.getPosition() + rightEncoder.getPosition()) / 2;
+        inputs.elevatorMotorVelocityMetersPerSecond = (leftEncoder.getVelocity() + rightEncoder.getVelocity()) / 2;
+        inputs.elevatorInputVolts = inputVolts;
+
+        Logger.recordOutput("Elevator/Left Motor", leftEncoder.getPosition());
+        Logger.recordOutput("Elevator/Right Motor", rightEncoder.getPosition());
     }
 }

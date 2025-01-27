@@ -1,6 +1,7 @@
 package frc.robot.subsystems.elevator;
 
-import java.lang.System.Logger;
+
+import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -30,14 +31,14 @@ public void updateInputs(ElevatorIOInputs inputs) {
 
 @Override
 public void moveElevator(double speed) {
-    elevatorAppliedVolts = MathUtil.clamp(speed, -1, 1);
+    elevatorAppliedVolts = MathUtil.clamp(speed * 12, -12, 12);
     elevatorSim.setInputVoltage(elevatorAppliedVolts);
 }
 
 @Override
 public void setVoltage(double volts){
     elevatorAppliedVolts = volts;
-    // Logger.recordOutput("Setting output", volts);
+    Logger.recordOutput("Setting output", volts);
     elevatorSim.setInputVoltage(volts);
 }
         
