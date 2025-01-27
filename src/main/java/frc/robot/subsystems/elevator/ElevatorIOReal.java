@@ -7,6 +7,10 @@ import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
 
+import edu.wpi.first.math.controller.ElevatorFeedforward;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.units.measure.AngularVelocity;
 
 import com.revrobotics.spark.SparkBase;
@@ -27,6 +31,15 @@ public class ElevatorIOReal implements ElevatorIO {
 
     private RelativeEncoder leftEncoder = leftElevatorMotor.getEncoder();
     private RelativeEncoder rightEncoder = rightElevatorMotor.getEncoder();
+
+
+    private final ElevatorFeedforward ffmodel = new ElevatorFeedforward(0, 0, 0);
+    private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(1, 1);
+    private final PIDController controller = new PIDController(1, 0, 0);
+    private final TrapezoidProfile profile = new TrapezoidProfile(constraints);
+    private TrapezoidProfile.State setpoint = new TrapezoidProfile.State();
+
+
 
     private SparkFlexConfig config = new SparkFlexConfig();
      
@@ -55,9 +68,15 @@ public class ElevatorIOReal implements ElevatorIO {
         rightElevatorMotor.setVoltage(voltage);
     }
 
+
     @Override
     public void updateInputs(ElevatorIOInputs inputs) {
         //might want to separate by motor or you can average if they don't need to be ran in reverse
+
+        if(!inputs.openLoop){
+            setVoltage(ffmodel.calculate(setpoint.velocity, setpoint.position) + controller.calculate(setpoint.velocity));
+            setpoint = profile.calculate(0.1, setpoint, setpoint);
+        }
         inputs.elevatorCurrent = leftElevatorMotor.getOutputCurrent();
         inputs.elevatorAppliedVolts = leftElevatorMotor.getAppliedOutput() * leftElevatorMotor.getBusVoltage();
 
@@ -67,6 +86,8 @@ public class ElevatorIOReal implements ElevatorIO {
 
         Logger.recordOutput("Elevator/Left Motor", leftEncoder.getPosition());
         Logger.recordOutput("Elevator/Right Motor", rightEncoder.getPosition());
+
+
     }
 
     @Override

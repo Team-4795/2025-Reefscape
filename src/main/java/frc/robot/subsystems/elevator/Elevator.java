@@ -26,8 +26,7 @@ public class Elevator extends SubsystemBase {
     private  PIDController controller = new PIDController(
         ElevatorConstants.kP,
         ElevatorConstants.kI,
-        ElevatorConstants.kD,
-        ElevatorConstants.constraints);
+        ElevatorConstants.kD);
 
     private ElevatorFeedforward feedforward = new ElevatorFeedforward(ElevatorConstants.ks, ElevatorConstants.kg, ElevatorConstants.kv);
 

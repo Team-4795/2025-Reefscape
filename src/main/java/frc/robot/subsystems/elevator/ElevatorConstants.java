@@ -1,8 +1,12 @@
 package frc.robot.subsystems.elevator;
 
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+
 public final class ElevatorConstants{
     public static final double maxDistance = 0.80;
-    public static double constraints = 0.2; //figure this out later
+    // public static double constraints = 0.2; //figure this out later
+    public static final Constraints constraints = new Constraints(4, 5); //change later
+
     public static double kD = 0; //figure this out later
     public static double kI = 0; //figure this out later
     public static double kP = 1; //figure this out later

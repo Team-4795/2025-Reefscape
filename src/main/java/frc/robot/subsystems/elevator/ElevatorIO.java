@@ -13,6 +13,7 @@ public interface ElevatorIO {
     
         public double elevatorMotorVelocityMetersPerSecond = 0.0;
         public double elevatorMotorPositionMeters = 0.0;
+        public boolean openLoop = false;
     }
     
         public default void updateInputs(ElevatorIOInputs inputs) {
