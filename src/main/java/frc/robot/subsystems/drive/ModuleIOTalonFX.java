@@ -68,28 +68,28 @@ public class ModuleIOTalonFX implements ModuleIO {
         break;
       case 1:
         // Front right
-        driveTalonFX = new TalonFX(10);
-        turnSparkMax = new SparkFlex(9, MotorType.kBrushless);
+        driveTalonFX = new TalonFX(3);
+        turnSparkMax = new SparkFlex(4, MotorType.kBrushless);
         turnAbsoluteEncoder = turnSparkMax.getAbsoluteEncoder();
         break;
       case 2:
         // Back left
-        driveTalonFX = new TalonFX(4);
-        turnSparkMax = new SparkFlex(6, MotorType.kBrushless);
+        driveTalonFX = new TalonFX(8);
+        turnSparkMax = new SparkFlex(7, MotorType.kBrushless);
         turnAbsoluteEncoder = turnSparkMax.getAbsoluteEncoder();
         driveTalonFX.setInverted(false);
         break;
       case 3:
         // Back right
-        driveTalonFX = new TalonFX(7);
-        turnSparkMax = new SparkFlex(8, MotorType.kBrushless);
+        driveTalonFX = new TalonFX(6);
+        turnSparkMax = new SparkFlex(5, MotorType.kBrushless);
         turnAbsoluteEncoder = turnSparkMax.getAbsoluteEncoder();
         break;
       default:
         throw new RuntimeException("Invalid module index");
     }
     
-    //final TalonFXConfiguration drivingConfig = new TalonFXConfiguration();    
+    final TalonFXConfiguration drivingConfig = new TalonFXConfiguration();    
     //turnSparkMax.restoreFactoryDefaults();
 
     //turnAbsoluteEncoder.setPositionConversionFactor(2 * Math.PI); // Radians
@@ -107,8 +107,8 @@ public class ModuleIOTalonFX implements ModuleIO {
 
     turnSparkMax.setInverted(isTurnMotorInverted);
 
-    driveTalonFX.setPosition(0);
     driveTalonFX.setInverted(true);
+    driveTalonFX.setPosition(0);
 
     turnRelativeEncoder.setPosition(0.0);
     encoderconfig.measurementPeriod(10);
