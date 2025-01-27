@@ -41,10 +41,10 @@ public class ElevatorIOReal implements ElevatorIO {
     public ElevatorIOReal(){
     
     config.smartCurrentLimit(ElevatorConstants.elevatorCurrentLimits);
-
-    leftElevatorMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     rightElevatorMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
-
+    config.follow(ElevatorConstants.rightDeviceID);
+    leftElevatorMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    
     leftElevatorMotor.clearFaults();
     rightElevatorMotor.clearFaults();
 }
@@ -52,8 +52,7 @@ public class ElevatorIOReal implements ElevatorIO {
     @Override
     public void setVoltage(double voltage) {
         inputVolts = voltage; 
-        leftElevatorMotor.setVoltage(voltage);
-        rightElevatorMotor.setVoltage(-voltage);
+        rightElevatorMotor.setVoltage(voltage);
     }
 
     @Override
@@ -69,4 +68,11 @@ public class ElevatorIOReal implements ElevatorIO {
         Logger.recordOutput("Elevator/Left Motor", leftEncoder.getPosition());
         Logger.recordOutput("Elevator/Right Motor", rightEncoder.getPosition());
     }
+
+    @Override
+    public void moveElevator(double speed) {
+        rightElevatorMotor.set(speed);
+
+    }
+    
 }

@@ -53,14 +53,18 @@ public class Elevator extends SubsystemBase {
     }
     
 
-    public void setMovingSpeedRPM(double leftSpeed, double rightSpeed){
-        leftMovingSpeed = leftSpeed;
-        rightMovingSpeed = rightSpeed;
-    }
+    // public void setMovingSpeedRPM(double leftSpeed, double rightSpeed){
+    //     leftMovingSpeed = leftSpeed;
+    //     rightMovingSpeed = rightSpeed;
+    // }
 
 
     public void setGoal(double goal){
 
+    }
+
+    public  void moveElevator(double speed) {
+        io.moveElevator(speed);
     }
 
     public double getTruePosition() {
