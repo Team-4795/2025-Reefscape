@@ -1,5 +1,7 @@
 package frc.robot.subsystems.arm;
 
+import java.util.Arrays;
+
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -8,11 +10,12 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Arm extends SubsystemBase {
     private ArmIOInputsAutoLogged inputs = new ArmIOInputsAutoLogged();
-    private boolean openLoop = true;
     private ArmIO io;
     private static Arm instance;
 
@@ -28,13 +31,16 @@ public class Arm extends SubsystemBase {
         return instance;
     }
 
-    public void setGoal(double angle) {
-        openLoop = false;
-        io.setGoal(angle);
+    public Command setGoal(double angle) {
+        return Commands.runOnce(() -> setOpenLoop(false)).andThen(() -> io.setGoal(angle), this);
+    }
+
+    public Command manualVoltage(double voltage) {
+        return Commands.startEnd(() -> io.setVoltage(voltage), () -> io.setVoltage(voltage), this);
     }
 
     public void setOpenLoop(boolean openLoop) {
-        this.openLoop = openLoop;
+        inputs.openLoop = openLoop;
     }
 
     public Pose3d getArmPose(){
@@ -47,7 +53,6 @@ public class Arm extends SubsystemBase {
     @Override
     public void periodic() {
         Logger.recordOutput(getName() + "/Pose", getArmPose());
-        this.inputs.openLoop = openLoop;
         io.updateInputs(inputs);
         Logger.processInputs(getName(), inputs);
     }

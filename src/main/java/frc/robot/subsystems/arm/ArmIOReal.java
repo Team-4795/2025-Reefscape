@@ -8,6 +8,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -17,8 +18,8 @@ public class ArmIOReal implements ArmIO {
     private SparkFlexConfig config = new SparkFlexConfig();
     private AbsoluteEncoder armEncoder = armMotor.getAbsoluteEncoder();
 
-    private final ArmFeedforward ffmodel = new ArmFeedforward(0, 0, 0);
-    private final PIDController controller = new PIDController(0.02, 0,0.00);
+    private final ArmFeedforward ffmodel = new ArmFeedforward(ArmConstants.kS, ArmConstants.kG, ArmConstants.kV, ArmConstants.kA);
+    private final PIDController controller = new PIDController(0.04, 0,0.00);
     private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(1, 2);
     private final TrapezoidProfile profile = new TrapezoidProfile(constraints);
     private TrapezoidProfile.State goal = new TrapezoidProfile.State(ArmConstants.Sim.INIT_ANGLE, 0);
@@ -39,7 +40,7 @@ public class ArmIOReal implements ArmIO {
     @Override
     public void updateInputs(ArmIOInputs inputs) {
         if(!inputs.openLoop) {
-            setVoltage(ffmodel.calculate(setpoint.velocity, setpoint.position) + controller.calculate(setpoint.velocity));
+            setVoltage(ffmodel.calculate(setpoint.velocity, setpoint.position) + controller.calculate(inputs.angularVelocity, setpoint.velocity));
             setpoint = profile.calculate(0.02, setpoint, goal);
         }
 
@@ -50,6 +51,6 @@ public class ArmIOReal implements ArmIO {
     }
 
     public void setVoltage(double voltage) {
-        armMotor.setVoltage(-voltage);
+        armMotor.setVoltage(MathUtil.clamp(-voltage, -12, 12));
     }
 }

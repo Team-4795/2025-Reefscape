@@ -1,5 +1,7 @@
 package frc.robot.subsystems.arm;
 
+import java.util.Arrays;
+
 import org.littletonrobotics.junction.AutoLog;
 
 public interface ArmIO {
@@ -10,7 +12,7 @@ public interface ArmIO {
         public double angularVelocity = 0.0;
         public double current = 0.0;
         public double goalAngle = 0.0;
-        public boolean openLoop = false;
+        public boolean openLoop = true;
         public double setpointVelocity = 0.0;
     }
 
@@ -22,6 +24,5 @@ public interface ArmIO {
     }
     
     public default void setGoal(double angle) {
-
     }
 }

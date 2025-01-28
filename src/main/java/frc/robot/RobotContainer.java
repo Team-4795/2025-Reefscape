@@ -30,11 +30,13 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    OIConstants.driverController.povUp().onTrue(Commands.runOnce(() -> Arm.getInstance().setGoal(Math.PI / 2)));
-    OIConstants.driverController.povDown().onTrue(Commands.runOnce(() -> Arm.getInstance().setGoal(0)));
+    if(OIConstants.driverController.isConnected()) {
+      OIConstants.driverController.povUp().onTrue(Arm.getInstance().setGoal(Math.PI / 2));
+      OIConstants.driverController.povDown().onTrue(Arm.getInstance().setGoal(0));
+    }
   }
 
   public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
+    return Arm.getInstance().setGoal(Math.PI / 2);
   }
 }

@@ -1,5 +1,9 @@
 package frc.robot.subsystems.arm;
 
+import java.util.Arrays;
+
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -17,41 +21,42 @@ public class ArmIOSim implements ArmIO {
         ArmConstants.Sim.GRAVITY,
         ArmConstants.Sim.INIT_ANGLE
     );
-    private double voltage = 0;
-    private final SimpleMotorFeedforward ffmodel = new SimpleMotorFeedforward(0.04, 1.65);
-    private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(1, 2);
+    private final ArmFeedforward ffmodel = new ArmFeedforward(
+        ArmConstants.kS,
+        ArmConstants.kG,
+        ArmConstants.kV,
+        ArmConstants.kA
+    );
+    private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(0.5, 1);
     private final PIDController controller = new PIDController(0.02, 0,0.00);
     private final TrapezoidProfile profile = new TrapezoidProfile(constraints);
-    private TrapezoidProfile.State goal = new TrapezoidProfile.State(ArmConstants.Sim.INIT_ANGLE + 0.5, 0);
+    private TrapezoidProfile.State goal = new TrapezoidProfile.State(ArmConstants.Sim.INIT_ANGLE, 0);
     private TrapezoidProfile.State setpoint = new TrapezoidProfile.State();
-
-    public ArmIOSim() {
-
-    }
+    private double voltage = 0;
 
     @Override
     public void setVoltage(double voltage) {
-        armSim.setInputVoltage(voltage);
+        armSim.setInputVoltage(MathUtil.clamp(voltage, -12, 12));
         this.voltage = voltage;
     }
 
     @Override
     public void setGoal(double angle) {
-        goal = new TrapezoidProfile.State(angle + 0.5, 0);
+        goal = new TrapezoidProfile.State(angle, 0);
     }
 
     @Override
     public void updateInputs(ArmIOInputs inputs) {
         if(!inputs.openLoop) {
-            setVoltage(ffmodel.calculate(setpoint.velocity) + controller.calculate(armSim.getVelocityRadPerSec(), setpoint.velocity));
             setpoint = profile.calculate(0.02, setpoint, goal);
+            setVoltage(ffmodel.calculate(inputs.angularPosition, setpoint.velocity));
         }
 
         inputs.angularPosition = armSim.getAngleRads();
         inputs.angularVelocity = armSim.getVelocityRadPerSec();
         inputs.current = armSim.getCurrentDrawAmps();
         inputs.voltage = voltage;
-        inputs.goalAngle = goal.position - 0.5;
+        inputs.goalAngle = goal.position;
         inputs.setpointVelocity = setpoint.velocity;
         armSim.update(0.02);
     }
