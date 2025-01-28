@@ -11,6 +11,7 @@ import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
 
 import com.revrobotics.spark.SparkBase;
@@ -32,6 +33,7 @@ public class ElevatorIOReal implements ElevatorIO {
     private RelativeEncoder leftEncoder = leftElevatorMotor.getEncoder();
     private RelativeEncoder rightEncoder = rightElevatorMotor.getEncoder();
 
+    private AbsoluteEncoder leftAbsoluteEncoder = leftElevatorMotor.getAbsoluteEncoder();
 
     private final ElevatorFeedforward ffmodel = new ElevatorFeedforward(0, 0, 0);
     private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(1, 1);
@@ -40,6 +42,8 @@ public class ElevatorIOReal implements ElevatorIO {
     private TrapezoidProfile.State setpoint = new TrapezoidProfile.State();
 
 
+    private double minPositionMeters = 0.0;
+    private double maxPositionMeters = 0.7112;
 
     private SparkFlexConfig config = new SparkFlexConfig();
      
@@ -49,6 +53,13 @@ public class ElevatorIOReal implements ElevatorIO {
 
     private boolean isEnabled;
     private boolean hasPlayed = false;
+
+    //zero stuff 
+    public void zeroElevator(){
+        double AbsolutePosition = leftAbsoluteEncoder.getPosition();
+        leftEncoder.setPosition(0);
+        rightEncoder.setPosition(0);
+    }
     
     
     public ElevatorIOReal(){
@@ -56,6 +67,9 @@ public class ElevatorIOReal implements ElevatorIO {
     config.smartCurrentLimit(ElevatorConstants.elevatorCurrentLimits);
     rightElevatorMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
     config.follow(ElevatorConstants.rightDeviceID);
+    config.inverted(true);
+    config.absoluteEncoder.positionConversionFactor(Units.inchesToMeters(11 / 8));
+    config.absoluteEncoder.velocityConversionFactor(Units.inchesToMeters(11 / 8) / 60);
     leftElevatorMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     
     leftElevatorMotor.clearFaults();
@@ -64,6 +78,12 @@ public class ElevatorIOReal implements ElevatorIO {
 
     @Override
     public void setVoltage(double voltage) {
+        double currentPosition = leftEncoder.getPosition(); // Relative encoder position
+        if (currentPosition <= minPositionMeters && voltage < 0) {
+            voltage = 0; // Prevent moving below the minimum position
+        } else if (currentPosition >= maxPositionMeters && voltage > 0) {
+            voltage = 0; // Prevent moving above the maximum position
+        }
         inputVolts = voltage; 
         rightElevatorMotor.setVoltage(voltage);
     }
@@ -80,8 +100,10 @@ public class ElevatorIOReal implements ElevatorIO {
         inputs.elevatorCurrent = leftElevatorMotor.getOutputCurrent();
         inputs.elevatorAppliedVolts = leftElevatorMotor.getAppliedOutput() * leftElevatorMotor.getBusVoltage();
 
-        inputs.elevatorMotorPositionMeters = (leftEncoder.getPosition() + rightEncoder.getPosition()) / 2;
-        inputs.elevatorMotorVelocityMetersPerSecond = (leftEncoder.getVelocity() + rightEncoder.getVelocity()) / 2;
+        //inputs.elevatorMotorPositionMeters = (leftEncoder.getPosition() + rightEncoder.getPosition()) / 2;
+        inputs.elevatorMotorPositionMeters = leftAbsoluteEncoder.getPosition();
+        //inputs.elevatorMotorVelocityMetersPerSecond = (leftEncoder.getVelocity() + rightEncoder.getVelocity()) / 2;
+        inputs.elevatorMotorVelocityMetersPerSecond = leftAbsoluteEncoder.getVelocity();
         inputs.elevatorInputVolts = inputVolts;
 
         Logger.recordOutput("Elevator/Left Motor", leftEncoder.getPosition());
@@ -92,8 +114,18 @@ public class ElevatorIOReal implements ElevatorIO {
 
     @Override
     public void moveElevator(double speed) {
-        rightElevatorMotor.set(speed);
 
+        double currentPosition = leftEncoder.getPosition();
+        if ((currentPosition <= minPositionMeters && speed < 0) || 
+            (currentPosition >= maxPositionMeters && speed > 0)) {
+            speed = 0; 
+        }
+        rightElevatorMotor.set(speed);
+    }
+
+    public void setSoftLimits(double min, double max) {
+        this.minPositionMeters = min;
+        this.maxPositionMeters = max;
+    }
     }
     
-}

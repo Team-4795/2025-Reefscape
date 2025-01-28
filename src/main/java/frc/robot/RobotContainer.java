@@ -36,8 +36,8 @@ public class RobotContainer {
 
   private void configureBindings() {
     CommandXboxController xboxController = new CommandXboxController(1);
-    xboxController.leftTrigger().onTrue(Commands.run(() -> elevator.moveElevator(xboxController.getLeftTriggerAxis()/2)));
-    xboxController.leftTrigger().onTrue(Commands.run(() -> elevator.moveElevator(-xboxController.getRightTriggerAxis()/2)));
+    xboxController.leftTrigger().whileTrue(Commands.run(() -> elevator.moveElevator(xboxController.getLeftTriggerAxis()/2)));
+    xboxController.leftTrigger().whileTrue(Commands.run(() -> elevator.moveElevator(-xboxController.getRightTriggerAxis()/2)));
 
 
   }

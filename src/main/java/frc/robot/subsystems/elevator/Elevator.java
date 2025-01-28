@@ -2,6 +2,7 @@ package frc.robot.subsystems.elevator;
 
 
 import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 
@@ -36,6 +37,7 @@ public class Elevator extends SubsystemBase {
     }
 
     public void periodic () {
+        Logger.processInputs(getName(), inputs);
 
     }
 

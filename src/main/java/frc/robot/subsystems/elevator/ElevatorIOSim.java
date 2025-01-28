@@ -45,7 +45,8 @@ if(!inputs.openLoop){
 
 @Override
 public void moveElevator(double speed) {
-    elevatorAppliedVolts = MathUtil.clamp(speed, 0, 0);
+    System.out.println("hi");
+    elevatorAppliedVolts = 12 * speed;
     elevatorSim.setInputVoltage(elevatorAppliedVolts);
 }
 
