@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIOReal;
+import frc.robot.subsystems.intake.IntakeIORealVortex;
 import frc.robot.subsystems.intake.IntakeIOSim;
 
 public class RobotContainer {
@@ -24,7 +25,7 @@ public class RobotContainer {
     
     switch (Constants.currentMode) {
       case REAL:
-        intake = Intake.initialize(new IntakeIOReal());
+        intake = Intake.initialize(new IntakeIORealVortex());
         break;
       case SIM:
         intake = Intake.initialize(new IntakeIOSim());
