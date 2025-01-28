@@ -35,8 +35,12 @@ public class Arm extends SubsystemBase {
         return Commands.runOnce(() -> setOpenLoop(false)).andThen(() -> io.setGoal(angle), this);
     }
 
+    public void resetAbsoluteEncoder() {
+        io.resetAbsoluteEncoder();
+    }
+
     public Command manualVoltage(double voltage) {
-        return Commands.startEnd(() -> io.setVoltage(voltage), () -> io.setVoltage(voltage), this);
+        return  Commands.runOnce(() -> setOpenLoop(true)).andThen(Commands.startEnd(() -> io.setVoltage(voltage), () -> io.setVoltage(voltage), this));
     }
 
     public void setOpenLoop(boolean openLoop) {

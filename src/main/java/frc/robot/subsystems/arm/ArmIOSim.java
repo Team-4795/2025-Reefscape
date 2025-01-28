@@ -38,6 +38,11 @@ public class ArmIOSim implements ArmIO {
     }
 
     @Override
+    public void resetAbsoluteEncoder() {
+        armSim.setState(0, armSim.getVelocityRadPerSec());
+    }
+
+    @Override
     public void setGoal(double angle) {
         goal = new TrapezoidProfile.State(angle, 0);
     }

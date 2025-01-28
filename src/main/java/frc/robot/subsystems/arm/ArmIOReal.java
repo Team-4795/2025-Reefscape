@@ -3,6 +3,7 @@ package frc.robot.subsystems.arm;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 
 import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -18,7 +19,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 public class ArmIOReal implements ArmIO {
     private final SparkFlex armMotor = new SparkFlex(ArmConstants.CAN_ID, MotorType.kBrushless);
     private SparkFlexConfig config = new SparkFlexConfig();
-    private AbsoluteEncoder armEncoder;
+    private SparkAbsoluteEncoder armEncoder;
 
     private final ArmFeedforward ffmodel = new ArmFeedforward(ArmConstants.kS, ArmConstants.kG, ArmConstants.kV, ArmConstants.kA);
     private final PIDController controller = new PIDController(0.04, 0,0.00);
@@ -41,6 +42,11 @@ public class ArmIOReal implements ArmIO {
     @Override
     public void setGoal(double angle) {
         goal = new TrapezoidProfile.State(angle, 0);
+    }
+
+    @Override
+    public void resetAbsoluteEncoder() {
+        armMotor.getEncoder().setPosition(0);
     }
 
     @Override

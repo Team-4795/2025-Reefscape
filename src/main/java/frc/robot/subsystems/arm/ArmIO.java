@@ -19,6 +19,10 @@ public interface ArmIO {
     public default void updateInputs(ArmIOInputs inputs) {
         
     }
+
+    public default void resetAbsoluteEncoder() {
+    }
+
     public default void setVoltage(double voltage) {
 
     }
