@@ -33,10 +33,17 @@ public class ArmIOReal implements ArmIO {
         config.idleMode(IdleMode.kBrake);
         config.absoluteEncoder.positionConversionFactor(2 * Math.PI / ArmConstants.Sim.GEARING);
         config.absoluteEncoder.velocityConversionFactor(2 * Math.PI / ArmConstants.Sim.GEARING / 60);
+        config.encoder.positionConversionFactor(2 * Math.PI / ArmConstants.Sim.GEARING);
+        config.encoder.velocityConversionFactor(2 * Math.PI / ArmConstants.Sim.GEARING / 60);
+        config.softLimit.forwardSoftLimitEnabled(true);
+        config.softLimit.reverseSoftLimitEnabled(false);
+        config.softLimit.forwardSoftLimit(ArmConstants.Sim.MAX_ANGLE);
+        config.softLimit.reverseSoftLimit(ArmConstants.Sim.MIN_ANGLE);
         armMotor.clearFaults();
         armMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         armEncoder = armMotor.getAbsoluteEncoder();
+        armMotor.getEncoder().setPosition(armEncoder.getPosition());
     }
 
     @Override
