@@ -1,5 +1,7 @@
 package frc.robot.subsystems.arm;
 
+import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
+
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -16,7 +18,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 public class ArmIOReal implements ArmIO {
     private final SparkFlex armMotor = new SparkFlex(ArmConstants.CAN_ID, MotorType.kBrushless);
     private SparkFlexConfig config = new SparkFlexConfig();
-    private AbsoluteEncoder armEncoder = armMotor.getAbsoluteEncoder();
+    private AbsoluteEncoder armEncoder;
 
     private final ArmFeedforward ffmodel = new ArmFeedforward(ArmConstants.kS, ArmConstants.kG, ArmConstants.kV, ArmConstants.kA);
     private final PIDController controller = new PIDController(0.04, 0,0.00);
@@ -28,8 +30,12 @@ public class ArmIOReal implements ArmIO {
     public ArmIOReal(){
         config.smartCurrentLimit(ArmConstants.CURRENT_LIMIT);
         config.idleMode(IdleMode.kBrake);
+        config.absoluteEncoder.positionConversionFactor(2 * Math.PI / ArmConstants.Sim.GEARING);
+        config.absoluteEncoder.velocityConversionFactor(2 * Math.PI / ArmConstants.Sim.GEARING / 60);
         armMotor.clearFaults();
         armMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+        armEncoder = armMotor.getAbsoluteEncoder();
     }
 
     @Override
@@ -44,8 +50,8 @@ public class ArmIOReal implements ArmIO {
             setpoint = profile.calculate(0.02, setpoint, goal);
         }
 
-        inputs.angularPosition = armEncoder.getPosition() * 2 * Math.PI;
-        inputs.angularVelocity = armEncoder.getVelocity() * 2 * Math.PI / 60;
+        inputs.angularPosition = armEncoder.getPosition();
+        inputs.angularVelocity = armEncoder.getVelocity();
         inputs.current = armMotor.getOutputCurrent();
         inputs.voltage = armMotor.getAppliedOutput();
     }

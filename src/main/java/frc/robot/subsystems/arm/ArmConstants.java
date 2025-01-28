@@ -3,7 +3,7 @@ package frc.robot.subsystems.arm;
 public class ArmConstants {
     public static int CAN_ID = 10;
     public static int CURRENT_LIMIT = 40;
-    public static double kG = 1.338;
+    public static double kG = 1.02;
     public static double kV = 1.01;
     public static double kA = 0.05;
     public static double kS = 0.1;
