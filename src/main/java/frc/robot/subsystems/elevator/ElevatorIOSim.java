@@ -43,6 +43,7 @@ if(!inputs.openLoop){
     inputs.elevatorCurrent = elevatorSim.getCurrentDrawAmps();
     inputs.elevatorAppliedVolts = elevatorAppliedVolts;
     elevatorSim.update(0.02);
+    
 }
 
 @Override

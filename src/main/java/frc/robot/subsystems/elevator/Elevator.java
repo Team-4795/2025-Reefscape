@@ -1,6 +1,8 @@
 package frc.robot.subsystems.elevator;
 
 
+import java.io.DataOutput;
+
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -21,6 +23,13 @@ public class Elevator extends SubsystemBase {
 
     @AutoLogOutput
     private double rightMovingSpeed = 0.0;
+
+    @AutoLogOutput
+    private double setGoal = 0.0;
+
+    @AutoLogOutput
+    private double setPoint = 0.0;
+    
 
     private double maxDistance = ElevatorConstants.maxDistance;
 

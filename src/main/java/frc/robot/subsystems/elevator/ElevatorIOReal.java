@@ -100,12 +100,20 @@ public class ElevatorIOReal implements ElevatorIO {
         }
         inputs.elevatorCurrent = leftElevatorMotor.getOutputCurrent();
         inputs.elevatorAppliedVolts = leftElevatorMotor.getAppliedOutput() * leftElevatorMotor.getBusVoltage();
+        
 
-        //inputs.elevatorMotorPositionMeters = (leftEncoder.getPosition() + rightEncoder.getPosition()) / 2;
         inputs.elevatorMotorPositionMeters = leftAbsoluteEncoder.getPosition();
-        //inputs.elevatorMotorVelocityMetersPerSecond = (leftEncoder.getVelocity() + rightEncoder.getVelocity()) / 2;
         inputs.elevatorMotorVelocityMetersPerSecond = leftAbsoluteEncoder.getVelocity();
         inputs.elevatorInputVolts = inputVolts;
+        Logger.recordOutput("Elevator/Setpoint/Position", setpoint.position);
+        Logger.recordOutput("Elevator/Setpoint/Velocity", setpoint.velocity);
+        
+        setVoltage(ffmodel.calculate(setpoint.velocity, setpoint.position) + controller.calculate(setpoint.velocity));
+        setpoint = profile.calculate(0.1, setpoint, goal);
+        
+        // log goal after updating
+        Logger.recordOutput("Elevator/Goal/Position", goal.position);
+        Logger.recordOutput("Elevator/Goal/Velocity", goal.velocity);
 
         Logger.recordOutput("Elevator/Left Motor", leftEncoder.getPosition());
         Logger.recordOutput("Elevator/Right Motor", rightEncoder.getPosition());
