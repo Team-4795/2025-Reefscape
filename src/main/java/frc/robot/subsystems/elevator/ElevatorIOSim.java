@@ -15,12 +15,12 @@ import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 
 public class ElevatorIOSim implements ElevatorIO {
-    private ElevatorSim elevatorSim = new ElevatorSim(0, 0.1, DCMotor.getNeoVortex(2), 0, 0, false, 0);
+    private ElevatorSim elevatorSim = new ElevatorSim(ElevatorConstants.kv, 1, DCMotor.getNeoVortex(2), 0, 0.7112, true, 0);
 
     private double elevatorAppliedVolts = 0.0;
 
 
-private final SimpleMotorFeedforward ffmodel = new SimpleMotorFeedforward(0, 0);
+private final SimpleMotorFeedforward ffmodel = new SimpleMotorFeedforward(ElevatorConstants.ks, ElevatorConstants.kv);
 private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(1, 1);
 private final PIDController controller = new PIDController(1, 0, 0);
 private final TrapezoidProfile profile = new TrapezoidProfile(constraints);
@@ -37,17 +37,16 @@ if(!inputs.openLoop){
     setpoint = profile.calculate(0.1, setpoint, setGoal);
     }
     
-    elevatorSim.update(0.02);
     inputs.elevatorPositionMetersPerSecond = elevatorSim.getPositionMeters();
     inputs.elevatorMotorPositionMeters = elevatorSim.getPositionMeters();
     inputs.elevatorMotorVelocityMetersPerSecond = elevatorSim.getVelocityMetersPerSecond();
     inputs.elevatorCurrent = elevatorSim.getCurrentDrawAmps();
     inputs.elevatorAppliedVolts = elevatorAppliedVolts;
+    elevatorSim.update(0.02);
 }
 
 @Override
 public void moveElevator(double speed) {
-    System.out.println("hi");
     elevatorAppliedVolts = 12 * speed;
     elevatorSim.setInputVoltage(elevatorAppliedVolts);
 }

@@ -17,11 +17,14 @@ public interface ElevatorIO {
     }
     
 
-        public 
-        
+                
         public default void updateInputs(ElevatorIOInputs inputs) {
             
         }
+
+        public default void setGoal(double goal) {
+
+    }        
     
         public default void moveElevator(double speed) {
 

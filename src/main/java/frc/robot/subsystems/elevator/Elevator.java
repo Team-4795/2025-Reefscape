@@ -5,7 +5,7 @@ import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
-
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -39,11 +39,6 @@ public class Elevator extends SubsystemBase {
         return instance;
     }
 
-    public void periodic () {
-        Logger.processInputs(getName(), inputs);
-
-    }
-
     public static Elevator initialize(ElevatorIO io){
         if(instance == null){
             instance = new Elevator(io);
@@ -66,6 +61,9 @@ public class Elevator extends SubsystemBase {
     public Commands setGoal(double goal){
         
         return Commands.runOnce(() -> setOpenLoop(false)).andThen(() -> io.setGoal(goal), this);
+    }
+
+
     }
 
     public  void moveElevator(double speed) {
@@ -92,10 +90,13 @@ public class Elevator extends SubsystemBase {
         this.setGoal(getPosition());
     }
 
-    
     @Override
-    public void setGoal(double angle) {
-        goal = new TrapezoidProfile.State(goal, 0);
+    public void periodic() {
+        io.updateInputs(inputs);
+        Logger.processInputs(getName(), inputs);
+
+    }
+
     }
 
 }
