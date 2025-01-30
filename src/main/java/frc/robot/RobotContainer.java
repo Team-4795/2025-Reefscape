@@ -42,6 +42,16 @@ public class RobotContainer {
      ()->intake.setIntakeSpeed(0), intake));
     m_driverController.b().whileTrue(Commands.startEnd(()->intake.setIntakeSpeed(-1),
      ()->intake.setIntakeSpeed(0), intake));
+
+
+     m_driverController.leftBumper()
+     .whileTrue(
+        Commands.sequence(
+          intake.intake().until(() -> intake.GamePieceInitial()),
+          intake.intakeSlow().until(() -> intake.GamePeiceFinal()),
+          Commands.run(() -> intake.setIntakeSpeed(0))
+        )
+     );
   }
 
   public Command getAutonomousCommand() {

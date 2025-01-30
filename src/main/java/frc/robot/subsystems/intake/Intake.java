@@ -1,7 +1,9 @@
 package frc.robot.subsystems.intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeSetpoints;
 import frc.robot.subsystems.intake.IntakeIO.IntakeIOInputs;
@@ -35,13 +37,34 @@ public class Intake extends SubsystemBase {
         intakeSpeed = speed;
     }
 
+    /*
+    public Command intakeS() {
+        return startEnd(() -> setIntakeSpeed(IntakeSetpoints.intake), () -> setIntakeSpeed(0)).until(() -> GamePieceInitial()).andThen(() -> intakeSlow().until(() -> GamePeiceFinal()));
+        return startEnd(() -> setIntakeSpeed(IntakeSetpoints.intake), () -> setIntakeSpeed(0)).until(() -> GamePieceInitial());
+    }
+    */
+
     public Command intake() {
         return startEnd(() -> setIntakeSpeed(IntakeSetpoints.intake), () -> setIntakeSpeed(0));
+    }
+
+    public Command intakeSlow() {
+        return startEnd(() -> setIntakeSpeed(IntakeSetpoints.slow), () -> setIntakeSpeed(0));
     }
 
     public Command reverse() {
         return startEnd(() -> setIntakeSpeed(IntakeSetpoints.reverse), () -> setIntakeSpeed(0));
     }
+
+    
+    public boolean GamePieceInitial() {
+        return 0 >= inputs.currentAmps;
+    }
+
+    public boolean GamePeiceFinal() {
+        return IntakeConstants.currentThreshold >= inputs.currentAmps; 
+    }
+
     public boolean hasGamepiece() {
         return io.hasGamepiece();
     }

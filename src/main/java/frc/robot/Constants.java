@@ -6,6 +6,7 @@ public final class Constants {
     public static final class IntakeSetpoints{
         //placeholders
         public static final double intake = -0.85;
+        public static final double slow = -0.4;
         public static final double reverse = 0.7;
     }
     
