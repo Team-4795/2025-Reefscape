@@ -40,6 +40,7 @@ public class ElevatorIOReal implements ElevatorIO {
     private final PIDController controller = new PIDController(1, 0, 0);
     private final TrapezoidProfile profile = new TrapezoidProfile(constraints);
     private TrapezoidProfile.State setpoint = new TrapezoidProfile.State();
+    private TrapezoidProfile.State goal = new TrapezoidProfile.State();
 
 
     private double minPositionMeters = 0.0;
@@ -95,7 +96,7 @@ public class ElevatorIOReal implements ElevatorIO {
 
         if(!inputs.openLoop){
             setVoltage(ffmodel.calculate(setpoint.velocity, setpoint.position) + controller.calculate(setpoint.velocity));
-            setpoint = profile.calculate(0.1, setpoint, setpoint);
+            setpoint = profile.calculate(0.1, setpoint, setGoal);
         }
         inputs.elevatorCurrent = leftElevatorMotor.getOutputCurrent();
         inputs.elevatorAppliedVolts = leftElevatorMotor.getAppliedOutput() * leftElevatorMotor.getBusVoltage();

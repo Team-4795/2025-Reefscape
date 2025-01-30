@@ -25,6 +25,8 @@ private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Co
 private final PIDController controller = new PIDController(1, 0, 0);
 private final TrapezoidProfile profile = new TrapezoidProfile(constraints);
 private TrapezoidProfile.State setpoint = new TrapezoidProfile.State();
+private TrapezoidProfile.State goal = new TrapezoidProfile.State();
+
 
 
 @Override 
@@ -32,7 +34,7 @@ public void updateInputs(ElevatorIOInputs inputs) {
 
 if(!inputs.openLoop){
      setVoltage(ffmodel.calculate(setpoint.velocity, setpoint.position) + controller.calculate(setpoint.velocity));
-    setpoint = profile.calculate(0.1, setpoint, setpoint);
+    setpoint = profile.calculate(0.1, setpoint, setGoal);
     }
     
     elevatorSim.update(0.02);

@@ -8,6 +8,9 @@ import edu.wpi.first.math.controller.ElevatorFeedforward;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 
 
 public class Elevator extends SubsystemBase {
@@ -60,8 +63,9 @@ public class Elevator extends SubsystemBase {
     // }
 
 
-    public void setGoal(double goal){
-
+    public Commands setGoal(double goal){
+        
+        return Commands.runOnce(() -> setOpenLoop(false)).andThen(() -> io.setGoal(goal), this);
     }
 
     public  void moveElevator(double speed) {
@@ -89,8 +93,12 @@ public class Elevator extends SubsystemBase {
     }
 
     
+    @Override
+    public void setGoal(double angle) {
+        goal = new TrapezoidProfile.State(goal, 0);
     }
 
+}
 
 
 
