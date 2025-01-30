@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 
 
 public class Elevator extends SubsystemBase {
@@ -58,15 +57,17 @@ public class Elevator extends SubsystemBase {
     // }
 
 
-    public Commands setGoal(double goal){
+    public Command setGoal(double goal){
         
         return Commands.runOnce(() -> setOpenLoop(false)).andThen(() -> io.setGoal(goal), this);
     }
 
-
+    public void setOpenLoop(boolean openLoop) {
+        inputs.openLoop = openLoop;
     }
 
     public  void moveElevator(double speed) {
+        setOpenLoop(true);
         io.moveElevator(speed);
     }
 
@@ -97,9 +98,7 @@ public class Elevator extends SubsystemBase {
 
     }
 
-    }
-
-}
+    } 
 
 
 

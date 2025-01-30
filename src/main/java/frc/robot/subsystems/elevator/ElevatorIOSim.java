@@ -34,7 +34,7 @@ public void updateInputs(ElevatorIOInputs inputs) {
 
 if(!inputs.openLoop){
      setVoltage(ffmodel.calculate(setpoint.velocity, setpoint.position) + controller.calculate(setpoint.velocity));
-    setpoint = profile.calculate(0.1, setpoint, setGoal);
+    setpoint = profile.calculate(0.02, setpoint, goal);
     }
     
     inputs.elevatorPositionMetersPerSecond = elevatorSim.getPositionMeters();
@@ -57,5 +57,11 @@ public void setVoltage(double volts){
     // Logger.recordOutput("Setting output", volts);
     elevatorSim.setInputVoltage(volts);
 }
+
+@Override
+public void setGoal(double height) {
+    goal = new TrapezoidProfile.State(height, 0.1);
         
 }
+
+    }

@@ -96,7 +96,7 @@ public class ElevatorIOReal implements ElevatorIO {
 
         if(!inputs.openLoop){
             setVoltage(ffmodel.calculate(setpoint.velocity, setpoint.position) + controller.calculate(setpoint.velocity));
-            setpoint = profile.calculate(0.1, setpoint, setGoal);
+            setpoint = profile.calculate(0.1, setpoint, goal);
         }
         inputs.elevatorCurrent = leftElevatorMotor.getOutputCurrent();
         inputs.elevatorAppliedVolts = leftElevatorMotor.getAppliedOutput() * leftElevatorMotor.getBusVoltage();
