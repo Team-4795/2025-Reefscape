@@ -31,16 +31,18 @@ public class Arm extends SubsystemBase {
         return instance;
     }
 
-    public Command setGoal(double angle) {
-        return Commands.runOnce(() -> setOpenLoop(false)).andThen(() -> io.setGoal(angle), this);
+    public void setGoal(double angle) {
+        setOpenLoop(false);
+        io.setGoal(angle);
     }
 
     public void resetAbsoluteEncoder() {
         io.resetAbsoluteEncoder();
     }
 
-    public Command manualVoltage(double voltage) {
-        return  Commands.runOnce(() -> setOpenLoop(true)).andThen(Commands.startEnd(() -> io.setVoltage(voltage), () -> io.setVoltage(voltage), this));
+    public void manualVoltage(double voltage) {
+        setOpenLoop(true);
+        io.setVoltage(voltage);
     }
 
     public void setOpenLoop(boolean openLoop) {

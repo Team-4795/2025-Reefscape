@@ -33,6 +33,7 @@ public class ArmIOReal implements ArmIO {
         config.idleMode(IdleMode.kBrake);
         config.absoluteEncoder.positionConversionFactor(2 * Math.PI / ArmConstants.Sim.GEARING);
         config.absoluteEncoder.velocityConversionFactor(2 * Math.PI / ArmConstants.Sim.GEARING / 60);
+        config.absoluteEncoder.inverted(true);
         config.encoder.positionConversionFactor(2 * Math.PI / ArmConstants.Sim.GEARING);
         config.encoder.velocityConversionFactor(2 * Math.PI / ArmConstants.Sim.GEARING / 60);
         config.softLimit.forwardSoftLimitEnabled(true);
@@ -59,7 +60,7 @@ public class ArmIOReal implements ArmIO {
     @Override
     public void updateInputs(ArmIOInputs inputs) {
         if(!inputs.openLoop) {
-            setVoltage(ffmodel.calculate(setpoint.velocity, setpoint.position) + controller.calculate(inputs.angularVelocity, setpoint.velocity));
+            setVoltage(ffmodel.calculate(setpoint.velocity, setpoint.position));
             setpoint = profile.calculate(0.02, setpoint, goal);
         }
 

@@ -4,13 +4,14 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmIOReal;
 import frc.robot.subsystems.arm.ArmIOSim;
+import frc.robot.subsystems.arm.ArmConstants;
 
 public class RobotContainer {  
   public RobotContainer() {
@@ -30,13 +31,24 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    if(OIConstants.driverController.isConnected()) {
-      OIConstants.driverController.povUp().onTrue(Arm.getInstance().setGoal(Math.PI / 2));
-      OIConstants.driverController.povDown().onTrue(Arm.getInstance().setGoal(0));
-    }
+      OIConstants.driverController.povUp().whileTrue(
+        Commands.startEnd(
+          () -> Arm.getInstance().manualVoltage(6), 
+          () -> Arm.getInstance().manualVoltage(0),
+          Arm.getInstance()
+        )
+      );
+      
+      OIConstants.driverController.povDown().whileTrue(
+        Commands.startEnd(
+          () -> Arm.getInstance().manualVoltage(-6), 
+          () -> Arm.getInstance().manualVoltage(0),
+          Arm.getInstance()
+        )
+      );
   }
 
   public Command getAutonomousCommand() {
-    return Arm.getInstance().setGoal(Math.PI / 2);
+    return Commands.runOnce(() -> Arm.getInstance().manualVoltage(ArmConstants.kG));
   }
 }
