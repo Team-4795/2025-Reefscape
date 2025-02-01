@@ -33,7 +33,7 @@ public class ElevatorIOReal implements ElevatorIO {
     private RelativeEncoder leftEncoder = leftElevatorMotor.getEncoder();
     private RelativeEncoder rightEncoder = rightElevatorMotor.getEncoder();
 
-    private AbsoluteEncoder leftAbsoluteEncoder = leftElevatorMotor.getAbsoluteEncoder();
+ //   private AbsoluteEncoder leftAbsoluteEncoder = leftElevatorMotor.getAbsoluteEncoder();
 
     private final ElevatorFeedforward ffmodel = new ElevatorFeedforward(0, 0, 0);
     private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(1, 1);
@@ -57,7 +57,7 @@ public class ElevatorIOReal implements ElevatorIO {
 
     //zero stuff 
     public void zeroElevator(){
-        double AbsolutePosition = leftAbsoluteEncoder.getPosition();
+    //    double AbsolutePosition = leftAbsoluteEncoder.getPosition();
         leftEncoder.setPosition(0);
         rightEncoder.setPosition(0);
     }
@@ -67,10 +67,14 @@ public class ElevatorIOReal implements ElevatorIO {
     
     config.smartCurrentLimit(ElevatorConstants.elevatorCurrentLimits);
     rightElevatorMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
-    config.follow(ElevatorConstants.rightDeviceID);
+    config.follow(ElevatorConstants.rightDeviceID, true);
     config.inverted(true);
-    config.absoluteEncoder.positionConversionFactor(Units.inchesToMeters(11 / 8));
-    config.absoluteEncoder.velocityConversionFactor(Units.inchesToMeters(11 / 8) / 60);
+
+    config.encoder.positionConversionFactor(Units.inchesToMeters(11/18));
+    config.encoder.velocityConversionFactor(Units.inchesToMeters(11/18)/60);
+    
+ //   config.absoluteEncoder.positionConversionFactor(Units.inchesToMeters(11 / 18));             use these later
+ //   config.absoluteEncoder.velocityConversionFactor(Units.inchesToMeters(11 / 18) / 60);        use these later
     leftElevatorMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     
     leftElevatorMotor.clearFaults();
@@ -81,9 +85,9 @@ public class ElevatorIOReal implements ElevatorIO {
     public void setVoltage(double voltage) {
         double currentPosition = leftEncoder.getPosition(); // Relative encoder position
         if (currentPosition <= minPositionMeters && voltage < 0) {
-            voltage = 0; // Prevent moving below the minimum position
+            voltage = 0;
         } else if (currentPosition >= maxPositionMeters && voltage > 0) {
-            voltage = 0; // Prevent moving above the maximum position
+            voltage = 0; 
         }
         inputVolts = voltage; 
         rightElevatorMotor.setVoltage(voltage);
@@ -96,20 +100,23 @@ public class ElevatorIOReal implements ElevatorIO {
 
         if(!inputs.openLoop){
             setVoltage(ffmodel.calculate(setpoint.velocity, setpoint.position) + controller.calculate(setpoint.velocity));
-            setpoint = profile.calculate(0.1, setpoint, goal);
+            setpoint = profile.calculate(0.02, setpoint, goal);
         }
         inputs.elevatorCurrent = leftElevatorMotor.getOutputCurrent();
         inputs.elevatorAppliedVolts = leftElevatorMotor.getAppliedOutput() * leftElevatorMotor.getBusVoltage();
         
-
-        inputs.elevatorMotorPositionMeters = leftAbsoluteEncoder.getPosition();
-        inputs.elevatorMotorVelocityMetersPerSecond = leftAbsoluteEncoder.getVelocity();
+        inputs.elevatorMotorPositionMeters = leftEncoder.getPosition();
+        inputs.elevatorMotorPositionMeters = rightEncoder.getPosition();
+        inputs.elevatorMotorVelocityMetersPerSecond = leftEncoder.getVelocity();
+        inputs.elevatorMotorVelocityMetersPerSecond = rightEncoder.getVelocity();
+       // inputs.elevatorMotorPositionMeters = leftAbsoluteEncoder.getPosition();
+       // inputs.elevatorMotorVelocityMetersPerSecond = leftAbsoluteEncoder.getVelocity();     will use absolute encoder later
         inputs.elevatorInputVolts = inputVolts;
         Logger.recordOutput("Elevator/Setpoint/Position", setpoint.position);
         Logger.recordOutput("Elevator/Setpoint/Velocity", setpoint.velocity);
         
         setVoltage(ffmodel.calculate(setpoint.velocity, setpoint.position) + controller.calculate(setpoint.velocity));
-        setpoint = profile.calculate(0.1, setpoint, goal);
+        setpoint = profile.calculate(0.02, setpoint, goal);
         
         // log goal after updating
         Logger.recordOutput("Elevator/Goal/Position", goal.position);
