@@ -20,6 +20,8 @@ public class RobotContainer {
   
   private final CommandXboxController m_driverController =
     new CommandXboxController(OperatorConstants.kDriverControllerPort);
+
+    private final CommandXboxController m_operatorController = new CommandXboxController(1);
   
   public RobotContainer() {
     
@@ -44,7 +46,7 @@ public class RobotContainer {
      ()->intake.setIntakeSpeed(0), intake));
 
 
-     m_driverController.leftBumper()
+     m_operatorController.povUp()
      .whileTrue(
         Commands.sequence(
           intake.intake().until(() -> intake.GamePieceInitial()),
@@ -52,6 +54,14 @@ public class RobotContainer {
           Commands.run(() -> intake.setIntakeSpeed(0))
         )
      );
+
+     m_operatorController.x().whileTrue(Commands.startEnd(() -> intake.setIntakeSpeed(-0.5),
+     () -> intake.setIntakeSpeed(0), intake));
+
+     m_operatorController.a().whileTrue(Commands.startEnd(() -> intake.setIntakeSpeed(0.5), 
+     () -> intake.setIntakeSpeed(0), intake));
+
+
   }
 
   public Command getAutonomousCommand() {

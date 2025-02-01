@@ -58,11 +58,11 @@ public class Intake extends SubsystemBase {
 
     
     public boolean GamePieceInitial() {
-        return 0 >= inputs.currentAmps;
+        return IntakeConstants.initialThreshold <= inputs.currentAmps;
     }
 
     public boolean GamePeiceFinal() {
-        return IntakeConstants.currentThreshold >= inputs.currentAmps; 
+        return IntakeConstants.currentThreshold <= inputs.currentAmps; 
     }
 
     public boolean hasGamepiece() {
