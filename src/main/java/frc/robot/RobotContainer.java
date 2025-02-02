@@ -27,84 +27,70 @@ public class RobotContainer {
 
   Elevator elevator;
 
-  
-  private  Drive drive;
-   
-    public RobotContainer() throws IOException, ParseException {
-    switch (Constants.currentMode){
-      case REAL:
-      elevator = Elevator.initialize(new ElevatorIOReal());
-      break;
-      case SIM:
-      elevator = Elevator.initialize(new ElevatorIOSim());
-      break;
-      case REPLAY:
-      elevator = Elevator.initialize(new ElevatorIOReal());
-      break;
-      default: 
-    }
-  
-      switch (Constants.currentMode) {
-        case REAL:
-          
-        drive = 
-          new Drive(
-            new GyroIOPigeon(), 
-            new ModuleIOTalonFX(0),
-            new ModuleIOTalonFX(1), 
-            new ModuleIOTalonFX(2), 
-            new ModuleIOTalonFX(3));
-          break;
-  
-      case SIM:
-       
-      drive =
-        new Drive(
-          new GyroIO() {}, 
-          new ModuleIOSim(), 
-          new ModuleIOSim(), 
-          new ModuleIOSim(), 
-          new ModuleIOSim());
-      
-        default:
-        
-      drive =
-      new Drive(
-        new GyroIO() {}, 
-        new ModuleIOSim(), 
-        new ModuleIOSim(), 
-        new ModuleIOSim(), 
-        new ModuleIOSim());
-    
-        break;
-    }
+  private Drive drive;
 
+  public RobotContainer() throws IOException, ParseException {
+    switch (Constants.currentMode) {
+      case REAL:
+        elevator = Elevator.initialize(new ElevatorIOReal());
+
+        drive = new Drive(
+            new GyroIOPigeon(),
+            new ModuleIOTalonFX(0),
+            new ModuleIOTalonFX(1),
+            new ModuleIOTalonFX(2),
+            new ModuleIOTalonFX(3));
+
+        break;
+      case SIM:
+        elevator = Elevator.initialize(new ElevatorIOSim());
+
+        drive = new Drive(
+            new GyroIO() {
+            },
+            new ModuleIOSim(),
+            new ModuleIOSim(),
+            new ModuleIOSim(),
+            new ModuleIOSim());
+
+        break;
+      case REPLAY:
+        elevator = Elevator.initialize(new ElevatorIOReal());
+        break;
+      default:
+
+        elevator = Elevator.initialize(new ElevatorIOSim());
+
+        drive = new Drive(
+            new GyroIO() {
+            },
+            new ModuleIOSim(),
+            new ModuleIOSim(),
+            new ModuleIOSim(),
+            new ModuleIOSim());
+    }
 
     configureBindings();
   }
 
   private void configureBindings() {
     drive.setDefaultCommand(
-      DriveCommands.joystickDrive(
-        drive,
-        () -> Constants.OIConstants.driverController.getLeftY(),
-        () -> Constants.OIConstants.driverController.getLeftX(),
-        () -> -Constants.OIConstants.driverController.getRightX() 
-        ));
+        DriveCommands.joystickDrive(
+            drive,
+            () -> Constants.OIConstants.driverController.getLeftY(),
+            () -> Constants.OIConstants.driverController.getLeftX(),
+            () -> -Constants.OIConstants.driverController.getRightX()));
 
-    Constants.OIConstants.driverController.a().whileTrue(Commands.runOnce(()-> drive.zeroHeading(), drive));
+    Constants.OIConstants.driverController.a().whileTrue(Commands.runOnce(() -> drive.zeroHeading(), drive));
 
-      }
-
-  
-
-  private void configureBindings() {
     CommandXboxController xboxController = new CommandXboxController(1);
-    xboxController.leftTrigger().whileTrue(Commands.run(() -> elevator.moveElevator(xboxController.getLeftTriggerAxis()/2)));
-    xboxController.rightTrigger().whileTrue(Commands.run(() -> elevator.moveElevator(-xboxController.getRightTriggerAxis()/2)));
-
+    xboxController.leftTrigger()
+        .whileTrue(Commands.run(() -> elevator.moveElevator(xboxController.getLeftTriggerAxis() / 2)));
+    xboxController.rightTrigger()
+        .whileTrue(Commands.run(() -> elevator.moveElevator(-xboxController.getRightTriggerAxis() / 2)));
 
   }
+
 
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");
