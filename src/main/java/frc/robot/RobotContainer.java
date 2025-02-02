@@ -22,6 +22,7 @@ import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorIO;
 import frc.robot.subsystems.elevator.ElevatorIOReal;
 import frc.robot.subsystems.elevator.ElevatorIOSim;
+import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIOReal;
@@ -140,6 +141,21 @@ public class RobotContainer {
      Constants.OIConstants.operatorController.a().whileTrue(Commands.startEnd(() -> intake.setIntakeSpeed(0.5), 
      () -> intake.setIntakeSpeed(0), intake));
 
+     OIConstants.driverController.povUp().whileTrue(
+        Commands.startEnd(
+          () -> Arm.getInstance().manualVoltage(6), 
+          () -> Arm.getInstance().manualVoltage(0),
+          Arm.getInstance()
+        )
+      );
+      
+      OIConstants.driverController.povDown().whileTrue(
+        Commands.startEnd(
+          () -> Arm.getInstance().manualVoltage(-6), 
+          () -> Arm.getInstance().manualVoltage(0),
+          Arm.getInstance()
+        )
+      );
   }
 
   public Command getAutonomousCommand() {
