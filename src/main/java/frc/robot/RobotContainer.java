@@ -28,13 +28,18 @@ import frc.robot.subsystems.intake.IntakeIOReal;
 import frc.robot.subsystems.intake.IntakeIORealVortex;
 import frc.robot.subsystems.intake.IntakeIOSim;
 import org.littletonrobotics.junction.Logger;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.ArmConstants;
+import frc.robot.subsystems.arm.ArmIO;
+import frc.robot.subsystems.arm.ArmIOSim;
+import frc.robot.subsystems.arm.ArmIOReal;
 
+
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
-
-public class RobotContainer {
+public class RobotContainer {  
 
   private Elevator elevator;
   private Drive drive;
@@ -50,6 +55,8 @@ public class RobotContainer {
       case REAL:
         elevator = Elevator.initialize(new ElevatorIOReal());
         intake = Intake.initialize(new IntakeIORealVortex());
+        Arm.initialize(new ArmIOReal());
+;
 
         drive = new Drive(
             new GyroIOPigeon(),
@@ -62,6 +69,8 @@ public class RobotContainer {
       case SIM:
         elevator = Elevator.initialize(new ElevatorIOSim());
         intake = Intake.initialize(new IntakeIOSim());
+        Arm.initialize(new ArmIOSim());
+
 
         drive = new Drive(
             new GyroIO() {
@@ -72,13 +81,13 @@ public class RobotContainer {
             new ModuleIOSim());
 
         break;
-      case REPLAY:
-        elevator = Elevator.initialize(new ElevatorIOReal());
-        break;
+
       default:
 
         elevator = Elevator.initialize(new ElevatorIOSim());
         intake = Intake.initialize(new IntakeIOSim());
+        Arm.initialize(new ArmIOSim());
+
 
         drive = new Drive(
             new GyroIO() {
@@ -90,7 +99,6 @@ public class RobotContainer {
 
             
     }
-
     configureBindings();
   }
 
@@ -135,6 +143,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
+    return Commands.runOnce(() -> Arm.getInstance().manualVoltage(ArmConstants.kG));
   }
 }
