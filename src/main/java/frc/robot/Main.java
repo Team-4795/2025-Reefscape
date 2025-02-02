@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj.RobotBase;
 public final class Main  {
   private Main() {}
 
+  public String Bruh = "Bruh";
+
   public static void main(String... args) {
     RobotBase.startRobot(() -> {
       try {

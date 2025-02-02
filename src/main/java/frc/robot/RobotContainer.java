@@ -22,17 +22,34 @@ import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorIO;
 import frc.robot.subsystems.elevator.ElevatorIOReal;
 import frc.robot.subsystems.elevator.ElevatorIOSim;
+import frc.robot.Constants.OperatorConstants;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeIOReal;
+import frc.robot.subsystems.intake.IntakeIORealVortex;
+import frc.robot.subsystems.intake.IntakeIOSim;
+import org.littletonrobotics.junction.Logger;
+
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+
 
 public class RobotContainer {
 
-  Elevator elevator;
-
+  private Elevator elevator;
   private Drive drive;
+  private Intake intake;
+  
+  private final CommandXboxController m_driverController =
+    new CommandXboxController(OperatorConstants.kDriverControllerPort);
+
+    private final CommandXboxController m_operatorController = new CommandXboxController(1);
 
   public RobotContainer() throws IOException, ParseException {
     switch (Constants.currentMode) {
       case REAL:
         elevator = Elevator.initialize(new ElevatorIOReal());
+        intake = Intake.initialize(new IntakeIORealVortex());
 
         drive = new Drive(
             new GyroIOPigeon(),
@@ -44,6 +61,7 @@ public class RobotContainer {
         break;
       case SIM:
         elevator = Elevator.initialize(new ElevatorIOSim());
+        intake = Intake.initialize(new IntakeIOSim());
 
         drive = new Drive(
             new GyroIO() {
@@ -60,6 +78,7 @@ public class RobotContainer {
       default:
 
         elevator = Elevator.initialize(new ElevatorIOSim());
+        intake = Intake.initialize(new IntakeIOSim());
 
         drive = new Drive(
             new GyroIO() {
@@ -68,6 +87,8 @@ public class RobotContainer {
             new ModuleIOSim(),
             new ModuleIOSim(),
             new ModuleIOSim());
+
+            
     }
 
     configureBindings();
@@ -89,8 +110,29 @@ public class RobotContainer {
     xboxController.rightTrigger()
         .whileTrue(Commands.run(() -> elevator.moveElevator(-xboxController.getRightTriggerAxis() / 2)));
 
-  }
 
+    Constants.OIConstants.driverController.a().whileTrue(Commands.startEnd(()->intake.setIntakeSpeed(1),
+     ()->intake.setIntakeSpeed(0), intake));
+    m_driverController.b().whileTrue(Commands.startEnd(()->intake.setIntakeSpeed(-1),
+     ()->intake.setIntakeSpeed(0), intake));
+
+
+     Constants.OIConstants.operatorController.povUp()
+     .whileTrue(
+        Commands.sequence(
+          intake.intake().until(() -> intake.GamePieceInitial()),
+          intake.intakeSlow().until(() -> intake.GamePeiceFinal()),
+          Commands.run(() -> intake.setIntakeSpeed(0))
+        )
+     );
+
+     Constants.OIConstants.operatorController.x().whileTrue(Commands.startEnd(() -> intake.setIntakeSpeed(-0.5),
+     () -> intake.setIntakeSpeed(0), intake));
+
+     Constants.OIConstants.operatorController.a().whileTrue(Commands.startEnd(() -> intake.setIntakeSpeed(0.5), 
+     () -> intake.setIntakeSpeed(0), intake));
+
+  }
 
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");
