@@ -16,12 +16,33 @@ import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.elevator.ElevatorIO;
+import frc.robot.subsystems.elevator.ElevatorIOReal;
+import frc.robot.subsystems.elevator.ElevatorIOSim;
 
 public class RobotContainer {
+
+  Elevator elevator;
+
   
   private  Drive drive;
    
     public RobotContainer() throws IOException, ParseException {
+    switch (Constants.currentMode){
+      case REAL:
+      elevator = Elevator.initialize(new ElevatorIOReal());
+      break;
+      case SIM:
+      elevator = Elevator.initialize(new ElevatorIOSim());
+      break;
+      case REPLAY:
+      elevator = Elevator.initialize(new ElevatorIOReal());
+      break;
+      default: 
+    }
   
       switch (Constants.currentMode) {
         case REAL:
@@ -76,6 +97,14 @@ public class RobotContainer {
       }
 
   
+
+  private void configureBindings() {
+    CommandXboxController xboxController = new CommandXboxController(1);
+    xboxController.leftTrigger().whileTrue(Commands.run(() -> elevator.moveElevator(xboxController.getLeftTriggerAxis()/2)));
+    xboxController.rightTrigger().whileTrue(Commands.run(() -> elevator.moveElevator(-xboxController.getRightTriggerAxis()/2)));
+
+
+  }
 
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");
