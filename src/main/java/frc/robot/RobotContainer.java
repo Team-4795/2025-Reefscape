@@ -49,6 +49,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return Commands.runOnce(() -> Arm.getInstance().manualVoltage(ArmConstants.kG));
+    return Commands.runOnce(() -> Arm.getInstance().manualVoltage(ArmConstants.DEFAULTkG));
   }
 }

@@ -5,10 +5,24 @@ import edu.wpi.first.math.util.Units;
 public class ArmConstants {
     public static int CAN_ID = 14;
     public static int CURRENT_LIMIT = 40;
-    public static double kG = 1.02;
-    public static double kV = 1.01;
-    public static double kA = 0.05;
-    public static double kS = 0.1;
+
+    // Default FF
+    public static double DEFAULTkG = 1.02;
+    public static double DEFAULTkV = 1.01;
+    public static double DEFAULTkA = 0.05;
+    public static double DEFAULTkS = 0.1;
+
+    // Algae FF
+    public static double ALGAEkG = 1.02;
+    public static double ALGAEkV = 1.01;
+    public static double ALGAEkA = 0.05;
+    public static double ALGAEkS = 0.1;
+
+    // Default FF
+    public static double CORALkG = 1.02;
+    public static double CORALkV = 1.01;
+    public static double CORALkA = 0.05;
+    public static double CORALkS = 0.1;
 
     public static class Sim {
         public static double GEARING = 60;

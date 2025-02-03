@@ -13,4 +13,10 @@ public class Constants {
     public static class OIConstants {
         public static final CommandXboxController driverController = new CommandXboxController(0);
     }
+
+    public static enum Gamepiece {
+        ALGAE,
+        CORAL,
+        NONE,
+    }
 }
