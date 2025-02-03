@@ -114,8 +114,9 @@ public class RobotContainer {
         .whileTrue(Commands.run(() -> elevator.moveElevator(-xboxController.getRightTriggerAxis() / 2)));
 
 
-    Constants.OIConstants.driverController.a().whileTrue(Commands.startEnd(()->intake.setIntakeSpeed(1),
+    Constants.OIConstants.driverController.x().whileTrue(Commands.startEnd(()->intake.setIntakeSpeed(1),
      ()->intake.setIntakeSpeed(0), intake));
+    
     OIConstants.driverController.b().whileTrue(Commands.startEnd(()->intake.setIntakeSpeed(-1),
      ()->intake.setIntakeSpeed(0), intake));
 
