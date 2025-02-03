@@ -18,12 +18,7 @@ public class ArmIOSim implements ArmIO {
         ArmConstants.Sim.GRAVITY,
         ArmConstants.Sim.INIT_ANGLE
     );
-    private final ArmFeedforward ffmodel = new ArmFeedforward(
-        ArmConstants.kS,
-        ArmConstants.kG,
-        ArmConstants.kV,
-        ArmConstants.kA
-    );
+    private ArmFeedforward ffmodel = new ArmFeedforward(ArmConstants.DEFAULTkS, ArmConstants.DEFAULTkG, ArmConstants.DEFAULTkV, ArmConstants.DEFAULTkA);
     private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(0.5, 1);
     private final PIDController controller = new PIDController(0.02, 0,0.00);
     private final TrapezoidProfile profile = new TrapezoidProfile(constraints);
@@ -45,6 +40,11 @@ public class ArmIOSim implements ArmIO {
     @Override
     public void setGoal(double angle) {
         goal = new TrapezoidProfile.State(angle, 0);
+    }
+
+    @Override
+    public void setFFValues(double kS, double kG, double kV, double kA) {
+        ffmodel = new ArmFeedforward(kS, kG, kV, kA);
     }
 
     @Override

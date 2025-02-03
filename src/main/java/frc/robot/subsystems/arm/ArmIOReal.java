@@ -21,7 +21,7 @@ public class ArmIOReal implements ArmIO {
     private SparkFlexConfig config = new SparkFlexConfig();
     private SparkAbsoluteEncoder armEncoder;
 
-    private final ArmFeedforward ffmodel = new ArmFeedforward(ArmConstants.kS, ArmConstants.kG, ArmConstants.kV, ArmConstants.kA);
+    private ArmFeedforward ffmodel = new ArmFeedforward(ArmConstants.DEFAULTkS, ArmConstants.DEFAULTkG, ArmConstants.DEFAULTkV, ArmConstants.DEFAULTkA);
     private final PIDController controller = new PIDController(0.04, 0,0.00);
     private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(1, 2);
     private final TrapezoidProfile profile = new TrapezoidProfile(constraints);
@@ -53,6 +53,11 @@ public class ArmIOReal implements ArmIO {
     }
 
     @Override
+    public void setFFValues(double kS, double kG, double kV, double kA) {
+        ffmodel = new ArmFeedforward(kS, kG, kV);
+    }
+
+    @Override
     public void resetAbsoluteEncoder() {
         armMotor.getEncoder().setPosition(0);
     }
@@ -60,6 +65,7 @@ public class ArmIOReal implements ArmIO {
     @Override
     public void updateInputs(ArmIOInputs inputs) {
         if(!inputs.openLoop) {
+            // setVoltage(ffmodel.calculate(setpoint.velocity, setpoint.position) + controller.calculate(inputs.angularVelocity, setpoint.velocity));
             setVoltage(ffmodel.calculate(setpoint.velocity, setpoint.position));
             setpoint = profile.calculate(0.02, setpoint, goal);
         }

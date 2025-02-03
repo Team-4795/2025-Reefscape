@@ -13,6 +13,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.Gamepiece;
 
 public class Arm extends SubsystemBase {
     private ArmIOInputsAutoLogged inputs = new ArmIOInputsAutoLogged();
@@ -54,6 +55,20 @@ public class Arm extends SubsystemBase {
             new Translation3d(10 + -(0.45) * Math.cos(inputs.angularPosition), 1, 1 + (0.45) * Math.sin(inputs.angularPosition)),
             new Rotation3d(0, inputs.angularPosition, 0)
         );
+    }
+
+    public void setFFMode(Gamepiece gamepieceType) {
+        switch (gamepieceType) {
+            case CORAL:
+                io.setFFValues(ArmConstants.CORALkS, ArmConstants.CORALkG, ArmConstants.CORALkV, ArmConstants.CORALkA);
+                break;
+            case ALGAE:
+                io.setFFValues(ArmConstants.ALGAEkS, ArmConstants.ALGAEkG, ArmConstants.CORALkV, ArmConstants.CORALkA);
+                break;
+            case NONE:
+                io.setFFValues(ArmConstants.DEFAULTkS, ArmConstants.DEFAULTkG, ArmConstants.DEFAULTkV, ArmConstants.DEFAULTkA);
+                break;
+        }
     }
 
     @Override

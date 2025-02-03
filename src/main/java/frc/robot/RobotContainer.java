@@ -23,7 +23,6 @@ import frc.robot.subsystems.elevator.ElevatorIO;
 import frc.robot.subsystems.elevator.ElevatorIOReal;
 import frc.robot.subsystems.elevator.ElevatorIOSim;
 import frc.robot.Constants.OIConstants;
-import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIOReal;
 import frc.robot.subsystems.intake.IntakeIORealVortex;
@@ -45,11 +44,6 @@ public class RobotContainer {
   private Elevator elevator;
   private Drive drive;
   private Intake intake;
-  
-  private final CommandXboxController m_driverController =
-    new CommandXboxController(OperatorConstants.kDriverControllerPort);
-
-    private final CommandXboxController m_operatorController = new CommandXboxController(1);
 
   public RobotContainer() throws IOException, ParseException {
     switch (Constants.currentMode) {
@@ -122,7 +116,7 @@ public class RobotContainer {
 
     Constants.OIConstants.driverController.a().whileTrue(Commands.startEnd(()->intake.setIntakeSpeed(1),
      ()->intake.setIntakeSpeed(0), intake));
-    m_driverController.b().whileTrue(Commands.startEnd(()->intake.setIntakeSpeed(-1),
+    OIConstants.driverController.b().whileTrue(Commands.startEnd(()->intake.setIntakeSpeed(-1),
      ()->intake.setIntakeSpeed(0), intake));
 
 
@@ -159,6 +153,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return Commands.runOnce(() -> Arm.getInstance().manualVoltage(ArmConstants.kG));
+    return Commands.runOnce(() -> Arm.getInstance().manualVoltage(ArmConstants.DEFAULTkG));
   }
 }
