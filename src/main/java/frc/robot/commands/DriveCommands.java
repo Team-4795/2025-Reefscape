@@ -2,11 +2,14 @@ package frc.robot.commands;
 
 import java.util.function.DoubleSupplier;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -23,6 +26,8 @@ import frc.robot.subsystems.vision.AprilTag.VisionConstants;
 import frc.robot.subsystems.vision.AprilTag.VisionIO.VisionIOInputs;
 
 public class DriveCommands {
+    private static Pose2d reefPose;
+
     private DriveCommands() {}
 
   /**
@@ -70,7 +75,9 @@ public class DriveCommands {
   }
 
   public static Command driveToBestReefPos(Drive drive) {
-    Pose2d reefPose = Vision.getInstance().getBestReefPose().toPose2d();
+    reefPose = Vision.getInstance().getBestReefPose().toPose2d();
+    Logger.recordOutput("Reef Pose", reefPose);
+
     DoubleSupplier distance = () -> drive.getPose().getTranslation().getDistance(reefPose.getTranslation());
 
     PathConstraints constraints = new PathConstraints(

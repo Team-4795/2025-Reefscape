@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 // import frc.robot.subsystems.MAXSwerve.Drive;
+import frc.robot.subsystems.drive.Drive;
 
 public class VisionIOSim implements VisionIO {
     VisionSystemSim visionSim;
@@ -23,7 +24,7 @@ public class VisionIOSim implements VisionIO {
     int cameraId;
 
     public VisionIOSim() {
-        cameraId = 0;
+        cameraId = 2;
         visionSim = new VisionSystemSim("main");
         visionSim.addAprilTags(VisionConstants.aprilTagFieldLayout);
 
@@ -58,9 +59,9 @@ public class VisionIOSim implements VisionIO {
         // }
 
         // Uncomment once drive is done
-        //visionSim.update(Drive.getInstance().getPose());
+        visionSim.update(Drive.getInstance().getPose());
         
-        visionSim.update(new Pose2d(12, 12, new Rotation2d(45)));
+        // visionSim.update(new Pose2d(12, 12, new Rotation2d(45)));
         visionSim.getDebugField();
     }
 }

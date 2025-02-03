@@ -60,13 +60,13 @@ public class VisionConstants {
         // Left Camera
         new Transform3d(
             new Translation3d(
-                -0.375,
-                -0.375,
-                Units.inchesToMeters(7)), 
+                -Units.inchesToMeters(12.8),
+                -Units.inchesToMeters(12),
+                Units.inchesToMeters(10)), 
             new Rotation3d(
                 0, 
                 Units.degreesToRadians(-30), 
-                Units.degreesToRadians(130))),
+                Units.degreesToRadians(-45))),
 
         // Right Camera
         new Transform3d(
