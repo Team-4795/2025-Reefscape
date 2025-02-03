@@ -32,24 +32,28 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 
 /**
- * Module IO implementation for SparkMax drive motor controller, SparkMax turn motor controller (NEO
+ * Module IO implementation for SparkMax drive motor controller, SparkMax turn
+ * motor controller (NEO
  * or NEO 550), and analog absolute encoder connected to the RIO
  *
- * <p>NOTE: This implementation should be used as a starting point and adapted to different hardware
+ * <p>
+ * NOTE: This implementation should be used as a starting point and adapted to
+ * different hardware
  * configurations (e.g. If using a CANcoder, copy from "ModuleIOTalonFX")
  *
- * <p>To calibrate the absolute encoder offsets, point the modules straight (such that forward
- * motion on the drive motor will propel the robot forward) and copy the reported values from the
+ * <p>
+ * To calibrate the absolute encoder offsets, point the modules straight (such
+ * that forward
+ * motion on the drive motor will propel the robot forward) and copy the
+ * reported values from the
  * absolute encoders using AdvantageScope. These values are logged under
  * "/Drive/ModuleX/TurnAbsolutePositionRad"
  */
 public class ModuleIOTalonFX implements ModuleIO {
   final VelocityVoltage m_request = new VelocityVoltage(0).withSlot(0);
- 
- 
 
   private final TalonFX driveTalonFX;
-  private final SparkFlex turnSparkMax;
+  private final SparkFlex turnSparkFlex;
 
   private final RelativeEncoder turnRelativeEncoder;
   private final AbsoluteEncoder turnAbsoluteEncoder;
@@ -57,47 +61,48 @@ public class ModuleIOTalonFX implements ModuleIO {
   private final boolean isTurnMotorInverted = true;
 
   public ModuleIOTalonFX(int index) {
-    
+
     switch (index) {
       case 0:
         // Front left
         driveTalonFX = new TalonFX(1);
-        turnSparkMax = new SparkFlex(2, MotorType.kBrushless);
-        turnAbsoluteEncoder = turnSparkMax.getAbsoluteEncoder();
+        turnSparkFlex = new SparkFlex(2, MotorType.kBrushless);
+        turnAbsoluteEncoder = turnSparkFlex.getAbsoluteEncoder();
         driveTalonFX.setInverted(false);
         break;
       case 1:
         // Front right
-        driveTalonFX = new TalonFX(3);
-        turnSparkMax = new SparkFlex(4, MotorType.kBrushless);
-        turnAbsoluteEncoder = turnSparkMax.getAbsoluteEncoder();
+        driveTalonFX = new TalonFX(10);
+        turnSparkFlex = new SparkFlex(9, MotorType.kBrushless);
+        turnAbsoluteEncoder = turnSparkFlex.getAbsoluteEncoder();
         break;
       case 2:
         // Back left
-        driveTalonFX = new TalonFX(8);
-        turnSparkMax = new SparkFlex(7, MotorType.kBrushless);
-        turnAbsoluteEncoder = turnSparkMax.getAbsoluteEncoder();
+        driveTalonFX = new TalonFX(4);
+        turnSparkFlex = new SparkFlex(6, MotorType.kBrushless);
+        turnAbsoluteEncoder = turnSparkFlex.getAbsoluteEncoder();
         driveTalonFX.setInverted(false);
         break;
       case 3:
         // Back right
-        driveTalonFX = new TalonFX(6);
-        turnSparkMax = new SparkFlex(5, MotorType.kBrushless);
-        turnAbsoluteEncoder = turnSparkMax.getAbsoluteEncoder();
+        driveTalonFX = new TalonFX(7);
+        turnSparkFlex = new SparkFlex(8, MotorType.kBrushless);
+        turnAbsoluteEncoder = turnSparkFlex.getAbsoluteEncoder();
         break;
       default:
         throw new RuntimeException("Invalid module index");
     }
-    
-    final TalonFXConfiguration drivingConfig = new TalonFXConfiguration();    
-    //turnSparkMax.restoreFactoryDefaults();
 
-    //turnAbsoluteEncoder.setPositionConversionFactor(2 * Math.PI); // Radians
-    //turnAbsoluteEncoder.setVelocityConversionFactor((2 * Math.PI) / 60.0); // Radians per second
+    // final TalonFXConfiguration drivingConfig = new TalonFXConfiguration();
+    // turnSparkFlex.restoreFactoryDefaults();
 
-    turnSparkMax.setCANTimeout(250);
+    // turnAbsoluteEncoder.setPositionConversionFactor(2 * Math.PI); // Radians
+    // turnAbsoluteEncoder.setVelocityConversionFactor((2 * Math.PI) / 60.0); //
+    // Radians per second
 
-    turnRelativeEncoder = turnSparkMax.getEncoder(); // ???
+    turnSparkFlex.setCANTimeout(250);
+
+    turnRelativeEncoder = turnSparkFlex.getEncoder(); // ???
     final ExternalEncoderConfig encoderconfig = new ExternalEncoderConfig();
 
     encoderconfig.measurementPeriod(10);
@@ -105,18 +110,16 @@ public class ModuleIOTalonFX implements ModuleIO {
     encoderconfig.measurementPeriod(10);
     encoderconfig.averageDepth(2);
 
-    turnSparkMax.setInverted(isTurnMotorInverted);
+    turnSparkFlex.setInverted(isTurnMotorInverted);
 
-    driveTalonFX.setInverted(true);
     driveTalonFX.setPosition(0);
+    driveTalonFX.setInverted(true);
 
-    turnRelativeEncoder.setPosition(0.0);
-    encoderconfig.measurementPeriod(10);
-    encoderconfig.averageDepth(2);
+ 
 
-    turnSparkMax.setCANTimeout(0);
+    turnSparkFlex.setCANTimeout(0);
 
-    //turnSparkMax.burnFlash();
+    // turnSparkFlex.burnFlash();
 
     var config = config();
     var configSpark = configSpark(null);
@@ -129,8 +132,9 @@ public class ModuleIOTalonFX implements ModuleIO {
     REVLibError status2 = REVLibError.kError; // not work maybe
     for (int i = 0; i < 5; i++) {
       status = driveTalonFX.getConfigurator().apply(config);
-      turnSparkMax.configure(configSpark, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-      if (status.isOK()) break;
+      turnSparkFlex.configure(configSpark, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+      if (status.isOK())
+        break;
     }
 
     if (!status.isOK()) {
@@ -144,22 +148,20 @@ public class ModuleIOTalonFX implements ModuleIO {
 
   @Override
   public void updateInputs(ModuleIOInputs inputs) {
-    inputs.drivePositionRad =
-        Units.rotationsToRadians(driveTalonFX.getPosition().getValueAsDouble()) / DriveConstants.DriveGearing;
-    inputs.driveVelocityRadPerSec =
-        Units.rotationsPerMinuteToRadiansPerSecond(driveTalonFX.getVelocity().getValueAsDouble())
-            / DriveConstants.DriveGearing;
+    inputs.drivePositionRad = Units.rotationsToRadians(driveTalonFX.getPosition().getValueAsDouble())
+        / DriveConstants.DriveGearing;
+    inputs.driveVelocityRadPerSec = Units
+        .rotationsPerMinuteToRadiansPerSecond(driveTalonFX.getVelocity().getValueAsDouble())
+        / DriveConstants.DriveGearing;
     inputs.driveAppliedVolts = driveTalonFX.getMotorVoltage().getValueAsDouble();
-    inputs.driveCurrentAmps = new double[] {driveTalonFX.getSupplyCurrent().getValueAsDouble()};
+    inputs.driveCurrentAmps = new double[] { driveTalonFX.getSupplyCurrent().getValueAsDouble() };
 
     inputs.turnAbsolutePosition = Rotation2d.fromRadians(turnAbsoluteEncoder.getPosition());
-    inputs.turnPosition =
-        Rotation2d.fromRotations(turnRelativeEncoder.getPosition() / DriveConstants.TurnGearing);
-    inputs.turnVelocityRadPerSec =
-        Units.rotationsPerMinuteToRadiansPerSecond(turnRelativeEncoder.getVelocity())
-            / DriveConstants.TurnGearing;
-    inputs.turnAppliedVolts = turnSparkMax.getAppliedOutput() * turnSparkMax.getBusVoltage();
-    inputs.turnCurrentAmps = new double[] {turnSparkMax.getOutputCurrent()};
+    inputs.turnPosition = Rotation2d.fromRotations(turnRelativeEncoder.getPosition() / DriveConstants.TurnGearing);
+    inputs.turnVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(turnRelativeEncoder.getVelocity())
+        / DriveConstants.TurnGearing;
+    inputs.turnAppliedVolts = turnSparkFlex.getAppliedOutput() * turnSparkFlex.getBusVoltage();
+    inputs.turnCurrentAmps = new double[] { turnSparkFlex.getOutputCurrent() };
   }
 
   private SparkFlexConfig configSpark(IdleMode idle) {
@@ -185,7 +187,7 @@ public class ModuleIOTalonFX implements ModuleIO {
     talonFXConfig.Slot0.kV = 0;
 
     talonFXConfig.CurrentLimits.StatorCurrentLimitEnable = true;
-    talonFXConfig.CurrentLimits.StatorCurrentLimit = 40; // CurrentLimits.drive;
+    talonFXConfig.CurrentLimits.StatorCurrentLimit = DriveConstants.driveCurrentLimit; // CurrentLimits.drive;
 
     talonFXConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
@@ -200,23 +202,18 @@ public class ModuleIOTalonFX implements ModuleIO {
   }
 
   @Override
-  public void runTalonPID(double desiredStateRotPerSecond) {
-    driveTalonFX.setControl(m_request.withVelocity(desiredStateRotPerSecond));
-  }
-
-  @Override
   public void setTurnVoltage(double volts) {
-    turnSparkMax.setVoltage(volts);
+    turnSparkFlex.setVoltage(volts);
   }
 
-  //   @Override
-  //   public void setDriveBrakeMode(boolean enable) {
-  //     driveTalonFX.setBrakeMode(enable ? IdleMode.kBrake : IdleMode.kCoast);
-  //   }
+  // @Override
+  // public void setDriveBrakeMode(boolean enable) {
+  // driveTalonFX.setBrakeMode(enable ? IdleMode.kBrake : IdleMode.kCoast);
+  // }
 
   @Override
   public void setTurnBrakeMode(boolean enable) {
-    // turnSparkMax.setIdleMode(enable ? IdleMode.kBrake : IdleMode.kCoast);
+    // turnSparkFlex.setIdleMode(enable ? IdleMode.kBrake : IdleMode.kCoast);
     configSpark(enable ? IdleMode.kBrake : IdleMode.kCoast);
   }
 }

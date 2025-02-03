@@ -24,5 +24,6 @@ public class DriveConstants {
     public static final double DriveGearing = 6.11;
     public static final int turnCurrentLimit = 60; // May need to change later
     public static final int driveCurrentLimit = 60;
+    public static final int pigeonID = 20;
 
 }
