@@ -64,21 +64,21 @@ public class ElevatorIOReal implements ElevatorIO {
     
     
     public ElevatorIOReal(){
-    
-    config.smartCurrentLimit(ElevatorConstants.elevatorCurrentLimits);
-    rightElevatorMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
-    config.follow(ElevatorConstants.rightDeviceID, true);
-    config.inverted(true);
+        leftElevatorMotor.clearFaults();
+        rightElevatorMotor.clearFaults();
+        // config.encoder.positionConversionFactor(Units.inchesToMeters(11/18));
+        // config.encoder.velocityConversionFactor(Units.inchesToMeters(11/18)/60);    
+        config.smartCurrentLimit(ElevatorConstants.elevatorCurrentLimits);
 
-    config.encoder.positionConversionFactor(Units.inchesToMeters(11/18));
-    config.encoder.velocityConversionFactor(Units.inchesToMeters(11/18)/60);
-    
+        rightElevatorMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+        config.follow(ElevatorConstants.rightDeviceID, true);
+
+  
  //   config.absoluteEncoder.positionConversionFactor(Units.inchesToMeters(11 / 18));             use these later
  //   config.absoluteEncoder.velocityConversionFactor(Units.inchesToMeters(11 / 18) / 60);        use these later
     leftElevatorMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     
-    leftElevatorMotor.clearFaults();
-    rightElevatorMotor.clearFaults();
+
 }
 
     @Override

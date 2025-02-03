@@ -16,11 +16,11 @@ public class DriveConstants {
     public static final double TranslationKP = 0.1;
     public static final double TranslationKI = 0.0;
     public static final double TranslationKD = 0.0;
-    public static final double RotationKP = 10.0;
+    public static final double RotationKP = 5.0;
     public static final double RotationKI = 0.0;
     public static final double RotationKD = 0.0;
     public static final double WHEEL_RADIUS = Units.inchesToMeters(1.5);
-    public static final double TurnGearing = 13.3714;
+    public static final double TurnGearing = 12.155818;
     public static final double DriveGearing = 6.11;
     public static final int turnCurrentLimit = 60; // May need to change later
     public static final int driveCurrentLimit = 60;
