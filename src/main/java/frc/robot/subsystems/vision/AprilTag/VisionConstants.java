@@ -49,13 +49,13 @@ public class VisionConstants {
         // Backwards Camera
         new Transform3d(
             new Translation3d(
-                -0.3,
                 0,
-                Units.inchesToMeters(7)), 
+                -Units.inchesToMeters(26.5),
+                Units.inchesToMeters(20.8)), 
             new Rotation3d(
-                Units.degreesToRadians(90), 
-                Units.degreesToRadians(-30), 
-                Units.degreesToRadians(180))),
+                Units.degreesToRadians(0), 
+                Units.degreesToRadians(0), 
+                Units.degreesToRadians(0))),
 
         // Left Camera
         new Transform3d(
@@ -66,24 +66,24 @@ public class VisionConstants {
             new Rotation3d(
                 0, 
                 Units.degreesToRadians(-30), 
-                Units.degreesToRadians(-45))),
+                Units.degreesToRadians(-135))),
 
         // Right Camera
         new Transform3d(
             new Translation3d(
-                -0.375,
-                0.375,
-                Units.inchesToMeters(7)), 
+                Units.inchesToMeters(12.8),
+                -Units.inchesToMeters(12),
+                Units.inchesToMeters(10)), 
             new Rotation3d(
                 0, 
                 Units.degreesToRadians(-30), 
-                Units.degreesToRadians(-130)))};
+                Units.degreesToRadians(135)))};
 
     public static AprilTagFieldLayout aprilTagFieldLayout;
 
     static {
         try {
-            aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource("/frc/robot/2025AprilTag.json");
+            aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2025Reefscape.m_resourceFile);
             aprilTagFieldLayout.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
         } catch (IOException e) {
             e.printStackTrace();
