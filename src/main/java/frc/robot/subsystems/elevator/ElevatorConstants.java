@@ -20,7 +20,7 @@ public final class ElevatorConstants{
     public static double conversionFactor = 0.1; 
 
 
-    public static final int elevatorCurrentLimits = 60; //might need to adjust later
+    public static final int elevatorCurrentLimits = 45; //might need to adjust later
 
 
 
