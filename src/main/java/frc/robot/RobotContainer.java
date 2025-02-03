@@ -51,7 +51,6 @@ public class RobotContainer {
         elevator = Elevator.initialize(new ElevatorIOReal());
         intake = Intake.initialize(new IntakeIORealVortex());
         Arm.initialize(new ArmIOReal());
-;
 
         drive = new Drive(
             new GyroIOPigeon(),
@@ -65,7 +64,6 @@ public class RobotContainer {
         elevator = Elevator.initialize(new ElevatorIOSim());
         intake = Intake.initialize(new IntakeIOSim());
         Arm.initialize(new ArmIOSim());
-
 
         drive = new Drive(
             new GyroIO() {
@@ -82,7 +80,6 @@ public class RobotContainer {
         elevator = Elevator.initialize(new ElevatorIOSim());
         intake = Intake.initialize(new IntakeIOSim());
         Arm.initialize(new ArmIOSim());
-
 
         drive = new Drive(
             new GyroIO() {
@@ -107,19 +104,10 @@ public class RobotContainer {
 
     Constants.OIConstants.driverController.a().whileTrue(Commands.runOnce(() -> drive.zeroHeading(), drive));
 
-    CommandXboxController xboxController = new CommandXboxController(1);
-    xboxController.leftTrigger()
-        .whileTrue(Commands.run(() -> elevator.moveElevator(xboxController.getLeftTriggerAxis() / 2)));
-    xboxController.rightTrigger()
-        .whileTrue(Commands.run(() -> elevator.moveElevator(-xboxController.getRightTriggerAxis() / 2)));
-
-
-    Constants.OIConstants.driverController.x().whileTrue(Commands.startEnd(()->intake.setIntakeSpeed(1),
-     ()->intake.setIntakeSpeed(0), intake));
-    
-    OIConstants.driverController.b().whileTrue(Commands.startEnd(()->intake.setIntakeSpeed(-1),
-     ()->intake.setIntakeSpeed(0), intake));
-
+    OIConstants.operatorController.leftTrigger()
+        .whileTrue(Commands.run(() -> elevator.moveElevator(OIConstants.operatorController.getLeftTriggerAxis() / 2)));
+    OIConstants.operatorController.rightTrigger()
+        .whileTrue(Commands.run(() -> elevator.moveElevator(-OIConstants.operatorController.getRightTriggerAxis() / 2)));
 
      Constants.OIConstants.operatorController.povUp()
      .whileTrue(
@@ -151,6 +139,22 @@ public class RobotContainer {
           Arm.getInstance()
         )
       );
+
+
+      OIConstants.driverController.leftTrigger().whileTrue(
+        Commands.startEnd(
+        () -> Arm.getInstance().manualVoltage(OIConstants.operatorController.getLeftTriggerAxis() * 6), 
+        () -> Arm.getInstance().manualVoltage(0), 
+        Arm.getInstance()
+      ));
+
+
+      OIConstants.driverController.rightTrigger().whileTrue(
+        Commands.startEnd(
+        () -> Arm.getInstance().manualVoltage(OIConstants.operatorController.getRightTriggerAxis() * -6), 
+        () -> Arm.getInstance().manualVoltage(0), 
+        Arm.getInstance()
+      ));
   }
 
   public Command getAutonomousCommand() {
