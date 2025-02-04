@@ -75,21 +75,21 @@ public class ModuleIOTalonFX implements ModuleIO {
         break;
       case 1:
         // Front right
-        driveTalonFX = new TalonFX(10);
-        turnSparkFlex = new SparkFlex(9, MotorType.kBrushless);
+        driveTalonFX = new TalonFX(3);
+        turnSparkFlex = new SparkFlex(4, MotorType.kBrushless);
         turnAbsoluteEncoder = turnSparkFlex.getAbsoluteEncoder();
         break;
       case 2:
         // Back left
-        driveTalonFX = new TalonFX(4);
-        turnSparkFlex = new SparkFlex(6, MotorType.kBrushless);
+        driveTalonFX = new TalonFX(8);
+        turnSparkFlex = new SparkFlex(7, MotorType.kBrushless);
         turnAbsoluteEncoder = turnSparkFlex.getAbsoluteEncoder();
         driveTalonFX.setInverted(false);
         break;
       case 3:
         // Back right
-        driveTalonFX = new TalonFX(7);
-        turnSparkFlex = new SparkFlex(8, MotorType.kBrushless);
+        driveTalonFX = new TalonFX(6);
+        turnSparkFlex = new SparkFlex(5, MotorType.kBrushless);
         turnAbsoluteEncoder = turnSparkFlex.getAbsoluteEncoder();
         break;
       default:
@@ -127,13 +127,15 @@ public class ModuleIOTalonFX implements ModuleIO {
     driveTalonFX.setPosition(0);
     driveTalonFX.setInverted(true);
 
- 
+    encoderconfig.positionConversionFactor(2 * Math.PI);
+    encoderconfig.velocityConversionFactor(2 * Math.PI / 60);
 
     turnSparkFlex.setCANTimeout(0);
 
    
     var config = config();
-    var configSpark = configSpark(null);
+    var configSpark = configSpark(IdleMode.kBrake);
+    configSpark.apply(encoderconfig);
 
     driveTalonFX.optimizeBusUtilization();
 
