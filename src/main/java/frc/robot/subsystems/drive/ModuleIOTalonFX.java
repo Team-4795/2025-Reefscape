@@ -24,12 +24,14 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.ExternalEncoderConfig;
 import com.revrobotics.spark.config.SparkFlexConfig;
+import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import frc.robot.commands.DriveCommands;
 
 /**
  * Module IO implementation for SparkMax drive motor controller, SparkMax turn
@@ -59,7 +61,8 @@ public class ModuleIOTalonFX implements ModuleIO {
   private final AbsoluteEncoder turnAbsoluteEncoder;
 
   private final boolean isTurnMotorInverted = true;
-
+  public static final SparkFlexConfig turningConfig = new SparkFlexConfig();
+  
   public ModuleIOTalonFX(int index) {
 
     switch (index) {
@@ -93,12 +96,21 @@ public class ModuleIOTalonFX implements ModuleIO {
         throw new RuntimeException("Invalid module index");
     }
 
-    // final TalonFXConfiguration drivingConfig = new TalonFXConfiguration();
-    // turnSparkFlex.restoreFactoryDefaults();
-
-    // turnAbsoluteEncoder.setPositionConversionFactor(2 * Math.PI); // Radians
-    // turnAbsoluteEncoder.setVelocityConversionFactor((2 * Math.PI) / 60.0); //
-    // Radians per second
+    
+      turningConfig
+        .idleMode(IdleMode.kBrake)
+        .smartCurrentLimit(DriveConstants.turnCurrentLimit);
+      turningConfig.absoluteEncoder
+        .inverted(true)
+        .positionConversionFactor(DriveConstants.turningFactor)
+        .velocityConversionFactor(DriveConstants.turningFactor/60);
+      turningConfig.closedLoop
+        .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+        .pid(DriveConstants.RotationKP, DriveConstants.RotationKI, DriveConstants.RotationKD)
+        .outputRange(-1, 1)
+        .positionWrappingEnabled(true)
+        .positionWrappingInputRange(0, DriveConstants.turningFactor); 
+    
 
     turnSparkFlex.setCANTimeout(250);
 
@@ -119,8 +131,7 @@ public class ModuleIOTalonFX implements ModuleIO {
 
     turnSparkFlex.setCANTimeout(0);
 
-    // turnSparkFlex.burnFlash();
-
+   
     var config = config();
     var configSpark = configSpark(null);
 
@@ -168,7 +179,7 @@ public class ModuleIOTalonFX implements ModuleIO {
     var turningConfig = new SparkFlexConfig();
 
     turningConfig.smartCurrentLimit(DriveConstants.turnCurrentLimit);
-    // turningConfig.voltageCompensation(12.0);
+    turningConfig.voltageCompensation(12.0);
 
     if (idle != null) {
       turningConfig.idleMode(idle);
@@ -216,4 +227,6 @@ public class ModuleIOTalonFX implements ModuleIO {
     // turnSparkFlex.setIdleMode(enable ? IdleMode.kBrake : IdleMode.kCoast);
     configSpark(enable ? IdleMode.kBrake : IdleMode.kCoast);
   }
+
+ 
 }
