@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class Elevator extends SubsystemBase {
     private ElevatorIO io;
     private ElevatorIOInputsAutoLogged inputs = new ElevatorIOInputsAutoLogged();
+    private double voltage = 0;
 
     @AutoLogOutput
     private double leftMovingSpeed = 0.0;
@@ -100,10 +101,16 @@ public class Elevator extends SubsystemBase {
         this.setGoal(getPosition());
     }
 
+    public void setVoltage(double volts) {
+        io.setVoltage(volts);
+        voltage = volts;
+    }
+
     @Override
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs(getName(), inputs);
+        io.setVoltage(voltage);
 
     }
 

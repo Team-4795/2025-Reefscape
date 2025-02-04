@@ -23,19 +23,20 @@ public class ArmIOReal implements ArmIO {
 
     private ArmFeedforward ffmodel = new ArmFeedforward(ArmConstants.DEFAULTkS, ArmConstants.DEFAULTkG, ArmConstants.DEFAULTkV, ArmConstants.DEFAULTkA);
     private final PIDController controller = new PIDController(0.04, 0,0.00);
-    private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(1, 2);
+    private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(2, 2);
     private final TrapezoidProfile profile = new TrapezoidProfile(constraints);
-    private TrapezoidProfile.State goal = new TrapezoidProfile.State(ArmConstants.Sim.INIT_ANGLE, 0);
+    private TrapezoidProfile.State goal = new TrapezoidProfile.State(0, 0);
     private TrapezoidProfile.State setpoint = new TrapezoidProfile.State();
 
     public ArmIOReal(){
         config.smartCurrentLimit(ArmConstants.CURRENT_LIMIT);
         config.idleMode(IdleMode.kBrake);
-        config.absoluteEncoder.positionConversionFactor(2 * Math.PI / ArmConstants.Sim.GEARING);
-        config.absoluteEncoder.velocityConversionFactor(2 * Math.PI / ArmConstants.Sim.GEARING / 60);
-        config.absoluteEncoder.inverted(true);
-        config.encoder.positionConversionFactor(2 * Math.PI / ArmConstants.Sim.GEARING);
-        config.encoder.velocityConversionFactor(2 * Math.PI / ArmConstants.Sim.GEARING / 60);
+        config.absoluteEncoder.positionConversionFactor(1);
+        config.absoluteEncoder.positionConversionFactor(Math.PI);
+        config.absoluteEncoder.velocityConversionFactor(Math.PI / 60);
+        config.absoluteEncoder.inverted(false);
+        config.encoder.positionConversionFactor(Math.PI);
+        config.encoder.velocityConversionFactor(Math.PI / 60);
         config.softLimit.forwardSoftLimitEnabled(true);
         config.softLimit.reverseSoftLimitEnabled(false);
         config.softLimit.forwardSoftLimit(ArmConstants.Sim.MAX_ANGLE);
@@ -70,10 +71,11 @@ public class ArmIOReal implements ArmIO {
             setpoint = profile.calculate(0.02, setpoint, goal);
         }
 
-        inputs.angularPosition = armEncoder.getPosition();
+        inputs.angularPosition = armMotor.getAbsoluteEncoder().getPosition();
         inputs.angularVelocity = armEncoder.getVelocity();
         inputs.current = armMotor.getOutputCurrent();
         inputs.voltage = armMotor.getAppliedOutput();
+        inputs.setpointVelocity = setpoint.velocity;
     }
 
     public void setVoltage(double voltage) {

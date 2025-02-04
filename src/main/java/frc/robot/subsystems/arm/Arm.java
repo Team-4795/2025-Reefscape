@@ -24,6 +24,10 @@ public class Arm extends SubsystemBase {
         this.io = io;
     }
 
+    public double getAngle() {
+        return inputs.angularPosition;
+    }
+
     public static void initialize(ArmIO io) {
         instance = new Arm(io);
     }

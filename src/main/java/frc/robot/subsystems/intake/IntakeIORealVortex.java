@@ -29,6 +29,7 @@ public class IntakeIORealVortex implements IntakeIO {
     private SparkFlexConfig config = new SparkFlexConfig();
 
     public IntakeIORealVortex() {
+        intakeMotor.clearFaults();
         config.smartCurrentLimit(IntakeConstants.currentLimit);
         config.idleMode(IdleMode.kCoast);
 

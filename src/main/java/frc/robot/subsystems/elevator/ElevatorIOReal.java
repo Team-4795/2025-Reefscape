@@ -21,6 +21,8 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkFlexConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 
@@ -66,11 +68,12 @@ public class ElevatorIOReal implements ElevatorIO {
     public ElevatorIOReal(){
         leftElevatorMotor.clearFaults();
         rightElevatorMotor.clearFaults();
-        // config.encoder.positionConversionFactor(Units.inchesToMeters(11/18));
-        // config.encoder.velocityConversionFactor(Units.inchesToMeters(11/18)/60);    
+        // config.encoder.positionConversionFactor(Units.inchesToMeters(11.0/18.0));
+        // config.encoder.velocityConversionFactor(Units.inchesToMeters(11.0/18)/60.0);    
         config.smartCurrentLimit(ElevatorConstants.elevatorCurrentLimits);
+        config.idleMode(IdleMode.kBrake);
 
-        rightElevatorMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+        rightElevatorMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         config.follow(ElevatorConstants.rightDeviceID, true);
 
   
@@ -83,12 +86,12 @@ public class ElevatorIOReal implements ElevatorIO {
 
     @Override
     public void setVoltage(double voltage) {
-        double currentPosition = leftEncoder.getPosition(); // Relative encoder position
-        if (currentPosition <= minPositionMeters && voltage < 0) {
-            voltage = 0;
-        } else if (currentPosition >= maxPositionMeters && voltage > 0) {
-            voltage = 0; 
-        }
+        // double currentPosition = leftEncoder.getPosition(); // Relative encoder position
+        // if (currentPosition <= minPositionMeters && voltage < 0) {
+        //     voltage = 0;
+        // } else if (currentPosition >= maxPositionMeters && voltage > 0) {
+        //     voltage = 0; 
+        // }
         inputVolts = voltage; 
         rightElevatorMotor.setVoltage(voltage);
     }
@@ -98,10 +101,10 @@ public class ElevatorIOReal implements ElevatorIO {
     public void updateInputs(ElevatorIOInputs inputs) {
         //might want to separate by motor or you can average if they don't need to be ran in reverse
 
-        if(!inputs.openLoop){
-            setVoltage(ffmodel.calculate(setpoint.velocity, setpoint.position) + controller.calculate(setpoint.velocity));
-            setpoint = profile.calculate(0.02, setpoint, goal);
-        }
+        // if(!inputs.openLoop){
+        //     setVoltage(ffmodel.calculate(setpoint.velocity, setpoint.position) + controller.calculate(setpoint.velocity));
+        //     setpoint = profile.calculate(0.02, setpoint, goal);
+        // }
         inputs.elevatorCurrent = leftElevatorMotor.getOutputCurrent();
         inputs.elevatorAppliedVolts = leftElevatorMotor.getAppliedOutput() * leftElevatorMotor.getBusVoltage();
         
@@ -130,12 +133,6 @@ public class ElevatorIOReal implements ElevatorIO {
 
     @Override
     public void moveElevator(double speed) {
-
-        double currentPosition = leftEncoder.getPosition();
-        if ((currentPosition <= minPositionMeters && speed < 0) || 
-            (currentPosition >= maxPositionMeters && speed > 0)) {
-            speed = 0; 
-        }
         rightElevatorMotor.set(speed);
     }
 

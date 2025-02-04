@@ -19,9 +19,11 @@ import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorIO;
 import frc.robot.subsystems.elevator.ElevatorIOReal;
 import frc.robot.subsystems.elevator.ElevatorIOSim;
+import frc.robot.Constants.Gamepiece;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIOReal;
@@ -91,6 +93,7 @@ public class RobotContainer {
 
             
     }
+    Arm.getInstance().setFFMode(Gamepiece.CORAL);
     configureBindings();
   }
 
@@ -104,16 +107,32 @@ public class RobotContainer {
 
     Constants.OIConstants.driverController.a().whileTrue(Commands.runOnce(() -> drive.zeroHeading(), drive));
 
-    OIConstants.operatorController.leftTrigger()
-        .whileTrue(Commands.run(() -> elevator.moveElevator(OIConstants.operatorController.getLeftTriggerAxis() / 2)));
-    OIConstants.operatorController.rightTrigger()
-        .whileTrue(Commands.run(() -> elevator.moveElevator(-OIConstants.operatorController.getRightTriggerAxis() / 2)));
+    // OIConstants.operatorController.leftTrigger()
+    //     .whileTrue(Commands.startEnd(() -> elevator.moveElevator(OIConstants.operatorController.getLeftTriggerAxis() / 1.5), 
+    //     () -> elevator.moveElevator(0), 
+    //     elevator));
+
+    // OIConstants.operatorController.rightTrigger()
+    //     .whileTrue(Commands.startEnd(() -> elevator.moveElevator(-OIConstants.operatorController.getRightTriggerAxis() / 1.5),
+    //     () -> elevator.moveElevator(0), 
+    //     elevator));
+
+    OIConstants.operatorController.rightBumper()
+    .whileTrue(Commands.startEnd(() -> elevator.setVoltage(4), 
+    () -> elevator.setVoltage(-ElevatorConstants.kg), 
+    elevator));
+
+    OIConstants.operatorController.leftBumper()
+    .whileTrue(Commands.startEnd(() -> elevator.setVoltage(-4), 
+    () -> elevator.setVoltage(-ElevatorConstants.kg), 
+    elevator));
+
 
      Constants.OIConstants.operatorController.povUp()
      .whileTrue(
         Commands.sequence(
           intake.intake().until(() -> intake.GamePieceInitial()),
-          intake.intakeSlow().until(() -> intake.GamePeiceFinal()),
+          intake.intakeSlow().until(() -> intake.GamePieceFinal()),
           Commands.run(() -> intake.setIntakeSpeed(0))
         )
      );
@@ -126,16 +145,16 @@ public class RobotContainer {
 
      OIConstants.driverController.povUp().whileTrue(
         Commands.startEnd(
-          () -> Arm.getInstance().manualVoltage(6), 
-          () -> Arm.getInstance().manualVoltage(0),
+          () -> Arm.getInstance().manualVoltage(9), 
+          () -> Arm.getInstance().manualVoltage(ArmConstants.DEFAULTkG * Math.cos(Arm.getInstance().getAngle() - Math.PI/2)),
           Arm.getInstance()
         )
       );
       
       OIConstants.driverController.povDown().whileTrue(
         Commands.startEnd(
-          () -> Arm.getInstance().manualVoltage(-6), 
-          () -> Arm.getInstance().manualVoltage(0),
+          () -> Arm.getInstance().manualVoltage(-9), 
+          () -> Arm.getInstance().manualVoltage(ArmConstants.DEFAULTkG * Math.cos(Arm.getInstance().getAngle() - Math.PI/2)),
           Arm.getInstance()
         )
       );
@@ -158,6 +177,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return Commands.runOnce(() -> Arm.getInstance().manualVoltage(ArmConstants.DEFAULTkG));
+    return Commands.runOnce(() -> elevator.setVoltage(ElevatorConstants.kg));
   }
 }

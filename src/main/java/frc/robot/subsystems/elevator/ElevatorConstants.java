@@ -13,14 +13,14 @@ public final class ElevatorConstants{
     public static int rightDeviceID = 12;
     public static int leftDeviceID = 13;
     public static double ks = 0;
-    public static double kg = 0.16;
+    public static double kg = 0.3;
     public static double kv = 15.96; //IS THIS RIGHT?!?!?
     
     //change this later
     public static double conversionFactor = 0.1; 
 
 
-    public static final int elevatorCurrentLimits = 45; //might need to adjust later
+    public static final int elevatorCurrentLimits = 70; //might need to adjust later
 
 
 

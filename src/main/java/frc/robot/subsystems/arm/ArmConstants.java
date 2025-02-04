@@ -4,7 +4,7 @@ import edu.wpi.first.math.util.Units;
 
 public class ArmConstants {
     public static int CAN_ID = 14;
-    public static int CURRENT_LIMIT = 40;
+    public static int CURRENT_LIMIT = 50;
 
     // Default FF
     public static double DEFAULTkG = 1.02;
@@ -19,13 +19,13 @@ public class ArmConstants {
     public static double ALGAEkS = 0.1;
 
     // Default FF
-    public static double CORALkG = 1.02;
+    public static double CORALkG = 1.09;
     public static double CORALkV = 1.01;
     public static double CORALkA = 0.05;
     public static double CORALkS = 0.1;
 
     public static class Sim {
-        public static double GEARING = 60;
+        public static double GEARING = 40;
         public static double MOI = 2.09670337984;
         public static double LENGTH = 0.6604;
         public static double MIN_ANGLE = Units.degreesToRadians(-95);

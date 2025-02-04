@@ -61,7 +61,7 @@ public class Intake extends SubsystemBase {
         return IntakeConstants.initialThreshold <= inputs.currentAmps;
     }
 
-    public boolean GamePeiceFinal() {
+    public boolean GamePieceFinal() {
         return IntakeConstants.currentThreshold <= inputs.currentAmps; 
     }
 
