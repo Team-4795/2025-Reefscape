@@ -19,6 +19,7 @@ public class IntakeIOSim implements IntakeIO {
     inputs.angularVelocityRPM = motor.getAngularVelocityRPM();
     inputs.currentAmps = motor.getCurrentDrawAmps();
     isGamepieceDetected = inputs.currentAmps > IntakeConstants.currentThreshold;
+    inputs.hasGamepiece = hasGamepiece();
   }
   @Override
   public boolean hasGamepiece(){

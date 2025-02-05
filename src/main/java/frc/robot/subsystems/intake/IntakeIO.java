@@ -11,6 +11,7 @@ public interface IntakeIO {
         public double angularPositionRot = 0.0;
         public double angularVelocityRPM = 0.0;
         public double currentAmps = 0.0;
+        public boolean hasGamepiece = false;
     }
     public default void updateInputs(IntakeIOInputs inputs) {
     }

@@ -58,6 +58,7 @@ public class IntakeIOReal implements IntakeIO {
         inputs.angularPositionRot = intakeMotor.getPosition().getValueAsDouble();
         inputs.currentAmps = current.getValueAsDouble();
         inputs.voltage = voltage.getValueAsDouble();
+        inputs.hasGamepiece = hasGamepiece();
     }
 
     @Override
