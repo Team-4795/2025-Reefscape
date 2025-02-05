@@ -111,7 +111,6 @@ public class Elevator extends SubsystemBase {
         io.updateInputs(inputs);
         Logger.processInputs(getName(), inputs);
         io.setVoltage(voltage);
-
     }
 
     } 

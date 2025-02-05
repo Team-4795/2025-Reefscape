@@ -118,7 +118,7 @@ public class ElevatorIOReal implements ElevatorIO {
         Logger.recordOutput("Elevator/Setpoint/Position", setpoint.position);
         Logger.recordOutput("Elevator/Setpoint/Velocity", setpoint.velocity);
         
-        setVoltage(ffmodel.calculate(setpoint.velocity, ElevatorConstants.MAX_ACCELERATION) + controller.calculate(setpoint.velocity)); //originally poassing in position, changed to max acceleration not sure if right 
+        setVoltage(ffmodel.calculate(setpoint.velocity) + controller.calculate(setpoint.velocity)); //originally poassing in position, changed to max acceleration not sure if right 
         setpoint = profile.calculate(0.02, setpoint, goal);
         
         // log goal after updating
