@@ -49,35 +49,35 @@ public class VisionConstants {
         // Backwards Camera
         new Transform3d(
             new Translation3d(
+                -Units.inchesToMeters(0),
                 0,
-                -Units.inchesToMeters(26.5),
-                Units.inchesToMeters(20.8)), 
+                Units.inchesToMeters(39.5)), 
             new Rotation3d(
-                Units.degreesToRadians(0), 
-                Units.degreesToRadians(0), 
-                Units.degreesToRadians(0))),
+                Units.degreesToRadians(90), 
+                Units.degreesToRadians(-20), 
+                Units.degreesToRadians(180))),
 
         // Left Camera
         new Transform3d(
             new Translation3d(
-                -Units.inchesToMeters(12.8),
-                -Units.inchesToMeters(12),
-                Units.inchesToMeters(10)), 
+                Units.inchesToMeters(0),
+                Units.inchesToMeters(12),
+                Units.inchesToMeters(39.5)), 
             new Rotation3d(
                 0, 
-                Units.degreesToRadians(-30), 
-                Units.degreesToRadians(-135))),
+                Units.degreesToRadians(0), 
+                Units.degreesToRadians(135))),
 
         // Right Camera
         new Transform3d(
             new Translation3d(
-                Units.inchesToMeters(12.8),
+                Units.inchesToMeters(0),
                 -Units.inchesToMeters(12),
-                Units.inchesToMeters(10)), 
+                Units.inchesToMeters(39.5)), 
             new Rotation3d(
                 0, 
-                Units.degreesToRadians(-30), 
-                Units.degreesToRadians(135)))};
+                Units.degreesToRadians(0), 
+                Units.degreesToRadians(-135)))};
 
     public static AprilTagFieldLayout aprilTagFieldLayout;
 
