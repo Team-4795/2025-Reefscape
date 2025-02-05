@@ -68,8 +68,8 @@ public class ElevatorIOReal implements ElevatorIO {
     public ElevatorIOReal(){
         leftElevatorMotor.clearFaults();
         rightElevatorMotor.clearFaults();
-        // config.encoder.positionConversionFactor(Units.inchesToMeters(11.0/18.0));
-        // config.encoder.velocityConversionFactor(Units.inchesToMeters(11.0/18)/60.0);    
+        config.encoder.positionConversionFactor(Units.inchesToMeters(11.0/18.0));
+        config.encoder.velocityConversionFactor(Units.inchesToMeters(11.0/18.0)/60.0);    
         config.smartCurrentLimit(ElevatorConstants.elevatorCurrentLimits);
         config.idleMode(IdleMode.kBrake);
 
@@ -105,16 +105,21 @@ public class ElevatorIOReal implements ElevatorIO {
             setVoltage(ffmodel.calculate(setpoint.velocity) + controller.calculate(setpoint.velocity));
             setpoint = profile.calculate(0.02, setpoint, goal);
         }
-        inputs.elevatorCurrent = leftElevatorMotor.getOutputCurrent();
-        inputs.elevatorAppliedVolts = leftElevatorMotor.getAppliedOutput() * leftElevatorMotor.getBusVoltage();
-        
-        inputs.elevatorMotorPositionMeters = leftEncoder.getPosition();
-        inputs.elevatorMotorPositionMeters = rightEncoder.getPosition();
-        inputs.elevatorMotorVelocityMetersPerSecond = leftEncoder.getVelocity();
-        inputs.elevatorMotorVelocityMetersPerSecond = rightEncoder.getVelocity();
-       // inputs.elevatorMotorPositionMeters = leftAbsoluteEncoder.getPosition();
-       // inputs.elevatorMotorVelocityMetersPerSecond = leftAbsoluteEncoder.getVelocity();     will use absolute encoder later
-        inputs.elevatorInputVolts = inputVolts;
+        inputs.elevatorRightCurrent = rightElevatorMotor.getOutputCurrent();
+        inputs.elevatorRightAppliedVolts = rightElevatorMotor.getAppliedOutput() * leftElevatorMotor.getBusVoltage();
+        inputs.elevatorRightPositionMeters = rightEncoder.getPosition();
+        inputs.elevatorRightVelocityMetersPerSecond = rightEncoder.getVelocity();
+       // inputs.elevatorRightMotorPositionMeters = leftAbsoluteEncoder.getPosition();
+       // inputs.elevatorRightMotorVelocityMetersPerSecond = leftAbsoluteEncoder.getVelocity();     will use absolute encoder later
+        inputs.elevatorRightInputVolts = inputVolts;
+
+
+        inputs.elevatorLeftCurrent = leftElevatorMotor.getOutputCurrent();
+        inputs.elevatorLeftAppliedVolts = leftElevatorMotor.getAppliedOutput() * leftElevatorMotor.getBusVoltage();
+        inputs.elevatorLeftPositionMeters = leftEncoder.getPosition();
+        inputs.elevatorLeftVelocityMetersPerSecond = leftEncoder.getVelocity();
+        inputs.elevatorLeftInputVolts = inputVolts;
+
         Logger.recordOutput("Elevator/Setpoint/Position", setpoint.position);
         Logger.recordOutput("Elevator/Setpoint/Velocity", setpoint.velocity);
         

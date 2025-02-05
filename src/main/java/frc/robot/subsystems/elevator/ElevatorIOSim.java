@@ -37,13 +37,11 @@ if(!inputs.openLoop){
     setpoint = profile.calculate(0.02, setpoint, goal);
     }
     
-    inputs.elevatorPositionMetersPerSecond = elevatorSim.getPositionMeters();
-    inputs.elevatorMotorPositionMeters = elevatorSim.getPositionMeters();
-    inputs.elevatorMotorVelocityMetersPerSecond = elevatorSim.getVelocityMetersPerSecond();
-    inputs.elevatorCurrent = elevatorSim.getCurrentDrawAmps();
-    inputs.elevatorAppliedVolts = elevatorAppliedVolts;
+    inputs.elevatorLeftPositionMeters = elevatorSim.getPositionMeters();
+    inputs.elevatorLeftVelocityMetersPerSecond = elevatorSim.getVelocityMetersPerSecond();
+    inputs.elevatorLeftCurrent = elevatorSim.getCurrentDrawAmps();
+    inputs.elevatorRightAppliedVolts = elevatorAppliedVolts;
     elevatorSim.update(0.02);
-    
 }
 
 @Override
