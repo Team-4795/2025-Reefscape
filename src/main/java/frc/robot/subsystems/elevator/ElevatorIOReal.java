@@ -101,10 +101,10 @@ public class ElevatorIOReal implements ElevatorIO {
     public void updateInputs(ElevatorIOInputs inputs) {
         //might want to separate by motor or you can average if they don't need to be ran in reverse
 
-        // if(!inputs.openLoop){
-        //     setVoltage(ffmodel.calculate(setpoint.velocity, setpoint.position) + controller.calculate(setpoint.velocity));
-        //     setpoint = profile.calculate(0.02, setpoint, goal);
-        // }
+        if(!inputs.openLoop){
+            setVoltage(ffmodel.calculate(setpoint.velocity) + controller.calculate(setpoint.velocity));
+            setpoint = profile.calculate(0.02, setpoint, goal);
+        }
         inputs.elevatorCurrent = leftElevatorMotor.getOutputCurrent();
         inputs.elevatorAppliedVolts = leftElevatorMotor.getAppliedOutput() * leftElevatorMotor.getBusVoltage();
         
@@ -117,9 +117,6 @@ public class ElevatorIOReal implements ElevatorIO {
         inputs.elevatorInputVolts = inputVolts;
         Logger.recordOutput("Elevator/Setpoint/Position", setpoint.position);
         Logger.recordOutput("Elevator/Setpoint/Velocity", setpoint.velocity);
-        
-        setVoltage(ffmodel.calculate(setpoint.velocity) + controller.calculate(setpoint.velocity)); //originally poassing in position, changed to max acceleration not sure if right 
-        setpoint = profile.calculate(0.02, setpoint, goal);
         
         // log goal after updating
         Logger.recordOutput("Elevator/Goal/Position", goal.position);

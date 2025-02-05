@@ -102,6 +102,7 @@ public class Elevator extends SubsystemBase {
     }
 
     public void setVoltage(double volts) {
+        setOpenLoop(true);
         io.setVoltage(volts);
         voltage = volts;
     }
