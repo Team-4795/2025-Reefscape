@@ -66,8 +66,8 @@ public class ArmIOReal implements ArmIO {
     @Override
     public void updateInputs(ArmIOInputs inputs) {
         if(!inputs.openLoop) {
-            // setVoltage(ffmodel.calculate(setpoint.velocity, setpoint.position) + controller.calculate(inputs.angularVelocity, setpoint.velocity));
-            setVoltage(ffmodel.calculate(setpoint.velocity, setpoint.position));
+            // setVoltage(ffmodel.calculate(setpoint.position, setpoint.velocity) + controller.calculate(inputs.angularVelocity, setpoint.velocity));
+            setVoltage(ffmodel.calculate(setpoint.position, setpoint.velocity + ArmConstants.ARM_OFFSET));
             setpoint = profile.calculate(0.02, setpoint, goal);
         }
 

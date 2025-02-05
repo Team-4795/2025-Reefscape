@@ -38,7 +38,7 @@ public class ElevatorIOReal implements ElevatorIO {
  //   private AbsoluteEncoder leftAbsoluteEncoder = leftElevatorMotor.getAbsoluteEncoder();
 
     private final ElevatorFeedforward ffmodel = new ElevatorFeedforward(0, 0, 0);
-    private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(1, 1);
+    private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(ElevatorConstants.MAX_VELOCITY, ElevatorConstants.MAX_ACCELERATION);
     private final PIDController controller = new PIDController(1, 0, 0);
     private final TrapezoidProfile profile = new TrapezoidProfile(constraints);
     private TrapezoidProfile.State setpoint = new TrapezoidProfile.State();
@@ -118,7 +118,7 @@ public class ElevatorIOReal implements ElevatorIO {
         Logger.recordOutput("Elevator/Setpoint/Position", setpoint.position);
         Logger.recordOutput("Elevator/Setpoint/Velocity", setpoint.velocity);
         
-        setVoltage(ffmodel.calculate(setpoint.velocity, setpoint.position) + controller.calculate(setpoint.velocity));
+        setVoltage(ffmodel.calculate(setpoint.velocity, ElevatorConstants.MAX_ACCELERATION) + controller.calculate(setpoint.velocity)); //originally poassing in position, changed to max acceleration not sure if right 
         setpoint = profile.calculate(0.02, setpoint, goal);
         
         // log goal after updating

@@ -15,6 +15,8 @@ public final class ElevatorConstants{
     public static double ks = 0;
     public static double kg = 0.3;
     public static double kv = 15.96; //IS THIS RIGHT?!?!?
+    public static final double MAX_ACCELERATION = 1;
+    public static final double MAX_VELOCITY = 1; 
     
     //change this later
     public static double conversionFactor = 0.1; 

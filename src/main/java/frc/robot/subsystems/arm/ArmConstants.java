@@ -5,6 +5,7 @@ import edu.wpi.first.math.util.Units;
 public class ArmConstants {
     public static int CAN_ID = 14;
     public static int CURRENT_LIMIT = 50;
+    public static final double ARM_OFFSET = Math.PI/2;
 
     // Default FF
     public static double DEFAULTkG = 1.02;
