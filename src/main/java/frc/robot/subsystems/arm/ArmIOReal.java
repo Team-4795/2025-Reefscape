@@ -67,14 +67,14 @@ public class ArmIOReal implements ArmIO {
     public void updateInputs(ArmIOInputs inputs) {
         if(!inputs.openLoop) {
             // setVoltage(ffmodel.calculate(setpoint.position, setpoint.velocity) + controller.calculate(inputs.angularVelocity, setpoint.velocity));
-            setVoltage(ffmodel.calculate(setpoint.position, setpoint.velocity + ArmConstants.ARM_OFFSET));
+            setVoltage(ffmodel.calculate(setpoint.position, setpoint.velocity - ArmConstants.ARM_OFFSET));
             setpoint = profile.calculate(0.02, setpoint, goal);
         }
 
         inputs.angularPosition = armMotor.getAbsoluteEncoder().getPosition();
         inputs.angularVelocity = armEncoder.getVelocity();
         inputs.current = armMotor.getOutputCurrent();
-        inputs.voltage = armMotor.getAppliedOutput();
+        inputs.voltage = armMotor.getAppliedOutput() * armMotor.getBusVoltage();
         inputs.setpointVelocity = setpoint.velocity;
     }
 
