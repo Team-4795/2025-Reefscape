@@ -29,6 +29,8 @@ public interface ArmIO {
     public default void setGoal(double angle) {
     }
 
+    public default void hold() {}
+
     public default void setFFValues(double kS, double kG, double kV, double kA) {
 
     }

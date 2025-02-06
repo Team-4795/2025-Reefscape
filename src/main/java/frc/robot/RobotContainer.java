@@ -166,20 +166,34 @@ public class RobotContainer {
       );
 
 
+      // OIConstants.driverController.leftTrigger().whileTrue(
+      //   Commands.startEnd(
+      //   () -> Arm.getInstance().manualVoltage(OIConstants.operatorController.getLeftTriggerAxis() * 6), 
+      //   () -> Arm.getInstance().manualVoltage(0), 
+      //   Arm.getInstance()
+      // ));
+
+
+      // OIConstants.driverController.rightTrigger().whileTrue(
+      //   Commands.startEnd(
+      //   () -> Arm.getInstance().manualVoltage(OIConstants.operatorController.getRightTriggerAxis() * -6), 
+      //   () -> Arm.getInstance().manualVoltage(0), 
+      //   Arm.getInstance()
+      // ));
+
       OIConstants.driverController.leftTrigger().whileTrue(
-        Commands.startEnd(
-        () -> Arm.getInstance().manualVoltage(OIConstants.operatorController.getLeftTriggerAxis() * 6), 
-        () -> Arm.getInstance().manualVoltage(0), 
-        Arm.getInstance()
-      ));
-
-
+        Commands.run(
+          () -> Arm.getInstance().manualVoltage(OIConstants.operatorController.getLeftTriggerAxis() * 6), 
+          Arm.getInstance()
+        )
+      );
+      
       OIConstants.driverController.rightTrigger().whileTrue(
-        Commands.startEnd(
-        () -> Arm.getInstance().manualVoltage(OIConstants.operatorController.getRightTriggerAxis() * -6), 
-        () -> Arm.getInstance().manualVoltage(0), 
-        Arm.getInstance()
-      ));
+        Commands.run(
+          () -> Arm.getInstance().manualVoltage(OIConstants.operatorController.getLeftTriggerAxis() * -6), 
+          Arm.getInstance()
+        )
+      );
   }
 
   public Command getAutonomousCommand() {

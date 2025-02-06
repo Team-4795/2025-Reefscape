@@ -70,6 +70,12 @@ public class ArmIOReal implements ArmIO {
     }
 
     @Override
+    public void hold() {
+        double ffvolts = ffmodel.calculate(armEncoder.getPosition(), 0);
+        onboardController.setReference(ffvolts, ControlType.kVoltage);
+    }
+
+    @Override
     public void resetAbsoluteEncoder() {
         armMotor.getEncoder().setPosition(0);
     }
@@ -91,8 +97,7 @@ public class ArmIOReal implements ArmIO {
     }
 
     public void setVoltage(double voltage) {
-        double ffvolts = ffmodel.calculate(armEncoder.getPosition()  , 0);
-        onboardController.setReference(ffvolts, ControlType.kVoltage);
+        onboardController.setReference(voltage, ControlType.kVoltage);
         // armMotor.setVoltage(MathUtil.clamp(-voltage, -12, 12));
     }
 }

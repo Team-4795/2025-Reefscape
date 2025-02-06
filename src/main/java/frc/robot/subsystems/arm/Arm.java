@@ -22,6 +22,7 @@ public class Arm extends SubsystemBase {
 
     private Arm(ArmIO io) {
         this.io = io;
+        setDefaultCommand(Commands.run(() -> io.hold()));
     }
 
     public double getAngle() {
