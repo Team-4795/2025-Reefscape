@@ -48,7 +48,7 @@ public class ArmIOReal implements ArmIO {
         config.softLimit.forwardSoftLimit(ArmConstants.Sim.MAX_ANGLE);
         config.softLimit.reverseSoftLimit(ArmConstants.Sim.MIN_ANGLE);
 
-        config.closedLoop.p(0.04);
+        config.closedLoop.p(0.0);
         config.closedLoop.i(0.0);
         config.closedLoop.d(0.0);
 
@@ -84,7 +84,7 @@ public class ArmIOReal implements ArmIO {
     public void updateInputs(ArmIOInputs inputs) {
         if(!inputs.openLoop) {
             // setVoltage(ffmodel.calculate(setpoint.position, setpoint.velocity));
-            double ffvolts = ffmodel.calculate(setpoint.position, setpoint.velocity);
+            double ffvolts = ffmodel.calculate(armEncoder.getPosition(), setpoint.velocity);
             onboardController.setReference(setpoint.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, ffvolts);
             setpoint = profile.calculate(0.02, setpoint, goal);
         }
