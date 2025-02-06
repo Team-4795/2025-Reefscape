@@ -10,6 +10,8 @@ public class ArmConstants {
     public static final double CORAL_L2 = 0;
     public static final double CORAL_L3 = 54.1 * (Math.PI/180);
 
+    public static final double MAX_VELOCITY = 2;
+    public static final double MAX_ACCELERATION = 2;
 
     // Default FF
     public static final double DEFAULTkG = 1.02;
