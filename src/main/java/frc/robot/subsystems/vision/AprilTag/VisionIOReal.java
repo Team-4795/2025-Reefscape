@@ -11,6 +11,8 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.drive.RobotDriveBase;
 
 public class VisionIOReal implements VisionIO {
     List<PhotonPipelineResult> result;
@@ -87,17 +89,28 @@ public class VisionIOReal implements VisionIO {
                 if(target != null) {
                     inputs.bestTag = target.getFiducialId();
 
-                    for(int j = 0; j < VisionConstants.redReefIds.length; j++)
+                    if(DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red))
                     {
-                        if(inputs.bestTag == VisionConstants.redReefIds[j])
+                        for(int j = 0; j < VisionConstants.redReefIds.length; j++)
                         {
-                            VisionConstants.aprilTagFieldLayout.getTagPose(inputs.bestTag).ifPresentOrElse((pose) -> {
-                                inputs.reefPose = pose;
-                            }, () -> {
-                                inputs.reefPose = new Pose3d();
-                            });
+                            if(inputs.bestTag == VisionConstants.redReefIds[j])
+                            {
+                                inputs.reefPose = VisionConstants.redReefScoringPoses[inputs.bestTag - 6];
+                                break;
+                            }
+                        }
+                    }
+
+                    else if(DriverStation.getAlliance().get().equals(DriverStation.Alliance.Blue))
+                    {
+                        for(int j = 0; j < VisionConstants.blueReefIds.length; j++)
+                    {
+                        if(inputs.bestTag == VisionConstants.blueReefIds[j])
+                        {
+                            inputs.reefPose = VisionConstants.blueReefScoringPoses[inputs.bestTag - 17];
                             break;
                         }
+                    }
                     }
                 }
             }

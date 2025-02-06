@@ -13,7 +13,7 @@ public interface VisionIO {
         int[] tags = new int[] {};
 
         int bestTag = 0;
-        Pose3d reefPose = new Pose3d();
+        Pose2d reefPose = new Pose2d();
 
         double roll = 0.0;
         double pitch = 0.0;

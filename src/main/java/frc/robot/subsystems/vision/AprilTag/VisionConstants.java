@@ -106,6 +106,7 @@ public class VisionConstants {
         aprilTagFieldLayout.getTagPose(11).get().toPose2d()
     };
 
+
     public static final Pose2d[] redReefScoringPoses =
     new Pose2d[] {
         redReefTag[0].plus(new Transform2d(0.6, 0, new Rotation2d(Math.PI))),
@@ -114,6 +115,27 @@ public class VisionConstants {
         redReefTag[3].plus(new Transform2d(0.6, 0, new Rotation2d(Math.PI))),
         redReefTag[4].plus(new Transform2d(0.6, 0, new Rotation2d(Math.PI))),
         redReefTag[5].plus(new Transform2d(0.6, 0, new Rotation2d(Math.PI))),
+    };
+
+    private static final Pose2d[] blueReefTag =
+    new Pose2d[] {
+        aprilTagFieldLayout.getTagPose(17).get().toPose2d(),
+        aprilTagFieldLayout.getTagPose(18).get().toPose2d(),
+        aprilTagFieldLayout.getTagPose(19).get().toPose2d(),
+        aprilTagFieldLayout.getTagPose(20).get().toPose2d(),
+        aprilTagFieldLayout.getTagPose(21).get().toPose2d(),
+        aprilTagFieldLayout.getTagPose(22).get().toPose2d()
+    };
+
+    
+    public static final Pose2d[] blueReefScoringPoses =
+    new Pose2d[] {
+        blueReefTag[0].plus(new Transform2d(0.6, 0, new Rotation2d(Math.PI))),
+        blueReefTag[1].plus(new Transform2d(0.6, 0, new Rotation2d(Math.PI))),
+        blueReefTag[2].plus(new Transform2d(0.6, 0, new Rotation2d(Math.PI))),
+        blueReefTag[3].plus(new Transform2d(0.6, 0, new Rotation2d(Math.PI))),
+        blueReefTag[4].plus(new Transform2d(0.6, 0, new Rotation2d(Math.PI))),
+        blueReefTag[5].plus(new Transform2d(0.6, 0, new Rotation2d(Math.PI))),
     };
 
     public static final double areaCutoff = 11;
