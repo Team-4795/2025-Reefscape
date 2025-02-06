@@ -119,17 +119,15 @@ public class RobotContainer {
     //     elevator));
 
     OIConstants.operatorController.rightBumper().whileTrue(
-      Commands.startEnd(
+      Commands.run(
         () -> elevator.setVoltage(4), 
-        () -> elevator.setVoltage(-ElevatorConstants.kg), 
         elevator
       )
     );
 
     OIConstants.operatorController.leftBumper().whileTrue(
-      Commands.startEnd(
+      Commands.run(
         () -> elevator.setVoltage(-4), 
-        () -> elevator.setVoltage(-ElevatorConstants.kg), 
         elevator
       )
     );

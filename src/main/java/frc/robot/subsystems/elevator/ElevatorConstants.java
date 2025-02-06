@@ -4,7 +4,8 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 
 public final class ElevatorConstants{
-    public static final double maxDistance = 0.80;
+    public static final double maxDistance = 0.7112;
+    public static final double minDistance = 0.0;
     // public static final double constraints = 0.2; //figure this out later
     public static final Constraints constraints = new Constraints(4, 5); //change later
 

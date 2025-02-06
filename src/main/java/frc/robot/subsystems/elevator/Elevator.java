@@ -11,22 +11,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class Elevator extends SubsystemBase {
     private ElevatorIO io;
     private ElevatorIOInputsAutoLogged inputs = new ElevatorIOInputsAutoLogged();
-    private double voltage = 0;
-
-    @AutoLogOutput
-    private double leftMovingSpeed = 0.0;
-
-    @AutoLogOutput
-    private double rightMovingSpeed = 0.0;
-
-    @AutoLogOutput
-    private double setGoal = 0.0;
-
-    @AutoLogOutput
-    private double setPoint = 0.0;
-    
-
-    private double maxDistance = ElevatorConstants.maxDistance;
 
     private static Elevator instance;
     
@@ -44,17 +28,11 @@ public class Elevator extends SubsystemBase {
     private Elevator(ElevatorIO elevatorIO){
         io = elevatorIO;
         io.updateInputs(inputs);
+
+        setDefaultCommand(Commands.run(() -> setVoltage(-ElevatorConstants.kg)));
     }
-    
-
-    // public void setMovingSpeedRPM(double leftSpeed, double rightSpeed){
-    //     leftMovingSpeed = leftSpeed;
-    //     rightMovingSpeed = rightSpeed;
-    // }
-
 
     public Command setGoal(double goal){
-        
         return Commands.runOnce(() -> setOpenLoop(false)).andThen(() -> io.setGoal(goal), this);
     }
 
@@ -69,7 +47,6 @@ public class Elevator extends SubsystemBase {
 
     public double getPosition(){
         return inputs.elevatorLeftPositionMeters; //change later
-        
     }
 
     public double getVelocity() {
@@ -85,7 +62,6 @@ public class Elevator extends SubsystemBase {
     public void setVoltage(double volts) {
         setOpenLoop(true);
         io.setVoltage(volts);
-        voltage = volts;
     }
 
     @Override
@@ -93,11 +69,4 @@ public class Elevator extends SubsystemBase {
         io.updateInputs(inputs);
         Logger.processInputs(getName(), inputs);
     }
-
-    } 
-
-
-
-
-
-
+}
