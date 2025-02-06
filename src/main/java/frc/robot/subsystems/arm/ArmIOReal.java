@@ -3,8 +3,11 @@ package frc.robot.subsystems.arm;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 
 import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkAbsoluteEncoder;
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -23,6 +26,7 @@ public class ArmIOReal implements ArmIO {
 
     private ArmFeedforward ffmodel = new ArmFeedforward(ArmConstants.DEFAULTkS, ArmConstants.DEFAULTkG, ArmConstants.DEFAULTkV, ArmConstants.DEFAULTkA);
     private final PIDController controller = new PIDController(0.04, 0,0.00);
+    private final SparkClosedLoopController onboardController = armMotor.getClosedLoopController();
     private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(2, 2);
     private final TrapezoidProfile profile = new TrapezoidProfile(constraints);
     private TrapezoidProfile.State goal = new TrapezoidProfile.State(0, 0);
@@ -31,16 +35,23 @@ public class ArmIOReal implements ArmIO {
     public ArmIOReal(){
         config.smartCurrentLimit(ArmConstants.CURRENT_LIMIT);
         config.idleMode(IdleMode.kBrake);
-        config.absoluteEncoder.positionConversionFactor(1);
+
         config.absoluteEncoder.positionConversionFactor(Math.PI);
         config.absoluteEncoder.velocityConversionFactor(Math.PI / 60);
         config.absoluteEncoder.inverted(false);
+
         config.encoder.positionConversionFactor(Math.PI);
         config.encoder.velocityConversionFactor(Math.PI / 60);
+
         config.softLimit.forwardSoftLimitEnabled(true);
         config.softLimit.reverseSoftLimitEnabled(false);
         config.softLimit.forwardSoftLimit(ArmConstants.Sim.MAX_ANGLE);
         config.softLimit.reverseSoftLimit(ArmConstants.Sim.MIN_ANGLE);
+
+        config.closedLoop.p(0.04);
+        config.closedLoop.i(0.0);
+        config.closedLoop.d(0.0);
+
         armMotor.clearFaults();
         armMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
@@ -66,8 +77,9 @@ public class ArmIOReal implements ArmIO {
     @Override
     public void updateInputs(ArmIOInputs inputs) {
         if(!inputs.openLoop) {
-            // setVoltage(ffmodel.calculate(setpoint.position, setpoint.velocity) + controller.calculate(inputs.angularVelocity, setpoint.velocity));
-            setVoltage(ffmodel.calculate(setpoint.position, setpoint.velocity - ArmConstants.ARM_OFFSET));
+            // setVoltage(ffmodel.calculate(setpoint.position, setpoint.velocity));
+            double ffvolts = ffmodel.calculate(setpoint.position, setpoint.velocity);
+            onboardController.setReference(setpoint.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, ffvolts);
             setpoint = profile.calculate(0.02, setpoint, goal);
         }
 
@@ -79,6 +91,8 @@ public class ArmIOReal implements ArmIO {
     }
 
     public void setVoltage(double voltage) {
-        armMotor.setVoltage(MathUtil.clamp(-voltage, -12, 12));
+        double ffvolts = ffmodel.calculate(armEncoder.getPosition()  , 0);
+        onboardController.setReference(ffvolts, ControlType.kVoltage);
+        // armMotor.setVoltage(MathUtil.clamp(-voltage, -12, 12));
     }
 }
