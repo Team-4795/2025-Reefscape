@@ -127,9 +127,6 @@ public class ModuleIOTalonFX implements ModuleIO {
     driveTalonFX.setPosition(0);
     driveTalonFX.setInverted(true);
 
-    encoderconfig.positionConversionFactor(2 * Math.PI);
-    encoderconfig.velocityConversionFactor(2 * Math.PI / 60);
-
     turnSparkFlex.setCANTimeout(0);
 
    
