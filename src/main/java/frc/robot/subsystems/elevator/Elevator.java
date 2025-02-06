@@ -1,16 +1,10 @@
 package frc.robot.subsystems.elevator;
 
-
-import java.io.DataOutput;
-
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
-import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.Command;
 
 
@@ -73,17 +67,13 @@ public class Elevator extends SubsystemBase {
         io.moveElevator(speed);
     }
 
-    public double getTruePosition() {
-        return getPosition();
-    }
-
     public double getPosition(){
-        return maxDistance; //change later
+        return inputs.elevatorLeftPositionMeters; //change later
         
     }
 
     public double getVelocity() {
-        return maxDistance; //change later
+        return inputs.elevatorLeftVelocityMetersPerSecond; //change later
         
     }
 

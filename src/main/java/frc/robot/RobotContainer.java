@@ -168,20 +168,20 @@ public class RobotContainer {
         new InstantCommand(() -> Arm.getInstance().setGoal(ArmConstants.CORAL_L3)));
 
 
-      OIConstants.driverController.leftTrigger().whileTrue(
-        Commands.startEnd(
-        () -> Arm.getInstance().manualVoltage(OIConstants.operatorController.getLeftTriggerAxis() * 6), 
-        () -> Arm.getInstance().manualVoltage(0), 
-        Arm.getInstance()
-      ));
+      // OIConstants.driverController.leftTrigger().whileTrue(
+      //   Commands.startEnd(
+      //   () -> Arm.getInstance().manualVoltage(OIConstants.operatorController.getLeftTriggerAxis() * 6), 
+      //   () -> Arm.getInstance().manualVoltage(0), 
+      //   Arm.getInstance()
+      // ));
 
 
-      OIConstants.driverController.rightTrigger().whileTrue(
-        Commands.startEnd(
-        () -> Arm.getInstance().manualVoltage(OIConstants.operatorController.getRightTriggerAxis() * -6), 
-        () -> Arm.getInstance().manualVoltage(0), 
-        Arm.getInstance()
-      ));
+      // OIConstants.driverController.rightTrigger().whileTrue(
+      //   Commands.startEnd(
+      //   () -> Arm.getInstance().manualVoltage(OIConstants.operatorController.getRightTriggerAxis() * -6), 
+      //   () -> Arm.getInstance().manualVoltage(0), 
+      //   Arm.getInstance()
+      // ));
 
       OIConstants.driverController.leftTrigger().whileTrue(
         Commands.run(
@@ -192,7 +192,7 @@ public class RobotContainer {
       
       OIConstants.driverController.rightTrigger().whileTrue(
         Commands.run(
-          () -> Arm.getInstance().manualVoltage(OIConstants.operatorController.getLeftTriggerAxis() * -6), 
+          () -> Arm.getInstance().manualVoltage(OIConstants.operatorController.getLeftTriggerAxis() * -6 + ArmConstants.DEFAULTkG), 
           Arm.getInstance()
         )
       );

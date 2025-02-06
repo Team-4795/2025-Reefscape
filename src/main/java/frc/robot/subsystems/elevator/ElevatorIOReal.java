@@ -15,6 +15,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
 
 import com.revrobotics.spark.SparkBase;
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkFlex;
@@ -37,7 +38,7 @@ public class ElevatorIOReal implements ElevatorIO {
 
  //   private AbsoluteEncoder leftAbsoluteEncoder = leftElevatorMotor.getAbsoluteEncoder();
 
-    private final ElevatorFeedforward ffmodel = new ElevatorFeedforward(0, 0, 0);
+    private final ElevatorFeedforward ffmodel = new ElevatorFeedforward(ElevatorConstants.ks, ElevatorConstants.kg, ElevatorConstants.kv);
     private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(ElevatorConstants.MAX_VELOCITY, ElevatorConstants.MAX_ACCELERATION);
     private final PIDController controller = new PIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kP);
     private final TrapezoidProfile profile = new TrapezoidProfile(constraints);
@@ -54,9 +55,6 @@ public class ElevatorIOReal implements ElevatorIO {
 
     //final VelocityVoltage m_request = new VelocityVoltage(0).withSlot(0);
 
-    private boolean isEnabled;
-    private boolean hasPlayed = false;
-
     //zero stuff 
     public void zeroElevator(){
     //    double AbsolutePosition = leftAbsoluteEncoder.getPosition();
@@ -68,8 +66,8 @@ public class ElevatorIOReal implements ElevatorIO {
     public ElevatorIOReal(){
         leftElevatorMotor.clearFaults();
         rightElevatorMotor.clearFaults();
-        config.encoder.positionConversionFactor(Units.inchesToMeters(11.0/18.0));
-        config.encoder.velocityConversionFactor(Units.inchesToMeters(11.0/18.0)/60.0);    
+        config.encoder.positionConversionFactor(ElevatorConstants.conversionFactor);
+        config.encoder.velocityConversionFactor(ElevatorConstants.conversionFactor / 60);    
         config.smartCurrentLimit(ElevatorConstants.elevatorCurrentLimits);
         config.idleMode(IdleMode.kBrake);
 
@@ -96,6 +94,11 @@ public class ElevatorIOReal implements ElevatorIO {
         rightElevatorMotor.setVoltage(voltage);
     }
 
+
+    @Override
+    public void setGoal(double height) {
+        goal = new TrapezoidProfile.State(height, 0);
+    }
 
     @Override
     public void updateInputs(ElevatorIOInputs inputs) {

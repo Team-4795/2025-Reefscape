@@ -25,7 +25,6 @@ public class ArmIOReal implements ArmIO {
     private SparkAbsoluteEncoder armEncoder;
 
     private ArmFeedforward ffmodel = new ArmFeedforward(ArmConstants.DEFAULTkS, ArmConstants.DEFAULTkG, ArmConstants.DEFAULTkV, ArmConstants.DEFAULTkA);
-    private final PIDController controller = new PIDController(0.04, 0,0.00);
     private final SparkClosedLoopController onboardController = armMotor.getClosedLoopController();
     private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(2, 2);
     private final TrapezoidProfile profile = new TrapezoidProfile(constraints);
