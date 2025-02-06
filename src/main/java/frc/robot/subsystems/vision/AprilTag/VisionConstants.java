@@ -1,11 +1,16 @@
 package frc.robot.subsystems.vision.AprilTag;
 
+import static frc.robot.subsystems.vision.AprilTag.VisionConstants.aprilTagFieldLayout;
+
 import java.io.IOException;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
@@ -21,8 +26,6 @@ public class VisionConstants {
     public static final int aprilTagPipelineID = 0;
     public static final int reefDetectionPipelineID = 1;
 
-    public static final int[] redReefIds = {6, 7, 8, 9, 10, 11};
-    public static final int[] blueReefIds = {17, 18, 19, 20, 21, 22};
 
     public static final String[] cameraIds =
     new String[] {
@@ -61,22 +64,22 @@ public class VisionConstants {
         new Transform3d(
             new Translation3d(
                 Units.inchesToMeters(0),
-                Units.inchesToMeters(12),
-                Units.inchesToMeters(39.5)), 
+                Units.inchesToMeters(13),
+                Units.inchesToMeters(20)), 
             new Rotation3d(
                 0, 
-                Units.degreesToRadians(0), 
+                Units.degreesToRadians(-20), 
                 Units.degreesToRadians(135))),
 
         // Right Camera
         new Transform3d(
             new Translation3d(
                 Units.inchesToMeters(0),
-                -Units.inchesToMeters(12),
-                Units.inchesToMeters(39.5)), 
+                -Units.inchesToMeters(13),
+                Units.inchesToMeters(20)), 
             new Rotation3d(
                 0, 
-                Units.degreesToRadians(0), 
+                Units.degreesToRadians(-20), 
                 Units.degreesToRadians(-135)))};
 
     public static AprilTagFieldLayout aprilTagFieldLayout;
@@ -89,6 +92,29 @@ public class VisionConstants {
             e.printStackTrace();
         }
     }
+
+    public static final int[] redReefIds = {6, 7, 8, 9, 10, 11};
+    public static final int[] blueReefIds = {17, 18, 19, 20, 21, 22};
+
+    private static final Pose2d[] redReefTag =
+    new Pose2d[] {
+        aprilTagFieldLayout.getTagPose(6).get().toPose2d(),
+        aprilTagFieldLayout.getTagPose(7).get().toPose2d(),
+        aprilTagFieldLayout.getTagPose(8).get().toPose2d(),
+        aprilTagFieldLayout.getTagPose(9).get().toPose2d(),
+        aprilTagFieldLayout.getTagPose(10).get().toPose2d(),
+        aprilTagFieldLayout.getTagPose(11).get().toPose2d()
+    };
+
+    public static final Pose2d[] redReefScoringPoses =
+    new Pose2d[] {
+        redReefTag[0].plus(new Transform2d(0.6, 0, new Rotation2d(Math.PI))),
+        redReefTag[1].plus(new Transform2d(0.6, 0, new Rotation2d(Math.PI))),
+        redReefTag[2].plus(new Transform2d(0.6, 0, new Rotation2d(Math.PI))),
+        redReefTag[3].plus(new Transform2d(0.6, 0, new Rotation2d(Math.PI))),
+        redReefTag[4].plus(new Transform2d(0.6, 0, new Rotation2d(Math.PI))),
+        redReefTag[5].plus(new Transform2d(0.6, 0, new Rotation2d(Math.PI))),
+    };
 
     public static final double areaCutoff = 11;
     public static final double timeDelay = 0.5;

@@ -24,7 +24,7 @@ public class VisionIOSim implements VisionIO {
     int cameraId;
 
     public VisionIOSim() {
-        cameraId = 2;
+        cameraId = 3;
         visionSim = new VisionSystemSim("main");
         visionSim.addAprilTags(VisionConstants.aprilTagFieldLayout);
 

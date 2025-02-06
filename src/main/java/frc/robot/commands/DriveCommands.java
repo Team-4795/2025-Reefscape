@@ -75,20 +75,19 @@ public class DriveCommands {
   }
 
   public static Command driveToBestReefPos(Drive drive) {
-    reefPose = Vision.getInstance().getBestReefPose().toPose2d();
+    // reefPose = Vision.getInstance().getBestReefPose().toPose2d();
+    reefPose = VisionConstants.redReefScoringPoses[2];
     Logger.recordOutput("Reef Pose", reefPose);
 
-    DoubleSupplier distance = () -> drive.getPose().getTranslation().getDistance(reefPose.getTranslation());
-
     PathConstraints constraints = new PathConstraints(
-        3.0, 4.0,
+        5.0, 4.0,
         Units.degreesToRadians(540), Units.degreesToRadians(720));
 
     return AutoBuilder.pathfindToPose(
         reefPose,
         constraints,
         0.0
-        ).until(() -> distance.getAsDouble() < 0.5);
+        );
     }
 }
 
