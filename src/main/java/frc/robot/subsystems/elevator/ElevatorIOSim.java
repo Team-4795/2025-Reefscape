@@ -59,7 +59,7 @@ public void setVoltage(double volts){
 
 @Override
 public void setGoal(double height) {
-    goal = new TrapezoidProfile.State(height, 0.1);
+    goal = new TrapezoidProfile.State(height, 0);
         
 }
 

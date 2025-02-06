@@ -1,7 +1,5 @@
 package frc.robot.subsystems.intake;
 
-import javax.annotation.processing.SupportedOptions;
-
 import org.littletonrobotics.junction.AutoLog;
 
 public interface IntakeIO {

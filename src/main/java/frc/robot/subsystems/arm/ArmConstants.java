@@ -7,6 +7,10 @@ public class ArmConstants {
     public static final int CURRENT_LIMIT = 50;
     public static final double ARM_OFFSET = Math.PI/2;
 
+    public static final double CORAL_L2 = 0;
+    public static final double CORAL_L3 = 54.1 * (Math.PI/180);
+
+
     // Default FF
     public static final double DEFAULTkG = 1.02;
     public static final double DEFAULTkV = 1.01;

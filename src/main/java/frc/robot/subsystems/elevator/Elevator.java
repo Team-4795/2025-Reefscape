@@ -35,14 +35,6 @@ public class Elevator extends SubsystemBase {
     private double maxDistance = ElevatorConstants.maxDistance;
 
     private static Elevator instance;
-
-    private  PIDController controller = new PIDController(
-        ElevatorConstants.kP,
-        ElevatorConstants.kI,
-        ElevatorConstants.kD);
-
-    private ElevatorFeedforward feedforward = new ElevatorFeedforward(ElevatorConstants.ks, ElevatorConstants.kg, ElevatorConstants.kv);
-
     
     public static Elevator getInstance(){
         return instance;
@@ -96,7 +88,6 @@ public class Elevator extends SubsystemBase {
     }
 
     public void reset() {
-        controller.reset();
         io.resetEncoders();
         this.setGoal(getPosition());
     }
@@ -111,7 +102,6 @@ public class Elevator extends SubsystemBase {
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs(getName(), inputs);
-        io.setVoltage(voltage);
     }
 
     } 

@@ -10,6 +10,7 @@ import org.json.simple.parser.ParseException;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.DriveCommands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -149,37 +150,38 @@ public class RobotContainer {
      Constants.OIConstants.operatorController.a().whileTrue(Commands.startEnd(() -> intake.setIntakeSpeed(0.5), 
      () -> intake.setIntakeSpeed(0), intake));
 
-     OIConstants.driverController.povUp().whileTrue(
-        Commands.startEnd(
-          () -> Arm.getInstance().manualVoltage(9), 
-          () -> Arm.getInstance().manualVoltage(ArmConstants.DEFAULTkG * Math.cos(Arm.getInstance().getAngle() - Math.PI/2)),
-          Arm.getInstance()
-        )
-      );
+    //  OIConstants.driverController.povUp().whileTrue(
+    //     Commands.startEnd(
+    //       () -> Arm.getInstance().manualVoltage(9), 
+    //       () -> Arm.getInstance().manualVoltage(ArmConstants.DEFAULTkG * Math.cos(Arm.getInstance().getAngle() - Math.PI/2)),
+    //       Arm.getInstance()
+    //     )
+    //   );
       
-      OIConstants.driverController.povDown().whileTrue(
+      OIConstants.driverController.povDown().onTrue(
+        new InstantCommand(() -> Arm.getInstance().setGoal(0)));
+
+      OIConstants.driverController.povRight().onTrue(
+        new InstantCommand(() -> Arm.getInstance().setGoal(0)));
+
+      OIConstants.driverController.povUp().onTrue(
+        new InstantCommand(() -> Arm.getInstance().setGoal(ArmConstants.CORAL_L3)));
+
+
+      OIConstants.driverController.leftTrigger().whileTrue(
         Commands.startEnd(
-          () -> Arm.getInstance().manualVoltage(-9), 
-          () -> Arm.getInstance().manualVoltage(ArmConstants.DEFAULTkG * Math.cos(Arm.getInstance().getAngle() - Math.PI/2)),
-          Arm.getInstance()
-        )
-      );
+        () -> Arm.getInstance().manualVoltage(OIConstants.operatorController.getLeftTriggerAxis() * 6), 
+        () -> Arm.getInstance().manualVoltage(0), 
+        Arm.getInstance()
+      ));
 
 
-      // OIConstants.driverController.leftTrigger().whileTrue(
-      //   Commands.startEnd(
-      //   () -> Arm.getInstance().manualVoltage(OIConstants.operatorController.getLeftTriggerAxis() * 6), 
-      //   () -> Arm.getInstance().manualVoltage(0), 
-      //   Arm.getInstance()
-      // ));
-
-
-      // OIConstants.driverController.rightTrigger().whileTrue(
-      //   Commands.startEnd(
-      //   () -> Arm.getInstance().manualVoltage(OIConstants.operatorController.getRightTriggerAxis() * -6), 
-      //   () -> Arm.getInstance().manualVoltage(0), 
-      //   Arm.getInstance()
-      // ));
+      OIConstants.driverController.rightTrigger().whileTrue(
+        Commands.startEnd(
+        () -> Arm.getInstance().manualVoltage(OIConstants.operatorController.getRightTriggerAxis() * -6), 
+        () -> Arm.getInstance().manualVoltage(0), 
+        Arm.getInstance()
+      ));
 
       OIConstants.driverController.leftTrigger().whileTrue(
         Commands.run(

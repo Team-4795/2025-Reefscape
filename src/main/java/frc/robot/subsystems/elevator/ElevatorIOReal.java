@@ -39,7 +39,7 @@ public class ElevatorIOReal implements ElevatorIO {
 
     private final ElevatorFeedforward ffmodel = new ElevatorFeedforward(0, 0, 0);
     private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(ElevatorConstants.MAX_VELOCITY, ElevatorConstants.MAX_ACCELERATION);
-    private final PIDController controller = new PIDController(1, 0, 0);
+    private final PIDController controller = new PIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kP);
     private final TrapezoidProfile profile = new TrapezoidProfile(constraints);
     private TrapezoidProfile.State setpoint = new TrapezoidProfile.State();
     private TrapezoidProfile.State goal = new TrapezoidProfile.State();
