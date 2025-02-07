@@ -16,10 +16,10 @@ public class Module {
     private final int index;
     private final SimpleMotorFeedforward drivFeedforward;
     private final PIDController driveFeddbackPidController;
-    private final PIDController turnFeedPidController;
     private Rotation2d angleSetpoint = null;
     private Double speedSetPoint = null;
     private Rotation2d turnRelativeOffset = null;
+    
 
     public Module(ModuleIO io, int index) {
         this.io = io;
@@ -29,27 +29,26 @@ public class Module {
             case REAL:
                 drivFeedforward = new SimpleMotorFeedforward(DriveConstants.TranslationKS, DriveConstants.TranslationKV);
                 driveFeddbackPidController = new PIDController(DriveConstants.TranslationKP, DriveConstants.TranslationKI, DriveConstants.TranslationKD);
-               turnFeedPidController = new PIDController(DriveConstants.RotationKP, DriveConstants.RotationKI, DriveConstants.RotationKD);
                 break;
             case REPLAY:
                 drivFeedforward = new SimpleMotorFeedforward(0.1, 0.13);
                 driveFeddbackPidController = new PIDController(0.05, 0.0, 0.0);
-                turnFeedPidController = new PIDController(7, 0.0, 0.0);
+                // turnOnboardPIDController = new PIDController(7, 0.0, 0.0);
                 break;
             case SIM:
                 drivFeedforward = new SimpleMotorFeedforward(0.1, 0.13);
                 driveFeddbackPidController = new PIDController(0.05, 0.0, 0.0);
-                turnFeedPidController = new PIDController(10, 0.0, 0.0);
+                // turnOnboardPIDController = new PIDController(10, 0.0, 0.0);
                 break;
             default:
                 drivFeedforward = new SimpleMotorFeedforward(0.0, 0.0);
                 driveFeddbackPidController = new PIDController(0.0, 0.0, 0.0);
-                turnFeedPidController = new PIDController(0.0, 0.0, 0.0);
+                // turnOnboardPIDController = new PIDController(0.0, 0.0, 0.0);
                 break;
         }
 
-        turnFeedPidController.enableContinuousInput(-Math.PI, Math.PI);
-        setBrakeMode(true);
+        // turnOnboardPIDController.enableContinuousInput(-Math.PI, Math.PI);
+        // setBrakeMode(true);
     }
 
     public void periodic() {
@@ -61,11 +60,11 @@ public class Module {
         }
 
         if (angleSetpoint != null) {
-            io.setTurnVoltage(turnFeedPidController.calculate(getAngle().getRadians(), angleSetpoint.getRadians()));
+            io.setTurnAngleReference(angleSetpoint);;
         }
 
         if (speedSetPoint != null) {
-            double adjustSpeedSetpoint = speedSetPoint * Math.cos(turnFeedPidController.getPositionError());
+            double adjustSpeedSetpoint = speedSetPoint; // add equation when we have onboard DrivePid
 
             double velocityRadPerSec = adjustSpeedSetpoint / DriveConstants.WHEEL_RADIUS;
             io.setDriveVoltage(

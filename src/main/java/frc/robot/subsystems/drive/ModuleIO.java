@@ -36,9 +36,17 @@ public interface ModuleIO {
   public default void setTurnVoltage(double volts) {
   }
 
+  public default void setTurnAngleReference(Rotation2d angle){
+
+  }
+
   public default void setDriveBrakeMode(boolean enable) {
   }
 
   public default void setTurnBrakeMode(boolean enable) {
+  }
+
+  public default void getError(double error){
+    
   }
 }

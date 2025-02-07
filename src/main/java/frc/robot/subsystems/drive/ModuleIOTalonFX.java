@@ -20,6 +20,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.REVLibError;
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.ExternalEncoderConfig;
@@ -27,6 +28,7 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -54,14 +56,15 @@ import frc.robot.commands.DriveCommands;
 public class ModuleIOTalonFX implements ModuleIO {
   final VelocityVoltage m_request = new VelocityVoltage(0).withSlot(0);
 
-  private final TalonFX driveTalonFX;
-  private final SparkFlex turnSparkFlex;
+  public final TalonFX driveTalonFX;
+  public final SparkFlex turnSparkFlex;
 
   private final RelativeEncoder turnRelativeEncoder;
   private final AbsoluteEncoder turnAbsoluteEncoder;
 
   private final boolean isTurnMotorInverted = true;
   public static final SparkFlexConfig turningConfig = new SparkFlexConfig();
+  
   
   public ModuleIOTalonFX(int index) {
 
@@ -94,9 +97,10 @@ public class ModuleIOTalonFX implements ModuleIO {
         break;
       default:
         throw new RuntimeException("Invalid module index");
+
     }
 
-    
+       
       turningConfig
         .idleMode(IdleMode.kBrake)
         .smartCurrentLimit(DriveConstants.turnCurrentLimit);
@@ -110,6 +114,9 @@ public class ModuleIOTalonFX implements ModuleIO {
         .outputRange(-1, 1)
         .positionWrappingEnabled(true)
         .positionWrappingInputRange(0, DriveConstants.turningFactor); 
+        
+
+
     
 
     turnSparkFlex.setCANTimeout(250);
@@ -206,6 +213,7 @@ public class ModuleIOTalonFX implements ModuleIO {
     return talonFXConfig;
   }
 
+
   @Override
   public void setDriveVoltage(double volts) {
     driveTalonFX.setVoltage(volts);
@@ -226,6 +234,13 @@ public class ModuleIOTalonFX implements ModuleIO {
     // turnSparkFlex.setIdleMode(enable ? IdleMode.kBrake : IdleMode.kCoast);
     configSpark(enable ? IdleMode.kBrake : IdleMode.kCoast);
   }
-
+  @Override
+  public void setTurnAngleReference(Rotation2d angle){
+    turnSparkFlex.getClosedLoopController().setReference(angle.getRadians(), ControlType.kPosition);
+  }
+  @Override
+  public void getError(double error){
+    turnSparkFlex.getClosedLoopController().getIAccum();
+    }
  
 }
