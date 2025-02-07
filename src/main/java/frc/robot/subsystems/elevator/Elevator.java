@@ -1,6 +1,5 @@
 package frc.robot.subsystems.elevator;
 
-import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj2.command.Commands;

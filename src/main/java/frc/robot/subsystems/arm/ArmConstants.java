@@ -10,7 +10,7 @@ public class ArmConstants {
     public static final double CORAL_L1 = Units.degreesToRadians(-34.74);
     public static final double CORAL_L2 = Units.degreesToRadians(-54.1); // with elevator up
     public static final double CORAL_L3 = Units.degreesToRadians(54.1);
-    public static final double CORAL_L4 = Units.degreesToRadians(54.61)
+    public static final double CORAL_L4 = Units.degreesToRadians(54.61);
 
     public static final double MAX_VELOCITY = 2;
     public static final double MAX_ACCELERATION = 2;

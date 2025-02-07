@@ -4,7 +4,7 @@ import edu.wpi.first.math.util.Units;
 
 public class DriveConstants {
 
-    public static final double MAX_LINEAR_SPEED = Units.metersToFeet(5);
+    public static final double MAX_LINEAR_SPEED = 17.14;
     public static final double TRACK_LENGTH = Units.inchesToMeters(21.25);
     public static final double TRACK_WIDTH = Units.inchesToMeters(21.25);
     public static final double DRIVE_BASE_RADIUS = Math.hypot(DriveConstants.TRACK_LENGTH / 2.0,
@@ -19,7 +19,7 @@ public class DriveConstants {
     public static final double RotationKP = 5.0;
     public static final double RotationKI = 0.0;
     public static final double RotationKD = 0.0;
-    public static final double WHEEL_RADIUS = Units.inchesToMeters(1.5);
+    public static final double WHEEL_RADIUS = Units.inchesToMeters(4);
     public static final double TurnGearing = 12.155818;
     public static final double DriveGearing = 6.11;
     public static final int turnCurrentLimit = 60; // May need to change later

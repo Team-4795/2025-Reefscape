@@ -1,7 +1,5 @@
 package frc.robot.subsystems.arm;
 
-import java.util.Arrays;
-
 import org.littletonrobotics.junction.AutoLog;
 public interface ArmIO {
     @AutoLog

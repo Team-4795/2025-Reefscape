@@ -28,12 +28,10 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
-import frc.robot.commands.DriveCommands;
 
 /**
  * Module IO implementation for SparkMax drive motor controller, SparkMax turn
@@ -64,7 +62,7 @@ public class ModuleIOTalonFX implements ModuleIO {
 
   private final boolean isTurnMotorInverted = true;
   public static final SparkFlexConfig turningConfig = new SparkFlexConfig();
-  
+  public static final TalonFXConfiguration driveConfig = new TalonFXConfiguration();
   
   public ModuleIOTalonFX(int index) {
 
@@ -75,12 +73,15 @@ public class ModuleIOTalonFX implements ModuleIO {
         turnSparkFlex = new SparkFlex(2, MotorType.kBrushless);
         turnAbsoluteEncoder = turnSparkFlex.getAbsoluteEncoder();
         driveTalonFX.setInverted(false);
+        driveConfig.Audio.BeepOnBoot = true;
+
         break;
       case 1:
         // Front right
         driveTalonFX = new TalonFX(3);
         turnSparkFlex = new SparkFlex(4, MotorType.kBrushless);
         turnAbsoluteEncoder = turnSparkFlex.getAbsoluteEncoder();
+        driveConfig.Audio.BeepOnBoot = true;
         break;
       case 2:
         // Back left
@@ -88,12 +89,14 @@ public class ModuleIOTalonFX implements ModuleIO {
         turnSparkFlex = new SparkFlex(7, MotorType.kBrushless);
         turnAbsoluteEncoder = turnSparkFlex.getAbsoluteEncoder();
         driveTalonFX.setInverted(false);
+        driveConfig.Audio.BeepOnBoot = true;
         break;
       case 3:
         // Back right
         driveTalonFX = new TalonFX(6);
         turnSparkFlex = new SparkFlex(5, MotorType.kBrushless);
         turnAbsoluteEncoder = turnSparkFlex.getAbsoluteEncoder();
+        driveConfig.Audio.BeepOnBoot = true;
         break;
       default:
         throw new RuntimeException("Invalid module index");
@@ -114,6 +117,9 @@ public class ModuleIOTalonFX implements ModuleIO {
         .outputRange(-1, 1)
         .positionWrappingEnabled(true)
         .positionWrappingInputRange(0, DriveConstants.turningFactor); 
+
+      driveConfig
+        .Audio.BeepOnBoot = true;
         
 
 
@@ -137,9 +143,9 @@ public class ModuleIOTalonFX implements ModuleIO {
     turnSparkFlex.setCANTimeout(0);
 
    
-    var config = config();
-    var configSpark = configSpark(IdleMode.kBrake);
-    configSpark.apply(encoderconfig);
+     var config = config();
+    // var configSpark = configSpark(IdleMode.kBrake);
+    // configSpark.apply(encoderconfig);
 
     driveTalonFX.optimizeBusUtilization();
 
@@ -149,7 +155,7 @@ public class ModuleIOTalonFX implements ModuleIO {
     REVLibError status2 = REVLibError.kError; // not work maybe
     for (int i = 0; i < 5; i++) {
       status = driveTalonFX.getConfigurator().apply(config);
-      turnSparkFlex.configure(configSpark, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+      turnSparkFlex.configure(turningConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
       if (status.isOK())
         break;
     }
@@ -181,18 +187,18 @@ public class ModuleIOTalonFX implements ModuleIO {
     inputs.turnCurrentAmps = new double[] { turnSparkFlex.getOutputCurrent() };
   }
 
-  private SparkFlexConfig configSpark(IdleMode idle) {
-    var turningConfig = new SparkFlexConfig();
+  // private SparkFlexConfig configSpark(IdleMode idle) {
+  //   var turningConfig = new SparkFlexConfig();
 
-    turningConfig.smartCurrentLimit(DriveConstants.turnCurrentLimit);
-    turningConfig.voltageCompensation(12.0);
+  //   turningConfig.smartCurrentLimit(DriveConstants.turnCurrentLimit);
+  //   turningConfig.voltageCompensation(12.0);
 
-    if (idle != null) {
-      turningConfig.idleMode(idle);
-    }
+  //   if (idle != null) {
+  //     turningConfig.idleMode();
+  //   }
 
-    return turningConfig;
-  }
+  //   return turningConfig;
+  // }
 
   private TalonFXConfiguration config() {
     var talonFXConfig = new TalonFXConfiguration();
@@ -229,11 +235,11 @@ public class ModuleIOTalonFX implements ModuleIO {
   // driveTalonFX.setBrakeMode(enable ? IdleMode.kBrake : IdleMode.kCoast);
   // }
 
-  @Override
-  public void setTurnBrakeMode(boolean enable) {
-    // turnSparkFlex.setIdleMode(enable ? IdleMode.kBrake : IdleMode.kCoast);
-    configSpark(enable ? IdleMode.kBrake : IdleMode.kCoast);
-  }
+  // @Override
+  // public void setTurnBrakeMode(boolean enable) {
+  //   // turnSparkFlex.setIdleMode(enable ? IdleMode.kBrake : IdleMode.kCoast);
+  //   configSpark(enable ? IdleMode.kBrake : IdleMode.kCoast);
+  // }
   @Override
   public void setTurnAngleReference(Rotation2d angle){
     turnSparkFlex.getClosedLoopController().setReference(angle.getRadians(), ControlType.kPosition);
