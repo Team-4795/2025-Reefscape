@@ -13,10 +13,15 @@
 
 package frc.robot.subsystems.drive;
 
+import java.io.ObjectInputFilter.Config;
+
 import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.mechanisms.swerve.LegacySwerveModuleConstants;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.REVLibError;
@@ -60,7 +65,7 @@ public class ModuleIOTalonFX implements ModuleIO {
   private final RelativeEncoder turnRelativeEncoder;
   private final AbsoluteEncoder turnAbsoluteEncoder;
 
-  private final boolean isTurnMotorInverted = true;
+ 
   public static final SparkFlexConfig turningConfig = new SparkFlexConfig();
   public static final TalonFXConfiguration driveConfig = new TalonFXConfiguration();
   
@@ -72,38 +77,31 @@ public class ModuleIOTalonFX implements ModuleIO {
         driveTalonFX = new TalonFX(1);
         turnSparkFlex = new SparkFlex(2, MotorType.kBrushless);
         turnAbsoluteEncoder = turnSparkFlex.getAbsoluteEncoder();
-        driveTalonFX.setInverted(false);
-        driveConfig.Audio.BeepOnBoot = true;
-
         break;
       case 1:
         // Front right
         driveTalonFX = new TalonFX(3);
         turnSparkFlex = new SparkFlex(4, MotorType.kBrushless);
         turnAbsoluteEncoder = turnSparkFlex.getAbsoluteEncoder();
-        driveConfig.Audio.BeepOnBoot = true;
         break;
       case 2:
         // Back left
         driveTalonFX = new TalonFX(8);
         turnSparkFlex = new SparkFlex(7, MotorType.kBrushless);
         turnAbsoluteEncoder = turnSparkFlex.getAbsoluteEncoder();
-        driveTalonFX.setInverted(false);
-        driveConfig.Audio.BeepOnBoot = true;
         break;
       case 3:
         // Back right
         driveTalonFX = new TalonFX(6);
         turnSparkFlex = new SparkFlex(5, MotorType.kBrushless);
         turnAbsoluteEncoder = turnSparkFlex.getAbsoluteEncoder();
-        driveConfig.Audio.BeepOnBoot = true;
         break;
       default:
         throw new RuntimeException("Invalid module index");
 
     }
 
-       
+      // turning SparkFlex Configuration 
       turningConfig
         .idleMode(IdleMode.kBrake)
         .smartCurrentLimit(DriveConstants.turnCurrentLimit);
@@ -117,44 +115,47 @@ public class ModuleIOTalonFX implements ModuleIO {
         .outputRange(-1, 1)
         .positionWrappingEnabled(true)
         .positionWrappingInputRange(0, DriveConstants.turningFactor); 
-
-      driveConfig
-        .Audio.BeepOnBoot = true;
-        
-
-
-    
-
     turnSparkFlex.setCANTimeout(250);
-
-    turnRelativeEncoder = turnSparkFlex.getEncoder(); // ???
+    turnRelativeEncoder = turnSparkFlex.getEncoder(); // only getting one?
     final ExternalEncoderConfig encoderconfig = new ExternalEncoderConfig();
-
     encoderconfig.measurementPeriod(10);
     turnRelativeEncoder.setPosition(0.0);
     encoderconfig.measurementPeriod(10);
     encoderconfig.averageDepth(2);
 
-    turnSparkFlex.setInverted(isTurnMotorInverted);
 
-    driveTalonFX.setPosition(0);
-    driveTalonFX.setInverted(true);
+  // Drive TalonFX Configuration
+      driveConfig.MotorOutput.Inverted = DriveConstants.driveMotorInverted;
+      driveConfig.MotorOutput.NeutralMode = DriveConstants.driveMotorNeutralMode;
+      driveConfig.Feedback.SensorToMechanismRatio = DriveConstants.DriveGearing;
+  
+      // May need to add Thresholds
+      driveConfig.CurrentLimits.StatorCurrentLimitEnable = true;
+      driveConfig.CurrentLimits.StatorCurrentLimit = DriveConstants.driveCurrentLimit;
+      // driveConfig.Slot0 = new Slot0Configs().withKP(0).withKI(0).withKD(0)
+      driveConfig.Slot0.kP = DriveConstants.TranslationKP;
+      driveConfig.Slot0.kI = DriveConstants.TranslationKI;
+      driveConfig.Slot0.kD = DriveConstants.TranslationKD;
+      // driveConfig.Slot0.kS = DriveConstants.TranslationKS;
+      // driveConfig.Slot0.kV = DriveConstants.TranslationKV;
+    
+      //May need to change ramp and openloop
+      driveConfig.ClosedLoopRamps.DutyCycleClosedLoopRampPeriod = DriveConstants.closedLoopRamp;
+      driveConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = DriveConstants.closedLoopRamp;
+      driveConfig.Audio.BeepOnBoot = true;  
+      driveTalonFX.setPosition(0);
+      driveTalonFX.optimizeBusUtilization();
+      driveTalonFX.clearStickyFaults();
+      driveConfig.TorqueCurrent.PeakForwardTorqueCurrent = DriveConstants.driveCurrentLimit;
+      driveConfig.TorqueCurrent.PeakReverseTorqueCurrent = -DriveConstants.driveCurrentLimit;
+      
 
-    turnSparkFlex.setCANTimeout(0);
 
-   
-     var config = config();
-    // var configSpark = configSpark(IdleMode.kBrake);
-    // configSpark.apply(encoderconfig);
-
-    driveTalonFX.optimizeBusUtilization();
-
-    driveTalonFX.clearStickyFaults();
 
     StatusCode status = StatusCode.StatusCodeNotInitialized;
-    REVLibError status2 = REVLibError.kError; // not work maybe
-    for (int i = 0; i < 5; i++) {
-      status = driveTalonFX.getConfigurator().apply(config);
+    // REVLibError status2 = REVLibError.kError; // not work maybe
+     for (int i = 0; i < 5; i++) {
+       status = driveTalonFX.getConfigurator().apply(driveConfig);
       turnSparkFlex.configure(turningConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
       if (status.isOK())
         break;
@@ -187,38 +188,6 @@ public class ModuleIOTalonFX implements ModuleIO {
     inputs.turnCurrentAmps = new double[] { turnSparkFlex.getOutputCurrent() };
   }
 
-  // private SparkFlexConfig configSpark(IdleMode idle) {
-  //   var turningConfig = new SparkFlexConfig();
-
-  //   turningConfig.smartCurrentLimit(DriveConstants.turnCurrentLimit);
-  //   turningConfig.voltageCompensation(12.0);
-
-  //   if (idle != null) {
-  //     turningConfig.idleMode();
-  //   }
-
-  //   return turningConfig;
-  // }
-
-  private TalonFXConfiguration config() {
-    var talonFXConfig = new TalonFXConfiguration();
-
-    talonFXConfig.Slot0.kP = 1;
-    talonFXConfig.Slot0.kI = 0;
-    talonFXConfig.Slot0.kD = 0;
-    talonFXConfig.Slot0.kS = 0;
-    talonFXConfig.Slot0.kV = 0;
-
-    talonFXConfig.CurrentLimits.StatorCurrentLimitEnable = true;
-    talonFXConfig.CurrentLimits.StatorCurrentLimit = DriveConstants.driveCurrentLimit; // CurrentLimits.drive;
-
-    talonFXConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-
-    talonFXConfig.Audio.BeepOnBoot = true;
-
-    return talonFXConfig;
-  }
-
 
   @Override
   public void setDriveVoltage(double volts) {
@@ -230,16 +199,20 @@ public class ModuleIOTalonFX implements ModuleIO {
     turnSparkFlex.setVoltage(volts);
   }
 
-  // @Override
-  // public void setDriveBrakeMode(boolean enable) {
-  // driveTalonFX.setBrakeMode(enable ? IdleMode.kBrake : IdleMode.kCoast);
-  // }
+   @Override
+   public void setDriveBrakeMode(boolean enable) {
+   if (driveConfig.MotorOutput.NeutralMode == NeutralModeValue.Brake){
+    enable = true;
+   } else {
+    enable = false;
+      }
+   }
 
-  // @Override
-  // public void setTurnBrakeMode(boolean enable) {
-  //   // turnSparkFlex.setIdleMode(enable ? IdleMode.kBrake : IdleMode.kCoast);
-  //   configSpark(enable ? IdleMode.kBrake : IdleMode.kCoast);
-  // }
+   @Override
+  public void setTurnBrakeMode(boolean enable) {
+     turningConfig.idleMode(enable ? IdleMode.kBrake : IdleMode.kCoast);
+   }
+
   @Override
   public void setTurnAngleReference(Rotation2d angle){
     turnSparkFlex.getClosedLoopController().setReference(angle.getRadians(), ControlType.kPosition);
@@ -248,5 +221,5 @@ public class ModuleIOTalonFX implements ModuleIO {
   public void getError(double error){
     turnSparkFlex.getClosedLoopController().getIAccum();
     }
- 
+  
 }

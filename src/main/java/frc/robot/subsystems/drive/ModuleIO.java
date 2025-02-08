@@ -47,6 +47,7 @@ public interface ModuleIO {
   }
 
   public default void getError(double error){
-    
+
   }
+
 }

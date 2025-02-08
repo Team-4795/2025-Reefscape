@@ -1,6 +1,5 @@
 package frc.robot.subsystems.drive;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -15,7 +14,7 @@ public class Module {
     private final ModuleIOInputsAutoLogged inputs = new ModuleIOInputsAutoLogged();
     private final int index;
     private final SimpleMotorFeedforward drivFeedforward;
-    private final PIDController driveFeddbackPidController;
+    // private final PIDController driveFeedBackPidController;
     private Rotation2d angleSetpoint = null;
     private Double speedSetPoint = null;
     private Rotation2d turnRelativeOffset = null;
@@ -28,27 +27,23 @@ public class Module {
         switch (Constants.currentMode) {
             case REAL:
                 drivFeedforward = new SimpleMotorFeedforward(DriveConstants.TranslationKS, DriveConstants.TranslationKV);
-                driveFeddbackPidController = new PIDController(DriveConstants.TranslationKP, DriveConstants.TranslationKI, DriveConstants.TranslationKD);
+                // driveFeedBackPidController = new PIDController(DriveConstants.TranslationKP, DriveConstants.TranslationKI, DriveConstants.TranslationKD);
                 break;
             case REPLAY:
                 drivFeedforward = new SimpleMotorFeedforward(0.1, 0.13);
-                driveFeddbackPidController = new PIDController(0.05, 0.0, 0.0);
-                // turnOnboardPIDController = new PIDController(7, 0.0, 0.0);
+                // driveFeedBackPidController = new PIDController(0.05, 0.0, 0.0);
                 break;
             case SIM:
                 drivFeedforward = new SimpleMotorFeedforward(0.1, 0.13);
-                driveFeddbackPidController = new PIDController(0.05, 0.0, 0.0);
-                // turnOnboardPIDController = new PIDController(10, 0.0, 0.0);
+                // driveFeedBackPidController = new PIDController(0.05, 0.0, 0.0);
                 break;
             default:
                 drivFeedforward = new SimpleMotorFeedforward(0.0, 0.0);
-                driveFeddbackPidController = new PIDController(0.0, 0.0, 0.0);
-                // turnOnboardPIDController = new PIDController(0.0, 0.0, 0.0);
+                // driveFeedBackPidController = new PIDController(0.0, 0.0, 0.0);
                 break;
         }
 
-        // turnOnboardPIDController.enableContinuousInput(-Math.PI, Math.PI);
-        // setBrakeMode(true);
+        
     }
 
     public void periodic() {
@@ -63,14 +58,15 @@ public class Module {
             io.setTurnAngleReference(angleSetpoint);;
         }
 
-        if (speedSetPoint != null) {
-            double adjustSpeedSetpoint = speedSetPoint; // add equation when we have onboard DrivePid
+        // if (speedSetPoint != null) {
+        //     double adjustSpeedSetpoint = speedSetPoint * Math.cos(io.getError()) ; // add equation with onboard DrivePid
 
-            double velocityRadPerSec = adjustSpeedSetpoint / DriveConstants.WHEEL_RADIUS;
-            io.setDriveVoltage(
-                    drivFeedforward.calculate(velocityRadPerSec)
-                            + driveFeddbackPidController.calculate(inputs.driveVelocityRadPerSec, velocityRadPerSec));
-        }
+            
+        //     double velocityRadPerSec = adjustSpeedSetpoint / DriveConstants.WHEEL_RADIUS;
+        //     io.setDriveVoltage(
+        //             drivFeedforward.calculate(velocityRadPerSec)
+        //                     + driveFeedBackPidController.calculate(inputs.driveVelocityRadPerSec, velocityRadPerSec));
+        // }
     }
 
     public SwerveModuleState runSetpoint(SwerveModuleState state) {
@@ -109,7 +105,7 @@ public class Module {
         }
     }
 
-    public double getVelocityRadPerSec() {
+    public double getVelocityMetersPerSec() {
         return inputs.driveVelocityRadPerSec * DriveConstants.WHEEL_RADIUS;
     }
 
@@ -122,7 +118,7 @@ public class Module {
     }
 
     public SwerveModuleState getState() {
-        return new SwerveModuleState(getVelocityRadPerSec(), getAngle());
+        return new SwerveModuleState(getVelocityMetersPerSec(), getAngle());
     }
 
     public double getCharacterizationVelocity() {
