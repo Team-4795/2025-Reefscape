@@ -20,7 +20,7 @@ public final class ElevatorConstants{
     public static final double MAX_ACCELERATION = 1;
     public static final double MAX_VELOCITY = 1; 
     
-    public static final double conversionFactor = Units.inchesToMeters(1/9 * Math.PI * 1.751); // gearing * pi * sprocket diameter
+    public static final double conversionFactor = Units.inchesToMeters(1.0/9.0 * Math.PI * 1.751); // gearing * pi * sprocket diameter
 
 
     public static final int elevatorCurrentLimits = 40; //might need to adjust later
