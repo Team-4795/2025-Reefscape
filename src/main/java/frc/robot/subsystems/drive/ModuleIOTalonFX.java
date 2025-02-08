@@ -13,18 +13,12 @@
 
 package frc.robot.subsystems.drive;
 
-import java.io.ObjectInputFilter.Config;
-
 import com.ctre.phoenix6.StatusCode;
-import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.mechanisms.swerve.LegacySwerveModuleConstants;
-import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.AbsoluteEncoder;
-import com.revrobotics.REVLibError;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
@@ -136,8 +130,8 @@ public class ModuleIOTalonFX implements ModuleIO {
       driveConfig.Slot0.kP = DriveConstants.TranslationKP;
       driveConfig.Slot0.kI = DriveConstants.TranslationKI;
       driveConfig.Slot0.kD = DriveConstants.TranslationKD;
-      // driveConfig.Slot0.kS = DriveConstants.TranslationKS;
-      // driveConfig.Slot0.kV = DriveConstants.TranslationKV;
+      driveConfig.Slot0.kS = DriveConstants.TranslationKS;
+      driveConfig.Slot0.kV = DriveConstants.TranslationKV;
     
       //May need to change ramp and openloop
       driveConfig.ClosedLoopRamps.DutyCycleClosedLoopRampPeriod = DriveConstants.closedLoopRamp;
@@ -146,8 +140,7 @@ public class ModuleIOTalonFX implements ModuleIO {
       driveTalonFX.setPosition(0);
       driveTalonFX.optimizeBusUtilization();
       driveTalonFX.clearStickyFaults();
-      driveConfig.TorqueCurrent.PeakForwardTorqueCurrent = DriveConstants.driveCurrentLimit;
-      driveConfig.TorqueCurrent.PeakReverseTorqueCurrent = -DriveConstants.driveCurrentLimit;
+
       
 
 
@@ -221,5 +214,10 @@ public class ModuleIOTalonFX implements ModuleIO {
   public void getError(double error){
     turnSparkFlex.getClosedLoopController().getIAccum();
     }
+
+  @Override
+  public void setDesiredSpeed(double speed){
+    
+  }
   
 }

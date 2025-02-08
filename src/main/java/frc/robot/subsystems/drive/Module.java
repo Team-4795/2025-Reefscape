@@ -1,23 +1,38 @@
 package frc.robot.subsystems.drive;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.Constants;
-
+import frc.robot.Util.LoggedTunableNumber;
 import org.littletonrobotics.junction.Logger;
 
 public class Module {
+    private static final LoggedTunableNumber drivekS =
+    new LoggedTunableNumber("Drive/Module/DrivekS");
+private static final LoggedTunableNumber drivekV =
+    new LoggedTunableNumber("Drive/Module/DrivekV");
+private static final LoggedTunableNumber drivekP =
+    new LoggedTunableNumber("Drive/Module/DrivekP");
+    private static final LoggedTunableNumber drivekI =
+    new LoggedTunableNumber("Drive/Module/DrivekI");
+    private static final LoggedTunableNumber drivekD =
+    new LoggedTunableNumber("Drive/Module/DrivekD");
+private static final LoggedTunableNumber turnkP = new LoggedTunableNumber("Drive/Module/TurnkP");
+private static final LoggedTunableNumber turnkI = new LoggedTunableNumber("Drive/Module/TurnkI");
+private static final LoggedTunableNumber turnkD = new LoggedTunableNumber("Drive/Module/TurnkD");
 
     private final ModuleIO io;
     private final ModuleIOInputsAutoLogged inputs = new ModuleIOInputsAutoLogged();
     private final int index;
-    private final SimpleMotorFeedforward drivFeedforward;
-    // private final PIDController driveFeedBackPidController;
+    //  private final SimpleMotorFeedforward drivFeedforward;
+    //  private final PIDController driveFeedBackPidController;
     private Rotation2d angleSetpoint = null;
     private Double speedSetPoint = null;
     private Rotation2d turnRelativeOffset = null;
+    
     
 
     public Module(ModuleIO io, int index) {
@@ -26,20 +41,28 @@ public class Module {
 
         switch (Constants.currentMode) {
             case REAL:
-                drivFeedforward = new SimpleMotorFeedforward(DriveConstants.TranslationKS, DriveConstants.TranslationKV);
-                // driveFeedBackPidController = new PIDController(DriveConstants.TranslationKP, DriveConstants.TranslationKI, DriveConstants.TranslationKD);
-                break;
+            drivekS.initDefault(0.014);
+            drivekV.initDefault(0.134);
+            drivekP.initDefault(0.1);
+            drivekI.initDefault(0);
+            drivekD.initDefault(0);
+            turnkP.initDefault(10);
+            turnkI.initDefault(0);
+            turnkD.initDefault(0);
+            // drivFeedforward = new SimpleMotorFeedforward(DriveConstants.TranslationKS, DriveConstants.TranslationKV);
+               // driveFeedBackPidController = new PIDController(DriveConstants.TranslationKP, DriveConstants.TranslationKI, DriveConstants.TranslationKD);
+                 break;
             case REPLAY:
-                drivFeedforward = new SimpleMotorFeedforward(0.1, 0.13);
-                // driveFeedBackPidController = new PIDController(0.05, 0.0, 0.0);
+                //  drivFeedforward = new SimpleMotorFeedforward(0.1, 0.13);
+                //  driveFeedBackPidController = new PIDController(0.05, 0.0, 0.0);
                 break;
             case SIM:
-                drivFeedforward = new SimpleMotorFeedforward(0.1, 0.13);
-                // driveFeedBackPidController = new PIDController(0.05, 0.0, 0.0);
+                //  drivFeedforward = new SimpleMotorFeedforward(0.1, 0.13);
+                //  driveFeedBackPidController = new PIDController(0.05, 0.0, 0.0);
                 break;
             default:
-                drivFeedforward = new SimpleMotorFeedforward(0.0, 0.0);
-                // driveFeedBackPidController = new PIDController(0.0, 0.0, 0.0);
+                //  drivFeedforward = new SimpleMotorFeedforward(0.0, 0.0);
+                //  driveFeedBackPidController = new PIDController(0.0, 0.0, 0.0);
                 break;
         }
 

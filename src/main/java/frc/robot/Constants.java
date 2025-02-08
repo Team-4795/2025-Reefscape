@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class Constants {
+    public static final boolean tuningMode = false;
     public static final class IntakeSetpoints{
       public static final double intake = -0.6;
       public static final double slow = -0.3;

@@ -23,7 +23,7 @@ public class DriveConstants {
     public static final double RotationKI = 0.0;
     public static final double RotationKD = 0.0;
     public static final double WHEEL_RADIUS = Units.inchesToMeters(4);
-    public static final double TurnGearing = (468/35) * (10/11);
+    public static final double TurnGearing = (468.0/35.0) * (10.0/11.0);
     public static final double DriveGearing = 6.11;
     public static final int turnCurrentLimit = 60; // May need to change later
     public static final int driveCurrentLimit = 60;

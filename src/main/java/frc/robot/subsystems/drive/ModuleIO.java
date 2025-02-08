@@ -50,4 +50,8 @@ public interface ModuleIO {
 
   }
 
+  public default void setDesiredSpeed(double speed){
+    
+  }
+
 }
