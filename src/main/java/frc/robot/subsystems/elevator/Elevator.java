@@ -4,6 +4,7 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 
 
@@ -28,11 +29,20 @@ public class Elevator extends SubsystemBase {
         io = elevatorIO;
         io.updateInputs(inputs);
 
-        setDefaultCommand(Commands.run(() -> setVoltage(-ElevatorConstants.kg)));
+        setDefaultCommand(Commands.run(() -> setVoltage(-ElevatorConstants.kg), this));
     }
 
     public Command setGoal(double goal){
-        return Commands.runOnce(() -> setOpenLoop(false)).andThen(() -> io.setGoal(goal), this);
+         return Commands.startEnd(
+            () -> {
+                setOpenLoop(false);
+                io.setGoal(goal);
+            },
+            () -> {
+                setOpenLoop(true);
+            },
+            this
+        ).until(() -> MathUtil.isNear(goal, inputs.elevatorLeftPositionMeters, 0.008));
     }
 
     public void setOpenLoop(boolean openLoop) {

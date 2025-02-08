@@ -2,9 +2,11 @@ package frc.robot.subsystems.arm;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Gamepiece;
@@ -16,7 +18,7 @@ public class Arm extends SubsystemBase {
 
     private Arm(ArmIO io) {
         this.io = io;
-        setDefaultCommand(Commands.run(() -> io.hold()));
+        setDefaultCommand(Commands.run(() -> io.hold(), this));
     }
 
     public double getAngle() {
@@ -31,9 +33,17 @@ public class Arm extends SubsystemBase {
         return instance;
     }
 
-    public void setGoal(double angle) {
-        setOpenLoop(false);
-        io.setGoal(angle);
+    public Command setGoal(double angle) {
+        return Commands.startEnd(
+            () -> {
+                setOpenLoop(false);
+                io.setGoal(angle);
+            },
+            () -> {
+                setOpenLoop(true);
+            },
+            this
+        ).until(() -> MathUtil.isNear(angle, inputs.angularPosition, 0.008));
     }
 
     public void resetAbsoluteEncoder() {

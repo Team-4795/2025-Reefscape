@@ -183,6 +183,9 @@ public class RobotContainer {
           Arm.getInstance()
         )
       );
+
+      OIConstants.driverController.leftBumper().onTrue(Arm.getInstance().setGoal(ArmConstants.CORAL_L1));
+      OIConstants.driverController.rightBumper().onTrue(Arm.getInstance().setGoal(ArmConstants.CORAL_L2));
   }
 
   public Command getAutonomousCommand() {
