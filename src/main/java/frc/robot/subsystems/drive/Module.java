@@ -85,8 +85,8 @@ private static final LoggedTunableNumber turnkD = new LoggedTunableNumber("Drive
             //  double adjustSpeedSetpoint = speedSetPoint * Math.cos(io.getError()) ; // add equation with onboard DrivePid
 
             
-             double velocityRadPerSec = speedSetPoint / DriveConstants.WHEEL_RADIUS;
-             io.setDesiredSpeed(velocityRadPerSec);
+             double velocityRPS = speedSetPoint / 2 * Math.PI * DriveConstants.WHEEL_RADIUS;
+             io.setDesiredSpeed(velocityRPS);
             }
     }
 
