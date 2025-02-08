@@ -43,7 +43,7 @@ private static final LoggedTunableNumber turnkD = new LoggedTunableNumber("Drive
             case REAL:
             drivekS.initDefault(0.014);
             drivekV.initDefault(0.134);
-            drivekP.initDefault(0.1);
+            drivekP.initDefault(0.0);
             drivekI.initDefault(0);
             drivekD.initDefault(0);
             turnkP.initDefault(10);
@@ -81,15 +81,13 @@ private static final LoggedTunableNumber turnkD = new LoggedTunableNumber("Drive
             io.setTurnAngleReference(angleSetpoint);;
         }
 
-        // if (speedSetPoint != null) {
-        //     double adjustSpeedSetpoint = speedSetPoint * Math.cos(io.getError()) ; // add equation with onboard DrivePid
+         if (speedSetPoint != null) {
+            //  double adjustSpeedSetpoint = speedSetPoint * Math.cos(io.getError()) ; // add equation with onboard DrivePid
 
             
-        //     double velocityRadPerSec = adjustSpeedSetpoint / DriveConstants.WHEEL_RADIUS;
-        //     io.setDriveVoltage(
-        //             drivFeedforward.calculate(velocityRadPerSec)
-        //                     + driveFeedBackPidController.calculate(inputs.driveVelocityRadPerSec, velocityRadPerSec));
-        // }
+             double velocityRadPerSec = speedSetPoint / DriveConstants.WHEEL_RADIUS;
+             io.setDesiredSpeed(velocityRadPerSec);
+            }
     }
 
     public SwerveModuleState runSetpoint(SwerveModuleState state) {

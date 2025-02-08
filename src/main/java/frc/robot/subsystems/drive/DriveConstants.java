@@ -28,7 +28,7 @@ public class DriveConstants {
     public static final int turnCurrentLimit = 60; // May need to change later
     public static final int driveCurrentLimit = 60;
     public static final int pigeonID = 20;
-    public static final double turningFactor = 2*Math.PI;
+    public static final double turningFactor = 2 * Math.PI;
     public static final InvertedValue driveMotorInverted = InvertedValue.Clockwise_Positive;
     public static final NeutralModeValue driveMotorNeutralMode = NeutralModeValue.Brake;
     public static final double openLoopRamp = 0.25;

@@ -16,6 +16,7 @@ package frc.robot.subsystems.drive;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.AbsoluteEncoder;
@@ -51,17 +52,17 @@ import edu.wpi.first.math.util.Units;
  * "/Drive/ModuleX/TurnAbsolutePositionRad"
  */
 public class ModuleIOTalonFX implements ModuleIO {
-  final VelocityVoltage m_request = new VelocityVoltage(0).withSlot(0);
+  // final VelocityVoltage m_request = new VelocityVoltage(0).withSlot(0);
 
   public final TalonFX driveTalonFX;
   public final SparkFlex turnSparkFlex;
-
   private final RelativeEncoder turnRelativeEncoder;
   private final AbsoluteEncoder turnAbsoluteEncoder;
 
  
   public static final SparkFlexConfig turningConfig = new SparkFlexConfig();
   public static final TalonFXConfiguration driveConfig = new TalonFXConfiguration();
+
   
   public ModuleIOTalonFX(int index) {
 
@@ -167,13 +168,12 @@ public class ModuleIOTalonFX implements ModuleIO {
   public void updateInputs(ModuleIOInputs inputs) {
     inputs.drivePositionRad = Units.rotationsToRadians(driveTalonFX.getPosition().getValueAsDouble())
         / DriveConstants.DriveGearing;
-    inputs.driveVelocityRadPerSec = Units
-        .rotationsPerMinuteToRadiansPerSecond(driveTalonFX.getVelocity().getValueAsDouble())
+    inputs.driveVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(driveTalonFX.getVelocity().getValueAsDouble())
         / DriveConstants.DriveGearing;
     inputs.driveAppliedVolts = driveTalonFX.getMotorVoltage().getValueAsDouble();
     inputs.driveCurrentAmps = new double[] { driveTalonFX.getSupplyCurrent().getValueAsDouble() };
 
-    inputs.turnAbsolutePosition = Rotation2d.fromRadians(turnAbsoluteEncoder.getPosition());
+    inputs.turnAbsolutePosition = Rotation2d.fromRotations(turnAbsoluteEncoder.getPosition());
     inputs.turnPosition = Rotation2d.fromRotations(turnRelativeEncoder.getPosition() / DriveConstants.TurnGearing);
     inputs.turnVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(turnRelativeEncoder.getVelocity())
         / DriveConstants.TurnGearing;
@@ -210,14 +210,11 @@ public class ModuleIOTalonFX implements ModuleIO {
   public void setTurnAngleReference(Rotation2d angle){
     turnSparkFlex.getClosedLoopController().setReference(angle.getRadians(), ControlType.kPosition);
   }
-  @Override
-  public void getError(double error){
-    turnSparkFlex.getClosedLoopController().getIAccum();
-    }
 
   @Override
   public void setDesiredSpeed(double speed){
-    
+    final VelocityVoltage m_request = new VelocityVoltage(speed);
+    driveTalonFX.setControl(m_request);
   }
   
 }
