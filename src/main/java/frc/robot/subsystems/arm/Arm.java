@@ -43,7 +43,7 @@ public class Arm extends SubsystemBase {
     }
 
     public void resetAbsoluteEncoder() {
-        io.resetAbsoluteEncoder();
+        io.resetEncoder();
     }
 
     public void manualVoltage(double voltage) {

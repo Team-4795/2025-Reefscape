@@ -12,13 +12,15 @@ public interface ArmIO {
         public double setpointVelocity = 0.0;
         public double appliedOutput = 0.0; 
         public double busVoltage = 0.0;
+        public double relativeEncoderPosition = 0.0;
+        public double relativeEncoderVelocity = 0.0;
     }
 
     public default void updateInputs(ArmIOInputs inputs) {
         
     }
 
-    public default void resetAbsoluteEncoder() {
+    public default void resetEncoder() {
     }
 
     public default void setVoltage(double voltage) {

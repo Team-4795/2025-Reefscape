@@ -33,7 +33,7 @@ public class ArmIOSim implements ArmIO {
     }
 
     @Override
-    public void resetAbsoluteEncoder() {
+    public void resetEncoder() {
         armSim.setState(0, armSim.getVelocityRadPerSec());
     }
 

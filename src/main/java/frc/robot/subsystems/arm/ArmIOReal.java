@@ -37,6 +37,9 @@ public class ArmIOReal implements ArmIO {
         config.absoluteEncoder.velocityConversionFactor(Math.PI / 60);
         config.absoluteEncoder.inverted(false);
 
+        config.encoder.positionConversionFactor(2 * Math.PI / ArmConstants.Sim.GEARING);
+        config.encoder.velocityConversionFactor(2 * Math.PI / ArmConstants.Sim.GEARING);
+
         config.openLoopRampRate(1);
 
         // config.softLimit.forwardSoftLimitEnabled(true);
@@ -55,6 +58,7 @@ public class ArmIOReal implements ArmIO {
         armMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         armEncoder = armMotor.getAbsoluteEncoder();
+        armMotor.getEncoder().setPosition(getOffsetAngle());
     }
 
     @Override
@@ -81,7 +85,7 @@ public class ArmIOReal implements ArmIO {
     }
 
     @Override
-    public void resetAbsoluteEncoder() {
+    public void resetEncoder() {
         armMotor.getEncoder().setPosition(0);
     }
 
@@ -104,5 +108,7 @@ public class ArmIOReal implements ArmIO {
         inputs.goalAngle = goal.position;
         inputs.busVoltage = armMotor.getBusVoltage();
         inputs.appliedOutput = armMotor.getAppliedOutput();
+        inputs.relativeEncoderPosition = armMotor.getEncoder().getPosition();
+        inputs.relativeEncoderVelocity = armMotor.getEncoder().getVelocity();
     }
 }
