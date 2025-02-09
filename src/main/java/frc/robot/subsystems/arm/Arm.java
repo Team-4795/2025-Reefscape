@@ -51,6 +51,7 @@ public class Arm extends SubsystemBase {
     }
 
     public void manualVoltage(double voltage) {
+        Logger.recordOutput("isHolding", false);
         setOpenLoop(true);
         io.setVoltage(voltage);
     }

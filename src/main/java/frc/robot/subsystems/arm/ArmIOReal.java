@@ -1,5 +1,7 @@
 package frc.robot.subsystems.arm;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
@@ -35,15 +37,19 @@ public class ArmIOReal implements ArmIO {
         config.absoluteEncoder.velocityConversionFactor(Math.PI / 60);
         config.absoluteEncoder.inverted(false);
 
-        config.softLimit.forwardSoftLimitEnabled(true);
-        config.softLimit.reverseSoftLimitEnabled(false);
-        config.softLimit.forwardSoftLimit(ArmConstants.Sim.MAX_ANGLE);
-        config.softLimit.reverseSoftLimit(ArmConstants.Sim.MIN_ANGLE);
+        config.openLoopRampRate(1);
+
+        // config.softLimit.forwardSoftLimitEnabled(true);
+        // config.softLimit.reverseSoftLimitEnabled(false);
+        // config.softLimit.forwardSoftLimit(ArmConstants.Sim.MAX_ANGLE);
+        // config.softLimit.reverseSoftLimit(ArmConstants.Sim.MIN_ANGLE);
 
         config.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
         config.closedLoop.p(0.0);
         config.closedLoop.i(0.0);
         config.closedLoop.d(0.0);
+
+        config.inverted(true);
 
         armMotor.clearFaults();
         armMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -63,8 +69,11 @@ public class ArmIOReal implements ArmIO {
 
     @Override
     public void hold() {
-        double ffvolts = ffmodel.calculate(armEncoder.getPosition(), 0);
-        onboardController.setReference(ffvolts, ControlType.kVoltage);
+        double ffvolts = ffmodel.calculate(getOffsetAngle(), 0);
+        Logger.recordOutput("arm ffvolts", ffvolts);
+        Logger.recordOutput("isHolding", true);
+        Logger.recordOutput("arm angle", getOffsetAngle());
+        setVoltage(ffvolts);
     }
 
     @Override
@@ -78,19 +87,26 @@ public class ArmIOReal implements ArmIO {
         // armMotor.setVoltage(MathUtil.clamp(-voltage, -12, 12));
     }
 
+    public double getOffsetAngle() {
+        return armEncoder.getPosition() - ArmConstants.ARM_OFFSET;
+    }
+
     @Override
     public void updateInputs(ArmIOInputs inputs) {
         if(!inputs.openLoop) {
             // setVoltage(ffmodel.calculate(setpoint.position, setpoint.velocity));
-            double ffvolts = ffmodel.calculate(armEncoder.getPosition(), setpoint.velocity);
+            double ffvolts = ffmodel.calculate(getOffsetAngle(), setpoint.velocity);
             onboardController.setReference(setpoint.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, ffvolts);
             setpoint = profile.calculate(0.02, setpoint, goal);
         }
 
-        inputs.angularPosition = armEncoder.getPosition();
+        inputs.angularPosition = getOffsetAngle();
         inputs.angularVelocity = armEncoder.getVelocity();
         inputs.current = armMotor.getOutputCurrent();
         inputs.voltage = armMotor.getAppliedOutput() * armMotor.getBusVoltage();
         inputs.setpointVelocity = setpoint.velocity;
+        inputs.goalAngle = goal.position;
+        inputs.busVoltage = armMotor.getBusVoltage();
+        inputs.appliedOutput = armMotor.getAppliedOutput();
     }
 }

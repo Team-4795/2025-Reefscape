@@ -11,6 +11,8 @@ public interface ArmIO {
         public double goalAngle = 0.0;
         public boolean openLoop = true;
         public double setpointVelocity = 0.0;
+        public double appliedOutput = 0.0; 
+        public double busVoltage = 0.0;
     }
 
     public default void updateInputs(ArmIOInputs inputs) {

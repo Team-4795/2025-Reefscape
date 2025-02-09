@@ -19,6 +19,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIORealVortex;
 import frc.robot.subsystems.intake.IntakeIOSim;
+import frc.robot.subsystems.CANCoderTest;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmIOSim;
@@ -36,6 +37,7 @@ public class RobotContainer {
         elevator = Elevator.initialize(new ElevatorIOReal());
         intake = Intake.initialize(new IntakeIORealVortex());
         Arm.initialize(new ArmIOReal());
+        CANCoderTest canCoderTest = new CANCoderTest();
 
         // drive = new Drive(
         //     new GyroIOPigeon(),
@@ -162,25 +164,27 @@ public class RobotContainer {
       //   () -> Arm.getInstance().manualVoltage(0), 
       //   Arm.getInstance()
       // ));
-      OIConstants.driverController.leftTrigger().whileTrue(
+      OIConstants.driverController.y().whileTrue(
         Commands.run(
-          () -> Arm.getInstance().manualVoltage(OIConstants.operatorController.getLeftTriggerAxis() * 6), 
+          () -> Arm.getInstance().manualVoltage( 6), 
           Arm.getInstance()
         )
       );
       
-      OIConstants.driverController.rightTrigger().whileTrue(
+      // up
+      OIConstants.driverController.a().whileTrue(
         Commands.run(
-          () -> Arm.getInstance().manualVoltage(OIConstants.operatorController.getLeftTriggerAxis() * -6 + ArmConstants.DEFAULTkG), 
+          () -> Arm.getInstance().manualVoltage(-6), 
           Arm.getInstance()
         )
       );
 
-      OIConstants.driverController.leftBumper().onTrue(Arm.getInstance().setGoal(ArmConstants.CORAL_L1));
+      OIConstants.driverController.leftBumper().onTrue(Arm.getInstance().setGoal(0));
       OIConstants.driverController.rightBumper().onTrue(Arm.getInstance().setGoal(ArmConstants.CORAL_L2));
   }
 
   public Command getAutonomousCommand() {
-    return Commands.runOnce(() -> elevator.setVoltage(ElevatorConstants.kg));
+    return Commands.sequence(
+    );
   }
 }
