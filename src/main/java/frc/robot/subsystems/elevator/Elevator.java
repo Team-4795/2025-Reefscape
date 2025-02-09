@@ -33,24 +33,12 @@ public class Elevator extends SubsystemBase {
     }
 
     public Command setGoal(double goal){
-         return Commands.startEnd(
-            () -> {
-                setOpenLoop(false);
-                io.setGoal(goal);
-            },
-            () -> {
-                setOpenLoop(true);
-            },
-            this
-        ).until(() -> MathUtil.isNear(goal, inputs.elevatorLeftPositionMeters, 0.008));
-    }
-
-    public void setOpenLoop(boolean openLoop) {
-        inputs.openLoop = openLoop;
+        return Commands.runOnce(() -> io.setGoal(goal), this)
+        .andThen(Commands.run(() -> io.updateMotionProfile(), this))
+        .until(() -> MathUtil.isNear(goal, inputs.elevatorLeftPositionMeters, 0.008));
     }
 
     public  void moveElevator(double speed) {
-        setOpenLoop(true);
         io.moveElevator(speed);
     }
 
@@ -69,7 +57,6 @@ public class Elevator extends SubsystemBase {
     }
 
     public void setVoltage(double volts) {
-        setOpenLoop(true);
         io.setVoltage(volts);
     }
 

@@ -17,8 +17,6 @@ public interface ElevatorIO {
 
         public double goalHeight = 0.0;
         public double setpointVelocity = 0.0;
-
-        public boolean openLoop = true;
     }
     
 
@@ -36,6 +34,8 @@ public interface ElevatorIO {
         public default void moveElevator(double speed) {
 
         }
+
+    public default void updateMotionProfile() {}
     
         public default void setVoltage(double volts) {}   
         

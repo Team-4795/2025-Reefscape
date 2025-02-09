@@ -79,13 +79,14 @@ public class ElevatorIOReal implements ElevatorIO {
     }
 
     @Override
-    public void updateInputs(ElevatorIOInputs inputs) {
-        if(!inputs.openLoop){
-            double ffvolts = ffmodel.calculate(setpoint.velocity);
-            controller.setReference(setpoint.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, ffvolts);
-            setpoint = profile.calculate(0.02, setpoint, goal);
-        }
+    public void updateMotionProfile() {
+        double ffvolts = ffmodel.calculate(setpoint.velocity);
+        controller.setReference(setpoint.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, ffvolts);
+        setpoint = profile.calculate(0.02, setpoint, goal);
+    }
 
+    @Override
+    public void updateInputs(ElevatorIOInputs inputs) {
         inputs.elevatorRightCurrent = rightElevatorMotor.getOutputCurrent();
         inputs.elevatorRightAppliedVolts = rightElevatorMotor.getAppliedOutput() * leftElevatorMotor.getBusVoltage();
         inputs.elevatorRightPositionMeters = rightEncoder.getPosition();
