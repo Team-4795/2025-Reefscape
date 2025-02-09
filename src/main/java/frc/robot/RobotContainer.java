@@ -78,6 +78,7 @@ public class RobotContainer {
 
             
     }
+    RobotVisualizer robotVisualizer = new RobotVisualizer();
     configureBindings();
   }
 
@@ -112,6 +113,20 @@ public class RobotContainer {
       Commands.run(
         () -> elevator.setVoltage(-4), 
         elevator
+      )
+    );
+
+    Constants.OIConstants.operatorController.povRight().onTrue(
+      Commands.parallel(
+        Arm.getInstance().setGoal(ArmConstants.CORAL_L4),
+        Elevator.getInstance().setGoal(ElevatorConstants.maxDistance)
+      )
+    );
+
+    Constants.OIConstants.operatorController.povLeft().onTrue(
+      Commands.parallel(
+        Arm.getInstance().setGoal(ArmConstants.Sim.INIT_ANGLE),
+        Elevator.getInstance().setGoal(ElevatorConstants.minDistance)
       )
     );
 

@@ -29,7 +29,7 @@ public class Elevator extends SubsystemBase {
         io = elevatorIO;
         io.updateInputs(inputs);
 
-        setDefaultCommand(Commands.run(() -> setVoltage(-ElevatorConstants.kg), this));
+        setDefaultCommand(Commands.run(() -> io.hold(), this));
     }
 
     public Command setGoal(double goal){

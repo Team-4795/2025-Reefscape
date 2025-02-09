@@ -27,6 +27,8 @@ public interface ElevatorIO {
             
         }
 
+        public default void hold() {}
+
         public default void setGoal(double goal) {
 
     }        

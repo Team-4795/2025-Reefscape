@@ -14,7 +14,7 @@ public final class ElevatorConstants{
     public static final double kP = 0; //figure this out later
     public static final int rightDeviceID = 12;
     public static final int leftDeviceID = 13;
-    public static final double ks = 0;
+    public static final double ks = 0.01;
     public static final double kg = 0.38;
     public static final double kv = 6.84; //IS THIS RIGHT?!?!?
     public static final double MAX_ACCELERATION = 1;
