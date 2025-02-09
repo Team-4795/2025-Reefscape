@@ -117,9 +117,12 @@ public class RobotContainer {
     );
 
     Constants.OIConstants.operatorController.povRight().onTrue(
-      Commands.parallel(
-        Arm.getInstance().setGoal(ArmConstants.CORAL_L4),
-        Elevator.getInstance().setGoal(ElevatorConstants.maxDistance)
+      Commands.sequence(
+        Commands.parallel(
+          Arm.getInstance().setGoal(ArmConstants.CORAL_L4),
+          Elevator.getInstance().setGoal(ElevatorConstants.maxDistance)
+        ),
+        intake.intake().withTimeout(2)
       )
     );
 

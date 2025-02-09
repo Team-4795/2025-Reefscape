@@ -28,8 +28,13 @@ public class Intake extends SubsystemBase {
         io.updateInputs(inputs);
     }
 
+    public double getPosition() {
+        return inputs.angularPositionRot;
+    }
+
     public void setIntakeSpeed(double speed){
         intakeSpeed = speed;
+        io.setMotorSpeed(intakeSpeed);
     }
 
     /*
@@ -68,7 +73,6 @@ public class Intake extends SubsystemBase {
     public void periodic(){
         io.updateInputs(inputs);
         Logger.processInputs("Intake", inputs);
-        io.setMotorSpeed(intakeSpeed);
         Logger.recordOutput("Intake/Intake speed", intakeSpeed);
         Logger.recordOutput("Intake/Gamepiece detected", hasGamepiece());
     }
