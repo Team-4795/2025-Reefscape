@@ -56,14 +56,14 @@ public class Vision extends SubsystemBase{
         shouldUpdate[id] = !shouldUpdate[id];
     }
 
-    public Pose3d getBestReefPose() {
+    public Pose2d getBestReefPose() {
         for(int i = 0; i < io.length; i++) {
-            if(inputs[i].reefPose != new Pose3d())
+            if(inputs[i].reefPose != new Pose2d())
             {
                 return inputs[i].reefPose;
             }
         }
-        return new Pose3d();
+        return new Pose2d();
     }
 
     // public void toggleReefMode() {

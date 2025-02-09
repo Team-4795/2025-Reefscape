@@ -91,26 +91,27 @@ public class VisionIOReal implements VisionIO {
 
                     if(DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red))
                     {
-                        for(int j = 0; j < VisionConstants.redReefIds.length; j++)
+                        for(int redReefid : VisionConstants.redReefIds)
                         {
-                            if(inputs.bestTag == VisionConstants.redReefIds[j])
+                            if(inputs.bestTag == redReefid)
                             {
                                 inputs.reefPose = VisionConstants.redReefScoringPoses[inputs.bestTag - 6];
                                 break;
                             }
                         }
                     }
+                    
 
                     else if(DriverStation.getAlliance().get().equals(DriverStation.Alliance.Blue))
                     {
-                        for(int j = 0; j < VisionConstants.blueReefIds.length; j++)
-                    {
-                        if(inputs.bestTag == VisionConstants.blueReefIds[j])
+                        for(int blueReefid : VisionConstants.blueReefIds)
                         {
-                            inputs.reefPose = VisionConstants.blueReefScoringPoses[inputs.bestTag - 17];
-                            break;
+                            if(inputs.bestTag == blueReefid)
+                            {
+                                inputs.reefPose = VisionConstants.blueReefScoringPoses[inputs.bestTag - 17];
+                                break;
+                            }
                         }
-                    }
                     }
                 }
             }
