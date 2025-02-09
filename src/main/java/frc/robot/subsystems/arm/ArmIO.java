@@ -9,7 +9,6 @@ public interface ArmIO {
         public double angularVelocity = 0.0;
         public double current = 0.0;
         public double goalAngle = 0.0;
-        public boolean openLoop = true;
         public double setpointVelocity = 0.0;
         public double appliedOutput = 0.0; 
         public double busVoltage = 0.0;
@@ -24,6 +23,10 @@ public interface ArmIO {
 
     public default void setVoltage(double voltage) {
 
+    }
+
+    public default void updateMotionProfile(){
+        
     }
     
     public default void setGoal(double angle) {

@@ -61,6 +61,13 @@ public class ArmIOReal implements ArmIO {
     public void setGoal(double angle) {
         goal = new TrapezoidProfile.State(angle, 0);
     }
+    
+    @Override
+    public void updateMotionProfile() {
+        double ffvolts = ffmodel.calculate(getOffsetAngle(), setpoint.velocity);
+        onboardController.setReference(setpoint.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, ffvolts);
+        setpoint = profile.calculate(0.02, setpoint, goal);
+    }
 
     @Override
     public void setFFValues(double kS, double kG, double kV, double kA) {
@@ -70,9 +77,6 @@ public class ArmIOReal implements ArmIO {
     @Override
     public void hold() {
         double ffvolts = ffmodel.calculate(getOffsetAngle(), 0);
-        Logger.recordOutput("arm ffvolts", ffvolts);
-        Logger.recordOutput("isHolding", true);
-        Logger.recordOutput("arm angle", getOffsetAngle());
         setVoltage(ffvolts);
     }
 
@@ -84,7 +88,6 @@ public class ArmIOReal implements ArmIO {
     @Override
     public void setVoltage(double voltage) {
         onboardController.setReference(voltage, ControlType.kVoltage);
-        // armMotor.setVoltage(MathUtil.clamp(-voltage, -12, 12));
     }
 
     public double getOffsetAngle() {
@@ -93,13 +96,6 @@ public class ArmIOReal implements ArmIO {
 
     @Override
     public void updateInputs(ArmIOInputs inputs) {
-        if(!inputs.openLoop) {
-            // setVoltage(ffmodel.calculate(setpoint.position, setpoint.velocity));
-            double ffvolts = ffmodel.calculate(getOffsetAngle(), setpoint.velocity);
-            onboardController.setReference(setpoint.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, ffvolts);
-            setpoint = profile.calculate(0.02, setpoint, goal);
-        }
-
         inputs.angularPosition = getOffsetAngle();
         inputs.angularVelocity = armEncoder.getVelocity();
         inputs.current = armMotor.getOutputCurrent();

@@ -9,7 +9,9 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.Gamepiece;
+import frc.robot.Constants.Mode;
 
 public class Arm extends SubsystemBase {
     private ArmIOInputsAutoLogged inputs = new ArmIOInputsAutoLogged();
@@ -19,6 +21,7 @@ public class Arm extends SubsystemBase {
     private Arm(ArmIO io) {
         this.io = io;
         setDefaultCommand(Commands.run(() -> io.hold(), this));
+        setFFMode(Constants.currentMode == Mode.SIM ? Gamepiece.SIM: Gamepiece.NONE);
     }
 
     public double getAngle() {
@@ -34,16 +37,9 @@ public class Arm extends SubsystemBase {
     }
 
     public Command setGoal(double angle) {
-        return Commands.startEnd(
-            () -> {
-                setOpenLoop(false);
-                io.setGoal(angle);
-            },
-            () -> {
-                setOpenLoop(true);
-            },
-            this
-        ).until(() -> MathUtil.isNear(angle, inputs.angularPosition, 0.008));
+        return Commands.runOnce(() -> io.setGoal(angle), this)
+            .andThen(Commands.run(() -> io.updateMotionProfile(), this))
+            .until(() -> MathUtil.isNear(angle, inputs.angularPosition, 0.008));
     }
 
     public void resetAbsoluteEncoder() {
@@ -51,13 +47,7 @@ public class Arm extends SubsystemBase {
     }
 
     public void manualVoltage(double voltage) {
-        Logger.recordOutput("isHolding", false);
-        setOpenLoop(true);
         io.setVoltage(voltage);
-    }
-
-    public void setOpenLoop(boolean openLoop) {
-        inputs.openLoop = openLoop;
     }
 
     public Pose3d getArmPose(){
@@ -68,12 +58,16 @@ public class Arm extends SubsystemBase {
     }
 
     public void setFFMode(Gamepiece gamepieceType) {
+        Logger.recordOutput(getName() + "/FFMode", gamepieceType);
         switch (gamepieceType) {
             case CORAL:
                 io.setFFValues(ArmConstants.CORALkS, ArmConstants.CORALkG, ArmConstants.CORALkV, ArmConstants.CORALkA);
                 break;
             case ALGAE:
-                io.setFFValues(ArmConstants.ALGAEkS, ArmConstants.ALGAEkG, ArmConstants.CORALkV, ArmConstants.CORALkA);
+                io.setFFValues(ArmConstants.ALGAEkS, ArmConstants.ALGAEkG, ArmConstants.ALGAEkV, ArmConstants.ALGAEkA);
+                break;
+            case SIM:
+                io.setFFValues(ArmConstants.SIMkS, ArmConstants.SIMkG, ArmConstants.SIMkV, ArmConstants.SIMkA);
                 break;
             case NONE:
                 io.setFFValues(ArmConstants.DEFAULTkS, ArmConstants.DEFAULTkG, ArmConstants.DEFAULTkV, ArmConstants.DEFAULTkA);

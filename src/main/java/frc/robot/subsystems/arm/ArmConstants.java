@@ -15,6 +15,12 @@ public class ArmConstants {
     public static final double MAX_VELOCITY = 2;
     public static final double MAX_ACCELERATION = 4;
 
+    // Simulation FF
+    public static final double SIMkG = 1.3;
+    public static final double SIMkV = 1.00;
+    public static final double SIMkA = 0.05;
+    public static final double SIMkS = 0.001;
+
     // Default FF
     public static final double DEFAULTkG = 1.02;
     public static final double DEFAULTkV = 1.01;
@@ -34,12 +40,12 @@ public class ArmConstants {
     public static final double CORALkS = 0.1;
 
     public static class Sim {
-        public static double GEARING = 40;
+        public static double GEARING = 60;
         public static double MOI = 2.09670337984;
         public static double LENGTH = 0.6604;
         public static double MIN_ANGLE = Units.degreesToRadians(-95);
         public static double MAX_ANGLE = Units.degreesToRadians(55);
         public static boolean GRAVITY = true;
-        public static double INIT_ANGLE = -Math.PI / 6;
+        public static double INIT_ANGLE = -Math.PI / 2;
     }
 }

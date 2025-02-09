@@ -26,5 +26,6 @@ public class Constants {
         ALGAE,
         CORAL,
         NONE,
+        SIM,
     }
 }

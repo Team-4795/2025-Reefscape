@@ -18,12 +18,12 @@ public class ArmIOSim implements ArmIO {
         ArmConstants.Sim.GRAVITY,
         ArmConstants.Sim.INIT_ANGLE
     );
-    private ArmFeedforward ffmodel = new ArmFeedforward(ArmConstants.DEFAULTkS, ArmConstants.DEFAULTkG, ArmConstants.DEFAULTkV, ArmConstants.DEFAULTkA);
+    private ArmFeedforward ffmodel = new ArmFeedforward(ArmConstants.SIMkS, ArmConstants.SIMkG, ArmConstants.SIMkV, ArmConstants.SIMkA);
     private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(0.5, 1);
-    private final PIDController controller = new PIDController(0.02, 0,0.00);
+    private final PIDController controller = new PIDController(2, 0,0.00);
     private final TrapezoidProfile profile = new TrapezoidProfile(constraints);
     private TrapezoidProfile.State goal = new TrapezoidProfile.State(ArmConstants.Sim.INIT_ANGLE, 0);
-    private TrapezoidProfile.State setpoint = new TrapezoidProfile.State();
+    private TrapezoidProfile.State setpoint = new TrapezoidProfile.State(ArmConstants.Sim.INIT_ANGLE, 0);
     private double voltage = 0;
 
     @Override
@@ -48,12 +48,13 @@ public class ArmIOSim implements ArmIO {
     }
 
     @Override
-    public void updateInputs(ArmIOInputs inputs) {
-        if(!inputs.openLoop) {
-            setpoint = profile.calculate(0.02, setpoint, goal);
-            setVoltage(ffmodel.calculate(inputs.angularPosition, setpoint.velocity));
-        }
+    public void updateMotionProfile() {
+        setpoint = profile.calculate(0.02, setpoint, goal);
+        setVoltage(ffmodel.calculate(armSim.getAngleRads(), setpoint.velocity) + controller.calculate(armSim.getAngleRads(), setpoint.position));
+    }
 
+    @Override
+    public void updateInputs(ArmIOInputs inputs) {
         inputs.angularPosition = armSim.getAngleRads();
         inputs.angularVelocity = armSim.getVelocityRadPerSec();
         inputs.current = armSim.getCurrentDrawAmps();

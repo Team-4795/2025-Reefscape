@@ -78,7 +78,6 @@ public class RobotContainer {
 
             
     }
-    Arm.getInstance().setFFMode(Gamepiece.CORAL);
     configureBindings();
   }
 
