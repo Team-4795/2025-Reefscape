@@ -1,5 +1,7 @@
 package frc.robot.subsystems.arm;
 
+import java.util.regex.MatchResult;
+
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
@@ -12,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.Gamepiece;
 import frc.robot.Constants.Mode;
+import frc.robot.Constants.OIConstants;
 
 public class Arm extends SubsystemBase {
     private ArmIOInputsAutoLogged inputs = new ArmIOInputsAutoLogged();
@@ -20,12 +23,24 @@ public class Arm extends SubsystemBase {
 
     private Arm(ArmIO io) {
         this.io = io;
-        setDefaultCommand(Commands.run(() -> io.hold(), this));
+        setDefaultCommand(
+            Commands.run(() -> {
+                double up = MathUtil.applyDeadband(OIConstants.driverController.getLeftTriggerAxis(), 0.1);
+                double down = MathUtil.applyDeadband(OIConstants.driverController.getRightTriggerAxis(), 0.1);
+                double change = (up - down) * 0.1;
+
+                io.setGoal(inputs.goalAngle + change);
+            }, this)
+        );
         setFFMode(Constants.currentMode == Mode.SIM ? Gamepiece.SIM: Gamepiece.NONE);
     }
 
     public double getAngle() {
         return inputs.angularPosition;
+    }
+
+    public double getGoalAngle() {
+        return inputs.goalAngle;
     }
 
     public static void initialize(ArmIO io) {
@@ -36,10 +51,8 @@ public class Arm extends SubsystemBase {
         return instance;
     }
 
-    public Command setGoal(double angle) {
-        return Commands.runOnce(() -> io.setGoal(angle), this)
-            .andThen(Commands.run(() -> io.updateMotionProfile(), this))
-            .until(() -> MathUtil.isNear(angle, inputs.angularPosition, 0.008));
+    public void setGoal(double angle) {
+        io.setGoal(angle);
     }
 
     public void resetAbsoluteEncoder() {
@@ -77,6 +90,7 @@ public class Arm extends SubsystemBase {
 
     @Override
     public void periodic() {
+        io.updateMotionProfile();
         Logger.recordOutput(getName() + "/Pose", getArmPose());
         io.updateInputs(inputs);
         Logger.processInputs(getName(), inputs);

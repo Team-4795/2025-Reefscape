@@ -27,6 +27,10 @@ public interface ArmIO {
 
     }
 
+    public default double getGoal() {
+        return 0.0;
+    }
+
     public default void updateMotionProfile(){
         
     }

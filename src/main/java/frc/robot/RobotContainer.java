@@ -104,34 +104,34 @@ public class RobotContainer {
 
     OIConstants.operatorController.rightBumper().whileTrue(
       Commands.run(
-        () -> elevator.setVoltage(4), 
+        () -> elevator.setVoltage(1), 
         elevator
       )
     );
 
     OIConstants.operatorController.leftBumper().whileTrue(
       Commands.run(
-        () -> elevator.setVoltage(-4), 
+        () -> elevator.setVoltage(-1), 
         elevator
       )
     );
 
-    Constants.OIConstants.operatorController.povRight().onTrue(
-      Commands.sequence(
-        Commands.parallel(
-          Arm.getInstance().setGoal(ArmConstants.CORAL_L4),
-          Elevator.getInstance().setGoal(ElevatorConstants.maxDistance)
-        ),
-        intake.intake().withTimeout(2)
-      )
-    );
+    // Constants.OIConstants.operatorController.povRight().onTrue(
+    //   Commands.sequence(
+    //     Commands.parallel(
+    //       Arm.getInstance().setGoal(ArmConstants.CORAL_L4),
+    //       Elevator.getInstance().setGoal(ElevatorConstants.maxDistance)
+    //     ),
+    //     intake.intake().withTimeout(2)
+    //   )
+    // );
 
-    Constants.OIConstants.operatorController.povLeft().onTrue(
-      Commands.parallel(
-        Arm.getInstance().setGoal(ArmConstants.Sim.INIT_ANGLE),
-        Elevator.getInstance().setGoal(ElevatorConstants.minDistance)
-      )
-    );
+    // Constants.OIConstants.operatorController.povLeft().onTrue(
+    //   Commands.parallel(
+    //     Arm.getInstance().setGoal(ArmConstants.Sim.INIT_ANGLE),
+    //     Elevator.getInstance().setGoal(ElevatorConstants.minDistance)
+    //   )
+    // );
 
 
      Constants.OIConstants.operatorController.povUp()
@@ -146,58 +146,24 @@ public class RobotContainer {
      Constants.OIConstants.operatorController.x().whileTrue(Commands.startEnd(() -> intake.setIntakeSpeed(-0.5),
      () -> intake.setIntakeSpeed(0), intake));
 
-     Constants.OIConstants.operatorController.a().whileTrue(Commands.startEnd(() -> intake.setIntakeSpeed(0.5), 
+     Constants.OIConstants.operatorController.b().whileTrue(Commands.startEnd(() -> intake.setIntakeSpeed(0.5), 
      () -> intake.setIntakeSpeed(0), intake));
 
-    //  OIConstants.driverController.povUp().whileTrue(
-    //     Commands.startEnd(
-    //       () -> Arm.getInstance().manualVoltage(9), 
-    //       () -> Arm.getInstance().manualVoltage(ArmConstants.DEFAULTkG * Math.cos(Arm.getInstance().getAngle() - Math.PI/2)),
-    //       Arm.getInstance()
-    //     )
-    //   );
+     Constants.OIConstants.operatorController.y().whileTrue(
+      elevator.setGoal(ElevatorConstants.maxDistance/2)
+     );
       
-      OIConstants.driverController.povDown().onTrue((Arm.getInstance().setGoal(0)));
-      OIConstants.driverController.povRight().onTrue((Arm.getInstance().setGoal(ArmConstants.CORAL_L2)));
-      OIConstants.driverController.povUp().onTrue((Arm.getInstance().setGoal(ArmConstants.CORAL_L3)));
+      // OIConstants.driverController.povDown().onTrue((Arm.getInstance().setGoal(0)));
+      // OIConstants.driverController.povRight().onTrue((Arm.getInstance().setGoal(ArmConstants.CORAL_L2)));
+      OIConstants.driverController.povUp().onTrue(Commands.runOnce(() -> Arm.getInstance().setGoal(ArmConstants.CORAL_L3)));
 
 
       // OIConstants.operatorController.povDown().onTrue((elevator.setGoal(0.05)));
       // OIConstants.operatorController.povRight().onTrue((elevator.setGoal(0.4)));
       // OIConstants.operatorController.povUp().onTrue((elevator.setGoal(0.69)));
 
-
-      // OIConstants.driverController.leftTrigger().whileTrue(
-      //   Commands.startEnd(
-      //   () -> Arm.getInstance().manualVoltage(OIConstants.operatorController.getLeftTriggerAxis() * 6), 
-      //   () -> Arm.getInstance().manualVoltage(0), 
-      //   Arm.getInstance()
-      // ));
-
-
-      // OIConstants.driverController.rightTrigger().whileTrue(
-      //   Commands.startEnd(
-      //   () -> Arm.getInstance().manualVoltage(OIConstants.operatorController.getRightTriggerAxis() * -6), 
-      //   () -> Arm.getInstance().manualVoltage(0), 
-      //   Arm.getInstance()
-      // ));
-      OIConstants.driverController.y().whileTrue(
-        Commands.run(
-          () -> Arm.getInstance().manualVoltage( 6), 
-          Arm.getInstance()
-        )
-      );
-      
-      // up
-      OIConstants.driverController.a().whileTrue(
-        Commands.run(
-          () -> Arm.getInstance().manualVoltage(-6), 
-          Arm.getInstance()
-        )
-      );
-
-      OIConstants.driverController.leftBumper().onTrue(Arm.getInstance().setGoal(0));
-      OIConstants.driverController.rightBumper().onTrue(Arm.getInstance().setGoal(ArmConstants.CORAL_L2));
+      OIConstants.driverController.leftBumper().onTrue(Commands.runOnce(() -> Arm.getInstance().setGoal(0)));
+      OIConstants.driverController.rightBumper().onTrue(Commands.runOnce(() -> Arm.getInstance().setGoal(ArmConstants.CORAL_L2)));
   }
 
   public Command getAutonomousCommand() {

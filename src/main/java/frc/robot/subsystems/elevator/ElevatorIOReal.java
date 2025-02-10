@@ -48,10 +48,10 @@ public class ElevatorIOReal implements ElevatorIO {
         config.encoder.positionConversionFactor(ElevatorConstants.conversionFactor);
         config.encoder.velocityConversionFactor(ElevatorConstants.conversionFactor / 60);    
 
-        config.softLimit.forwardSoftLimitEnabled(true);
-        config.softLimit.reverseSoftLimitEnabled(true);
-        config.softLimit.forwardSoftLimit(ElevatorConstants.maxDistance);
-        config.softLimit.reverseSoftLimit(ElevatorConstants.minDistance);
+        // config.softLimit.forwardSoftLimitEnabled(true);
+        // config.softLimit.reverseSoftLimitEnabled(true);
+        // config.softLimit.forwardSoftLimit(ElevatorConstants.maxDistance);
+        // config.softLimit.reverseSoftLimit(ElevatorConstants.minDistance);
 
         config.closedLoop.p(0);
         config.closedLoop.i(0);
@@ -59,7 +59,7 @@ public class ElevatorIOReal implements ElevatorIO {
 
         config.smartCurrentLimit(ElevatorConstants.elevatorCurrentLimits);
         config.idleMode(IdleMode.kBrake);
-
+        config.inverted(true);
         rightElevatorMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         config.follow(ElevatorConstants.rightDeviceID, true);
     
@@ -86,9 +86,15 @@ public class ElevatorIOReal implements ElevatorIO {
     }
 
     @Override
+    public void hold() {
+        double ffvolts = ffmodel.calculate(0);
+        setVoltage(ffvolts);
+    }
+
+    @Override
     public void updateInputs(ElevatorIOInputs inputs) {
         inputs.elevatorRightCurrent = rightElevatorMotor.getOutputCurrent();
-        inputs.elevatorRightAppliedVolts = rightElevatorMotor.getAppliedOutput() * leftElevatorMotor.getBusVoltage();
+        inputs.elevatorRightAppliedVolts = rightElevatorMotor.getAppliedOutput() * rightElevatorMotor.getBusVoltage();
         inputs.elevatorRightPositionMeters = rightEncoder.getPosition();
         inputs.elevatorRightVelocityMetersPerSecond = rightEncoder.getVelocity();
        // inputs.elevatorRightMotorPositionMeters = leftAbsoluteEncoder.getPosition();
