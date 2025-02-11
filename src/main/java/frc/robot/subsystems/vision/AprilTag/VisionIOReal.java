@@ -49,7 +49,7 @@ public class VisionIOReal implements VisionIO {
             camera.setPipelineIndex(VisionConstants.aprilTagPipelineID);
     }
 
-    public void getBestReefPos() {
+    public Pose2d getBestReefPos() {
         Translation2d odometry = Drive.getInstance().getPose().getTranslation();
         Pose2d bestPose = new Pose2d();
 
@@ -71,17 +71,19 @@ public class VisionIOReal implements VisionIO {
 
         if(DriverStation.getAlliance().get().equals(DriverStation.Alliance.Blue))
         {
-            double distance = VisionConstants.redReefScoringPoses[0].getTranslation().getDistance(odometry);
+            double distance = VisionConstants.blueReefScoringPoses[0].getTranslation().getDistance(odometry);
 
-            for(int i = 1; i < VisionConstants.redReefScoringPoses.length; i++)
+            for(int i = 1; i < VisionConstants.blueReefScoringPoses.length; i++)
             {
-                if(VisionConstants.redReefScoringPoses[i].getTranslation().getDistance(odometry) < distance)
+                if(VisionConstants.blueReefScoringPoses[i].getTranslation().getDistance(odometry) < distance)
                 {
-                    distance = VisionConstants.redReefScoringPoses[i].getTranslation().getDistance(odometry);
-                    bestPose = VisionConstants.redReefScoringPoses[i];
+                    distance = VisionConstants.blueReefScoringPoses[i].getTranslation().getDistance(odometry);
+                    bestPose = VisionConstants.blueReefScoringPoses[i];
                 }
             }
         }
+
+        return bestPose;
     }
 
     @Override
@@ -118,41 +120,8 @@ public class VisionIOReal implements VisionIO {
                     inputs.tags = new int[] {};
                 });
             }
-
-            for(int i = 0; i < result.size(); i++)
-            {
-                result.get(i).targets.sort(sortMode.getComparator());
-                target = result.get(i).getBestTarget();
-
-                if(target != null) {
-                    inputs.bestTag = target.getFiducialId();
-
-                    if(DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red))
-                    {
-                        for(int redReefid : VisionConstants.redReefIds)
-                        {
-                            if(inputs.bestTag == redReefid)
-                            {
-                                inputs.reefPose = VisionConstants.redReefScoringPoses[inputs.bestTag - 6];
-                                break;
-                            }
-                        }
-                    }
-                    
-
-                    else if(DriverStation.getAlliance().get().equals(DriverStation.Alliance.Blue))
-                    {
-                        for(int blueReefid : VisionConstants.blueReefIds)
-                        {
-                            if(inputs.bestTag == blueReefid)
-                            {
-                                inputs.reefPose = VisionConstants.blueReefScoringPoses[inputs.bestTag - 17];
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
+            
+            inputs.reefPose = getBestReefPos();
         }
 
         else if(camera.getPipelineIndex() == VisionConstants.reefDetectionPipelineID) { // Reef detection pippeline index? Change later

@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.AprilTag.VisionIOInputsAutoLogged;
@@ -133,7 +134,8 @@ public class Vision extends SubsystemBase{
                 Logger.recordOutput("Vision/" + VisionConstants.cameraIds[i] + "/xy std dev", xyStdDev);
                 
                 if(shouldUpdate[i]) {
-                    Drive.getInstance().addVisionMeasurement(robotPose.toPose2d(), inputs[i].timestamp[p], stddevs);
+                    RobotContainer.drivetrain.addVisionMeasurement(robotPose.toPose2d(), inputs[i].timestamp[p], stddevs);
+                    // Drive.getInstance().addVisionMeasurement(robotPose.toPose2d(), inputs[i].timestamp[p], stddevs);
                 }
             }
         }

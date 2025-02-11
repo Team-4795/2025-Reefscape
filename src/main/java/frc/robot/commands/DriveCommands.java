@@ -75,8 +75,8 @@ public class DriveCommands {
   }
 
   public static Command driveToBestReefPos(Drive drive) {
-    // reefPose = Vision.getInstance().getBestReefPose().toPose2d();
-    reefPose = VisionConstants.redReefScoringPoses[2];
+    reefPose = Vision.getInstance().getBestReefPose();
+    // reefPose = VisionConstants.redReefScoringPoses[2];
     Logger.recordOutput("Reef Pose", reefPose);
 
     PathConstraints constraints = new PathConstraints(

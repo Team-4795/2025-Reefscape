@@ -12,7 +12,6 @@ public interface VisionIO {
         double[] timestamp = new double[] {};
         int[] tags = new int[] {};
 
-        int bestTag = 0;
         Pose2d reefPose = new Pose2d();
 
         double roll = 0.0;
