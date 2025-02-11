@@ -23,7 +23,7 @@ public class Module {
     private Rotation2d angleSetpoint = null;
     private Double speedSetPoint = null;
     private Rotation2d turnRelativeOffset = null;
-
+//public static char dumbdum = dumb;
     public Module (ModuleIO io, int index) {
         this.io = io;
         this.index = index;

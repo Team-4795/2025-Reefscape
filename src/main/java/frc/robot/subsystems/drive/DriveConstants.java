@@ -4,8 +4,8 @@ import edu.wpi.first.math.util.Units;
 
 public class DriveConstants {
     public static final double MAX_LINEAR_SPEED = Units.metersToFeet(5);
-    public static final double TRACK_LENGTH = Units.inchesToMeters(21.25);
-    public static final double TRACK_WIDTH = Units.inchesToMeters(21.25);
+    public static final double TRACK_LENGTH = Units.inchesToMeters(31.5);
+    public static final double TRACK_WIDTH = Units.inchesToMeters(31.5);
     public static final double DRIVE_BASE_RADIUS = 
     Math.hypot(DriveConstants.TRACK_LENGTH / 2.0, DriveConstants.TRACK_WIDTH / 2.0);
     public static final double MAX_ANGULAR_SPEED = Units.feetToMeters(DriveConstants.MAX_LINEAR_SPEED) / DRIVE_BASE_RADIUS;
