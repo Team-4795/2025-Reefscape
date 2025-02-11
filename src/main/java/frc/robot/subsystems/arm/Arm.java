@@ -29,7 +29,7 @@ public class Arm extends SubsystemBase {
                 double down = MathUtil.applyDeadband(OIConstants.driverController.getRightTriggerAxis(), 0.1);
                 double change = (up - down) * 0.1;
 
-                io.setGoal(inputs.goalAngle + change);
+                // io.setGoal(inputs.goalAngle + change);
             }, this)
         );
         setFFMode(Constants.currentMode == Mode.SIM ? Gamepiece.SIM: Gamepiece.NONE);

@@ -23,7 +23,7 @@ public class ArmIOReal implements ArmIO {
     private SparkFlexConfig config = new SparkFlexConfig();
     private SparkAbsoluteEncoder armEncoder;
 
-    private ArmFeedforward ffmodel = new ArmFeedforward(ArmConstants.DEFAULTkS, ArmConstants.DEFAULTkG, ArmConstants.DEFAULTkV, ArmConstants.DEFAULTkA);
+    private ArmFeedforward ffmodel = new ArmFeedforward(ArmConstants.DEFAULTkS, ArmConstants.DEFAULTkG, ArmConstants.DEFAULTkV, ArmConstants.DEFAULTkA, 0.02);
     private final SparkClosedLoopController onboardController = armMotor.getClosedLoopController();
     private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(ArmConstants.MAX_VELOCITY, ArmConstants.MAX_ACCELERATION);
     private final TrapezoidProfile profile = new TrapezoidProfile(constraints);
@@ -39,17 +39,17 @@ public class ArmIOReal implements ArmIO {
         config.absoluteEncoder.inverted(false);
 
         config.encoder.positionConversionFactor(2 * Math.PI / ArmConstants.Sim.GEARING);
-        config.encoder.velocityConversionFactor(2 * Math.PI / ArmConstants.Sim.GEARING);
-
-        config.openLoopRampRate(1);
+        config.encoder.velocityConversionFactor(2 * Math.PI / ArmConstants.Sim.GEARING / 60);
 
         // config.softLimit.forwardSoftLimitEnabled(true);
         // config.softLimit.reverseSoftLimitEnabled(false);
         // config.softLimit.forwardSoftLimit(ArmConstants.Sim.MAX_ANGLE);
         // config.softLimit.reverseSoftLimit(ArmConstants.Sim.MIN_ANGLE);
 
-        config.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
-        config.closedLoop.p(0.0);
+        config.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+        config.closedLoop.positionWrappingEnabled(true);
+        config.closedLoop.positionWrappingInputRange(0, Math.PI);
+        config.closedLoop.p(5.0);
         config.closedLoop.i(0.0);
         config.closedLoop.d(0.0);
 
@@ -62,12 +62,12 @@ public class ArmIOReal implements ArmIO {
         armMotor.getEncoder().setPosition(getOffsetAngle());
 
         goal = new TrapezoidProfile.State(getOffsetAngle(), 0);
-        setpoint = new TrapezoidProfile.State();
+        setpoint = new TrapezoidProfile.State(getOffsetAngle(), 0);
     }
 
     @Override
     public void setGoal(double angle) {
-        goal = new TrapezoidProfile.State(MathUtil.clamp(angle, ArmConstants.Sim.MIN_ANGLE,  ArmConstants.Sim.MAX_ANGLE), 0);
+        goal = new TrapezoidProfile.State(angle,  0);
     }
 
     @Override
@@ -77,9 +77,15 @@ public class ArmIOReal implements ArmIO {
     
     @Override
     public void updateMotionProfile() {
-        double ffvolts = ffmodel.calculate(getOffsetAngle(), setpoint.velocity);
-        onboardController.setReference(setpoint.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, ffvolts);
+        double prevVelocity = setpoint.velocity;
+        Logger.recordOutput("prev velocity", prevVelocity);
         setpoint = profile.calculate(0.02, setpoint, goal);
+        double acceleration = (setpoint.velocity - prevVelocity) / 0.02;
+        Logger.recordOutput("acceleration", acceleration);
+        double ffvolts = ffmodel.calculate(getOffsetAngle(), setpoint.velocity, acceleration);
+        Logger.recordOutput("arm ffvolts", ffvolts);
+        onboardController.setReference(setpoint.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, ffvolts);
+
     }
 
     @Override
@@ -121,5 +127,6 @@ public class ArmIOReal implements ArmIO {
         inputs.appliedOutput = armMotor.getAppliedOutput();
         inputs.relativeEncoderPosition = armMotor.getEncoder().getPosition();
         inputs.relativeEncoderVelocity = armMotor.getEncoder().getVelocity();
+        inputs.setpointPosition = setpoint.position;
     }
 }

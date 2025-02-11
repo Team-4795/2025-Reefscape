@@ -5,7 +5,7 @@ import edu.wpi.first.math.util.Units;
 public class ArmConstants {
     public static final int CAN_ID = 14;
     public static final int CURRENT_LIMIT = 50;
-    public static final double ARM_OFFSET = Math.PI/2;
+    public static final double ARM_OFFSET = 1.8;
 
     public static final double CORAL_L1 = Units.degreesToRadians(-34.74);
     public static final double CORAL_L2 = Units.degreesToRadians(-54.1); // with elevator up
@@ -24,8 +24,8 @@ public class ArmConstants {
     // Default FF
     public static final double DEFAULTkG = 1.02;
     public static final double DEFAULTkV = 1.01;
-    public static final double DEFAULTkA = 0.05;
-    public static final double DEFAULTkS = 0.1;
+    public static final double DEFAULTkA = 0.07;
+    public static final double DEFAULTkS = 0.3;
 
     // Algae FF
     public static final double ALGAEkG = 1.02;

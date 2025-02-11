@@ -11,7 +11,7 @@ public final class ElevatorConstants{
 
     public static final double kD = 0; //figure this out later
     public static final double kI = 0; //figure this out later
-    public static final double kP = 0; //figure this out later
+    public static final double kP = 10; //figure this out later
     public static final int rightDeviceID = 12;
     public static final int leftDeviceID = 13;
     public static final double ks = 0.01;

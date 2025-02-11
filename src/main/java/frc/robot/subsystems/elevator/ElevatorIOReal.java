@@ -80,9 +80,11 @@ public class ElevatorIOReal implements ElevatorIO {
 
     @Override
     public void updateMotionProfile() {
-        double ffvolts = ffmodel.calculate(setpoint.velocity);
-        controller.setReference(setpoint.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, ffvolts);
+        double prevVelocity = setpoint.velocity;
         setpoint = profile.calculate(0.02, setpoint, goal);
+        double acceleration = (setpoint.velocity - prevVelocity) / 0.02;
+        double ffvolts = ffmodel.calculate(setpoint.velocity, acceleration);
+        controller.setReference(setpoint.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, ffvolts);
     }
 
     @Override

@@ -19,7 +19,6 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIORealVortex;
 import frc.robot.subsystems.intake.IntakeIOSim;
-import frc.robot.subsystems.CANCoderTest;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmIOSim;
@@ -37,7 +36,6 @@ public class RobotContainer {
         elevator = Elevator.initialize(new ElevatorIOReal());
         intake = Intake.initialize(new IntakeIORealVortex());
         Arm.initialize(new ArmIOReal());
-        CANCoderTest canCoderTest = new CANCoderTest();
 
         // drive = new Drive(
         //     new GyroIOPigeon(),
@@ -116,22 +114,22 @@ public class RobotContainer {
       )
     );
 
-    // Constants.OIConstants.operatorController.povRight().onTrue(
-    //   Commands.sequence(
-    //     Commands.parallel(
-    //       Arm.getInstance().setGoal(ArmConstants.CORAL_L4),
-    //       Elevator.getInstance().setGoal(ElevatorConstants.maxDistance)
-    //     ),
-    //     intake.intake().withTimeout(2)
-    //   )
-    // );
+    Constants.OIConstants.operatorController.povRight().onTrue(
+      Commands.sequence(
+        Commands.parallel(
+          Commands.runOnce(() -> Arm.getInstance().setGoal(1.02)),
+          Elevator.getInstance().setGoal(0.57)
+        )
+      )
+    );
 
-    // Constants.OIConstants.operatorController.povLeft().onTrue(
-    //   Commands.parallel(
-    //     Arm.getInstance().setGoal(ArmConstants.Sim.INIT_ANGLE),
-    //     Elevator.getInstance().setGoal(ElevatorConstants.minDistance)
-    //   )
-    // );
+    Constants.OIConstants.operatorController.povLeft().onTrue(
+      Commands.sequence(
+        Elevator.getInstance().setGoal(ElevatorConstants.minDistance).withTimeout(2),
+        Commands.runOnce(() -> Arm.getInstance().setGoal(-1.8)),
+        Commands.waitSeconds(1.5)
+      )
+    );
 
 
      Constants.OIConstants.operatorController.povUp()
@@ -149,8 +147,12 @@ public class RobotContainer {
      Constants.OIConstants.operatorController.b().whileTrue(Commands.startEnd(() -> intake.setIntakeSpeed(0.5), 
      () -> intake.setIntakeSpeed(0), intake));
 
-     Constants.OIConstants.operatorController.y().whileTrue(
+     Constants.OIConstants.operatorController.y().onTrue(
       elevator.setGoal(ElevatorConstants.maxDistance/2)
+     );
+
+     Constants.OIConstants.operatorController.a().onTrue(
+      elevator.setGoal(0)
      );
       
       // OIConstants.driverController.povDown().onTrue((Arm.getInstance().setGoal(0)));
@@ -162,7 +164,7 @@ public class RobotContainer {
       // OIConstants.operatorController.povRight().onTrue((elevator.setGoal(0.4)));
       // OIConstants.operatorController.povUp().onTrue((elevator.setGoal(0.69)));
 
-      OIConstants.driverController.leftBumper().onTrue(Commands.runOnce(() -> Arm.getInstance().setGoal(0)));
+      OIConstants.driverController.leftBumper().onTrue(Commands.runOnce(() -> Arm.getInstance().setGoal(-1.8)));
       OIConstants.driverController.rightBumper().onTrue(Commands.runOnce(() -> Arm.getInstance().setGoal(ArmConstants.CORAL_L2)));
   }
 
