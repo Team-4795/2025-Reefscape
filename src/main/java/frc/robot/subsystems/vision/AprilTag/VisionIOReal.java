@@ -11,8 +11,11 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.drive.RobotDriveBase;
+import frc.robot.subsystems.drive.Drive;
 
 public class VisionIOReal implements VisionIO {
     List<PhotonPipelineResult> result;
@@ -44,6 +47,41 @@ public class VisionIOReal implements VisionIO {
 
         else if(camera.getPipelineIndex() == VisionConstants.reefDetectionPipelineID && camera.getName().equals(VisionConstants.cameraIds[0]))
             camera.setPipelineIndex(VisionConstants.aprilTagPipelineID);
+    }
+
+    public void getBestReefPos() {
+        Translation2d odometry = Drive.getInstance().getPose().getTranslation();
+        Pose2d bestPose = new Pose2d();
+
+        if(DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red))
+        {
+
+            double distance = VisionConstants.redReefScoringPoses[0].getTranslation().getDistance(odometry);
+
+            for(int i = 1; i < VisionConstants.redReefScoringPoses.length; i++)
+            {
+                if(VisionConstants.redReefScoringPoses[i].getTranslation().getDistance(odometry) < distance)
+                {
+                    distance = VisionConstants.redReefScoringPoses[i].getTranslation().getDistance(odometry);
+                    bestPose = VisionConstants.redReefScoringPoses[i];
+                }
+            }
+            
+        }
+
+        if(DriverStation.getAlliance().get().equals(DriverStation.Alliance.Blue))
+        {
+            double distance = VisionConstants.redReefScoringPoses[0].getTranslation().getDistance(odometry);
+
+            for(int i = 1; i < VisionConstants.redReefScoringPoses.length; i++)
+            {
+                if(VisionConstants.redReefScoringPoses[i].getTranslation().getDistance(odometry) < distance)
+                {
+                    distance = VisionConstants.redReefScoringPoses[i].getTranslation().getDistance(odometry);
+                    bestPose = VisionConstants.redReefScoringPoses[i];
+                }
+            }
+        }
     }
 
     @Override
