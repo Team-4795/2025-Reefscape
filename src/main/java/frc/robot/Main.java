@@ -5,12 +5,13 @@
 package frc.robot;
 
 import java.io.IOException;
-import java.text.ParseException;
 
 import edu.wpi.first.wpilibj.RobotBase;
 
 public final class Main  {
   private Main() {}
+
+  public String Bruh = "Bruh";
 
   public static void main(String... args) {
     RobotBase.startRobot(() -> {
