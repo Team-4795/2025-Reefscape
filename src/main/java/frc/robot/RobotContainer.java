@@ -7,7 +7,11 @@ package frc.robot;
 import java.io.IOException;
 
 import org.json.simple.parser.ParseException;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+
+import choreo.auto.AutoChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.DriveCommands;
@@ -20,6 +24,7 @@ import frc.robot.subsystems.drive.ModuleIOTalonFX;
 public class RobotContainer {
   
   private  Drive drive;
+  LoggedDashboardChooser<Command> autoChooser;
    
     public RobotContainer() throws IOException, ParseException {
   
@@ -80,6 +85,6 @@ public class RobotContainer {
   
 
   public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
+    return autoChooser.get();
   }
 }
