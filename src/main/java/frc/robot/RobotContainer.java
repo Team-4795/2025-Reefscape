@@ -8,6 +8,7 @@ import java.io.IOException;
 
 import org.json.simple.parser.ParseException;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.elevator.Elevator;
@@ -23,6 +24,7 @@ import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmIOSim;
 import frc.robot.subsystems.arm.ArmIOReal;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class RobotContainer {  
 
@@ -90,29 +92,47 @@ public class RobotContainer {
 
     //Constants.OIConstants.driverController.a().whileTrue(Commands.runOnce(() -> drive.zeroHeading(), drive));
 
-    // OIConstants.operatorController.leftTrigger()
-    //     .whileTrue(Commands.startEnd(() -> elevator.moveElevator(OIConstants.operatorController.getLeftTriggerAxis() / 1.5), 
-    //     () -> elevator.moveElevator(0), 
-    //     elevator));
+    OIConstants.operatorController.leftTrigger()
+        .whileTrue(Commands.startEnd(() -> elevator.moveElevator(OIConstants.operatorController.getLeftTriggerAxis() / 1.5), 
+        () -> elevator.moveElevator(0), 
+        elevator));
 
-    // OIConstants.operatorController.rightTrigger()
-    //     .whileTrue(Commands.startEnd(() -> elevator.moveElevator(-OIConstants.operatorController.getRightTriggerAxis() / 1.5),
-    //     () -> elevator.moveElevator(0), 
-    //     elevator));
+    OIConstants.operatorController.rightTrigger()
+        .whileTrue(Commands.startEnd(() -> elevator.moveElevator(-OIConstants.operatorController.getRightTriggerAxis() / 1.5),
+        () -> elevator.moveElevator(0), 
+        elevator));
 
-    OIConstants.operatorController.rightBumper().whileTrue(
-      Commands.run(
-        () -> elevator.setVoltage(1), 
-        elevator
-      )
-    );
+    // OIConstants.operatorController.rightBumper().whileTrue(
+    //   Commands.run(
+    //     () -> elevator.setVoltage(1), 
+    //     elevator
+    //   )
+    // );
 
-    OIConstants.operatorController.leftBumper().whileTrue(
-      Commands.run(
-        () -> elevator.setVoltage(-1), 
-        elevator
-      )
-    );
+    // OIConstants.operatorController.leftBumper().whileTrue(
+    //   Commands.run(
+    //     () -> elevator.setVoltage(-1), 
+    //     elevator
+    //   )
+    // );
+
+
+    // OIConstants.operatorController.leftBumper().whileTrue(
+    //   Arm.getInstance().sysIDRoutine().quasistatic(SysIdRoutine.Direction.kForward)
+    // );
+
+    // OIConstants.operatorController.rightBumper().whileTrue(
+    //   Arm.getInstance().sysIDRoutine().quasistatic(SysIdRoutine.Direction.kReverse)
+    // );
+
+    // OIConstants.operatorController.leftTrigger().whileTrue(
+    //   Arm.getInstance().sysIDRoutine().dynamic(SysIdRoutine.Direction.kForward)
+    // );
+
+    // OIConstants.operatorController.rightTrigger().whileTrue(
+    //   Arm.getInstance().sysIDRoutine().dynamic(SysIdRoutine.Direction.kReverse)
+    // );
+    
 
     Constants.OIConstants.operatorController.povRight().onTrue(
       Commands.sequence(
@@ -125,7 +145,7 @@ public class RobotContainer {
 
     Constants.OIConstants.operatorController.povLeft().onTrue(
       Commands.sequence(
-        Elevator.getInstance().setGoal(ElevatorConstants.minDistance).withTimeout(2),
+        Elevator.getInstance().setGoal(ElevatorConstants.minDistance),
         Commands.runOnce(() -> Arm.getInstance().setGoal(-1.8)),
         Commands.waitSeconds(1.5)
       )
@@ -141,10 +161,10 @@ public class RobotContainer {
         )
      );
 
-     Constants.OIConstants.operatorController.x().whileTrue(Commands.startEnd(() -> intake.setIntakeSpeed(-0.5),
+     Constants.OIConstants.operatorController.x().whileTrue(Commands.startEnd(() -> intake.setIntakeSpeed(-1),
      () -> intake.setIntakeSpeed(0), intake));
 
-     Constants.OIConstants.operatorController.b().whileTrue(Commands.startEnd(() -> intake.setIntakeSpeed(0.5), 
+     Constants.OIConstants.operatorController.b().whileTrue(Commands.startEnd(() -> intake.setIntakeSpeed(1), 
      () -> intake.setIntakeSpeed(0), intake));
 
      Constants.OIConstants.operatorController.y().onTrue(
@@ -169,7 +189,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return Commands.sequence(
-    );
+    return Commands.print("hi");
   }
 }

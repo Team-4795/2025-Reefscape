@@ -34,7 +34,8 @@ public class Elevator extends SubsystemBase {
 
     public Command setGoal(double goal){
         return Commands.runOnce(() -> io.setGoal(goal), this)
-        .andThen(Commands.run(() -> io.updateMotionProfile(), this));
+        .andThen(Commands.run(() -> io.updateMotionProfile(), this))
+        .withTimeout(2.5);
     }
 
     public  void moveElevator(double speed) {

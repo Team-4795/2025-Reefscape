@@ -82,7 +82,7 @@ public class ArmIOReal implements ArmIO {
         setpoint = profile.calculate(0.02, setpoint, goal);
         double acceleration = (setpoint.velocity - prevVelocity) / 0.02;
         Logger.recordOutput("acceleration", acceleration);
-        double ffvolts = ffmodel.calculate(getOffsetAngle(), setpoint.velocity, acceleration);
+        double ffvolts = ffmodel.calculate(armMotor.getEncoder().getPosition(), setpoint.velocity, acceleration);
         Logger.recordOutput("arm ffvolts", ffvolts);
         onboardController.setReference(setpoint.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, ffvolts);
 
