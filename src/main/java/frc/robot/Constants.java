@@ -1,5 +1,10 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.subsystems.vision.AprilTag.VisionConstants;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class Constants {
@@ -27,5 +32,10 @@ public class Constants {
         CORAL,
         NONE,
         SIM,
+    }
+
+    public static final class FieldConstants {
+        public static final double fieldLength = VisionConstants.aprilTagFieldLayout.getFieldLength();
+        public static final double fieldWidth = VisionConstants.aprilTagFieldLayout.getFieldWidth();
     }
 }

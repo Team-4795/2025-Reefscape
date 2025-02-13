@@ -1,4 +1,4 @@
-package frc.robot.util;
+package frc.robot.Util;
 
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;

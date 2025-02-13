@@ -7,8 +7,10 @@ package frc.robot;
 import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import java.io.IOException;
 
 import org.json.simple.parser.ParseException;
@@ -17,6 +19,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import choreo.auto.AutoChooser;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
@@ -31,7 +34,9 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIORealVortex;
 import frc.robot.subsystems.intake.IntakeIOSim;
 import frc.robot.subsystems.swerve.Swerve;
-import frc.robot.util.NamedCommandManager;
+import frc.robot.subsystems.vision.AprilTag.Vision;
+import frc.robot.subsystems.vision.AprilTag.VisionIOReal;
+import frc.robot.Util.NamedCommandManager;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmIOSim;
@@ -42,6 +47,7 @@ public class RobotContainer {
   private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond);
   private RobotVisualizer visualizer = new RobotVisualizer();
 
+  // private final Vision vision;
   /* Setting up bindings for necessary control of the swerve drive platform */
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
       .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
@@ -49,7 +55,7 @@ public class RobotContainer {
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
-  private final Telemetry logger = new Telemetry(MaxSpeed);
+  public final Telemetry logger = new Telemetry(MaxSpeed);
 
   public final Swerve drivetrain;
 
@@ -87,6 +93,7 @@ public class RobotContainer {
     autoChooser.addOption("BottomBarge C BB BF", AutoBuilder.buildAuto("BottomBarge C BB BF"));
     autoChooser.addOption("raiseL4", AutoCommands.raiseL4());
     configureBindings();
+    
   }
 
   private void configureBindings() {
