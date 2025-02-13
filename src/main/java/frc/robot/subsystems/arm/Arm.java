@@ -1,5 +1,9 @@
 package frc.robot.subsystems.arm;
 
+import static edu.wpi.first.units.Units.Radians;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.Volts;
+
 import java.util.regex.MatchResult;
 
 import org.littletonrobotics.junction.Logger;
@@ -8,9 +12,13 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Constants.Gamepiece;
 import frc.robot.Constants.Mode;
@@ -21,6 +29,19 @@ public class Arm extends SubsystemBase {
     private ArmIO io;
     private static Arm instance;
 
+    private SysIdRoutine sysIdRoutine = new SysIdRoutine(
+        new SysIdRoutine.Config(),
+        new SysIdRoutine.Mechanism(volts -> {
+            manualVoltage(volts.magnitude());
+        }, 
+        log -> {
+            log.motor("arm motor")
+                .voltage(Voltage.ofBaseUnits(inputs.voltage, Volts))
+                .angularPosition(Angle.ofBaseUnits(inputs.relativeEncoderPosition, Radians))
+                .angularVelocity(AngularVelocity.ofBaseUnits(inputs.relativeEncoderVelocity, RadiansPerSecond));
+        }, this)
+    );
+
     private Arm(ArmIO io) {
         this.io = io;
         setDefaultCommand(
@@ -28,7 +49,6 @@ public class Arm extends SubsystemBase {
                 double up = MathUtil.applyDeadband(OIConstants.driverController.getLeftTriggerAxis(), 0.1);
                 double down = MathUtil.applyDeadband(OIConstants.driverController.getRightTriggerAxis(), 0.1);
                 double change = (up - down) * 0.1;
-
                 // io.setGoal(inputs.goalAngle + change);
             }, this)
         );
@@ -57,6 +77,10 @@ public class Arm extends SubsystemBase {
 
     public void resetAbsoluteEncoder() {
         io.resetEncoder();
+    }
+
+    public SysIdRoutine sysIDRoutine() {
+        return sysIdRoutine;
     }
 
     public void manualVoltage(double voltage) {
