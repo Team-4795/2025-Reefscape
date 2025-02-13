@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
+import frc.robot.RobotContainer;
 // import frc.robot.subsystems.MAXSwerve.Drive;
 import frc.robot.subsystems.drive.Drive;
 
@@ -59,7 +60,7 @@ public class VisionIOSim implements VisionIO {
         // }
 
         // Uncomment once drive is done
-        visionSim.update(Drive.getInstance().getPose());
+        visionSim.update(RobotContainer.drivetrain.getState().Pose);
         
         // visionSim.update(new Pose2d(12, 12, new Rotation2d(45)));
         visionSim.getDebugField();
