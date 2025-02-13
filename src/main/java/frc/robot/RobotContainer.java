@@ -45,22 +45,19 @@ import frc.robot.subsystems.arm.ArmIOSim;
 import frc.robot.subsystems.arm.ArmIOReal;
 
 public class RobotContainer {
-  private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
-  private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond);
-
   private RobotVisualizer visualizer = new RobotVisualizer();
-  private final Vision vision;
+  // private final Vision vision;
 
   // private final Vision vision;
   /* Setting up bindings for necessary control of the swerve drive platform */
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-      .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+      .withDeadband(Constants.driveConstants.MaxSpeed * 0.1).withRotationalDeadband(Constants.driveConstants.MaxAngularRate * 0.1) // Add a 10% deadband
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
 
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
-  public final Telemetry logger = new Telemetry(MaxSpeed);
+  public final Telemetry logger = new Telemetry(Constants.driveConstants.MaxSpeed);
 
   public final Swerve drivetrain;
 
@@ -76,12 +73,12 @@ public class RobotContainer {
         intake = Intake.initialize(new IntakeIORealVortex());
         Arm.initialize(new ArmIOReal());
         drivetrain = Swerve.initialize(TunerConstants.createDrivetrain());
-        vision = Vision.initialize(
-          new VisionIOReal(0),
-          new VisionIOReal(1),
-          new VisionIOReal(2),
-          new VisionIOReal(3)
-        );
+        // vision = Vision.initialize(
+        //   new VisionIOReal(0),
+        //   new VisionIOReal(1),
+        //   new VisionIOReal(2),
+        //   new VisionIOReal(3)
+        // );
         break;
 
       case SIM:
@@ -89,14 +86,14 @@ public class RobotContainer {
         intake = Intake.initialize(new IntakeIOSim());
         Arm.initialize(new ArmIOSim());
         drivetrain = Swerve.initialize(TunerConstants.createDrivetrain());
-        vision = Vision.initialize(new VisionIOSim());
+        // vision = Vision.initialize(new VisionIOSim());
         break;
 
       default:
         elevator = Elevator.initialize(new ElevatorIOSim());
         intake = Intake.initialize(new IntakeIOSim());
         drivetrain = Swerve.initialize(TunerConstants.createDrivetrain());
-        vision = Vision.initialize(new VisionIOSim());
+        // vision = Vision.initialize(new VisionIOSim());
         Arm.initialize(new ArmIOSim());
     }
 
@@ -115,9 +112,9 @@ public class RobotContainer {
     drivetrain.setDefaultCommand(
         // Drivetrain will execute this command periodically
         drivetrain
-            .applyRequest(() -> drive.withVelocityX(-Constants.OIConstants.driverController.getLeftY() * MaxSpeed)
-                .withVelocityY(-Constants.OIConstants.driverController.getLeftX() * MaxSpeed)
-                .withRotationalRate(-Constants.OIConstants.driverController.getRightX() * MaxAngularRate)));
+            .applyRequest(() -> drive.withVelocityX(-Constants.OIConstants.driverController.getLeftY() * Constants.driveConstants.MaxSpeed)
+                .withVelocityY(-Constants.OIConstants.driverController.getLeftX() * Constants.driveConstants.MaxSpeed)
+                .withRotationalRate(-Constants.OIConstants.driverController.getRightX() * Constants.driveConstants.MaxAngularRate)));
 
     // Constants.OIConstants.driverController.back().and(Constants.OIConstants.driverController.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
     // Constants.OIConstants.driverController.back().and(Constants.OIConstants.driverController.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
@@ -128,8 +125,8 @@ public class RobotContainer {
 
     Constants.OIConstants.driverController.rightBumper().whileTrue(
       new AutoAlignReef(
-        new ProfiledPIDController(1, 0, 0, new Constraints(MaxSpeed, 3)), 
-        new ProfiledPIDController(1, 0, 0, new Constraints(MaxSpeed, 3))));
+        new ProfiledPIDController(1, 0, 0, new Constraints(Constants.driveConstants.MaxSpeed, 3)), 
+        new ProfiledPIDController(1, 0, 0, new Constraints(Constants.driveConstants.MaxSpeed, 3))));
 
     drivetrain.registerTelemetry(logger::telemeterize);
 

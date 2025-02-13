@@ -10,5 +10,6 @@ public class NamedCommandManager {
         NamedCommands.registerCommand("Say Hello", Commands.print("Hello World!"));
         NamedCommands.registerCommand("Raise to L4", AutoCommands.raiseL4());
         NamedCommands.registerCommand("Stow", AutoCommands.stow());
+        NamedCommands.registerCommand("Drive to Reef", AutoCommands.driveToReef());
     }
 }

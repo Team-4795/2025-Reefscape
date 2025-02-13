@@ -121,7 +121,10 @@ public class AutoAlignReef extends Command{
         Logger.recordOutput("AutoAlign/Distance at goal", translationController.atGoal());
         Logger.recordOutput("AutoAlign/PID input", drivePIDOutput);
 
-        Swerve.getInstance().setControl(drive.withVelocityX(driveSpeed * direction.getCos()).withVelocityY(driveSpeed * direction.getSin()).withRotationalRate(omega));
+        Swerve.getInstance().setControl(
+            drive.withVelocityX(driveSpeed * direction.getCos())
+            .withVelocityY(driveSpeed * direction.getSin())
+            .withRotationalRate(omega));
     }
 
     private double projection(Translation2d v1, Translation2d onto){
