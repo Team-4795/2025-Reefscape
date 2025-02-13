@@ -84,9 +84,12 @@ public class RobotContainer {
 
     RobotVisualizer robotVisualizer = new RobotVisualizer();
 
+    
 
     autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser("BTopBarge DFDB"));
     autoChooser.addOption("BottomBarge C BB BF", AutoBuilder.buildAuto("BottomBarge C BB BF"));
+
+
     configureBindings();
   }
 
