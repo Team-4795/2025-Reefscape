@@ -15,7 +15,6 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.drive.RobotDriveBase;
-import frc.robot.subsystems.drive.Drive;
 
 public class VisionIOReal implements VisionIO {
     List<PhotonPipelineResult> result;

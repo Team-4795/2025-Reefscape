@@ -13,9 +13,6 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.RobotContainer;
-// import frc.robot.subsystems.MAXSwerve.Drive;
-import frc.robot.subsystems.drive.Drive;
-
 public class VisionIOSim implements VisionIO {
     VisionSystemSim visionSim;
     TargetModel  targetModel;

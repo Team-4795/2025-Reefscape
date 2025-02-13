@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.FieldConstants;
-import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.AprilTag.VisionIOInputsAutoLogged;
 
 import static frc.robot.subsystems.vision.AprilTag.VisionConstants.*;
