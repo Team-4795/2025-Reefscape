@@ -29,6 +29,7 @@ import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorIOReal;
 import frc.robot.subsystems.elevator.ElevatorIOSim;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.AutoAlignReef;
 import frc.robot.commands.AutoCommands;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIORealVortex;
@@ -46,6 +47,7 @@ import frc.robot.subsystems.arm.ArmIOReal;
 public class RobotContainer {
   private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
   private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond);
+
   private RobotVisualizer visualizer = new RobotVisualizer();
   private final Vision vision;
 
@@ -54,6 +56,7 @@ public class RobotContainer {
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
       .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
+
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
@@ -122,6 +125,11 @@ public class RobotContainer {
     // Constants.OIConstants.driverController.start().and(Constants.OIConstants.driverController.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
     Constants.OIConstants.driverController.a().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+
+    Constants.OIConstants.driverController.rightBumper().whileTrue(
+      new AutoAlignReef(
+        new ProfiledPIDController(1, 0, 0, new Constraints(MaxSpeed, 3)), 
+        new ProfiledPIDController(1, 0, 0, new Constraints(MaxSpeed, 3))));
 
     drivetrain.registerTelemetry(logger::telemeterize);
 

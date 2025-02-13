@@ -1,11 +1,16 @@
 
 package frc.robot.commands;
 
+import static edu.wpi.first.units.Units.*;
+
+import frc.robot.Constants;
+
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.MathUtil;
@@ -27,9 +32,15 @@ import frc.robot.Telemetry;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.vision.AprilTag.Vision;
 import frc.robot.subsystems.vision.AprilTag.VisionConstants;
+import frc.robot.generated.TunerConstants;
 
 
 public class AutoAlignReef extends Command{
+    private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond);
+
+    private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+
     private static final Pose2d[] RED_SCORING_AREAS = VisionConstants.redReefScoringPoses;
     private static final Pose2d[] BLUE_SCORING_AREAS = VisionConstants.blueReefScoringPoses;
 
@@ -42,23 +53,17 @@ public class AutoAlignReef extends Command{
     private ProfiledPIDController translationController;
     private ProfiledPIDController rotationController;
 
-    public static double  driveSpeed;
-    public static Rotation2d direction;
-    public static double omega;
 
     private double mult;
     private Pose2d currentPose;
     private Pose2d targetPose;
     private double distance;
 
-    private Swerve driveTrain;
-
-    public AutoAlignReef(Swerve driveTrain, ProfiledPIDController translation, ProfiledPIDController rotation) {
+    public AutoAlignReef(ProfiledPIDController translation, ProfiledPIDController rotation) {
         translationController = translation;
         translationController.setTolerance(0.1);
         rotationController = rotation;
-        this.driveTrain = driveTrain;
-        // addRequirements(driveTrain);
+        addRequirements(Swerve.getInstance());
     }
 
 
@@ -72,35 +77,35 @@ public class AutoAlignReef extends Command{
         offset = (isScoringLeft) ? 0.33 / 2.0 :  -0.33 / 2.0;
         targetPose = targetPose.plus(new Transform2d(0, offset, new Rotation2d(0)));
         
-        currentPose = driveTrain.getState().Pose;
-        double velocity = mult * projection(new Translation2d(driveTrain.getState().Speeds.vxMetersPerSecond, driveTrain.getState().Speeds.vyMetersPerSecond), targetPose.getTranslation().minus(currentPose.getTranslation()));
+        currentPose = Swerve.getInstance().getState().Pose;
+        double velocity = mult * projection(new Translation2d(Swerve.getInstance().getState().Speeds.vxMetersPerSecond, Swerve.getInstance().getState().Speeds.vyMetersPerSecond), targetPose.getTranslation().minus(currentPose.getTranslation()));
         rotationController.enableContinuousInput(-Math.PI, Math.PI);
 
-        Logger.recordOutput("AutoAlign/Robot velocity", new Translation2d(driveTrain.getState().Speeds.vxMetersPerSecond, driveTrain.getState().Speeds.vyMetersPerSecond));
+        Logger.recordOutput("AutoAlign/Robot velocity", new Translation2d(Swerve.getInstance().getState().Speeds.vxMetersPerSecond, Swerve.getInstance().getState().Speeds.vyMetersPerSecond));
         Logger.recordOutput("AutoAlign/Translation", targetPose.getTranslation().minus(currentPose.getTranslation()));
         Logger.recordOutput("AutoAlign/velocity", velocity);
 
         distance = currentPose.getTranslation().getDistance(targetPose.getTranslation());
         translationController.reset(distance, velocity);
-        rotationController.reset(MathUtil.angleModulus(currentPose.getRotation().getRadians()), driveTrain.getState().Speeds.omegaRadiansPerSecond);
+        rotationController.reset(MathUtil.angleModulus(currentPose.getRotation().getRadians()), Swerve.getInstance().getState().Speeds.omegaRadiansPerSecond);
     }
 
     @Override
     public void execute() {
         // driveTrain.registerTelemetry(logger::telemeterize);
 
-        currentPose = driveTrain.getState().Pose;
+        currentPose = Swerve.getInstance().getState().Pose;
         distance = currentPose.getTranslation().getDistance(targetPose.getTranslation());
 
         translationController.reset(distance, translationController.getSetpoint().velocity);
 
         double rotationPIDOutput = rotationController.calculate(MathUtil.angleModulus(currentPose.getRotation().getRadians()), targetPose.getRotation().getRadians());
-        omega = rotationController.getSetpoint().velocity + rotationPIDOutput;
+        double omega = rotationController.getSetpoint().velocity + rotationPIDOutput;
         
         double scalar =  scalar(distance);
         double drivePIDOutput = translationController.calculate(distance, 0);
-        driveSpeed = mult * scalar * translationController.getSetpoint().velocity + drivePIDOutput;
-        direction = new Rotation2d(currentPose.getX() - targetPose.getX(), currentPose.getY() - targetPose.getY());
+        double driveSpeed = mult * scalar * translationController.getSetpoint().velocity + drivePIDOutput;
+        Rotation2d direction = new Rotation2d(currentPose.getX() - targetPose.getX(), currentPose.getY() - targetPose.getY());
 
         Logger.recordOutput("AutoAlign/target pose", targetPose);
         Logger.recordOutput("AutoAlign/Translation x direction", driveSpeed * direction.getCos());
@@ -115,6 +120,8 @@ public class AutoAlignReef extends Command{
         Logger.recordOutput("AutoAlign/Distance", currentPose.getTranslation().getDistance(targetPose.getTranslation()));
         Logger.recordOutput("AutoAlign/Distance at goal", translationController.atGoal());
         Logger.recordOutput("AutoAlign/PID input", drivePIDOutput);
+
+        Swerve.getInstance().setControl(drive.withVelocityX(driveSpeed * direction.getCos()).withVelocityY(driveSpeed * direction.getSin()).withRotationalRate(omega));
     }
 
     private double projection(Translation2d v1, Translation2d onto){
