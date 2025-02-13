@@ -42,20 +42,22 @@ public class AutoAlignReef extends Command{
     private ProfiledPIDController translationController;
     private ProfiledPIDController rotationController;
 
+    public static double  driveSpeed;
+    public static Rotation2d direction;
+    public static double omega;
+
     private double mult;
     private Pose2d currentPose;
     private Pose2d targetPose;
     private double distance;
 
     private CommandSwerveDrivetrain driveTrain;
-    private SwerveRequest.FieldCentric drive;
 
-    public AutoAlignReef(CommandSwerveDrivetrain driveTrain, SwerveRequest.FieldCentric drive, ProfiledPIDController translation, ProfiledPIDController rotation) {
+    public AutoAlignReef(CommandSwerveDrivetrain driveTrain, ProfiledPIDController translation, ProfiledPIDController rotation) {
         translationController = translation;
         translationController.setTolerance(0.1);
         rotationController = rotation;
         this.driveTrain = driveTrain;
-        this.drive = drive;
         // addRequirements(driveTrain);
     }
 
@@ -93,12 +95,12 @@ public class AutoAlignReef extends Command{
         translationController.reset(distance, translationController.getSetpoint().velocity);
 
         double rotationPIDOutput = rotationController.calculate(MathUtil.angleModulus(currentPose.getRotation().getRadians()), targetPose.getRotation().getRadians());
-        double omega = rotationController.getSetpoint().velocity + rotationPIDOutput;
+        omega = rotationController.getSetpoint().velocity + rotationPIDOutput;
         
-        double scalar = scalar(distance);
+        double scalar =  scalar(distance);
         double drivePIDOutput = translationController.calculate(distance, 0);
-        double driveSpeed = mult * scalar * translationController.getSetpoint().velocity + drivePIDOutput;
-        Rotation2d direction = new Rotation2d(currentPose.getX() - targetPose.getX(), currentPose.getY() - targetPose.getY());
+        driveSpeed = mult * scalar * translationController.getSetpoint().velocity + drivePIDOutput;
+        direction = new Rotation2d(currentPose.getX() - targetPose.getX(), currentPose.getY() - targetPose.getY());
 
         Logger.recordOutput("AutoAlign/target pose", targetPose);
         Logger.recordOutput("AutoAlign/Translation x direction", driveSpeed * direction.getCos());
@@ -113,8 +115,6 @@ public class AutoAlignReef extends Command{
         Logger.recordOutput("AutoAlign/Distance", currentPose.getTranslation().getDistance(targetPose.getTranslation()));
         Logger.recordOutput("AutoAlign/Distance at goal", translationController.atGoal());
         Logger.recordOutput("AutoAlign/PID input", drivePIDOutput);
-
-        driveTrain.applyRequest(() -> drive.withVelocityX(driveSpeed * direction.getCos()).withVelocityY(driveSpeed * direction.getCos()).withRotationalRate(omega));
     }
 
     private double projection(Translation2d v1, Translation2d onto){

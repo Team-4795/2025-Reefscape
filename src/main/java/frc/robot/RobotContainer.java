@@ -53,6 +53,8 @@ public class RobotContainer {
 
   public static CommandSwerveDrivetrain drivetrain;
 
+  public AutoAlignTest AutoAlignTest;
+
   public RobotContainer() throws IOException, ParseException {
   
       switch (Constants.currentMode) {
@@ -80,6 +82,8 @@ public class RobotContainer {
         .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
 
         drivetrain = TunerConstants.createDrivetrain();
+
+        AutoAlignTest = new AutoAlignTest(drivetrain);
           break;
       
       default:
@@ -102,20 +106,21 @@ public class RobotContainer {
   private void configureBindings() {
     // Note that X is defined as forward according to WPILib convention,
     // and Y is defined as to the left according to WPILib convention.
-    drivetrain.setDefaultCommand(
-    // //     // Drivetrain will execute this command periodically
-       drivetrain.applyRequest(() ->
-             drive.withVelocityX(-joystick.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-                 .withVelocityY(-joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                 .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
-         )
-     );
-
+    // drivetrain.setDefaultCommand(
+    // // //     // Drivetrain will execute this command periodically
+    //    drivetrain.applyRequest(() ->
+    //          drive.withVelocityX(-joystick.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+    //              .withVelocityY(-joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+    //              .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+    //      )
+    //  );
 
 
     // drivetrain.setDefaultCommand(new AutoAlignTest(drivetrain, drive, joystick, logger));
 
-    joystick.rightBumper().whileTrue(new AutoAlignReef(drivetrain, drive, new ProfiledPIDController(1, 0, 0, new Constraints(MaxSpeed, 5)), new ProfiledPIDController(1, 0, 0, new Constraints(MaxSpeed, 5))));
+
+    joystick.axisGreaterThan(0, 0.5).whileTrue(AutoAlignTest.joystickDrive(drivetrain));
+
               
 
     joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
@@ -139,6 +144,11 @@ public class RobotContainer {
     joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
     drivetrain.registerTelemetry(logger::telemeterize);
+  }
+
+  public static Command driveToReef(double driveSpeed, Rotation2d direction, double omega) {
+    // return drivetrain.applyRequest(() -> drive.withVelocityX(5).withVelocityY(5).withRotationalRate(5));
+    return drivetrain.applyRequest(() -> drive.withVelocityX(driveSpeed * direction.getCos()).withVelocityY(driveSpeed * direction.getCos()).withRotationalRate(omega));
   }
 
   public Command getAutonomousCommand() {
