@@ -83,7 +83,7 @@ public class RobotContainer {
 
     NamedCommandManager.registerNamedCommands();
 
-    autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser("BTopBarge DFDB"));
+    autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser("TopBarge UFUB Score 2"));
     autoChooser.addOption("BottomBarge C BB BF", AutoBuilder.buildAuto("BottomBarge C BB BF"));
     autoChooser.addOption("raiseL4", AutoCommands.raiseL4());
     configureBindings();
