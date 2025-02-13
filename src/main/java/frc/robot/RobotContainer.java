@@ -36,6 +36,7 @@ import frc.robot.subsystems.intake.IntakeIOSim;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.vision.AprilTag.Vision;
 import frc.robot.subsystems.vision.AprilTag.VisionIOReal;
+import frc.robot.subsystems.vision.AprilTag.VisionIOSim;
 import frc.robot.Util.NamedCommandManager;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;
@@ -46,6 +47,7 @@ public class RobotContainer {
   private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
   private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond);
   private RobotVisualizer visualizer = new RobotVisualizer();
+  private final Vision vision;
 
   // private final Vision vision;
   /* Setting up bindings for necessary control of the swerve drive platform */
@@ -70,20 +72,28 @@ public class RobotContainer {
         elevator = Elevator.initialize(new ElevatorIOReal());
         intake = Intake.initialize(new IntakeIORealVortex());
         Arm.initialize(new ArmIOReal());
-        drivetrain = TunerConstants.createDrivetrain();
+        drivetrain = Swerve.initialize(TunerConstants.createDrivetrain());
+        vision = Vision.initialize(
+          new VisionIOReal(0),
+          new VisionIOReal(1),
+          new VisionIOReal(2),
+          new VisionIOReal(3)
+        );
         break;
 
       case SIM:
         elevator = Elevator.initialize(new ElevatorIOSim());
         intake = Intake.initialize(new IntakeIOSim());
         Arm.initialize(new ArmIOSim());
-        drivetrain = TunerConstants.createDrivetrain();
+        drivetrain = Swerve.initialize(TunerConstants.createDrivetrain());
+        vision = Vision.initialize(new VisionIOSim());
         break;
 
       default:
         elevator = Elevator.initialize(new ElevatorIOSim());
         intake = Intake.initialize(new IntakeIOSim());
-        drivetrain = TunerConstants.createDrivetrain();
+        drivetrain = Swerve.initialize(TunerConstants.createDrivetrain());
+        vision = Vision.initialize(new VisionIOSim());
         Arm.initialize(new ArmIOSim());
     }
 
