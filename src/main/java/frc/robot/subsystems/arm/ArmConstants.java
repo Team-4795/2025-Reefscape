@@ -12,8 +12,8 @@ public class ArmConstants {
     public static final double CORAL_L3 = Units.degreesToRadians(54.1);
     public static final double CORAL_L4 = Units.degreesToRadians(54.61);
 
-    public static final double MAX_VELOCITY = 2;
-    public static final double MAX_ACCELERATION = 4;
+    public static final double MAX_VELOCITY = 3;
+    public static final double MAX_ACCELERATION = 10;
 
     // Simulation FF
     public static final double SIMkG = 1.3;

@@ -53,7 +53,7 @@ public class ElevatorIOReal implements ElevatorIO {
         // config.softLimit.forwardSoftLimit(ElevatorConstants.maxDistance);
         // config.softLimit.reverseSoftLimit(ElevatorConstants.minDistance);
 
-        config.closedLoop.p(0);
+        config.closedLoop.p(10);
         config.closedLoop.i(0);
         config.closedLoop.d(0);
 
@@ -75,6 +75,7 @@ public class ElevatorIOReal implements ElevatorIO {
 
     @Override
     public void setGoal(double height) {
+        setpoint = new TrapezoidProfile.State(leftEncoder.getPosition(), leftEncoder.getVelocity());
         goal = new TrapezoidProfile.State(height, 0);
     }
 
