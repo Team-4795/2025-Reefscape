@@ -51,7 +51,7 @@ public class RobotContainer {
 
   private final Telemetry logger = new Telemetry(MaxSpeed);
 
-  public final Swerve drivetrain = TunerConstants.createDrivetrain();
+  public final Swerve drivetrain;
 
   private Elevator elevator;
   // private Drive drive;
@@ -64,21 +64,21 @@ public class RobotContainer {
         elevator = Elevator.initialize(new ElevatorIOReal());
         intake = Intake.initialize(new IntakeIORealVortex());
         Arm.initialize(new ArmIOReal());
+        drivetrain = TunerConstants.createDrivetrain();
         break;
 
       case SIM:
         elevator = Elevator.initialize(new ElevatorIOSim());
         intake = Intake.initialize(new IntakeIOSim());
         Arm.initialize(new ArmIOSim());
+        drivetrain = TunerConstants.createDrivetrain();
         break;
 
       default:
         elevator = Elevator.initialize(new ElevatorIOSim());
         intake = Intake.initialize(new IntakeIOSim());
+        drivetrain = TunerConstants.createDrivetrain();
         Arm.initialize(new ArmIOSim());
-
-
-            
     }
 
     NamedCommandManager.registerNamedCommands();
