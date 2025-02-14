@@ -20,6 +20,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 
 import choreo.auto.AutoChooser;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
@@ -98,6 +99,15 @@ public class RobotContainer {
         drivetrain = Swerve.initialize(TunerConstants.createDrivetrain());
         vision = Vision.initialize(new VisionIOSim());
         Arm.initialize(new ArmIOSim());
+        break;
+    }
+
+    double withoffset = Units.degreesToRadians(45) - ArmConstants.ARM_OFFSET;
+    if(withoffset > ArmConstants.Sim.MAX_ANGLE) {
+      System.out.println(Math.PI / 2 - (Math.PI - withoffset));
+    } 
+    else {
+     System.out.println(Math.PI / 2 - (Math.PI - withoffset));
     }
 
     NamedCommandManager.registerNamedCommands();

@@ -107,12 +107,12 @@ public class ArmIOReal implements ArmIO {
 
     public double getOffsetAngle() {
        double withoffset = armEncoder.getPosition() - ArmConstants.ARM_OFFSET;
-       if(withoffset > Math.PI) {
-        return -1 * (2 * Math.PI - withoffset);
-        }
-        else {
-            return withoffset;
-        }
+       if(withoffset > ArmConstants.Sim.MAX_ANGLE) {
+        return Math.PI / 2 - (Math.PI - withoffset);
+       } 
+       else {
+        return withoffset;
+       }
     }
 
     @Override
