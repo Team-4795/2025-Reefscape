@@ -1,16 +1,9 @@
 
 package frc.robot.commands;
 
-import static edu.wpi.first.units.Units.*;
-
-import frc.robot.Constants;
-
-import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
-import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
-import com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.MathUtil;
@@ -24,25 +17,16 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N2;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.RobotContainer;
-import frc.robot.Telemetry;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.vision.AprilTag.Vision;
-import frc.robot.subsystems.vision.AprilTag.VisionConstants;
-import frc.robot.generated.TunerConstants;
 
 
-public class AutoAlignReef extends Command{
+public class AutoAlignFeeder extends Command{
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
-    private static final Pose2d[] RED_SCORING_AREAS = VisionConstants.redReefScoringPoses;
-    private static final Pose2d[] BLUE_SCORING_AREAS = VisionConstants.blueReefScoringPoses;
-
-    private boolean isScoringLeft = true;
-    private double offset = 0.0;
+    private static final Pose2d RED_FEEDER = new Pose2d(1.12, 6.92, new Rotation2d(-0.942477796076938));
+    private static final Pose2d BLUE_FEEDER = new Pose2d(16.51, 1.14, new Rotation2d(2.199114857512855));
 
     private final double maxDistance = 0.6;
     private final double minDistance = -0.1;
@@ -50,15 +34,17 @@ public class AutoAlignReef extends Command{
     private ProfiledPIDController translationController;
     private ProfiledPIDController rotationController;
 
+
     private double mult;
     private Pose2d currentPose;
     private Pose2d targetPose;
     private double distance;
 
-    public AutoAlignReef(ProfiledPIDController translation, ProfiledPIDController rotation) {
+    public AutoAlignFeeder(ProfiledPIDController translation, ProfiledPIDController rotation) {
         translationController = translation;
         translationController.setTolerance(0.1);
         rotationController = rotation;
+        rotationController.setTolerance(0.01);
         addRequirements(Swerve.getInstance());
     }
 
@@ -66,14 +52,9 @@ public class AutoAlignReef extends Command{
     @Override
     public void initialize(){
         DriverStation.getAlliance().ifPresent((alliance) -> {
-            // targetPose = (alliance == Alliance.Blue) ? BLUE_SCORING_AREAS[0] : RED_SCORING_AREAS[0];
+            targetPose = (alliance == Alliance.Blue) ? RED_FEEDER : BLUE_FEEDER;
             mult = (alliance == Alliance.Red) ? -1.0 : 1.0;
         });
-
-        targetPose = Vision.getInstance().getBestReefPose();
-        
-        offset = (isScoringLeft) ? 0.33 / 2.0 :  -0.33 / 2.0;
-        targetPose = targetPose.plus(new Transform2d(0, offset, new Rotation2d(0)));
         
         currentPose = Swerve.getInstance().getState().Pose;
         double velocity = mult * projection(new Translation2d(Swerve.getInstance().getState().Speeds.vxMetersPerSecond, Swerve.getInstance().getState().Speeds.vyMetersPerSecond), targetPose.getTranslation().minus(currentPose.getTranslation()));

@@ -29,6 +29,7 @@ import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorIOReal;
 import frc.robot.subsystems.elevator.ElevatorIOSim;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.AutoAlignFeeder;
 import frc.robot.commands.AutoAlignReef;
 import frc.robot.commands.AutoCommands;
 import frc.robot.subsystems.intake.Intake;
@@ -46,7 +47,7 @@ import frc.robot.subsystems.arm.ArmIOReal;
 
 public class RobotContainer {
   private RobotVisualizer visualizer = new RobotVisualizer();
-  // private final Vision vision;
+  private final Vision vision;
 
   // private final Vision vision;
   /* Setting up bindings for necessary control of the swerve drive platform */
@@ -79,6 +80,7 @@ public class RobotContainer {
         //   new VisionIOReal(2),
         //   new VisionIOReal(3)
         // );
+        vision = Vision.initialize(new VisionIOSim());
         break;
 
       case SIM:
@@ -86,14 +88,14 @@ public class RobotContainer {
         intake = Intake.initialize(new IntakeIOSim());
         Arm.initialize(new ArmIOSim());
         drivetrain = Swerve.initialize(TunerConstants.createDrivetrain());
-        // vision = Vision.initialize(new VisionIOSim());
+        vision = Vision.initialize(new VisionIOSim());
         break;
 
       default:
         elevator = Elevator.initialize(new ElevatorIOSim());
         intake = Intake.initialize(new IntakeIOSim());
         drivetrain = Swerve.initialize(TunerConstants.createDrivetrain());
-        // vision = Vision.initialize(new VisionIOSim());
+        vision = Vision.initialize(new VisionIOSim());
         Arm.initialize(new ArmIOSim());
     }
 
@@ -127,6 +129,11 @@ public class RobotContainer {
       new AutoAlignReef(
         new ProfiledPIDController(1, 0, 0, new Constraints(Constants.driveConstants.MaxSpeed, 3)), 
         new ProfiledPIDController(1, 0, 0, new Constraints(Constants.driveConstants.MaxSpeed, 3))));
+      
+    Constants.OIConstants.driverController.leftBumper().whileTrue(
+          new AutoAlignFeeder(
+            new ProfiledPIDController(1, 0, 0, new Constraints(Constants.driveConstants.MaxSpeed, 3)), 
+            new ProfiledPIDController(1, 0, 0, new Constraints(Constants.driveConstants.MaxSpeed, 3))));
 
     drivetrain.registerTelemetry(logger::telemeterize);
 
