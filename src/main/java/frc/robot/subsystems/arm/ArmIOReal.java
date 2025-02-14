@@ -67,7 +67,8 @@ public class ArmIOReal implements ArmIO {
 
     @Override
     public void setGoal(double angle) {
-        goal = new TrapezoidProfile.State(angle,  0);
+        setpoint = new TrapezoidProfile.State(armMotor.getEncoder().getPosition(), armMotor.getEncoder().getPosition());
+        goal = new TrapezoidProfile.State(MathUtil.clamp(angle, ArmConstants.Sim.MIN_ANGLE, ArmConstants.Sim.MIN_ANGLE),  0);
     }
 
     @Override
