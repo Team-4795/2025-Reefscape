@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.357,
-        "y": 7.191
+        "x": 1.6068256578947366,
+        "y": 7.440707236842105
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4871552264232655,
-        "y": 6.215532909825798
+        "x": 2.736980884318002,
+        "y": 6.465240146667903
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "High Feeder Back"
     },
     {
       "anchor": {

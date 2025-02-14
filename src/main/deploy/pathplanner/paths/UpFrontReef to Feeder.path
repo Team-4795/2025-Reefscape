@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 1.3566611842105263,
-        "y": 7.190542763157895
+        "x": 1.6068256578947366,
+        "y": 7.440707236842105
       },
       "prevControl": {
-        "x": 1.8185032894736841,
-        "y": 6.921134868421052
+        "x": 2.0686677631578947,
+        "y": 7.171299342105262
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "High Feeder Back"
     }
   ],
   "rotationTargets": [],
@@ -60,7 +60,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -119.99999999999999
+    "rotation": -30.276317116804947
   },
   "useDefaultConstraints": true
 }
