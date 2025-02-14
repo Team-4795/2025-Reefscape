@@ -5,7 +5,7 @@ import edu.wpi.first.math.util.Units;
 public class ArmConstants {
     public static final int CAN_ID = 14;
     public static final int CURRENT_LIMIT = 50;
-    public static final double ARM_OFFSET = 1.8;
+    public static final double ARM_OFFSET = Math.PI / 2;
 
     public static final double CORAL_L1 = Units.degreesToRadians(-34.74);
     public static final double CORAL_L2 = Units.degreesToRadians(-54.1); // with elevator up

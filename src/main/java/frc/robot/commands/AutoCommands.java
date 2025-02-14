@@ -33,7 +33,7 @@ public class AutoCommands {
     public static Command stow() {
         return Commands.parallel(
             Elevator.getInstance().setGoal(ElevatorConstants.minDistance),
-            Commands.runOnce(() -> Arm.getInstance().setGoal(-1.8), Arm.getInstance())
+            Commands.runOnce(() -> Arm.getInstance().setGoal(-Math.PI/2), Arm.getInstance())
         );
     }
 
