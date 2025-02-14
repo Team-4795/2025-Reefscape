@@ -13,6 +13,7 @@ import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.swerve.SwerveConstants;
 
 public class AutoCommands {
     private static Swerve drive = Swerve.getInstance();
@@ -36,9 +37,15 @@ public class AutoCommands {
         );
     }
 
-    public static Command driveToReef() {
+    public static Command alignReef() {
         return new AutoAlignReef(
-            new ProfiledPIDController(1, 0, 0, new Constraints(Constants.driveConstants.MaxSpeed, 3)), 
-            new ProfiledPIDController(1, 0, 0, new Constraints(Constants.driveConstants.MaxSpeed, 3)));
+            new ProfiledPIDController(1, 0, 0, new Constraints(SwerveConstants.MaxSpeed, 3)), 
+            new ProfiledPIDController(1, 0, 0, new Constraints(SwerveConstants.MaxSpeed, 3)));
+    }
+
+    public static Command alignFeeder() {
+        return new AutoAlignFeeder(
+            new ProfiledPIDController(1, 0, 0, new Constraints(SwerveConstants.MaxSpeed, 3)), 
+            new ProfiledPIDController(1, 0, 0, new Constraints(SwerveConstants.MaxSpeed, 3)));
     }
 }
