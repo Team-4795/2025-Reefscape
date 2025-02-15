@@ -15,6 +15,7 @@ public interface ArmIO {
         public double relativeEncoderPosition = 0.0;
         public double relativeEncoderVelocity = 0.0;
         public double setpointPosition = 0.0;
+        public double angularPositionDegrees = 0.0;
     }
 
     public default void updateInputs(ArmIOInputs inputs) {

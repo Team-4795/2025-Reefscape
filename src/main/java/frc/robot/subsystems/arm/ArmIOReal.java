@@ -17,6 +17,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 
 public class ArmIOReal implements ArmIO {
     private final SparkFlex armMotor = new SparkFlex(ArmConstants.CAN_ID, MotorType.kBrushless);
@@ -38,6 +39,8 @@ public class ArmIOReal implements ArmIO {
         config.absoluteEncoder.velocityConversionFactor(Math.PI / 60);
         config.absoluteEncoder.inverted(false);
 
+        config.openLoopRampRate(1);
+
         config.encoder.positionConversionFactor(2 * Math.PI / ArmConstants.Sim.GEARING);
         config.encoder.velocityConversionFactor(2 * Math.PI / ArmConstants.Sim.GEARING / 60);
 
@@ -46,14 +49,15 @@ public class ArmIOReal implements ArmIO {
         // config.softLimit.forwardSoftLimit(ArmConstants.Sim.MAX_ANGLE);
         // config.softLimit.reverseSoftLimit(ArmConstants.Sim.MIN_ANGLE);
 
-        config.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-        config.closedLoop.positionWrappingEnabled(true);
-        config.closedLoop.positionWrappingInputRange(0, Math.PI);
-        config.closedLoop.p(5.0);
+        config.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
+        config.closedLoop.p(2.3);
         config.closedLoop.i(0.0);
-        config.closedLoop.d(0.0);
+        config.closedLoop.d(0.1);
 
         config.inverted(true);
+        // config.encoder.inverted(true);
+
+
 
         armMotor.clearFaults();
         armMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -61,14 +65,14 @@ public class ArmIOReal implements ArmIO {
         armEncoder = armMotor.getAbsoluteEncoder();
         armMotor.getEncoder().setPosition(getOffsetAngle());
 
-        goal = new TrapezoidProfile.State(getOffsetAngle(), 0);
-        setpoint = new TrapezoidProfile.State(getOffsetAngle(), 0);
+        goal = new TrapezoidProfile.State(armEncoder.getPosition(), 0);
+        setpoint = new TrapezoidProfile.State(armEncoder.getPosition(), 0);
     }
 
     @Override
     public void setGoal(double angle) {
-        setpoint = new TrapezoidProfile.State(armMotor.getEncoder().getPosition(), armMotor.getEncoder().getPosition());
-        goal = new TrapezoidProfile.State(MathUtil.clamp(angle, ArmConstants.Sim.MIN_ANGLE, ArmConstants.Sim.MIN_ANGLE),  0);
+        setpoint = new TrapezoidProfile.State(armEncoder.getPosition(), armEncoder.getVelocity());
+        goal = new TrapezoidProfile.State(angle,  0);
     }
 
     @Override
@@ -83,10 +87,10 @@ public class ArmIOReal implements ArmIO {
         setpoint = profile.calculate(0.02, setpoint, goal);
         double acceleration = (setpoint.velocity - prevVelocity) / 0.02;
         Logger.recordOutput("acceleration", acceleration);
-        double ffvolts = ffmodel.calculate(armMotor.getEncoder().getPosition(), setpoint.velocity, acceleration);
+        double ffvolts = ffmodel.calculate(armEncoder.getPosition(), setpoint.velocity, acceleration);
         Logger.recordOutput("arm ffvolts", ffvolts);
-        onboardController.setReference(setpoint.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, ffvolts);
-
+        // onboardController.setReference(setpoint.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, ffvolts);
+        onboardController.setReference(setpoint.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, 0);
     }
 
     @Override
@@ -106,19 +110,16 @@ public class ArmIOReal implements ArmIO {
     }
 
     public double getOffsetAngle() {
-       double withoffset = armEncoder.getPosition() - ArmConstants.ARM_OFFSET;
-       if(withoffset > ArmConstants.Sim.MAX_ANGLE) {
-        return Math.PI / 2 - (Math.PI - withoffset);
-       } 
-       else {
-        return withoffset;
-       }
+        // if(armEncoder.getPosition() <= 0) {
+        //     return armMotor.getEncoder().getPosition();
+        // }
+        return armEncoder.getPosition() - ArmConstants.ARM_OFFSET;
     }
 
     @Override
     public void updateInputs(ArmIOInputs inputs) {
-        inputs.angularPosition = getOffsetAngle();
-        // inputs.angularPosition = armEncoder.getPosition();
+        // inputs.angularPosition = getOffsetAngle();
+        inputs.angularPosition = armEncoder.getPosition();
         inputs.angularVelocity = armEncoder.getVelocity();
         inputs.current = armMotor.getOutputCurrent();
         inputs.voltage = armMotor.getAppliedOutput() * armMotor.getBusVoltage();
@@ -127,7 +128,8 @@ public class ArmIOReal implements ArmIO {
         inputs.busVoltage = armMotor.getBusVoltage();
         inputs.appliedOutput = armMotor.getAppliedOutput();
         inputs.relativeEncoderPosition = armMotor.getEncoder().getPosition();
-        inputs.relativeEncoderVelocity = armMotor.getEncoder().getVelocity();
+        inputs.relativeEncoderVelocity = armMotor.getEncoder    ().getVelocity();
         inputs.setpointPosition = setpoint.position;
+        inputs.angularPositionDegrees = Units.radiansToDegrees(getOffsetAngle());
     }
 }

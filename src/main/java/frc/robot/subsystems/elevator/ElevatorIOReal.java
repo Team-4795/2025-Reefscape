@@ -62,7 +62,8 @@ public class ElevatorIOReal implements ElevatorIO {
         config.inverted(true);
         rightElevatorMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         config.follow(ElevatorConstants.rightDeviceID, true);
-    
+
+        leftElevatorMotor.setCANTimeout(200);
         //   config.absoluteEncoder.positionConversionFactor(Units.inchesToMeters(11 / 18));             use these later
         //   config.absoluteEncoder.velocityConversionFactor(Units.inchesToMeters(11 / 18) / 60);        use these later
         leftElevatorMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -103,7 +104,6 @@ public class ElevatorIOReal implements ElevatorIO {
        // inputs.elevatorRightMotorPositionMeters = leftAbsoluteEncoder.getPosition();
        // inputs.elevatorRightMotorVelocityMetersPerSecond = leftAbsoluteEncoder.getVelocity();     will use absolute encoder later
 
-
         inputs.elevatorLeftCurrent = leftElevatorMotor.getOutputCurrent();
         inputs.elevatorLeftAppliedVolts = leftElevatorMotor.getAppliedOutput() * leftElevatorMotor.getBusVoltage();
         inputs.elevatorLeftPositionMeters = leftEncoder.getPosition();
@@ -111,6 +111,7 @@ public class ElevatorIOReal implements ElevatorIO {
 
         inputs.setpointVelocity = setpoint.velocity;
         inputs.goalHeight = goal.position;
+        inputs.setpointPosition = setpoint.position;
     }
 
     @Override

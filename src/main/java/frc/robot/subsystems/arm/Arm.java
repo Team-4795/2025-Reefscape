@@ -46,8 +46,8 @@ public class Arm extends SubsystemBase {
         this.io = io;
         setDefaultCommand(
             Commands.run(() -> {
-                double up = MathUtil.applyDeadband(Math.pow(OIConstants.driverController.getLeftTriggerAxis(), 3), 0.1);
-                double down = MathUtil.applyDeadband(Math.pow(OIConstants.driverController.getRightTriggerAxis(), 3), 0.1);
+                double up = MathUtil.applyDeadband(Math.pow(OIConstants.operatorController.getLeftTriggerAxis(), 3), 0.1);
+                double down = MathUtil.applyDeadband(Math.pow(OIConstants.operatorController.getRightTriggerAxis(), 3), 0.1);
                 double change = (up - down) * 0.1;
                 // io.setGoal(inputs.goalAngle + change);
             }, this)

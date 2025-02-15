@@ -5,12 +5,12 @@ import edu.wpi.first.math.util.Units;
 public class ArmConstants {
     public static final int CAN_ID = 14;
     public static final int CURRENT_LIMIT = 50;
-    public static final double ARM_OFFSET = Math.PI / 2;
+    public static final double ARM_OFFSET = Units.degreesToRadians(107);
 
-    public static final double CORAL_L1 = Units.degreesToRadians(-34.74);
-    public static final double CORAL_L2 = Units.degreesToRadians(-54.1); // with elevator up
-    public static final double CORAL_L3 = Units.degreesToRadians(54.1);
-    public static final double CORAL_L4 = Units.degreesToRadians(54.61);
+    public static final double CORAL_L1 = 1.3992315530776978;
+    public static final double CORAL_L2 = 0.9181456565856934; // with elevator up
+    public static final double CORAL_L3 = 2.7386298179626465;
+    public static final double CORAL_L4 = 2.8875072;
 
     public static final double MAX_VELOCITY = 3;
     public static final double MAX_ACCELERATION = 10;

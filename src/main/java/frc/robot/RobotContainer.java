@@ -75,7 +75,8 @@ public class RobotContainer {
         elevator = Elevator.initialize(new ElevatorIOReal());
         intake = Intake.initialize(new IntakeIORealVortex());
         Arm.initialize(new ArmIOReal());
-        drivetrain = Swerve.initialize(TunerConstants.createDrivetrain());
+        drivetrain = Swerve.initialize(new Swerve(TunerConstants.DrivetrainConstants, 50, TunerConstants.FrontLeft, TunerConstants.FrontRight, TunerConstants.BackLeft, TunerConstants.BackRight));
+        // drivetrain = Swerve.initialize(TunerConstants.createDrivetrain());
         // vision = Vision.initialize(
         //   new VisionIOReal(0),
         //   new VisionIOReal(1),
@@ -153,19 +154,24 @@ public class RobotContainer {
     );
 
     // Elevator manual control
-    elevator.setDefaultCommand(
-      Commands.startEnd(
-        () -> elevator.moveElevator(OIConstants.operatorController.getLeftY() / 1.5),
-        () -> elevator.setVoltage(ElevatorConstants.kg),
-        elevator
-      )
+    Constants.OIConstants.operatorController.leftBumper().whileTrue(
+      Commands.run(() -> elevator.setVoltage(12), elevator)
+    );
+
+    Constants.OIConstants.operatorController.rightBumper().whileTrue(
+      Commands.run(() -> elevator.setVoltage(12), elevator)
     );
 
     // L4 setpoint - ADD OTHERS
     Constants.OIConstants.operatorController.povUp().onTrue(AutoCommands.raiseL4());
 
+    Constants.OIConstants.operatorController.povLeft().onTrue(AutoCommands.raiseL3());
+
+    Constants.OIConstants.operatorController.povRight().onTrue(AutoCommands.raiseL2());
+
+
     // Stow
-    Constants.OIConstants.operatorController.rightStick().onTrue(AutoCommands.stow());
+    Constants.OIConstants.operatorController.rightStick().whileTrue(AutoCommands.stow());
 
     // Reverse intake
     Constants.OIConstants.operatorController.a().whileTrue(
@@ -176,14 +182,22 @@ public class RobotContainer {
       )
     );
 
-    // Intake
     Constants.OIConstants.operatorController.y().whileTrue(
-      Commands.sequence(
-        intake.intake().until(() -> intake.GamePieceInitial()),
-        intake.intakeSlow().until(() -> intake.GamePieceFinal()),
-        Commands.runOnce(() -> intake.setIntakeSpeed(0))
+      Commands.startEnd(
+        () -> intake.setIntakeSpeed(1),
+        () ->  intake.setIntakeSpeed(0), 
+        intake
       )
     );
+
+    // Intake
+    // Constants.OIConstants.operatorController.y().whileTrue(
+    //   Commands.sequence(
+    //     intake.intake().until(() -> intake.GamePieceInitial()),
+    //     intake.intakeSlow().until(() -> intake.GamePieceFinal()),
+    //     Commands.runOnce(() -> intake.setIntakeSpeed(0))
+    //   )
+    // );
 
     // OIConstants.operatorController.leftBumper().whileTrue(
     // Arm.getInstance().sysIDRoutine().quasistatic(SysIdRoutine.Direction.kForward)
