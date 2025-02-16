@@ -49,7 +49,7 @@ import frc.robot.subsystems.arm.ArmIOReal;
 
 public class RobotContainer {
   private RobotVisualizer visualizer = new RobotVisualizer();
-  private final Vision vision;
+  private Vision vision;
 
   // private final Vision vision;
   /* Setting up bindings for necessary control of the swerve drive platform */
@@ -83,7 +83,7 @@ public class RobotContainer {
         //   new VisionIOReal(2),
         //   new VisionIOReal(3)
         // );
-        vision = Vision.initialize(new VisionIOSim());
+        // vision = Vision.initialize(new VisionIOSim());
         break;
 
       case SIM:
