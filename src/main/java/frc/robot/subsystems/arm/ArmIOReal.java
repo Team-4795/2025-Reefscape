@@ -65,7 +65,7 @@ public class ArmIOReal implements ArmIO {
         armMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         armEncoder = armMotor.getAbsoluteEncoder();
-        armMotor.getEncoder().setPosition(getOffsetAngle());
+        armMotor.getEncoder().setPosition(armEncoder.getPosition());
 
         goal = new TrapezoidProfile.State(armEncoder.getPosition(), 0);
         setpoint = new TrapezoidProfile.State(armEncoder.getPosition(), 0);
