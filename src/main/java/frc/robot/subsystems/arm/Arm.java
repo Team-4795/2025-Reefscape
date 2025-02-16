@@ -48,8 +48,8 @@ public class Arm extends SubsystemBase {
             Commands.run(() -> {
                 double up = MathUtil.applyDeadband(Math.pow(OIConstants.operatorController.getLeftTriggerAxis(), 3), 0.1);
                 double down = MathUtil.applyDeadband(Math.pow(OIConstants.operatorController.getRightTriggerAxis(), 3), 0.1);
-                double change = (up - down) * 0.1;
-                // io.setGoal(inputs.goalAngle + change);
+                double change = (up - down) * 0.02;
+                io.setGoal(inputs.goalAngle + change);
             }, this)
         );
         setFFMode(Constants.currentMode == Mode.SIM ? Gamepiece.SIM: Gamepiece.NONE);

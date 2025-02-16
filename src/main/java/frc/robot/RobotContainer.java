@@ -103,14 +103,6 @@ public class RobotContainer {
         break;
     }
 
-    double withoffset = Units.degreesToRadians(45) - ArmConstants.ARM_OFFSET;
-    if(withoffset > ArmConstants.Sim.MAX_ANGLE) {
-      System.out.println(Math.PI / 2 - (Math.PI - withoffset));
-    } 
-    else {
-     System.out.println(Math.PI / 2 - (Math.PI - withoffset));
-    }
-
     NamedCommandManager.registerNamedCommands();
 
     autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser("TopBarge UFUB Score 2"));
@@ -159,7 +151,7 @@ public class RobotContainer {
     );
 
     Constants.OIConstants.operatorController.rightBumper().whileTrue(
-      Commands.run(() -> elevator.setVoltage(12), elevator)
+      Commands.run(() -> elevator.setVoltage(-12), elevator)
     );
 
     // L4 setpoint - ADD OTHERS
@@ -169,6 +161,14 @@ public class RobotContainer {
 
     Constants.OIConstants.operatorController.povRight().onTrue(AutoCommands.raiseL2());
 
+    // arm setpoint testing
+    Constants.OIConstants.driverController.povUp().onTrue(
+      Commands.runOnce(() -> Arm.getInstance().setGoal(ArmConstants.CORAL_L4), Arm.getInstance())
+    );
+
+    Constants.OIConstants.driverController.povUp().onTrue(
+      Commands.runOnce(() -> Arm.getInstance().setGoal(Units.radiansToDegrees(3)), Arm.getInstance())
+    );
 
     // Stow
     Constants.OIConstants.operatorController.rightStick().whileTrue(AutoCommands.stow());

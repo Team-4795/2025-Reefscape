@@ -16,6 +16,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
@@ -26,6 +27,7 @@ public class ArmIOReal implements ArmIO {
 
     private ArmFeedforward ffmodel = new ArmFeedforward(ArmConstants.DEFAULTkS, ArmConstants.DEFAULTkG, ArmConstants.DEFAULTkV, ArmConstants.DEFAULTkA, 0.02);
     private final SparkClosedLoopController onboardController = armMotor.getClosedLoopController();
+    private final PIDController controller = new PIDController(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD);
     private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(ArmConstants.MAX_VELOCITY, ArmConstants.MAX_ACCELERATION);
     private final TrapezoidProfile profile = new TrapezoidProfile(constraints);
     private TrapezoidProfile.State goal;
@@ -83,21 +85,25 @@ public class ArmIOReal implements ArmIO {
     @Override
     public void updateMotionProfile() {
         double prevVelocity = setpoint.velocity;
-        Logger.recordOutput("prev velocity", prevVelocity);
         setpoint = profile.calculate(0.02, setpoint, goal);
         double acceleration = (setpoint.velocity - prevVelocity) / 0.02;
-        Logger.recordOutput("acceleration", acceleration);
         double ffvolts = ffmodel.calculate(armEncoder.getPosition(), setpoint.velocity, acceleration);
-        Logger.recordOutput("arm ffvolts", ffvolts);
+        double pidvolts = controller.calculate(armEncoder.getPosition(), goal.position);
+  
+        setVoltage(pidvolts + ffvolts);
         // onboardController.setReference(setpoint.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, ffvolts);
-        onboardController.setReference(setpoint.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, 0);
+        // onboardController.setReference(setpoint.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, 0);
+
+        Logger.recordOutput("Arm/ffvolts", ffvolts);
+        Logger.recordOutput("Arm/pidvolts", pidvolts);
+        Logger.recordOutput("Arm/prev velocity", prevVelocity);
+        Logger.recordOutput("Arm/acceleration", acceleration);
     }
 
     @Override
     public void setFFValues(double kS, double kG, double kV, double kA) {
         ffmodel = new ArmFeedforward(kS, kG, kV);
     }
-
 
     @Override
     public void resetEncoder() {
@@ -110,9 +116,6 @@ public class ArmIOReal implements ArmIO {
     }
 
     public double getOffsetAngle() {
-        // if(armEncoder.getPosition() <= 0) {
-        //     return armMotor.getEncoder().getPosition();
-        // }
         return armEncoder.getPosition() - ArmConstants.ARM_OFFSET;
     }
 
