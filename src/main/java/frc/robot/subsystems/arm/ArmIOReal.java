@@ -1,5 +1,7 @@
 package frc.robot.subsystems.arm;
 
+import static edu.wpi.first.units.Units.Volts;
+
 import org.littletonrobotics.junction.Logger;
 
 import com.revrobotics.spark.ClosedLoopSlot;
@@ -90,7 +92,7 @@ public class ArmIOReal implements ArmIO {
         double ffvolts = ffmodel.calculate(armEncoder.getPosition(), setpoint.velocity, acceleration);
         double pidvolts = controller.calculate(armEncoder.getPosition(), goal.position);
   
-        setVoltage(ffvolts);
+        setVoltage(ffvolts + pidvolts);
         // onboardController.setReference(setpoint.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, ffvolts);
         // onboardController.setReference(setpoint.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, 0);
 
@@ -112,7 +114,8 @@ public class ArmIOReal implements ArmIO {
 
     @Override
     public void setVoltage(double voltage) {
-        onboardController.setReference(voltage, ControlType.kVoltage);
+        armMotor.setVoltage(voltage);
+        // onboardController.setReference(voltage, ControlType.kVoltage);
     }
 
     public double getOffsetAngle() {
