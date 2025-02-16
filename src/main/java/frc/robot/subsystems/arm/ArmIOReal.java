@@ -74,7 +74,7 @@ public class ArmIOReal implements ArmIO {
     @Override
     public void setGoal(double angle) {
         if(angle != goal.position) {
-            setpoint = new TrapezoidProfile.State(armEncoder.getPosition(), armEncoder.getVelocity());
+            setpoint = new TrapezoidProfile.State(armMotor.getEncoder().getPosition(), armMotor.getEncoder().getVelocity());
             goal = new TrapezoidProfile.State(angle, 0);
         }
     }
@@ -89,8 +89,11 @@ public class ArmIOReal implements ArmIO {
         double prevVelocity = setpoint.velocity;
         setpoint = profile.calculate(0.02, setpoint, goal);
         double acceleration = (setpoint.velocity - prevVelocity) / 0.02;
-        double ffvolts = ffmodel.calculate(armEncoder.getPosition(), setpoint.velocity, acceleration);
-        double pidvolts = controller.calculate(armEncoder.getPosition(), goal.position);
+        // double ffvolts = ffmodel.calculate(armEncoder.getPosition(), setpoint.velocity, acceleration);
+        // double pidvolts = controller.calculate(armEncoder.getPosition(), goal.position);
+
+        double ffvolts = ffmodel.calculate(armMotor.getEncoder().getPosition(), setpoint.velocity, acceleration);
+        double pidvolts = controller.calculate(armMotor.getEncoder().getPosition(), setpoint.position);
   
         setVoltage(ffvolts + pidvolts);
         // onboardController.setReference(setpoint.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, ffvolts);
