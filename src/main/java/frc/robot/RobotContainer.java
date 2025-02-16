@@ -166,8 +166,8 @@ public class RobotContainer {
       Commands.runOnce(() -> Arm.getInstance().setGoal(ArmConstants.CORAL_L4), Arm.getInstance())
     );
 
-    Constants.OIConstants.operatorController.povUp().onTrue(
-      Commands.runOnce(() -> Arm.getInstance().setGoal(Units.radiansToDegrees(3)), Arm.getInstance())
+    Constants.OIConstants.operatorController.povDown().onTrue(
+      Commands.runOnce(() -> Arm.getInstance().setGoal(Units.degreesToRadians(3)), Arm.getInstance())
     );
 
     // Stow
