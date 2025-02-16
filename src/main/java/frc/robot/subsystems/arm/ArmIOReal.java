@@ -85,10 +85,10 @@ public class ArmIOReal implements ArmIO {
     
     @Override
     public void updateMotionProfile() {
-        double prevVelocity = setpoint.velocity;
-        setpoint = profile.calculate(0.02, setpoint, goal);
-        double acceleration = (setpoint.velocity - prevVelocity) / 0.02;
+        // double prevVelocity = setpoint.velocity;
+        // double acceleration = (setpoint.velocity - prevVelocity) / 0.02;
         // double ffvolts = ffmodel.calculate(armMotor.getEncoder().getPosition(), setpoint.velocity, acceleration);
+        setpoint = profile.calculate(0.02, setpoint, goal);
         double ffvolts = ffmodel.calculate(armMotor.getEncoder().getPosition(), setpoint.velocity);
         double pidvolts = controller.calculate(armMotor.getEncoder().getPosition(), setpoint.position);
   
@@ -98,8 +98,8 @@ public class ArmIOReal implements ArmIO {
 
         Logger.recordOutput("Arm/ffvolts", ffvolts);
         Logger.recordOutput("Arm/pidvolts", pidvolts);
-        Logger.recordOutput("Arm/prev velocity", prevVelocity);
-        Logger.recordOutput("Arm/acceleration", acceleration);
+        // Logger.recordOutput("Arm/prev velocity", prevVelocity);
+        // Logger.recordOutput("Arm/acceleration", acceleration);
     }
 
     @Override
