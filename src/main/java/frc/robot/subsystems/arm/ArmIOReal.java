@@ -89,10 +89,8 @@ public class ArmIOReal implements ArmIO {
         double prevVelocity = setpoint.velocity;
         setpoint = profile.calculate(0.02, setpoint, goal);
         double acceleration = (setpoint.velocity - prevVelocity) / 0.02;
-        // double ffvolts = ffmodel.calculate(armEncoder.getPosition(), setpoint.velocity, acceleration);
-        // double pidvolts = controller.calculate(armEncoder.getPosition(), goal.position);
-
-        double ffvolts = ffmodel.calculate(armMotor.getEncoder().getPosition(), setpoint.velocity, acceleration);
+        // double ffvolts = ffmodel.calculate(armMotor.getEncoder().getPosition(), setpoint.velocity, acceleration);
+        double ffvolts = ffmodel.calculate(armMotor.getEncoder().getPosition(), setpoint.velocity);
         double pidvolts = controller.calculate(armMotor.getEncoder().getPosition(), setpoint.position);
   
         setVoltage(ffvolts + pidvolts);
