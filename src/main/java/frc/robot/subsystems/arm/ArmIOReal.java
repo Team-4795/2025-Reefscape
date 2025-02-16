@@ -59,8 +59,6 @@ public class ArmIOReal implements ArmIO {
         config.inverted(true);
         // config.encoder.inverted(true);
 
-
-
         armMotor.clearFaults();
         armMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
@@ -73,8 +71,10 @@ public class ArmIOReal implements ArmIO {
 
     @Override
     public void setGoal(double angle) {
-        setpoint = new TrapezoidProfile.State(armEncoder.getPosition(), armEncoder.getVelocity());
-        goal = new TrapezoidProfile.State(angle, 0);
+        if(angle != goal.position) {
+            setpoint = new TrapezoidProfile.State(armEncoder.getPosition(), armEncoder.getVelocity());
+            goal = new TrapezoidProfile.State(angle, 0);
+        }
     }
 
     @Override
@@ -131,7 +131,7 @@ public class ArmIOReal implements ArmIO {
         inputs.busVoltage = armMotor.getBusVoltage();
         inputs.appliedOutput = armMotor.getAppliedOutput();
         inputs.relativeEncoderPosition = armMotor.getEncoder().getPosition();
-        inputs.relativeEncoderVelocity = armMotor.getEncoder    ().getVelocity();
+        inputs.relativeEncoderVelocity = armMotor.getEncoder().getVelocity();
         inputs.setpointPosition = setpoint.position;
         inputs.angularPositionDegrees = Units.radiansToDegrees(getOffsetAngle());
     }
