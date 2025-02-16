@@ -155,18 +155,18 @@ public class RobotContainer {
     );
 
     // L4 setpoint - ADD OTHERS
-    Constants.OIConstants.operatorController.povUp().onTrue(AutoCommands.raiseL4());
+    // Constants.OIConstants.operatorController.povUp().onTrue(AutoCommands.raiseL4());
 
-    Constants.OIConstants.operatorController.povLeft().onTrue(AutoCommands.raiseL3());
+    // Constants.OIConstants.operatorController.povLeft().onTrue(AutoCommands.raiseL3());
 
-    Constants.OIConstants.operatorController.povRight().onTrue(AutoCommands.raiseL2());
+    // Constants.OIConstants.operatorController.povRight().onTrue(AutoCommands.raiseL2());
 
     // arm setpoint testing
-    Constants.OIConstants.driverController.povUp().onTrue(
+    Constants.OIConstants.operatorController.povUp().onTrue(
       Commands.runOnce(() -> Arm.getInstance().setGoal(ArmConstants.CORAL_L4), Arm.getInstance())
     );
 
-    Constants.OIConstants.driverController.povUp().onTrue(
+    Constants.OIConstants.operatorController.povUp().onTrue(
       Commands.runOnce(() -> Arm.getInstance().setGoal(Units.radiansToDegrees(3)), Arm.getInstance())
     );
 
