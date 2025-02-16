@@ -52,9 +52,9 @@ public class ArmIOReal implements ArmIO {
         // config.softLimit.reverseSoftLimit(ArmConstants.Sim.MIN_ANGLE);
 
         config.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
-        config.closedLoop.p(2.3);
+        config.closedLoop.p(0);
         config.closedLoop.i(0.0);
-        config.closedLoop.d(0.1);
+        config.closedLoop.d(0.0);
 
         config.inverted(true);
         // config.encoder.inverted(true);
