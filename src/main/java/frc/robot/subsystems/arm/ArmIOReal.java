@@ -28,7 +28,7 @@ public class ArmIOReal implements ArmIO {
     private SparkAbsoluteEncoder armEncoder;
 
     private ArmFeedforward ffmodel = new ArmFeedforward(ArmConstants.DEFAULTkS, ArmConstants.DEFAULTkG, ArmConstants.DEFAULTkV, ArmConstants.DEFAULTkA, 0.02);
-    private final SparkClosedLoopController onboardController = armMotor.getClosedLoopController();
+    // private final SparkClosedLoopController onboardController = armMotor.getClosedLoopController();
     private final PIDController controller = new PIDController(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD);
     private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(ArmConstants.MAX_VELOCITY, ArmConstants.MAX_ACCELERATION);
     private final TrapezoidProfile profile = new TrapezoidProfile(constraints);
@@ -43,21 +43,22 @@ public class ArmIOReal implements ArmIO {
         config.absoluteEncoder.velocityConversionFactor(Math.PI / 60);
         config.absoluteEncoder.inverted(false);
 
-        config.openLoopRampRate(1);
-
         config.encoder.positionConversionFactor(2 * Math.PI / ArmConstants.Sim.GEARING);
         config.encoder.velocityConversionFactor(2 * Math.PI / ArmConstants.Sim.GEARING / 60);
+        config.encoder.quadratureMeasurementPeriod(20);
+
 
         // config.softLimit.forwardSoftLimitEnabled(true);
         // config.softLimit.reverseSoftLimitEnabled(false);
         // config.softLimit.forwardSoftLimit(ArmConstants.Sim.MAX_ANGLE);
         // config.softLimit.reverseSoftLimit(ArmConstants.Sim.MIN_ANGLE);
 
-        config.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
-        config.closedLoop.p(0);
-        config.closedLoop.i(0.0);
-        config.closedLoop.d(0.0);
+        // config.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
+        // config.closedLoop.p(0);
+        // config.closedLoop.i(0.0);
+        // config.closedLoop.d(0.0);
 
+        config.voltageCompensation(12.0);
         config.inverted(true);
         // config.encoder.inverted(true);
 
@@ -74,6 +75,7 @@ public class ArmIOReal implements ArmIO {
     @Override
     public void setGoal(double angle) {
         if(angle != goal.position) {
+            setpoint = new TrapezoidProfile.State(armEncoder.getPosition(), armEncoder.getVelocity());
             goal = new TrapezoidProfile.State(angle, 0);
         }
     }

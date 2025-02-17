@@ -13,7 +13,7 @@ public class ArmConstants {
     public static final double CORAL_L4 = 2.8875072;
 
     public static final double MAX_VELOCITY = 3;
-    public static final double MAX_ACCELERATION = 10;
+    public static final double MAX_ACCELERATION = 8;
 
     // Simulation FF
     public static final double SIMkG = 1.3;
