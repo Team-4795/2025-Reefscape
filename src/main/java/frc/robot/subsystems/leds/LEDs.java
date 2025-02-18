@@ -104,7 +104,7 @@ public class LEDs extends SubsystemBase {
         return Commands.runOnce(() -> this.setColor(color));
     }
 
-    public Command intaking() {
+    public Command intakingAlgae() {
         return Commands.repeatingSequence(
                 runOnce(() -> setColor(Color.kTurquoise)),
                 Commands.waitSeconds(0.2),
@@ -112,12 +112,36 @@ public class LEDs extends SubsystemBase {
                 Commands.waitSeconds(0.1));
     }
 
-    public Command intook() {
+    public Command intakingCoral(){
+        return Commands.repeatingSequence(
+                runOnce(() -> setColor(Color.kMediumPurple)),
+                Commands.waitSeconds(0.2),
+                runOnce(() -> setColor(Color.kBlack)),
+                Commands.waitSeconds(0.1));
+    }
+
+    public Command intookAlgae() {
         return Commands.repeatingSequence(
                 runOnce(() -> setColor(Color.kGreen)),
                 Commands.waitSeconds(0.2),
                 runOnce(() -> setColor(Color.kBlack)),
                 Commands.waitSeconds(0.1)).withTimeout(3);
+    }
+
+    public Command intookCoral() {
+        return Commands.repeatingSequence(
+                runOnce(() -> setColor(Color.kSteelBlue)),
+                Commands.waitSeconds(0.2),
+                runOnce(() -> setColor(Color.kBlack)),
+                Commands.waitSeconds(0.1)).withTimeout(3);
+    }
+
+    public Command elevator(){
+        return Commands.repeatingSequence(
+            runOnce(() -> setColor(Color.kPowderBlue)),
+            Commands.waitSeconds(0.2),
+            runOnce(() -> setColor(Color.kBlack)),
+            Commands.waitSeconds(0.1)).withTimeout(3);
     }
 
     public void setColor(Color color) {
