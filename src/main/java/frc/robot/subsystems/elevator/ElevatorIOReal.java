@@ -91,7 +91,7 @@ public class ElevatorIOReal implements ElevatorIO {
         // double ffvolts = ffmodel.calculate(setpoint.velocity, acceleration);
         double ffvolts = ffmodel.calculate(setpoint.velocity);
         double pidvolts = controller.calculate(rightEncoder.getPosition(), setpoint.position);
-        setVoltage(pidvolts + ffvolts);
+        setVoltage(ffvolts + pidvolts);
     }
 
     @Override

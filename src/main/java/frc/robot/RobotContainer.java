@@ -152,11 +152,11 @@ public class RobotContainer {
 
     // arm setpoint testing
     Constants.OIConstants.operatorController.povUp().onTrue(
-      Commands.runOnce(() -> Arm.getInstance().setGoal(ArmConstants.CORAL_L4), Arm.getInstance())
+      Elevator.getInstance().setGoal(.5)
     );
 
     Constants.OIConstants.operatorController.povDown().onTrue(
-      Commands.runOnce(() -> Arm.getInstance().setGoal(Units.degreesToRadians(3)), Arm.getInstance())
+      Elevator.getInstance().setGoal(0)
     );
 
     // Stow

@@ -44,7 +44,7 @@ public class ArmConstants {
     public static final double CORALkS = 0.1;
 
     public static class Sim {
-        public static double GEARING = 60;
+        public static double GEARING = 54;
         public static double MOI = 2.09670337984;
         public static double LENGTH = 0.6604;
         public static double MIN_ANGLE = Units.degreesToRadians(-95);
