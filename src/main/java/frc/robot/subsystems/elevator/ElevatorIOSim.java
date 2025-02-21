@@ -10,16 +10,14 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 
 public class ElevatorIOSim implements ElevatorIO {
     private ElevatorSim elevatorSim = new ElevatorSim(ElevatorConstants.kv, ElevatorConstants.ks, DCMotor.getNeoVortex(2), 0, 0.7112, true, 0);
-
     private double elevatorAppliedVolts = 0.0;
 
-
-private final ElevatorFeedforward ffmodel = new ElevatorFeedforward(ElevatorConstants.ks, ElevatorConstants.kg - .28, ElevatorConstants.kv);
-private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(2, 4);
-private final PIDController controller = new PIDController(50, 0, 1);
-private final TrapezoidProfile profile = new TrapezoidProfile(constraints);
-private TrapezoidProfile.State setpoint = new TrapezoidProfile.State();
-private TrapezoidProfile.State goal = new TrapezoidProfile.State();
+    private final ElevatorFeedforward ffmodel = new ElevatorFeedforward(ElevatorConstants.ks, ElevatorConstants.kg - .28, ElevatorConstants.kv);
+    private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(2, 4);
+    private final PIDController controller = new PIDController(50, 0, 1);
+    private final TrapezoidProfile profile = new TrapezoidProfile(constraints);
+    private TrapezoidProfile.State setpoint = new TrapezoidProfile.State();
+    private TrapezoidProfile.State goal = new TrapezoidProfile.State();
 
 @Override 
 public void updateInputs(ElevatorIOInputs inputs) {

@@ -136,31 +136,39 @@ public class RobotContainer {
 
     // Elevator manual control
     Constants.OIConstants.operatorController.leftBumper().whileTrue(
-      Commands.run(() -> elevator.setVoltage(12), elevator)
+      Commands.run(() -> Arm.getInstance().manualVoltage(3), Arm.getInstance())
     );
 
     Constants.OIConstants.operatorController.rightBumper().whileTrue(
-      Commands.run(() -> elevator.setVoltage(-12), elevator)
+      Commands.run(() -> Arm.getInstance().manualVoltage(-3), Arm.getInstance())
     );
 
     // L4 setpoint - ADD OTHERS
-    // Constants.OIConstants.operatorController.povUp().onTrue(AutoCommands.raiseL4());
+    Constants.OIConstants.operatorController.povUp().onTrue(AutoCommands.raiseL4());
 
     // Constants.OIConstants.operatorController.povLeft().onTrue(AutoCommands.raiseL3());
 
     // Constants.OIConstants.operatorController.povRight().onTrue(AutoCommands.raiseL2());
 
     // arm setpoint testing
-    Constants.OIConstants.operatorController.povUp().onTrue(
-      Elevator.getInstance().setGoal(.5)
-    );
+    // Constants.OIConstants.operatorController.povUp().onTrue(
+    //   Arm.getInstance().setGoalCommand(.8)
+    // );
 
-    Constants.OIConstants.operatorController.povDown().onTrue(
-      Elevator.getInstance().setGoal(0)
-    );
+    // Constants.OIConstants.operatorController.povDown().onTrue(
+    //   Arm.getInstance().setGoalCommand(-1)
+    // );
+
+    // Constants.OIConstants.operatorController.povUp().onTrue(
+    //   Elevator.getInstance().setGoal(.4)
+    // );
+
+    // Constants.OIConstants.operatorController.povDown().onTrue(
+    //   Elevator.getInstance().setGoal(0)
+    // );
 
     // Stow
-    Constants.OIConstants.operatorController.rightStick().whileTrue(AutoCommands.stow());
+    Constants.OIConstants.operatorController.povDown().onTrue(AutoCommands.stow());
 
     // Reverse intake
     Constants.OIConstants.operatorController.a().whileTrue(

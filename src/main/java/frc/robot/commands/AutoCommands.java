@@ -24,15 +24,15 @@ public class AutoCommands {
     private static Intake intake = Intake.getInstance();
 
     public static Command raiseL4() {
-        return Commands.parallel(
-            Elevator.getInstance().setGoal(0.57),
-            Commands.runOnce(() -> Arm.getInstance().setGoal(1.02), Arm.getInstance())
+        return Commands.sequence(
+            Arm.getInstance().setGoalCommand(.8).withTimeout(1.5),
+            Elevator.getInstance().setGoal(0.57)
         );
     }
 
     public static Command raiseL3() {
         return Commands.parallel(
-            Elevator.getInstance().setGoal(0),
+            Commands.waitSeconds(.3).andThen(Elevator.getInstance().setGoal(0)),
             Commands.runOnce(() -> Arm.getInstance().setGoal(ArmConstants.CORAL_L3), Arm.getInstance())
         );
     }
@@ -43,12 +43,13 @@ public class AutoCommands {
             Commands.runOnce(() -> Arm.getInstance().setGoal(ArmConstants.CORAL_L2), Arm.getInstance())
         );
     }
-    
+
 
     public static Command stow() {
-        return Commands.parallel(
-            Elevator.getInstance().setGoal(ElevatorConstants.minDistance),
-            Commands.runOnce(() -> Arm.getInstance().setGoal(-ArmConstants.ARM_OFFSET + Units.degreesToRadians(3)), Arm.getInstance())
+        return Commands.sequence(
+            Elevator.getInstance().setGoal(ElevatorConstants.minDistance).withTimeout(1),
+            Arm.getInstance().setGoalCommand(-Math.PI/2 - Units.degreesToRadians(17)).withTimeout(1.5),
+            intake.intake()
         );
     }
 

@@ -21,7 +21,7 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-
+// 
 public class ArmIOReal implements ArmIO {
     private final SparkFlex armMotor = new SparkFlex(ArmConstants.CAN_ID, MotorType.kBrushless);
     private SparkFlexConfig config = new SparkFlexConfig();
@@ -59,23 +59,23 @@ public class ArmIOReal implements ArmIO {
         // config.closedLoop.d(0.0);
 
         config.voltageCompensation(12.0);
-        config.inverted(true);
-        // config.encoder.inverted(true);
+        config.inverted(false);
+        config.absoluteEncoder.inverted(false);
 
         armMotor.clearFaults();
         armMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         armEncoder = armMotor.getAbsoluteEncoder();
-        armMotor.getEncoder().setPosition(armEncoder.getPosition());
+        armMotor.getEncoder().setPosition(getOffsetAngle());
 
-        goal = new TrapezoidProfile.State(armEncoder.getPosition(), 0);
-        setpoint = new TrapezoidProfile.State(armEncoder.getPosition(), 0);
+        goal = new TrapezoidProfile.State(armMotor.getEncoder().getPosition(), 0);
+        setpoint = new TrapezoidProfile.State(armMotor.getEncoder().getPosition(), 0);
     }
 
     @Override
     public void setGoal(double angle) {
         if(angle != goal.position) {
-            setpoint = new TrapezoidProfile.State(armEncoder.getPosition(), armEncoder.getVelocity());
+            setpoint = new TrapezoidProfile.State(armMotor.getEncoder().getPosition(), armEncoder.getVelocity());
             goal = new TrapezoidProfile.State(angle, 0);
         }
     }
@@ -94,7 +94,7 @@ public class ArmIOReal implements ArmIO {
         double ffvolts = ffmodel.calculate(armMotor.getEncoder().getPosition(), setpoint.velocity);
         double pidvolts = controller.calculate(armMotor.getEncoder().getPosition(), setpoint.position);
   
-        setVoltage(ffvolts);
+        setVoltage(ffvolts + pidvolts);
         // onboardController.setReference(setpoint.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, ffvolts);
         // onboardController.setReference(setpoint.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, 0);
 
@@ -108,6 +108,7 @@ public class ArmIOReal implements ArmIO {
     public void setFFValues(double kS, double kG, double kV, double kA) {
         ffmodel = new ArmFeedforward(kS, kG, kV);
     }
+
 
     @Override
     public void resetEncoder() {
