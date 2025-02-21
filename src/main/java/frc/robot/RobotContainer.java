@@ -192,6 +192,16 @@ public class RobotContainer {
     //   )
     // );
 
+    OIConstants.operatorController.leftBumper()
+        .onTrue(
+          Commands.runOnce(() -> drivetrain.setScoringLeft()
+        ));
+    
+    OIConstants.operatorController.rightBumper()
+        .onTrue(
+          Commands.runOnce(() -> drivetrain.setScoringRight()
+        ));
+
     // OIConstants.operatorController.leftBumper().whileTrue(
     // Arm.getInstance().sysIDRoutine().quasistatic(SysIdRoutine.Direction.kForward)
     // );

@@ -19,7 +19,11 @@ public class Constants {
       public static final double slow = -0.3;
       public static final double reverse = 0.7;
     }
-    
+    public static final class driveConstants {
+        public static double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+        public static double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond);
+
+    }
     public static Mode currentMode = Mode.SIM;
     public static enum Mode {
         SIM,
@@ -31,6 +35,7 @@ public class Constants {
         public static final CommandXboxController driverController = new CommandXboxController(0);
         public static final CommandXboxController operatorController = new CommandXboxController(1);
         public static final double KAxisDeadband = 0.1;  
+        public static boolean isScoringLeft = true;
     }
 
     public static enum Gamepiece {

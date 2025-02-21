@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.RobotContainer;
 import frc.robot.Telemetry;
+import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.vision.AprilTag.Vision;
 import frc.robot.subsystems.vision.AprilTag.VisionConstants;
@@ -41,7 +42,7 @@ public class AutoAlignReef extends Command{
     private static final Pose2d[] RED_SCORING_AREAS = VisionConstants.redReefScoringPoses;
     private static final Pose2d[] BLUE_SCORING_AREAS = VisionConstants.blueReefScoringPoses;
 
-    private boolean isScoringLeft = true;
+    private boolean isScoringLeft;
     private double offset = 0.0;
 
     private final double maxDistance = 0.6;
@@ -52,6 +53,7 @@ public class AutoAlignReef extends Command{
 
     private double mult;
     private Pose2d currentPose;
+    private Pose2d reefScoringPose;
     private Pose2d targetPose;
     private double distance;
 
@@ -70,10 +72,11 @@ public class AutoAlignReef extends Command{
             mult = (alliance == Alliance.Red) ? -1.0 : 1.0;
         });
 
-        targetPose = Vision.getInstance().getBestReefPose();
+        isScoringLeft = OIConstants.isScoringLeft;
+        reefScoringPose = Vision.getInstance().getBestReefPose();
         
         offset = (isScoringLeft) ? 0.33 / 2.0 :  -0.33 / 2.0;
-        targetPose = targetPose.plus(new Transform2d(0, offset, new Rotation2d(0)));
+        targetPose = reefScoringPose.plus(new Transform2d(0, offset, new Rotation2d(0)));
         
         currentPose = Swerve.getInstance().getState().Pose;
         double velocity = mult * projection(new Translation2d(Swerve.getInstance().getState().Speeds.vxMetersPerSecond, Swerve.getInstance().getState().Speeds.vyMetersPerSecond), targetPose.getTranslation().minus(currentPose.getTranslation()));
@@ -90,7 +93,11 @@ public class AutoAlignReef extends Command{
 
     @Override
     public void execute() {
-        // driveTrain.registerTelemetry(logger::telemeterize);
+        isScoringLeft = Constants.OIConstants.isScoringLeft;
+        reefScoringPose = Vision.getInstance().getBestReefPose();
+        
+        offset = (isScoringLeft) ? 0.33 / 2.0 :  -0.33 / 2.0;
+        targetPose = reefScoringPose.plus(new Transform2d(0, offset, new Rotation2d(0)));
 
         currentPose = Swerve.getInstance().getState().Pose;
         distance = currentPose.getTranslation().getDistance(targetPose.getTranslation());
@@ -106,6 +113,7 @@ public class AutoAlignReef extends Command{
         Rotation2d direction = new Rotation2d(currentPose.getX() - targetPose.getX(), currentPose.getY() - targetPose.getY());
 
         Logger.recordOutput("AutoAlign/target pose", targetPose);
+        Logger.recordOutput("AutoAlign/Scoring Left", isScoringLeft);
         Logger.recordOutput("AutoAlign/Translation x direction", driveSpeed * direction.getCos());
         Logger.recordOutput("AutoAlign/Translation y direction", driveSpeed * direction.getSin());
         Logger.recordOutput("AutoAlign/Rotation setpoint position", rotationController.getSetpoint().position);

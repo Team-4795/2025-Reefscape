@@ -2,6 +2,8 @@ package frc.robot.subsystems.vision.AprilTag;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.fasterxml.jackson.databind.exc.ValueInstantiationException;
+
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -14,6 +16,7 @@ import frc.robot.RobotContainer;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.vision.AprilTag.VisionIOInputsAutoLogged;
+import frc.robot.Constants;
 
 import static frc.robot.subsystems.vision.AprilTag.VisionConstants.*;
 
@@ -58,6 +61,11 @@ public class Vision extends SubsystemBase{
     }
 
     public Pose2d getBestReefPose() {
+        if(Constants.currentMode == Constants.Mode.SIM)
+        {
+            return VisionConstants.redReefScoringPoses[0];
+        }
+        
         for(int i = 0; i < io.length; i++) {
             if(inputs[i].reefPose != new Pose2d())
             {

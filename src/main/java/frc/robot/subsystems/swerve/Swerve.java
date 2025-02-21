@@ -44,6 +44,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.RobotVisualizer;
+import frc.robot.Constants.OIConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 import frc.robot.subsystems.vision.AprilTag.Vision;
@@ -322,6 +323,13 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
                 m_hasAppliedOperatorPerspective = true;
             });
         }
+    }
+    public void setScoringLeft() {
+        OIConstants.isScoringLeft = true;
+    }
+    
+    public void setScoringRight() {
+        OIConstants.isScoringLeft = false;
     }
 
     private void startSimThread() {
