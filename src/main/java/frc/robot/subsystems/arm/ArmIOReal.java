@@ -81,6 +81,13 @@ public class ArmIOReal implements ArmIO {
     }
 
     @Override
+    public void hold() {
+        double ffvolts = ffmodel.calculate(armMotor.getEncoder().getPosition(), 0);
+        double pidvolts = controller.calculate(armMotor.getEncoder().getPosition(), goal.position);
+        setVoltage(ffvolts + pidvolts);
+    }
+ 
+    @Override
     public double getGoal() {
         return goal.position;
     }

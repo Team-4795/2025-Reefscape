@@ -4,25 +4,25 @@
 
 package frc.robot;
 
-import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
-import com.ctre.phoenix6.swerve.SwerveRequest;
-
 import java.io.IOException;
 
 import org.json.simple.parser.ParseException;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-
+import frc.robot.commands.AutoCommands;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.ArmIOReal;
+import frc.robot.subsystems.arm.ArmIOSim;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorIOReal;
 import frc.robot.subsystems.elevator.ElevatorIOSim;
-import frc.robot.commands.AutoCommands;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIORealVortex;
 import frc.robot.subsystems.intake.IntakeIOSim;
@@ -31,10 +31,6 @@ import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.vision.AprilTag.Vision;
 import frc.robot.subsystems.vision.AprilTag.VisionIOSim;
 import frc.robot.util.NamedCommandManager;
-import frc.robot.subsystems.arm.Arm;
-import frc.robot.subsystems.arm.ArmConstants;
-import frc.robot.subsystems.arm.ArmIOSim;
-import frc.robot.subsystems.arm.ArmIOReal;
 
 public class RobotContainer {
   private RobotVisualizer visualizer = new RobotVisualizer();

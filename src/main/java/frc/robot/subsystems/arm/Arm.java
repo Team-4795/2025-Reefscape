@@ -59,7 +59,7 @@ public class Arm extends SubsystemBase {
     }
 
     public double getAngle() {
-        return inputs.angularPosition;
+        return inputs.relativeEncoderPosition;
     }
 
     public double getGoalAngle() {
@@ -81,6 +81,10 @@ public class Arm extends SubsystemBase {
     public Command setGoalCommand(double angle) {
         return Commands.runOnce(() -> io.setGoal(angle), this)
             .andThen(Commands.run(() -> io.updateMotionProfile(), this));
+    }
+
+    public boolean atGoal(double goal) {
+        return MathUtil.isNear(goal, getAngle(), 0.01);
     }
 
     public void resetAbsoluteEncoder() {

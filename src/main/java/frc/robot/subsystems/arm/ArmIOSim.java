@@ -67,6 +67,8 @@ public class ArmIOSim implements ArmIO {
     public void updateInputs(ArmIOInputs inputs) {
         inputs.angularPosition = armSim.getAngleRads();
         inputs.angularVelocity = armSim.getVelocityRadPerSec();
+        inputs.relativeEncoderPosition = armSim.getAngleRads();
+        inputs.relativeEncoderVelocity = armSim.getVelocityRadPerSec();
         inputs.current = armSim.getCurrentDrawAmps();
         inputs.voltage = voltage;
         inputs.goalAngle = goal.position;

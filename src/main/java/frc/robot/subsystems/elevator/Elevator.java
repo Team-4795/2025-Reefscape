@@ -31,6 +31,10 @@ public class Elevator extends SubsystemBase {
 
         setDefaultCommand(Commands.run(() -> io.hold(), this));
     }
+    
+    public boolean atGoal(double goal) {
+        return MathUtil.isNear(goal, getPosition(), 0.01);
+    }
 
     public Command setGoal(double goal){
         return Commands.runOnce(() -> io.setGoal(goal), this)
@@ -41,12 +45,16 @@ public class Elevator extends SubsystemBase {
         io.moveElevator(speed);
     }
 
+    public double getGoalHeight() {
+        return inputs.goalHeight;
+    }
+
     public double getPosition(){
-        return inputs.elevatorLeftPositionMeters; //change later
+        return inputs.elevatorRightPositionMeters; //change later
     }
 
     public double getVelocity() {
-        return inputs.elevatorLeftVelocityMetersPerSecond; //change later
+        return inputs.elevatorRightVelocityMetersPerSecond; //change later
         
     }
 

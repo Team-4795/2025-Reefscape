@@ -2,11 +2,13 @@ package frc.robot.commands;
 
 import com.pathplanner.lib.path.ConstraintsZone;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.arm.Arm;
@@ -24,10 +26,11 @@ public class AutoCommands {
     private static Intake intake = Intake.getInstance();
 
     public static Command raiseL4() {
-        return Commands.sequence(
-            Arm.getInstance().setGoalCommand(.8).withTimeout(1.5),
-            Elevator.getInstance().setGoal(0.57)
-        );
+        return Commands.parallel(
+            arm.setGoalCommand(.8),
+            Commands.waitUntil(() -> arm.getAngle() > -Math.PI/4)
+                .andThen(elevator.setGoal(.57))
+        ).until(() -> elevator.atGoal(.57) && arm.atGoal(.8));
     }
 
     public static Command raiseL3() {
@@ -47,16 +50,9 @@ public class AutoCommands {
 
     public static Command stow() {
         return Commands.sequence(
-            Elevator.getInstance().setGoal(ElevatorConstants.minDistance).withTimeout(1),
-            Arm.getInstance().setGoalCommand(-Math.PI/2 - Units.degreesToRadians(17)).withTimeout(1.5),
+            elevator.setGoal(ElevatorConstants.minDistance).withTimeout(1),
+            arm.setGoalCommand(-Math.PI/2 - Units.degreesToRadians(17)).withTimeout(1.5),
             intake.intake()
-        );
-    }
-
-    public static Command stowSequence() {
-        return Commands.sequence(
-            Elevator.getInstance().setGoal(ElevatorConstants.minDistance).withTimeout(3),
-            Commands.runOnce(() -> Arm.getInstance().setGoal(-ArmConstants.ARM_OFFSET + Units.degreesToRadians(3)), Arm.getInstance())
         );
     }
 

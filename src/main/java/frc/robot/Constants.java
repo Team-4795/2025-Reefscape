@@ -2,6 +2,8 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import com.ctre.phoenix6.signals.RobotEnableValue;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -18,7 +20,7 @@ public class Constants {
       public static final double reverse = 0.7;
     }
     
-    public static Mode currentMode = Mode.REAL;
+    public static Mode currentMode = Mode.SIM;
     public static enum Mode {
         SIM,
         REAL,
