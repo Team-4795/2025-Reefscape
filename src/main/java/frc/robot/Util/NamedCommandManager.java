@@ -1,4 +1,4 @@
-package frc.robot.util;
+package frc.robot.Util;
 
 import com.pathplanner.lib.auto.NamedCommands;
 
@@ -10,5 +10,6 @@ public class NamedCommandManager {
         NamedCommands.registerCommand("Say Hello", Commands.print("Hello World!"));
         NamedCommands.registerCommand("Raise to L4", AutoCommands.raiseL4());
         NamedCommands.registerCommand("Stow", AutoCommands.stow());
+        NamedCommands.registerCommand("Run Intake", AutoCommands.intake());
     }
 }
