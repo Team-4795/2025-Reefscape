@@ -8,7 +8,8 @@ import org.littletonrobotics.junction.Logger;
 public class Intake extends SubsystemBase {
     private IntakeIO io;
     private IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
-    private double intakeSpeed = 0.0;
+    private double 
+    intakeSpeed = 0.0;
 
     private static Intake instance;
 
@@ -62,7 +63,7 @@ public class Intake extends SubsystemBase {
     }
 
     public boolean GamePieceFinal() {
-        return IntakeConstants.currentThreshold <= inputs.currentAmps; 
+        return (IntakeConstants.initialThreshold > inputs.currentAmps) && IntakeConstants.currentThreshold <= inputs.currentAmps; 
     }
 
     public boolean hasGamepiece() {

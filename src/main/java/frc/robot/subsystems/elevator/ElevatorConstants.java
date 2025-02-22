@@ -19,6 +19,8 @@ public final class ElevatorConstants{
     public static final double kv = 6; //IS THIS RIGHT?!?!?
     public static final double MAX_ACCELERATION = 10;
     public static final double MAX_VELOCITY = 1.75; 
+    public static final double CORAL_L4_SETPOINT = 0.57;
+    public static final double CORAL_L2_SETPOINT = 0.38840916752815247    ;
     
     public static final double conversionFactor = Units.inchesToMeters(1.0/9.0 * Math.PI * 1.751); // gearing * pi * sprocket diameter
 

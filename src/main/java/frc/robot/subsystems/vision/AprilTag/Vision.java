@@ -143,7 +143,6 @@ public class Vision extends SubsystemBase{
                 
                 if(shouldUpdate[i]) {
                     Swerve.getInstance().addVisionMeasurement(robotPose.toPose2d(), inputs[i].timestamp[p], stddevs);
-                    // Drive.getInstance().addVisionMeasurement(robotPose.toPose2d(), inputs[i].timestamp[p], stddevs);
                 }
             }
         }

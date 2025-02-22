@@ -41,12 +41,12 @@ public class VisionConstants {
         // Front Camera
         new Transform3d(
             new Translation3d(
-                0.3,
+                Units.inchesToMeters(12),
                 0,
-                Units.inchesToMeters(7)), 
+                Units.inchesToMeters(9)), 
             new Rotation3d(
                 Units.degreesToRadians(90), 
-                Units.degreesToRadians(-30), 
+                Units.degreesToRadians(0), 
                 0)),
 
         // Backwards Camera

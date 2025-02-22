@@ -11,7 +11,7 @@ public class NamedCommandManager {
         NamedCommands.registerCommand("Raise to L4", AutoCommands.raiseL4());
         NamedCommands.registerCommand("Stow", AutoCommands.stow());
         NamedCommands.registerCommand("Drive to Reef", AutoCommands.alignReef());
-        NamedCommands.registerCommand("Drive to Feeder", AutoCommands.alignReef());
-
+        NamedCommands.registerCommand("Drive to Feeder", AutoCommands.alignFeeder());
+        NamedCommands.registerCommand("score", AutoCommands.score());
     }
 }

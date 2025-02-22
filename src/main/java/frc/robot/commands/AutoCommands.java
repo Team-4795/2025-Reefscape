@@ -27,39 +27,63 @@ public class AutoCommands {
 
     public static Command raiseL4() {
         return Commands.parallel(
-            arm.setGoalCommand(.8),
+            arm.setGoalCommand(ArmConstants.CORAL_L4),
             Commands.waitUntil(() -> arm.getAngle() > -Math.PI/4)
-                .andThen(elevator.setGoal(.57))
-        ).until(() -> elevator.atGoal(.57) && arm.atGoal(.8));
+                .andThen(elevator.setGoal(ElevatorConstants.CORAL_L4_SETPOINT))
+        ).until(() -> elevator.atGoal(ElevatorConstants.CORAL_L4_SETPOINT) && arm.atGoal(ArmConstants.CORAL_L4));
     }
 
     public static Command raiseL3() {
-        return Commands.parallel(
-            Commands.waitSeconds(.3).andThen(Elevator.getInstance().setGoal(0)),
-            Commands.runOnce(() -> Arm.getInstance().setGoal(ArmConstants.CORAL_L3), Arm.getInstance())
+        return Commands.either(
+            Commands.parallel(
+                arm.setGoalCommand(ArmConstants.CORAL_L3),
+                Commands.waitUntil(() -> arm.getAngle() > -Math.PI/4)
+                    .andThen(elevator.setGoal(0))
+            ).until(() -> elevator.atGoal(0) && arm.atGoal(ArmConstants.CORAL_L3)),
+            Commands.parallel(
+                elevator.setGoal(0),
+                Commands.waitUntil(() -> elevator.getPosition() < .2)
+                    .andThen(arm.setGoalCommand(ArmConstants.CORAL_L3))
+            ).until(() -> elevator.atGoal(0) && arm.atGoal(ArmConstants.CORAL_L3)),
+            () -> 0 < elevator.getGoalHeight()
         );
     }
 
     public static Command raiseL2() {
-        return Commands.parallel(
-            Elevator.getInstance().setGoal(0.4211287200450897),
-            Commands.runOnce(() -> Arm.getInstance().setGoal(ArmConstants.CORAL_L2), Arm.getInstance())
+        return Commands.either(
+            Commands.parallel(
+                arm.setGoalCommand(ArmConstants.CORAL_L2),
+                Commands.waitUntil(() -> arm.getAngle() > -Math.PI/4)
+                    .andThen(elevator.setGoal(ElevatorConstants.CORAL_L2_SETPOINT))
+            ).until(() -> elevator.atGoal(ElevatorConstants.CORAL_L2_SETPOINT) && arm.atGoal(ArmConstants.CORAL_L2)),
+            Commands.parallel(
+                elevator.setGoal(ElevatorConstants.CORAL_L2_SETPOINT),
+                Commands.waitUntil(() -> elevator.getPosition() < .2)
+                    .andThen(arm.setGoalCommand(ArmConstants.CORAL_L2))
+            ).until(() -> elevator.atGoal(ElevatorConstants.CORAL_L2_SETPOINT) && arm.atGoal(ArmConstants.CORAL_L2)),
+            () -> 0 < elevator.getGoalHeight()
         );
     }
 
 
     public static Command stow() {
-        return Commands.sequence(
-            elevator.setGoal(ElevatorConstants.minDistance).withTimeout(1),
-            arm.setGoalCommand(-Math.PI/2 - Units.degreesToRadians(17)).withTimeout(1.5),
-            intake.intake()
-        );
+        return Commands.parallel(
+            elevator.setGoal(0),
+            Commands.waitUntil(() -> elevator.getPosition() < .2)
+                .andThen(arm.setGoalCommand(ArmConstants.STOW))
+        ).until(() -> elevator.atGoal(0) && arm.atGoal(ArmConstants.STOW));
+        // .andThen(
+        //     intake.intake().withTimeout(2));
+    }
+
+    public static Command score() {
+        return intake.intake().withTimeout(1);
     }
 
     public static Command alignReef() {
         return new AutoAlignReef(
-            new ProfiledPIDController(1, 0, 0, new Constraints(SwerveConstants.MaxSpeed, 3)), 
-            new ProfiledPIDController(1, 0, 0, new Constraints(SwerveConstants.MaxSpeed, 3)));
+            new ProfiledPIDController(5, 0, 0, new Constraints(SwerveConstants.MaxSpeed, 3)), 
+            new ProfiledPIDController(5, 0, 0, new Constraints(SwerveConstants.MaxSpeed, 3)));
     }
 
     public static Command alignFeeder() {

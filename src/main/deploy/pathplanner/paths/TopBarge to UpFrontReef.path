@@ -34,19 +34,14 @@
   "eventMarkers": [
     {
       "name": "Raise to L4",
-      "waypointRelativePos": 0.12032085561497308,
+      "waypointRelativePos": 0.16745442268736957,
       "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "Raise to L4"
-        }
-      }
+      "command": null
     }
   ],
   "globalConstraints": {
     "maxVelocity": 5.0,
-    "maxAcceleration": 5.0,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,

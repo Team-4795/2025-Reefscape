@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.435608552631579,
-        "y": 5.612582236842105
+        "x": 4.447438524590164,
+        "y": 6.344620901639344
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.6068256578947366,
-        "y": 7.440707236842105
+        "x": 1.4505122950819673,
+        "y": 7.243698770491803
       },
       "prevControl": {
-        "x": 2.0686677631578947,
-        "y": 7.171299342105262
+        "x": 2.121823770491803,
+        "y": 7.09984631147541
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,19 +34,14 @@
   "eventMarkers": [
     {
       "name": "Stow",
-      "waypointRelativePos": 0.3689839572192507,
+      "waypointRelativePos": 0.24037812288993898,
       "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "Stow"
-        }
-      }
+      "command": null
     }
   ],
   "globalConstraints": {
     "maxVelocity": 5.0,
-    "maxAcceleration": 5.0,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -60,7 +55,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -30.276317116804947
+    "rotation": -122.06507907759246
   },
   "useDefaultConstraints": true
 }

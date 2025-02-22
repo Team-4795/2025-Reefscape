@@ -15,9 +15,9 @@
                 }
               },
               {
-                "type": "wait",
+                "type": "named",
                 "data": {
-                  "waitTime": 1.0
+                  "name": "score"
                 }
               },
               {
@@ -27,21 +27,15 @@
                 }
               },
               {
-                "type": "wait",
-                "data": {
-                  "waitTime": 1.0
-                }
-              },
-              {
                 "type": "path",
                 "data": {
                   "pathName": "Feeder to UpBackReef"
                 }
               },
               {
-                "type": "wait",
+                "type": "named",
                 "data": {
-                  "waitTime": 1.0
+                  "name": "score"
                 }
               }
             ]
@@ -50,7 +44,7 @@
       ]
     }
   },
-  "resetOdom": true,
+  "resetOdom": false,
   "folder": null,
   "choreoAuto": false
 }
