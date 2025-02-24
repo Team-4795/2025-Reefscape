@@ -194,13 +194,15 @@ public class RobotContainer {
       )
     );
 
-    OIConstants.operatorController.a().whileTrue(
-      Commands.startEnd(
-        () -> intake.setIntakeSpeed(-1),
-        () -> intake.setIntakeSpeed(0), 
-        intake
-      )
-    );
+    // OIConstants.operatorController.a().whileTrue(
+    //   Commands.startEnd(
+    //     () -> intake.setIntakeSpeed(-1),
+    //     () -> intake.setIntakeSpeed(0), 
+    //     intake
+    //   )
+    // );
+
+    OIConstants.operatorController.a().whileTrue(intake.intakeCommand());
 
     OIConstants.operatorController.leftBumper()
         .onTrue(
