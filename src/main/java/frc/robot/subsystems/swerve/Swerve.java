@@ -365,7 +365,7 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
         double y = -OIConstants.driverController.getLeftY();
         double omega = -Constants.OIConstants.driverController.getRightX();
         double speed = Math.hypot(x, y);
-        Rotation2d direction = new Rotation2d(x, y);
+        double direction = Math.atan2(y, x);
 
         speed = MathUtil.applyDeadband(speed, OIConstants.KAxisDeadband);
         omega = MathUtil.applyDeadband(omega, OIConstants.KAxisDeadband);
@@ -373,7 +373,7 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
         speed = speed * speed;
         omega = Math.copySign(omega * omega, omega);
 
-        Translation2d velocity = new Pose2d(new Translation2d(), direction)
+        Translation2d velocity = new Pose2d(new Translation2d(), new Rotation2d(direction))
             .transformBy(new Transform2d(speed, 0, new Rotation2d()))
             .getTranslation();
 

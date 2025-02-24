@@ -64,6 +64,10 @@ public class AutoAlignReef extends Command{
         addRequirements(Swerve.getInstance());
     }
 
+    public double getScoringPositionOffset(boolean isScoringLeft) {
+        return (isScoringLeft) ? 0.05 / 2.0 :  -0.5 / 2.0 -0.0254;
+    }
+
 
     @Override
     public void initialize(){
@@ -75,7 +79,7 @@ public class AutoAlignReef extends Command{
         isScoringLeft = OIConstants.isScoringLeft;
         reefScoringPose = Vision.getInstance().getBestReefPose();
         
-        offset = (isScoringLeft) ? 0.33 / 2.0 :  -0.33 / 2.0;
+        offset = getScoringPositionOffset(isScoringLeft);
         targetPose = reefScoringPose.plus(new Transform2d(0, offset, new Rotation2d(0)));
         
         currentPose = Swerve.getInstance().getState().Pose;
@@ -96,7 +100,7 @@ public class AutoAlignReef extends Command{
         isScoringLeft = Constants.OIConstants.isScoringLeft;
         reefScoringPose = Vision.getInstance().getBestReefPose();
         
-        offset = (isScoringLeft) ? 0.33 / 2.0 :  -0.33 / 2.0;
+        offset = getScoringPositionOffset(isScoringLeft);
         targetPose = reefScoringPose.plus(new Transform2d(0, offset, new Rotation2d(0)));
 
         currentPose = Swerve.getInstance().getState().Pose;

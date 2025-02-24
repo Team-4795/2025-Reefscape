@@ -41,9 +41,9 @@ public class VisionConstants {
         // Front Camera
         new Transform3d(
             new Translation3d(
-                Units.inchesToMeters(12),
-                0,
-                Units.inchesToMeters(9)), 
+                Units.inchesToMeters(14.5),
+                Units.inchesToMeters(1),
+                Units.inchesToMeters(8.25)), 
             new Rotation3d(
                 Units.degreesToRadians(90), 
                 Units.degreesToRadians(0), 
@@ -109,12 +109,12 @@ public class VisionConstants {
 
     public static final Pose2d[] redReefScoringPoses =
     new Pose2d[] {
-        redReefTag[0].plus(new Transform2d(0.6, 0, new Rotation2d(Math.PI))),
-        redReefTag[1].plus(new Transform2d(0.6, 0, new Rotation2d(Math.PI))),
-        redReefTag[2].plus(new Transform2d(0.6, 0, new Rotation2d(Math.PI))),
-        redReefTag[3].plus(new Transform2d(0.6, 0, new Rotation2d(Math.PI))),
-        redReefTag[4].plus(new Transform2d(0.6, 0, new Rotation2d(Math.PI))),
-        redReefTag[5].plus(new Transform2d(0.6, 0, new Rotation2d(Math.PI))),
+        redReefTag[0].plus(new Transform2d(0.45, 0, new Rotation2d(Math.PI))),
+        redReefTag[1].plus(new Transform2d(0.45, 0, new Rotation2d(Math.PI))),
+        redReefTag[2].plus(new Transform2d(0.45, 0, new Rotation2d(Math.PI))),
+        redReefTag[3].plus(new Transform2d(0.45, 0, new Rotation2d(Math.PI))),
+        redReefTag[4].plus(new Transform2d(0.45, 0, new Rotation2d(Math.PI))),
+        redReefTag[5].plus(new Transform2d(0.45, 0, new Rotation2d(Math.PI))),
     };
 
     private static final Pose2d[] blueReefTag =

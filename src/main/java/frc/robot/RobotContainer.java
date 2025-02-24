@@ -44,7 +44,9 @@ public class RobotContainer {
 
   // private final Vision vision;
   /* Setting up bindings for necessary control of the swerve drive platform */
-  private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
+  private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+  .withDeadband(SwerveConstants.MaxSpeed * 0.1).withRotationalDeadband(SwerveConstants.MaxAngularRate * 0.1) // Add a 10% deadband
+  .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
 
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
@@ -102,13 +104,13 @@ public class RobotContainer {
 
   private void configureBindings() {
     // Drive command
-    drivetrain.setDefaultCommand(
-      drivetrain.applyRequest(
-        () -> drive.withVelocityX(drivetrain.processJoystickInput().getX() * SwerveConstants.MaxSpeed)
-              .withVelocityY(drivetrain.processJoystickInput().getY() * SwerveConstants.MaxSpeed)
-              .withRotationalRate(drivetrain.processJoystickInput().getRotation().getRotations() * SwerveConstants.MaxAngularRate)
-      )
-    );
+     // Drive command
+
+     drivetrain.setDefaultCommand(
+      drivetrain
+          .applyRequest(() -> drive.withVelocityX(-Constants.OIConstants.driverController.getLeftY() * SwerveConstants.MaxSpeed * (drivetrain.isSlowMode() ? SwerveConstants.slowModeMultiplier: 1))
+              .withVelocityY(-Constants.OIConstants.driverController.getLeftX() * SwerveConstants.MaxSpeed * (drivetrain.isSlowMode() ? SwerveConstants.slowModeMultiplier: 1))
+              .withRotationalRate(-Constants.OIConstants.driverController.getRightX() * SwerveConstants.MaxAngularRate * (drivetrain.isSlowMode() ? SwerveConstants.slowModeMultiplier: 1))));
 
     // Zero heading
     Constants.OIConstants.driverController.b().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));

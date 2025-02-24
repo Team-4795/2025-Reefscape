@@ -58,16 +58,14 @@ public class Intake extends SubsystemBase {
         return startEnd(() -> setIntakeSpeed(IntakeSetpoints.reverse), () -> setIntakeSpeed(0));
     }
 
-    public Command intakeCommand(){
+    public Command intakeCommand() {
         return Commands.sequence(
             Commands.run(() -> setIntakeSpeed(IntakeSetpoints.intake)).until(() -> GamePieceInitial()), 
             Commands.waitSeconds(0.3),
             Commands.waitUntil(() -> GamePieceFinal()),
             Commands.startEnd(() -> setIntakeSpeed(IntakeSetpoints.reverse), 
-                () -> setIntakeSpeed(0)).withTimeout(0.2));
+                () -> setIntakeSpeed(0)).withTimeout(0.07));
     }
-
-    
     public boolean GamePieceInitial() {
         return IntakeConstants.initialThreshold <= inputs.currentAmps;
     }
