@@ -24,7 +24,7 @@ public class Constants {
         public static double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond);
 
     }
-    public static Mode currentMode = Mode.REAL;
+    public static Mode currentMode = Mode.SIM;
     public static enum Mode {
         SIM,
         REAL,

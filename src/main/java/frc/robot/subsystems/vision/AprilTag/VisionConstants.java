@@ -43,10 +43,10 @@ public class VisionConstants {
             new Translation3d(
                 Units.inchesToMeters(12),
                 0,
-                Units.inchesToMeters(9)), 
+                Units.inchesToMeters(8)), 
             new Rotation3d(
-                Units.degreesToRadians(90), 
                 Units.degreesToRadians(0), 
+                Units.degreesToRadians(-20), 
                 0)),
 
         // Backwards Camera

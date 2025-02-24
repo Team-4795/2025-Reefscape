@@ -114,7 +114,7 @@ public class RobotContainer {
     Constants.OIConstants.driverController.b().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
     // Reef/Feeder align
-    Constants.OIConstants.driverController.leftBumper().whileTrue(
+    Constants.OIConstants.operatorController.a().whileTrue(
         AutoCommands.alignReef()
     );
 
@@ -211,6 +211,7 @@ public class RobotContainer {
         .onTrue(
           Commands.runOnce(() -> drivetrain.setScoringRight()
         ));
+
 
     // OIConstants.operatorController.leftBumper().whileTrue(
     // Arm.getInstance().sysIDRoutine().quasistatic(SysIdRoutine.Direction.kForward)
