@@ -44,6 +44,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.RobotVisualizer;
+import frc.robot.Constants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
@@ -357,6 +358,26 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
     @Override
     public void addVisionMeasurement(Pose2d visionRobotPoseMeters, double timestampSeconds) {
         super.addVisionMeasurement(visionRobotPoseMeters, Utils.fpgaToCurrentTime(timestampSeconds));
+    }
+
+    public Pose2d processJoystickInput() {
+        double x = -OIConstants.driverController.getLeftX();
+        double y = -OIConstants.driverController.getLeftY();
+        double omega = -Constants.OIConstants.driverController.getRightX();
+        double speed = Math.hypot(x, y);
+        Rotation2d direction = new Rotation2d(x, y);
+
+        speed = MathUtil.applyDeadband(speed, OIConstants.KAxisDeadband);
+        omega = MathUtil.applyDeadband(omega, OIConstants.KAxisDeadband);
+
+        speed = speed * speed;
+        omega = Math.copySign(omega * omega, omega);
+
+        Translation2d velocity = new Pose2d(new Translation2d(), direction)
+            .transformBy(new Transform2d(speed, 0, new Rotation2d()))
+            .getTranslation();
+
+        return new Pose2d(velocity, new Rotation2d(omega));
     }
 
     /**
