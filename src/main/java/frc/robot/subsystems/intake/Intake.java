@@ -1,6 +1,7 @@
 package frc.robot.subsystems.intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeSetpoints;
 import org.littletonrobotics.junction.Logger;
@@ -8,7 +9,8 @@ import org.littletonrobotics.junction.Logger;
 public class Intake extends SubsystemBase {
     private IntakeIO io;
     private IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
-    private double intakeSpeed = 0.0;
+    private double 
+    intakeSpeed = 0.0;
 
     private static Intake instance;
 
@@ -56,13 +58,22 @@ public class Intake extends SubsystemBase {
         return startEnd(() -> setIntakeSpeed(IntakeSetpoints.reverse), () -> setIntakeSpeed(0));
     }
 
+    public Command intakeCommand(){
+        return Commands.sequence(
+            Commands.runOnce(() -> setIntakeSpeed(IntakeSetpoints.intake)), 
+            Commands.waitSeconds(0.3),
+            Commands.waitUntil(() -> GamePieceFinal()),
+            Commands.startEnd(() -> setIntakeSpeed(IntakeSetpoints.reverse), 
+                () -> setIntakeSpeed(0)).withTimeout(0.07));
+    }
+
     
     public boolean GamePieceInitial() {
         return IntakeConstants.initialThreshold <= inputs.currentAmps;
     }
 
     public boolean GamePieceFinal() {
-        return IntakeConstants.currentThreshold <= inputs.currentAmps; 
+        return (IntakeConstants.initialThreshold > inputs.currentAmps) && IntakeConstants.currentThreshold <= inputs.currentAmps; 
     }
 
     public boolean hasGamepiece() {

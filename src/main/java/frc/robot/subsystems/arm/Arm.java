@@ -53,7 +53,7 @@ public class Arm extends SubsystemBase {
         //     }, this)
         // );
         setDefaultCommand(
-            Commands.run(() -> io.hold(), this)
+            Commands.runOnce(() -> io.setGoal(getAngle()), this).andThen(Commands.run(() -> io.hold(), this))
         );
         setFFMode(Constants.currentMode == Mode.SIM ? Gamepiece.SIM: Gamepiece.NONE);
     }

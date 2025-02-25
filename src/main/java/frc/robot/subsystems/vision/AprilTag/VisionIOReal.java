@@ -55,7 +55,6 @@ public class VisionIOReal implements VisionIO {
 
         if(DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red))
         {
-
             double distance = VisionConstants.redReefScoringPoses[0].getTranslation().getDistance(odometry);
 
             for(int i = 1; i < VisionConstants.redReefScoringPoses.length; i++)
