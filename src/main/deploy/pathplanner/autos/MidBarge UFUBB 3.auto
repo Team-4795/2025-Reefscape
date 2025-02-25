@@ -11,9 +11,27 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Raise to L4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stow"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "UpFrontReef to Feeder"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
           }
         },
         {
@@ -23,15 +41,39 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Raise to L4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stow"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "UpBackReef to Feeder"
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Feeder to BackReef"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Raise to L4"
           }
         }
       ]

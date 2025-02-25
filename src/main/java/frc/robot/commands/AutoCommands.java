@@ -30,7 +30,8 @@ public class AutoCommands {
             arm.setGoalCommand(ArmConstants.CORAL_L4),
             Commands.waitUntil(() -> arm.getAngle() > -Math.PI/4)
                 .andThen(elevator.setGoal(ElevatorConstants.CORAL_L4_SETPOINT))
-        ).until(() -> elevator.atGoal(ElevatorConstants.CORAL_L4_SETPOINT) && arm.atGoal(ArmConstants.CORAL_L4));
+        ).withTimeout(1);
+        //until(() -> elevator.atGoal(ElevatorConstants.CORAL_L4_SETPOINT) && arm.atGoal(ArmConstants.CORAL_L4));
     }
 
     public static Command raiseL3() {
@@ -71,7 +72,8 @@ public class AutoCommands {
             elevator.setGoal(0),
             Commands.waitUntil(() -> elevator.getPosition() < .2)
                 .andThen(arm.setGoalCommand(ArmConstants.STOW))
-        ).until(() -> elevator.atGoal(0) && arm.atGoal(ArmConstants.STOW));
+        ).withTimeout(1);
+        //until(() -> elevator.atGoal(0) && arm.atGoal(ArmConstants.STOW));
         // .andThen(
         //     intake.intake().withTimeout(2));
     }
