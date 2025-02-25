@@ -114,7 +114,7 @@ public class RobotContainer {
     Constants.OIConstants.driverController.b().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
     // Reef/Feeder align
-    Constants.OIConstants.operatorController.a().whileTrue(
+    Constants.OIConstants.driverController.leftBumper().whileTrue(
         AutoCommands.alignReef()
     );
 
