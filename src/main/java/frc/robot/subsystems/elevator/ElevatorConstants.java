@@ -11,14 +11,14 @@ public final class ElevatorConstants{
 
     public static final double kD = 0; //figure this out later
     public static final double kI = 0; //figure this out later
-    public static final double kP = 10; //figure this out later
+    public static final double kP = 24; //figure this out later
     public static final int rightDeviceID = 12;
     public static final int leftDeviceID = 13;
-    public static final double ks = 0.01;
-    public static final double kg = 0.35;
-    public static final double kv = 7; //IS THIS RIGHT?!?!?
-    public static final double MAX_ACCELERATION = 1;
-    public static final double MAX_VELOCITY = 1; 
+    public static final double ks = 0.02;
+    public static final double kg = 0.25;
+    public static final double kv = 6; //IS THIS RIGHT?!?!?
+    public static final double MAX_ACCELERATION = 10;
+    public static final double MAX_VELOCITY = 1.75; 
     
     public static final double conversionFactor = Units.inchesToMeters(1.0/9.0 * Math.PI * 1.751); // gearing * pi * sprocket diameter
 

@@ -3,6 +3,7 @@ package frc.robot.subsystems.elevator;
 import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -22,13 +23,13 @@ public class ElevatorIOReal implements ElevatorIO {
     private RelativeEncoder leftEncoder = leftElevatorMotor.getEncoder();
     private RelativeEncoder rightEncoder = rightElevatorMotor.getEncoder();
 
-    private SparkClosedLoopController controller = rightElevatorMotor.getClosedLoopController();
+    // private SparkClosedLoopController controller = rightElevatorMotor.getClosedLoopController();
 
  //   private AbsoluteEncoder leftAbsoluteEncoder = leftElevatorMotor.getAbsoluteEncoder();
 
     private final ElevatorFeedforward ffmodel = new ElevatorFeedforward(ElevatorConstants.ks, ElevatorConstants.kg, ElevatorConstants.kv);
     private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(ElevatorConstants.MAX_VELOCITY, ElevatorConstants.MAX_ACCELERATION);
-    // private final PIDController controller = new PIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD);
+    private final PIDController controller = new PIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD);
     private final TrapezoidProfile profile = new TrapezoidProfile(constraints);
     private TrapezoidProfile.State setpoint = new TrapezoidProfile.State();
     private TrapezoidProfile.State goal = new TrapezoidProfile.State();
@@ -47,45 +48,50 @@ public class ElevatorIOReal implements ElevatorIO {
         rightElevatorMotor.clearFaults();
         config.encoder.positionConversionFactor(ElevatorConstants.conversionFactor);
         config.encoder.velocityConversionFactor(ElevatorConstants.conversionFactor / 60);    
+        config.encoder.quadratureMeasurementPeriod(20);
 
         // config.softLimit.forwardSoftLimitEnabled(true);
         // config.softLimit.reverseSoftLimitEnabled(true);
         // config.softLimit.forwardSoftLimit(ElevatorConstants.maxDistance);
         // config.softLimit.reverseSoftLimit(ElevatorConstants.minDistance);
 
-        config.closedLoop.p(10);
-        config.closedLoop.i(0);
-        config.closedLoop.d(0);
+        // config.closedLoop.p(10);
+        // config.closedLoop.i(0);
+        // config.closedLoop.d(0);
 
         config.smartCurrentLimit(ElevatorConstants.elevatorCurrentLimits);
+        config.voltageCompensation(12);
         config.idleMode(IdleMode.kBrake);
         config.inverted(true);
         rightElevatorMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         config.follow(ElevatorConstants.rightDeviceID, true);
-    
-        //   config.absoluteEncoder.positionConversionFactor(Units.inchesToMeters(11 / 18));             use these later
-        //   config.absoluteEncoder.velocityConversionFactor(Units.inchesToMeters(11 / 18) / 60);        use these later
+
+        leftElevatorMotor.setCANTimeout(200);
         leftElevatorMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
     @Override
     public void setVoltage(double voltage) {
-        controller.setReference(voltage, ControlType.kVoltage);
+        rightElevatorMotor.setVoltage(voltage);
     }
 
     @Override
     public void setGoal(double height) {
-        setpoint = new TrapezoidProfile.State(leftEncoder.getPosition(), leftEncoder.getVelocity());
-        goal = new TrapezoidProfile.State(height, 0);
+        if(height != goal.position) {
+            setpoint = new TrapezoidProfile.State(rightEncoder.getPosition(), rightEncoder.getVelocity());
+            goal = new TrapezoidProfile.State(height, 0);
+        }
     }
 
     @Override
     public void updateMotionProfile() {
-        double prevVelocity = setpoint.velocity;
+        // double prevVelocity = setpoint.velocity;
         setpoint = profile.calculate(0.02, setpoint, goal);
-        double acceleration = (setpoint.velocity - prevVelocity) / 0.02;
-        double ffvolts = ffmodel.calculate(setpoint.velocity, acceleration);
-        controller.setReference(setpoint.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, ffvolts);
+        // double acceleration = (setpoint.velocity - prevVelocity) / 0.02;
+        // double ffvolts = ffmodel.calculate(setpoint.velocity, acceleration);
+        double ffvolts = ffmodel.calculate(setpoint.velocity);
+        double pidvolts = controller.calculate(rightEncoder.getPosition(), setpoint.position);
+        setVoltage(ffvolts + pidvolts);
     }
 
     @Override
@@ -100,9 +106,6 @@ public class ElevatorIOReal implements ElevatorIO {
         inputs.elevatorRightAppliedVolts = rightElevatorMotor.getAppliedOutput() * rightElevatorMotor.getBusVoltage();
         inputs.elevatorRightPositionMeters = rightEncoder.getPosition();
         inputs.elevatorRightVelocityMetersPerSecond = rightEncoder.getVelocity();
-       // inputs.elevatorRightMotorPositionMeters = leftAbsoluteEncoder.getPosition();
-       // inputs.elevatorRightMotorVelocityMetersPerSecond = leftAbsoluteEncoder.getVelocity();     will use absolute encoder later
-
 
         inputs.elevatorLeftCurrent = leftElevatorMotor.getOutputCurrent();
         inputs.elevatorLeftAppliedVolts = leftElevatorMotor.getAppliedOutput() * leftElevatorMotor.getBusVoltage();
@@ -111,6 +114,7 @@ public class ElevatorIOReal implements ElevatorIO {
 
         inputs.setpointVelocity = setpoint.velocity;
         inputs.goalHeight = goal.position;
+        inputs.setpointPosition = setpoint.position;
     }
 
     @Override

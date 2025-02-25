@@ -44,19 +44,22 @@ public class Arm extends SubsystemBase {
 
     private Arm(ArmIO io) {
         this.io = io;
+        // setDefaultCommand(
+        //     Commands.run(() -> {
+        //         double up = MathUtil.applyDeadband(Math.pow(OIConstants.operatorController.getLeftTriggerAxis(), 3), 0.1);
+        //         double down = MathUtil.applyDeadband(Math.pow(OIConstants.operatorController.getRightTriggerAxis(), 3), 0.1);
+        //         double change = (up - down) * 0.02;
+        //         // io.setGoal(inputs.goalAngle + change);
+        //     }, this)
+        // );
         setDefaultCommand(
-            Commands.run(() -> {
-                double up = MathUtil.applyDeadband(OIConstants.driverController.getLeftTriggerAxis(), 0.1);
-                double down = MathUtil.applyDeadband(OIConstants.driverController.getRightTriggerAxis(), 0.1);
-                double change = (up - down) * 0.1;
-                // io.setGoal(inputs.goalAngle + change);
-            }, this)
+            Commands.run(() -> io.hold(), this)
         );
         setFFMode(Constants.currentMode == Mode.SIM ? Gamepiece.SIM: Gamepiece.NONE);
     }
 
     public double getAngle() {
-        return inputs.angularPosition;
+        return inputs.relativeEncoderPosition;
     }
 
     public double getGoalAngle() {
@@ -73,6 +76,15 @@ public class Arm extends SubsystemBase {
 
     public void setGoal(double angle) {
         io.setGoal(angle);
+    }
+
+    public Command setGoalCommand(double angle) {
+        return Commands.runOnce(() -> io.setGoal(angle), this)
+            .andThen(Commands.run(() -> io.updateMotionProfile(), this));
+    }
+
+    public boolean atGoal(double goal) {
+        return MathUtil.isNear(goal, getAngle(), 0.01);
     }
 
     public void resetAbsoluteEncoder() {
@@ -114,7 +126,7 @@ public class Arm extends SubsystemBase {
 
     @Override
     public void periodic() {
-        io.updateMotionProfile();
+        // io.updateMotionProfile();
         Logger.recordOutput(getName() + "/Pose", getArmPose());
         io.updateInputs(inputs);
         Logger.processInputs(getName(), inputs);

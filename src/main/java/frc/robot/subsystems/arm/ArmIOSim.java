@@ -20,7 +20,7 @@ public class ArmIOSim implements ArmIO {
     );
     private ArmFeedforward ffmodel = new ArmFeedforward(ArmConstants.SIMkS, ArmConstants.SIMkG, ArmConstants.SIMkV, ArmConstants.SIMkA);
     private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(3, 10);
-    private final PIDController controller = new PIDController(1, 0, .5);
+    private final PIDController controller = new PIDController(5, 0, 2);
     private final TrapezoidProfile profile = new TrapezoidProfile(constraints);
     private TrapezoidProfile.State goal = new TrapezoidProfile.State(ArmConstants.Sim.INIT_ANGLE, 0);
     private TrapezoidProfile.State setpoint = new TrapezoidProfile.State(ArmConstants.Sim.INIT_ANGLE, 0);
@@ -39,7 +39,10 @@ public class ArmIOSim implements ArmIO {
 
     @Override
     public void setGoal(double angle) {
-        goal = new TrapezoidProfile.State(angle, 0);
+        if(angle != goal.position) {
+            setpoint = new TrapezoidProfile.State(armSim.getAngleRads(), armSim.getVelocityRadPerSec());
+            goal = new TrapezoidProfile.State(MathUtil.clamp(angle, ArmConstants.Sim.MIN_ANGLE,  ArmConstants.Sim.MAX_ANGLE), 0);
+        } 
     }
 
     @Override
@@ -57,17 +60,20 @@ public class ArmIOSim implements ArmIO {
     @Override
     public void updateMotionProfile() {
         setpoint = profile.calculate(0.02, setpoint, goal);
-        setVoltage(ffmodel.calculate(armSim.getAngleRads(), setpoint.velocity));
+        setVoltage(ffmodel.calculate(armSim.getAngleRads(), setpoint.velocity) + controller.calculate(armSim.getAngleRads(), setpoint.position));
     }
 
     @Override
     public void updateInputs(ArmIOInputs inputs) {
         inputs.angularPosition = armSim.getAngleRads();
         inputs.angularVelocity = armSim.getVelocityRadPerSec();
+        inputs.relativeEncoderPosition = armSim.getAngleRads();
+        inputs.relativeEncoderVelocity = armSim.getVelocityRadPerSec();
         inputs.current = armSim.getCurrentDrawAmps();
         inputs.voltage = voltage;
         inputs.goalAngle = goal.position;
         inputs.setpointVelocity = setpoint.velocity;
+        inputs.setpointPosition = setpoint.position;
         armSim.update(0.02);
     }
 }

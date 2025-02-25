@@ -4,52 +4,48 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.*;
-
-import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
-import com.ctre.phoenix6.swerve.SwerveRequest;
-
 import java.io.IOException;
 
 import org.json.simple.parser.ParseException;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 
-import choreo.auto.AutoChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-
+import frc.robot.commands.AutoCommands;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.ArmIOReal;
+import frc.robot.subsystems.arm.ArmIOSim;
 import frc.robot.subsystems.elevator.Elevator;
-import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorIOReal;
 import frc.robot.subsystems.elevator.ElevatorIOSim;
-import frc.robot.Constants.OIConstants;
-import frc.robot.commands.AutoCommands;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIORealVortex;
 import frc.robot.subsystems.intake.IntakeIOSim;
 import frc.robot.subsystems.swerve.Swerve;
-import frc.robot.Util.NamedCommandManager;
-import frc.robot.subsystems.arm.Arm;
-import frc.robot.subsystems.arm.ArmConstants;
-import frc.robot.subsystems.arm.ArmIOSim;
-import frc.robot.subsystems.arm.ArmIOReal;
+import frc.robot.subsystems.swerve.SwerveConstants;
+import frc.robot.subsystems.vision.AprilTag.Vision;
+import frc.robot.subsystems.vision.AprilTag.VisionIOSim;
+import frc.robot.util.NamedCommandManager;
 
 public class RobotContainer {
-  private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
-  private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond);
   private RobotVisualizer visualizer = new RobotVisualizer();
+  private Vision vision;
 
+  // private final Vision vision;
   /* Setting up bindings for necessary control of the swerve drive platform */
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-      .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+      .withDeadband(SwerveConstants.MaxSpeed * 0.1).withRotationalDeadband(SwerveConstants.MaxAngularRate * 0.1) // Add a 10% deadband
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
+
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
-  private final Telemetry logger = new Telemetry(MaxSpeed);
+  public final Telemetry logger = new Telemetry(SwerveConstants.MaxSpeed);
 
   public final Swerve drivetrain;
 
@@ -64,21 +60,32 @@ public class RobotContainer {
         elevator = Elevator.initialize(new ElevatorIOReal());
         intake = Intake.initialize(new IntakeIORealVortex());
         Arm.initialize(new ArmIOReal());
-        drivetrain = TunerConstants.createDrivetrain();
+        drivetrain = Swerve.initialize(new Swerve(TunerConstants.DrivetrainConstants, 50, TunerConstants.FrontLeft, TunerConstants.FrontRight, TunerConstants.BackLeft, TunerConstants.BackRight));
+        // drivetrain = Swerve.initialize(TunerConstants.createDrivetrain());
+        // vision = Vision.initialize(
+        //   new VisionIOReal(0),
+        //   new VisionIOReal(1),
+        //   new VisionIOReal(2),
+        //   new VisionIOReal(3)
+        // );
+        // vision = Vision.initialize(new VisionIOSim());
         break;
 
       case SIM:
         elevator = Elevator.initialize(new ElevatorIOSim());
         intake = Intake.initialize(new IntakeIOSim());
         Arm.initialize(new ArmIOSim());
-        drivetrain = TunerConstants.createDrivetrain();
+        drivetrain = Swerve.initialize(TunerConstants.createDrivetrain());
+        vision = Vision.initialize(new VisionIOSim());
         break;
 
       default:
         elevator = Elevator.initialize(new ElevatorIOSim());
         intake = Intake.initialize(new IntakeIOSim());
-        drivetrain = TunerConstants.createDrivetrain();
+        drivetrain = Swerve.initialize(TunerConstants.createDrivetrain());
+        vision = Vision.initialize(new VisionIOSim());
         Arm.initialize(new ArmIOSim());
+        break;
     }
 
     NamedCommandManager.registerNamedCommands();
@@ -86,38 +93,103 @@ public class RobotContainer {
     autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser("TopBarge UFUB Score 2"));
     autoChooser.addOption("BottomBarge C BB BF", AutoBuilder.buildAuto("BottomBarge C BB BF"));
     configureBindings();
+    
   }
 
   private void configureBindings() {
-    // Note that X is defined as forward according to WPILib convention,
-    // and Y is defined as to the left according to WPILib convention.
+    // Drive command
     drivetrain.setDefaultCommand(
-        // Drivetrain will execute this command periodically
         drivetrain
-            .applyRequest(() -> drive.withVelocityX(-Constants.OIConstants.driverController.getLeftY() * MaxSpeed)
-                .withVelocityY(-Constants.OIConstants.driverController.getLeftX() * MaxSpeed)
-                .withRotationalRate(-Constants.OIConstants.driverController.getRightX() * MaxAngularRate)));
+            .applyRequest(() -> drive.withVelocityX(-Constants.OIConstants.driverController.getLeftY() * SwerveConstants.MaxSpeed * (drivetrain.isSlowMode() ? SwerveConstants.slowModeMultiplier: 1))
+                .withVelocityY(-Constants.OIConstants.driverController.getLeftX() * SwerveConstants.MaxSpeed * (drivetrain.isSlowMode() ? SwerveConstants.slowModeMultiplier: 1))
+                .withRotationalRate(-Constants.OIConstants.driverController.getRightX() * SwerveConstants.MaxAngularRate * (drivetrain.isSlowMode() ? SwerveConstants.slowModeMultiplier: 1))));
 
-    // Constants.OIConstants.driverController.back().and(Constants.OIConstants.driverController.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-    // Constants.OIConstants.driverController.back().and(Constants.OIConstants.driverController.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-    // Constants.OIConstants.driverController.start().and(Constants.OIConstants.driverController.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-    // Constants.OIConstants.driverController.start().and(Constants.OIConstants.driverController.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+    // Zero heading
+    Constants.OIConstants.driverController.b().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-    Constants.OIConstants.driverController.a().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+    // Reef/Feeder align
+    Constants.OIConstants.driverController.leftBumper().whileTrue(
+      Commands.either(
+        AutoCommands.alignReef(), 
+        AutoCommands.alignFeeder(), 
+        () -> Intake.getInstance().hasGamepiece()
+      )
+    );
 
-    drivetrain.registerTelemetry(logger::telemeterize);
+    // Slow mode
+    Constants.OIConstants.driverController.leftTrigger().onTrue(Commands.runOnce(() -> drivetrain.setSlowMode(true)));
+    Constants.OIConstants.driverController.leftTrigger().onFalse(Commands.runOnce(() -> drivetrain.setSlowMode(false)));
 
-    OIConstants.operatorController.leftTrigger()
-        .whileTrue(
-            Commands.startEnd(() -> elevator.moveElevator(OIConstants.operatorController.getLeftTriggerAxis() / 1.5),
-                () -> elevator.moveElevator(0),
-                elevator));
+    // Outtake
+    Constants.OIConstants.driverController.rightTrigger().whileTrue(
+      Commands.startEnd(
+        () -> intake.setIntakeSpeed(1),
+        () -> intake.setIntakeSpeed(0), 
+        intake
+      )
+    );
 
-    OIConstants.operatorController.rightTrigger()
-        .whileTrue(Commands.startEnd(
-            () -> elevator.moveElevator(-OIConstants.operatorController.getRightTriggerAxis() / 1.5),
-            () -> elevator.moveElevator(0),
-            elevator));
+    // Elevator manual control
+    Constants.OIConstants.operatorController.leftBumper().whileTrue(
+      Commands.run(() -> Arm.getInstance().manualVoltage(3), Arm.getInstance())
+    );
+
+    Constants.OIConstants.operatorController.rightBumper().whileTrue(
+      Commands.run(() -> Arm.getInstance().manualVoltage(-3), Arm.getInstance())
+    );
+
+    // L4 setpoint - ADD OTHERS
+    Constants.OIConstants.operatorController.povUp().onTrue(AutoCommands.raiseL4());
+
+    // Constants.OIConstants.operatorController.povLeft().onTrue(AutoCommands.raiseL3());
+
+    // Constants.OIConstants.operatorController.povRight().onTrue(AutoCommands.raiseL2());
+
+    // arm setpoint testing
+    // Constants.OIConstants.operatorController.povUp().onTrue(
+    //   Arm.getInstance().setGoalCommand(.8)
+    // );
+
+    // Constants.OIConstants.operatorController.povDown().onTrue(
+    //   Arm.getInstance().setGoalCommand(-1)
+    // );
+
+    // Constants.OIConstants.operatorController.povUp().onTrue(
+    //   Elevator.getInstance().setGoal(.4)
+    // );
+
+    // Constants.OIConstants.operatorController.povDown().onTrue(
+    //   Elevator.getInstance().setGoal(0)
+    // );
+
+    // Stow
+    Constants.OIConstants.operatorController.povDown().onTrue(AutoCommands.stow());
+
+    // Reverse intake
+    Constants.OIConstants.operatorController.a().whileTrue(
+      Commands.startEnd(
+        () -> intake.setIntakeSpeed(-1),
+        () ->  intake.setIntakeSpeed(0), 
+        intake
+      )
+    );
+
+    Constants.OIConstants.operatorController.y().whileTrue(
+      Commands.startEnd(
+        () -> intake.setIntakeSpeed(1),
+        () ->  intake.setIntakeSpeed(0), 
+        intake
+      )
+    );
+
+    // Intake
+    // Constants.OIConstants.operatorController.y().whileTrue(
+    //   Commands.sequence(
+    //     intake.intake().until(() -> intake.GamePieceInitial()),
+    //     intake.intakeSlow().until(() -> intake.GamePieceFinal()),
+    //     Commands.runOnce(() -> intake.setIntakeSpeed(0))
+    //   )
+    // );
 
     // OIConstants.operatorController.leftBumper().whileTrue(
     // Arm.getInstance().sysIDRoutine().quasistatic(SysIdRoutine.Direction.kForward)
@@ -135,17 +207,10 @@ public class RobotContainer {
     // Arm.getInstance().sysIDRoutine().dynamic(SysIdRoutine.Direction.kReverse)
     // );
 
-    Constants.OIConstants.operatorController.povRight().onTrue(
-        Commands.sequence(
-            Commands.parallel(
-                Commands.runOnce(() -> Arm.getInstance().setGoal(1.02), Arm.getInstance()),
-                Elevator.getInstance().setGoal(0.57))));
-
-    Constants.OIConstants.operatorController.povLeft().onTrue(
-        Commands.sequence(
-            Elevator.getInstance().setGoal(ElevatorConstants.minDistance),
-            Commands.runOnce(() -> Arm.getInstance().setGoal(-1.8), Arm.getInstance()),
-            Commands.waitSeconds(1.5)));
+    // Constants.OIConstants.driverController.back().and(Constants.OIConstants.driverController.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+    // Constants.OIConstants.driverController.back().and(Constants.OIConstants.driverController.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+    // Constants.OIConstants.driverController.start().and(Constants.OIConstants.driverController.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+    // Constants.OIConstants.driverController.start().and(Constants.OIConstants.driverController.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
     // Constants.OIConstants.operatorController.povUp()
     // .whileTrue(
@@ -156,11 +221,11 @@ public class RobotContainer {
     // )
     // );
 
-    Constants.OIConstants.operatorController.x().whileTrue(Commands.startEnd(() -> intake.setIntakeSpeed(-1),
-        () -> intake.setIntakeSpeed(0), intake));
+    // Constants.OIConstants.operatorController.x().whileTrue(Commands.startEnd(() -> intake.setIntakeSpeed(-1),
+    //     () -> intake.setIntakeSpeed(0), intake));
 
-    Constants.OIConstants.operatorController.b().whileTrue(Commands.startEnd(() -> intake.setIntakeSpeed(1),
-        () -> intake.setIntakeSpeed(0), intake));
+    // Constants.OIConstants.operatorController.b().whileTrue(Commands.startEnd(() -> intake.setIntakeSpeed(1),
+    //     () -> intake.setIntakeSpeed(0), intake));
 
     // OIConstants.driverController.povUp().onTrue(Commands.runOnce(() ->
     // Arm.getInstance().setGoal(ArmConstants.CORAL_L3)));
@@ -168,6 +233,8 @@ public class RobotContainer {
     // Arm.getInstance().setGoal(-1.8)));
     // OIConstants.driverController.rightBumper().onTrue(Commands.runOnce(() ->
     // Arm.getInstance().setGoal(ArmConstants.CORAL_L2)));
+
+    drivetrain.registerTelemetry(logger::telemeterize);
   }
 
   public Command getAutonomousCommand() {
