@@ -34,6 +34,14 @@ public class AutoCommands {
         ).until(() -> elevator.atGoal(ElevatorConstants.CORAL_L4_SETPOINT) && arm.atGoal(ArmConstants.CORAL_L4));
     }
 
+    public static Command vstow() {
+        return Commands.parallel(
+            arm.setGoalCommand(Units.degreesToRadians(95)),
+            Commands.waitUntil(() -> arm.getAngle() > -Math.PI/4)
+                .andThen(elevator.setGoal(ElevatorConstants.CORAL_L4_SETPOINT))
+        ).until(() -> elevator.atGoal(ElevatorConstants.CORAL_L4_SETPOINT) && arm.atGoal(Units.degreesToRadians(95)));
+    }
+
     public static Command raiseL3() {
         return Commands.either(
             Commands.parallel(
@@ -82,6 +90,9 @@ public class AutoCommands {
         Commands.startEnd(() -> intake.setIntakeSpeed(IntakeConstants.reverse), 
             () -> intake.setIntakeSpeed(0)),
             intake.reverse().withTimeout(0.07));
+        //until(() -> elevator.atGoal(0) && arm.atGoal(ArmConstants.STOW));
+        // .andThen(
+        //     intake.intake().withTimeout(2));
     }
 
     public static Command score() {

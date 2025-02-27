@@ -95,7 +95,6 @@ public class RobotContainer {
 
     autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser("Driver Forward Straight"));
     autoChooser.addOption("BottomBarge C BB BF", AutoBuilder.buildAuto("BottomBarge C BB BF"));
-    autoChooser.addOption("raiseL4", AutoCommands.raiseL4());
     configureBindings();
     
   }
