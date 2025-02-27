@@ -89,7 +89,7 @@ public class AutoCommands {
         return Commands.sequence(Commands.waitUntil(() -> intake.GamePieceFinal()),
         Commands.startEnd(() -> intake.setIntakeSpeed(IntakeConstants.reverse), 
             () -> intake.setIntakeSpeed(0)),
-            intake.reverse().withTimeout(0.07));
+            intake.reverse().withTimeout(0.05));
         //until(() -> elevator.atGoal(0) && arm.atGoal(ArmConstants.STOW));
         // .andThen(
         //     intake.intake().withTimeout(2));
