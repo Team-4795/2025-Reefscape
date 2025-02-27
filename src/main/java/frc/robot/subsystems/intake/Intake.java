@@ -56,7 +56,7 @@ public class Intake extends SubsystemBase {
         return startEnd(() -> setIntakeSpeed(IntakeConstants.reverse), () -> setIntakeSpeed(0));
     }
 
-    public Command intakeCommand(){
+    public Command intakeCommand() {
         return Commands.sequence(
             Commands.runOnce(() -> setIntakeSpeed(IntakeConstants.intake)), 
             Commands.waitSeconds(0.4),

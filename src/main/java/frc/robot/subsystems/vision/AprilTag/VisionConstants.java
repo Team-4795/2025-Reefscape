@@ -113,12 +113,12 @@ public class VisionConstants {
 
     public static final Pose2d[] redReefScoringPoses =
     new Pose2d[] {
-        redReefTag[0].plus(new Transform2d(0.6, 0, new Rotation2d(Math.PI))),
-        redReefTag[1].plus(new Transform2d(0.6, 0, new Rotation2d(Math.PI))),
-        redReefTag[2].plus(new Transform2d(0.6, 0, new Rotation2d(Math.PI))),
-        redReefTag[3].plus(new Transform2d(0.6, 0, new Rotation2d(Math.PI))),
-        redReefTag[4].plus(new Transform2d(0.6, 0, new Rotation2d(Math.PI))),
-        redReefTag[5].plus(new Transform2d(0.6, 0, new Rotation2d(Math.PI))),
+        redReefTag[0].plus(new Transform2d(0.45, 0, new Rotation2d(Math.PI))),
+        redReefTag[1].plus(new Transform2d(0.45, 0, new Rotation2d(Math.PI))),
+        redReefTag[2].plus(new Transform2d(0.45, 0, new Rotation2d(Math.PI))),
+        redReefTag[3].plus(new Transform2d(0.45, 0, new Rotation2d(Math.PI))),
+        redReefTag[4].plus(new Transform2d(0.45, 0, new Rotation2d(Math.PI))),
+        redReefTag[5].plus(new Transform2d(0.45, 0, new Rotation2d(Math.PI))),
     };
 
     private static final Pose2d[] blueReefTag =
