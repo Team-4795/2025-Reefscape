@@ -59,9 +59,9 @@ public class VisionIOReal implements VisionIO {
         {
             double distance = VisionConstants.redReefScoringPoses[0].getTranslation().getDistance(odometry);
 
-            for(int i = 1; i < VisionConstants.redReefScoringPoses.length; i++)
+            for(int i = 0; i < VisionConstants.redReefScoringPoses.length; i++)
             {
-                if(VisionConstants.redReefScoringPoses[i].getTranslation().getDistance(odometry) < distance)
+                if(VisionConstants.redReefScoringPoses[i].getTranslation().getDistance(odometry) <= distance)
                 {
                     distance = VisionConstants.redReefScoringPoses[i].getTranslation().getDistance(odometry);
                     bestPose = VisionConstants.redReefScoringPoses[i];
@@ -74,9 +74,9 @@ public class VisionIOReal implements VisionIO {
         {
             double distance = VisionConstants.blueReefScoringPoses[0].getTranslation().getDistance(odometry);
 
-            for(int i = 1; i < VisionConstants.blueReefScoringPoses.length; i++)
+            for(int i = 0; i < VisionConstants.blueReefScoringPoses.length; i++)
             {
-                if(VisionConstants.blueReefScoringPoses[i].getTranslation().getDistance(odometry) < distance)
+                if(VisionConstants.blueReefScoringPoses[i].getTranslation().getDistance(odometry) <= distance)
                 {
                     distance = VisionConstants.blueReefScoringPoses[i].getTranslation().getDistance(odometry);
                     bestPose = VisionConstants.blueReefScoringPoses[i];

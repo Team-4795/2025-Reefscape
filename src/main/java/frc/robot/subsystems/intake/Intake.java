@@ -59,9 +59,10 @@ public class Intake extends SubsystemBase {
     public Command intakeCommand() {
         return Commands.sequence(
             Commands.runOnce(() -> setIntakeSpeed(IntakeConstants.intake)), 
-            Commands.waitSeconds(0.4),
+            Commands.waitSeconds(0.3),
             Commands.waitUntil(() -> GamePieceFinal()),
-            reverse().withTimeout(0.07));
+            Commands.run(() -> setIntakeSpeed(0)).withTimeout(2),
+            reverse().withTimeout(0.12));
     }
     
     public boolean GamePieceInitial() {
@@ -69,7 +70,7 @@ public class Intake extends SubsystemBase {
     }
 
     public boolean GamePieceFinal() {
-        return (IntakeConstants.initialThreshold > inputs.currentAmps) && IntakeConstants.currentThreshold <= inputs.currentAmps; 
+        return IntakeConstants.currentThreshold <= inputs.currentAmps; 
     }
 
     public boolean hasGamepiece() {
@@ -82,6 +83,8 @@ public class Intake extends SubsystemBase {
         Logger.processInputs("Intake", inputs);
         Logger.recordOutput("Intake/Intake speed", intakeSpeed);
         Logger.recordOutput("Intake/Gamepiece detected", hasGamepiece());
+        Logger.recordOutput("Intake/Curent Above", GamePieceFinal());
+        
     }
 }
 

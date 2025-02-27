@@ -19,7 +19,7 @@ public class IntakeIORealVortex implements IntakeIO {
         intakeMotor.clearFaults();
         config.smartCurrentLimit(IntakeConstants.currentLimit);
         config.idleMode(IdleMode.kCoast);
-        intakeMotor.setCANTimeout(200);
+        intakeMotor.setCANTimeout(20);
         intakeMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 

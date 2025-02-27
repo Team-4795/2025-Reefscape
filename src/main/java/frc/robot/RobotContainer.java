@@ -204,7 +204,7 @@ public class RobotContainer {
     //   )
     // );
 
-    OIConstants.operatorController.a().whileTrue(intake.intakeCommand());
+    OIConstants.operatorController.a().onTrue(intake.intakeCommand());
 
       
     OIConstants.operatorController.leftBumper()

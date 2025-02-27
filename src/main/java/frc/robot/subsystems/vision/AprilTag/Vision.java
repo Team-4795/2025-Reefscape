@@ -133,15 +133,15 @@ public class Vision extends SubsystemBase{
                     || robotPose.getZ() > zMargin
                 ) continue;
 
-                if (Vision.getInstance().getIsReefAligning()) {
-                    for(int tag : inputs[i].tags) {
-                        for(int t = 0; i < VisionConstants.nonReefIds.length; i++) {
-                            if(tag == VisionConstants.nonReefIds[t]) {
-                                continue;
-                            }
-                        }
-                    }
-                }
+                // if (Vision.getInstance().getIsReefAligning()) {
+                //     for(int tag : inputs[i].tags) {
+                //         for(int t = 0; t < VisionConstants.nonReefIds.length; t++) {
+                //             if(tag == VisionConstants.nonReefIds[t]) {
+                //                 continue;
+                //             }
+                //         }
+                //     }
+                // }
 
                 List<Pose3d> tagPoses = new ArrayList<>();
                 for (int tag : inputs[i].tags) {

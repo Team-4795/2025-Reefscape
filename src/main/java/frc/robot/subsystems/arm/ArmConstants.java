@@ -7,11 +7,12 @@ public class ArmConstants {
     public static final int CURRENT_LIMIT = 50;
     public static final double ARM_OFFSET = 1.88;
 
+    //-68 degrees for algae
     public static final double CORAL_L1 = 1.3992315530776978 - ARM_OFFSET;
     public static final double CORAL_L2 = -1.0077334642410278;
     public static final double CORAL_L3 = 2.7386298179626465 - ARM_OFFSET;
     public static final double CORAL_L4 = 2.8875072 - ARM_OFFSET;
-    public static final double STOW = -Math.PI/2 - Units.degreesToRadians(17);
+    public static final double STOW = -Math.PI/2 - Units.degreesToRadians(18);
 
     public static final double MAX_VELOCITY = 6;
     public static final double MAX_ACCELERATION = 10;
