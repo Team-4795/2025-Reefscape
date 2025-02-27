@@ -11,7 +11,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "BTopBarge to DownFrontReef"
+                  "pathName": "MidBarge to UpFrontReef"
                 }
               },
               {
@@ -24,9 +24,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "score"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "score"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.25
+                }
+              }
+            ]
           }
         },
         {
@@ -36,7 +49,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "DownFrontReef to BFeeder"
+                  "pathName": "UpFrontReef to Feeder"
                 }
               },
               {
@@ -53,9 +66,28 @@
           "data": {
             "commands": [
               {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.5
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
                 "type": "path",
                 "data": {
-                  "pathName": "BFeeder to DownBackReef"
+                  "pathName": "Feeder to UpBackReef"
                 }
               },
               {
@@ -68,9 +100,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "score"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "score"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.25
+                }
+              }
+            ]
           }
         },
         {
@@ -80,7 +125,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "DownBackReef to BFeeder"
+                  "pathName": "UpBackReef to Feeder"
                 }
               },
               {
@@ -97,9 +142,28 @@
           "data": {
             "commands": [
               {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.5
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
                 "type": "path",
                 "data": {
-                  "pathName": "BFeeder to BackReef"
+                  "pathName": "Feeder to BackReef"
                 }
               },
               {
@@ -112,9 +176,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "score"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "score"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.25
+                }
+              }
+            ]
           }
         }
       ]

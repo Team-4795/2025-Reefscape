@@ -11,7 +11,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "MidBarge to UpFrontReef"
+                  "pathName": "Bottom 2 P1"
                 }
               },
               {
@@ -24,9 +24,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "score"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "score"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.25
+                }
+              }
+            ]
           }
         },
         {
@@ -36,7 +49,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "UpFrontReef to Feeder"
+                  "pathName": "Bottom 2 P2"
                 }
               },
               {
@@ -49,9 +62,22 @@
           }
         },
         {
-          "type": "wait",
+          "type": "parallel",
           "data": {
-            "waitTime": 0.5
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.5
+                }
+              }
+            ]
           }
         },
         {
@@ -61,7 +87,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Feeder to UpBackReef"
+                  "pathName": "Bottom 2 P3"
                 }
               },
               {
@@ -74,65 +100,28 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "score"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "UpBackReef to Feeder"
+                  "name": "score"
                 }
               },
               {
-                "type": "named",
+                "type": "wait",
                 "data": {
-                  "name": "Stow"
+                  "waitTime": 0.25
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Feeder to BackReef"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Raise to L4"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "score"
           }
         }
       ]
     }
   },
-  "resetOdom": true,
+  "resetOdom": false,
   "folder": null,
   "choreoAuto": false
 }
