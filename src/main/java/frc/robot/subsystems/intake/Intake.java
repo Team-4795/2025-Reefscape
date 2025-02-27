@@ -65,7 +65,6 @@ public class Intake extends SubsystemBase {
                 () -> setIntakeSpeed(0)),
                 reverse().withTimeout(0.07));
     }
-
     
     public boolean GamePieceInitial() {
         return IntakeConstants.initialThreshold <= inputs.currentAmps;
