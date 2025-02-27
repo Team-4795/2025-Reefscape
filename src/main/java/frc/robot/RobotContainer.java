@@ -34,8 +34,8 @@ import frc.robot.subsystems.intake.IntakeIOSim;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.vision.AprilTag.Vision;
-// import frc.robot.subsystems.vision.AprilTag.VisionIOReal;
-// import frc.robot.subsystems.vision.AprilTag.VisionIOSim;
+import frc.robot.subsystems.vision.AprilTag.VisionIOReal;
+import frc.robot.subsystems.vision.AprilTag.VisionIOSim;
 import frc.robot.util.NamedCommandManager;
 
 public class RobotContainer {
