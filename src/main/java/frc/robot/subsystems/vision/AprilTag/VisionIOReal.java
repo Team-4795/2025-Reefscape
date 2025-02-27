@@ -26,6 +26,8 @@ public class VisionIOReal implements VisionIO {
     PhotonTargetSortMode sortMode;
     PhotonTrackedTarget target;
 
+    boolean isReefAligning;
+
     public VisionIOReal(int camIndex) {
         camera = new PhotonCamera(VisionConstants.cameraIds[camIndex]); 
 
@@ -86,6 +88,16 @@ public class VisionIOReal implements VisionIO {
     }
 
     @Override
+    public void toggleIsReefAligning() {
+        isReefAligning = !isReefAligning;
+    }
+
+    @Override
+    public boolean getReefAligning() {
+        return isReefAligning;
+    }
+
+    @Override
     public void targetLeftReef() {
         sortMode = PhotonTargetSortMode.Leftmost;
     }
@@ -120,6 +132,7 @@ public class VisionIOReal implements VisionIO {
                 });
             }
             
+            inputs.isReefAligning = isReefAligning;
             inputs.reefPose = getBestReefPos();
         }
 

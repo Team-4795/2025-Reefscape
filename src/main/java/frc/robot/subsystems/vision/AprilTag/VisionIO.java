@@ -21,6 +21,8 @@ public interface VisionIO {
 
         int pipelineIndex = 10;
         String sortMode = "";
+
+        boolean isReefAligning = false;
     }
 
     public default void updateInputs(VisionIOInputs inputs) {}
@@ -34,4 +36,8 @@ public interface VisionIO {
     public default void targetRightReef() {}
 
     public default void targetAprilTag() {}
+
+    public default void toggleIsReefAligning() {}
+
+    public default boolean getReefAligning() { return false; }
 }

@@ -27,6 +27,12 @@
                 }
               },
               {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              },
+              {
                 "type": "path",
                 "data": {
                   "pathName": "Feeder to UpBackReef"

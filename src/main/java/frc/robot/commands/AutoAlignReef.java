@@ -67,6 +67,11 @@ public class AutoAlignReef extends Command{
 
     @Override
     public void initialize(){
+        Vision.getInstance().toggleShouldUpdate(1);
+        Vision.getInstance().toggleShouldUpdate(2);
+        Vision.getInstance().toggleShouldUpdate(3);
+        Vision.getInstance().toggleIsReefAligning();
+
         DriverStation.getAlliance().ifPresent((alliance) -> {
             // targetPose = (alliance == Alliance.Blue) ? BLUE_SCORING_AREAS[0] : RED_SCORING_AREAS[0];
             mult = (alliance == Alliance.Red) ? -1.0 : 1.0;
@@ -131,6 +136,14 @@ public class AutoAlignReef extends Command{
             drive.withVelocityX(driveSpeed * direction.getCos())
             .withVelocityY(driveSpeed * direction.getSin())
             .withRotationalRate(omega));
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        Vision.getInstance().toggleShouldUpdate(1);
+        Vision.getInstance().toggleShouldUpdate(2);
+        Vision.getInstance().toggleShouldUpdate(3);
+        Vision.getInstance().toggleIsReefAligning();
     }
 
     private double projection(Translation2d v1, Translation2d onto){

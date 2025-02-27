@@ -59,6 +59,17 @@ public class Vision extends SubsystemBase{
     public void toggleShouldUpdate(int id) {
         shouldUpdate[id] = !shouldUpdate[id];
     }
+    
+    public void toggleIsReefAligning() {
+        for(int i = 0; i < io.length; i++)
+        {
+            io[i].toggleIsReefAligning();
+        }
+    }
+
+    public boolean getIsReefAligning() {
+        return io[0].getReefAligning();
+    }
 
     public Pose2d getBestReefPose() {
         if(Constants.currentMode == Constants.Mode.SIM)
@@ -121,6 +132,16 @@ public class Vision extends SubsystemBase{
                     || robotPose.getZ() < -zMargin
                     || robotPose.getZ() > zMargin
                 ) continue;
+
+                if (Vision.getInstance().getIsReefAligning()) {
+                    for(int tag : inputs[i].tags) {
+                        for(int t = 0; i < VisionConstants.nonReefIds.length; i++) {
+                            if(tag == VisionConstants.nonReefIds[t]) {
+                                continue;
+                            }
+                        }
+                    }
+                }
 
                 List<Pose3d> tagPoses = new ArrayList<>();
                 for (int tag : inputs[i].tags) {
