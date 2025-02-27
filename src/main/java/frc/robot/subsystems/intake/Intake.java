@@ -61,9 +61,7 @@ public class Intake extends SubsystemBase {
             Commands.runOnce(() -> setIntakeSpeed(IntakeConstants.intake)), 
             Commands.waitSeconds(0.4),
             Commands.waitUntil(() -> GamePieceFinal()),
-            Commands.startEnd(() -> setIntakeSpeed(IntakeConstants.reverse), 
-                () -> setIntakeSpeed(0)),
-                reverse().withTimeout(0.07));
+            reverse().withTimeout(0.07));
     }
     
     public boolean GamePieceInitial() {

@@ -96,6 +96,10 @@ public class VisionConstants {
     public static final int[] redReefIds = {6, 7, 8, 9, 10, 11};
     public static final int[] blueReefIds = {17, 18, 19, 20, 21, 22};
 
+    public static final int[] allReefIds = {6,7,8,9,10,11,17,18,19,20,21,22};
+
+    public static final int[] nonReefIds = {1,2,3,4,5,12,13,14,15,16};
+
     private static final Pose2d[] redReefTag =
     new Pose2d[] {
         aprilTagFieldLayout.getTagPose(6).get().toPose2d(),

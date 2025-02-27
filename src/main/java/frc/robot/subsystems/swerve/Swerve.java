@@ -35,6 +35,9 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N2;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
@@ -98,10 +101,13 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
         ),
         new SysIdRoutine.Mechanism(
             output -> setControl(m_translationCharacterization.withVolts(output)),
-            null,
-            this
-        )
-    );
+            log -> {
+            log.motor("drive motor")
+                .voltage(Voltage.ofBaseUnits(Swerve.getInstance().getModule(0).getDriveMotor().getMotorVoltage().getValueAsDouble(), Volts))
+                .angularPosition(Angle.ofBaseUnits(Swerve.getInstance().getModule(0).getEncoder().getAbsolutePosition().getValueAsDouble(), Rotations))
+                .angularVelocity(AngularVelocity.ofBaseUnits(Swerve.getInstance().getModule(0).getEncoder().getVelocity().getValueAsDouble(), RotationsPerSecond));
+             }, this)
+        );
 
     /* SysId routine for characterizing steer. This is used to find PID gains for the steer motors. */
     private final SysIdRoutine m_sysIdRoutineSteer = new SysIdRoutine(
