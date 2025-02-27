@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.580667521505233,
-        "y": 6.2682316803176015
+        "x": 2.602775519450415,
+        "y": 6.148027441993914
       },
       "isLocked": false,
       "linkedName": "High Feeder Back"
     },
     {
       "anchor": {
-        "x": 3.8294407894736837,
-        "y": 5.102631578947368
+        "x": 3.6795170454545456,
+        "y": 5.086974431818182
       },
       "prevControl": {
-        "x": 3.105624889764662,
-        "y": 5.689371317218464
+        "x": 3.07883958869561,
+        "y": 5.627748479781079
       },
       "nextControl": null,
       "isLocked": false,
@@ -49,7 +49,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -60.78199999999999
+    "rotation": -59.99999999999999
   },
   "reversed": false,
   "folder": null,

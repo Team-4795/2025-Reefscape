@@ -72,7 +72,7 @@ public class AutoCommands {
             elevator.setGoal(0),
             Commands.waitUntil(() -> elevator.getPosition() < .2)
                 .andThen(arm.setGoalCommand(ArmConstants.STOW))
-        ).withTimeout(1);
+        ).withTimeout(1.25);
         //until(() -> elevator.atGoal(0) && arm.atGoal(ArmConstants.STOW));
         // .andThen(
         //     intake.intake().withTimeout(2));
