@@ -29,6 +29,7 @@ import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorIOReal;
 import frc.robot.subsystems.elevator.ElevatorIOSim;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeConstants;
 import frc.robot.subsystems.intake.IntakeIORealVortex;
 import frc.robot.subsystems.intake.IntakeIOSim;
 import frc.robot.subsystems.swerve.Swerve;
@@ -96,7 +97,6 @@ public class RobotContainer {
 
     autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser("Driver Forward Straight"));
     autoChooser.addOption("BottomBarge C BB BF", AutoBuilder.buildAuto("BottomBarge C BB BF"));
-    autoChooser.addOption("raiseL4", AutoCommands.raiseL4());
     configureBindings();
     
   }
@@ -206,6 +206,7 @@ public class RobotContainer {
 
     OIConstants.operatorController.a().whileTrue(intake.intakeCommand());
 
+      
     OIConstants.operatorController.leftBumper()
         .onTrue(
           Commands.runOnce(() -> drivetrain.setScoringLeft()
@@ -215,6 +216,7 @@ public class RobotContainer {
         .onTrue(
           Commands.runOnce(() -> drivetrain.setScoringRight()
         ));
+
 
     // OIConstants.operatorController.leftBumper().whileTrue(
     // Arm.getInstance().sysIDRoutine().quasistatic(SysIdRoutine.Direction.kForward)

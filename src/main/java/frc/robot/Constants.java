@@ -14,17 +14,13 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class Constants {
     public static final boolean tuningMode = false;
-    public static final class IntakeSetpoints{
-      public static final double intake = -0.6;
-      public static final double slow = -0.3;
-      public static final double reverse = 0.7;
-    }
+
     public static final class driveConstants {
         public static double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
         public static double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond);
 
     }
-    public static Mode currentMode = Mode.REAL;
+    public static Mode currentMode = Mode.SIM;
     public static enum Mode {
         SIM,
         REAL,

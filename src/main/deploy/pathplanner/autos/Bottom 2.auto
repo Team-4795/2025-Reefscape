@@ -7,31 +7,43 @@
         {
           "type": "path",
           "data": {
-            "pathName": "BBottomBarge to BFeeder"
+            "pathName": "Bottom 2 P1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "score"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "BFeeder to DownBackReef"
+            "pathName": "Bottom 2 P2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "DownBackReef to BFeeder"
+            "pathName": "Bottom 2 P3"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "BFeeder to BackReef"
+            "name": "score"
           }
         }
       ]
     }
   },
-  "resetOdom": true,
+  "resetOdom": false,
   "folder": null,
   "choreoAuto": false
 }

@@ -41,12 +41,12 @@ public class VisionConstants {
         // Front Camera
         new Transform3d(
             new Translation3d(
-                Units.inchesToMeters(14.5),
-                Units.inchesToMeters(1),
-                Units.inchesToMeters(8.25)), 
+                Units.inchesToMeters(12),
+                0,
+                Units.inchesToMeters(6.25)), 
             new Rotation3d(
-                Units.degreesToRadians(90), 
                 Units.degreesToRadians(0), 
+                Units.degreesToRadians(-20), 
                 0)),
 
         // Backwards Camera
@@ -95,6 +95,10 @@ public class VisionConstants {
 
     public static final int[] redReefIds = {6, 7, 8, 9, 10, 11};
     public static final int[] blueReefIds = {17, 18, 19, 20, 21, 22};
+
+    public static final int[] allReefIds = {6,7,8,9,10,11,17,18,19,20,21,22};
+
+    public static final int[] nonReefIds = {1,2,3,4,5,12,13,14,15,16};
 
     private static final Pose2d[] redReefTag =
     new Pose2d[] {

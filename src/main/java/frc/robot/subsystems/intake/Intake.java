@@ -3,14 +3,12 @@ package frc.robot.subsystems.intake;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.IntakeSetpoints;
 import org.littletonrobotics.junction.Logger;
 
 public class Intake extends SubsystemBase {
     private IntakeIO io;
     private IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
-    private double 
-    intakeSpeed = 0.0;
+    private double intakeSpeed = 0.0;
 
     private static Intake instance;
 
@@ -41,31 +39,31 @@ public class Intake extends SubsystemBase {
 
     /*
     public Command intakeS() {
-        return startEnd(() -> setIntakeSpeed(IntakeSetpoints.intake), () -> setIntakeSpeed(0)).until(() -> GamePieceInitial()).andThen(() -> intakeSlow().until(() -> GamePeiceFinal()));
+        return startEnd(() -> setIntakeSpeed(IntakeConstants.intake), () -> setIntakeSpeed(0)).until(() -> GamePieceInitial()).andThen(() -> intakeSlow().until(() -> GamePeiceFinal()));
         return startEnd(() -> setIntakeSpeed(IntakeSetpoints.intake), () -> setIntakeSpeed(0)).until(() -> GamePieceInitial());
     }
     */
 
     public Command intake() {
-        return startEnd(() -> setIntakeSpeed(IntakeSetpoints.intake), () -> setIntakeSpeed(0));
+        return startEnd(() -> setIntakeSpeed(IntakeConstants.intake), () -> setIntakeSpeed(0));
     }
 
     public Command intakeSlow() {
-        return startEnd(() -> setIntakeSpeed(IntakeSetpoints.slow), () -> setIntakeSpeed(0));
+        return startEnd(() -> setIntakeSpeed(IntakeConstants.slow), () -> setIntakeSpeed(0));
     }
 
     public Command reverse() {
-        return startEnd(() -> setIntakeSpeed(IntakeSetpoints.reverse), () -> setIntakeSpeed(0));
+        return startEnd(() -> setIntakeSpeed(IntakeConstants.reverse), () -> setIntakeSpeed(0));
     }
 
     public Command intakeCommand() {
         return Commands.sequence(
-            Commands.run(() -> setIntakeSpeed(IntakeSetpoints.intake)).until(() -> GamePieceInitial()), 
-            Commands.waitSeconds(0.3),
+            Commands.runOnce(() -> setIntakeSpeed(IntakeConstants.intake)), 
+            Commands.waitSeconds(0.4),
             Commands.waitUntil(() -> GamePieceFinal()),
-            Commands.startEnd(() -> setIntakeSpeed(IntakeSetpoints.reverse), 
-                () -> setIntakeSpeed(0)).withTimeout(0.07));
+            reverse().withTimeout(0.07));
     }
+    
     public boolean GamePieceInitial() {
         return IntakeConstants.initialThreshold <= inputs.currentAmps;
     }

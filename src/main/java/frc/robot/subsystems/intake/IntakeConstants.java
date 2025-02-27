@@ -4,6 +4,10 @@ public final class IntakeConstants {
     //PLACEHOLDERS
     public static final int canID = 18;
 
+    public static final double intake = -0.6;
+    public static final double slow = -0.3;
+    public static final double reverse = 0.7;
+
     public static final double simGearRatio = 0;
     public static final double overrideSpeed = -0.0;
 
