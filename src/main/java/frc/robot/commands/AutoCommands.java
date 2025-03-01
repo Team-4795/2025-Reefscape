@@ -75,6 +75,17 @@ public class AutoCommands {
     }
 
 
+    public static Command autoStow() {
+        return Commands.parallel(
+            elevator.setGoal(0),
+            Commands.waitUntil(() -> elevator.getPosition() < .2)
+                .andThen(arm.setGoalCommand(ArmConstants.STOW))
+        ).until(() -> elevator.atGoal(0) && arm.atGoal(ArmConstants.STOW))
+        .andThen(
+        Commands.runOnce(() -> intake.setIntakeSpeed(IntakeConstants.intake)));
+    }
+
+    
     public static Command stow() {
         return Commands.parallel(
             elevator.setGoal(0),
