@@ -23,8 +23,8 @@ public class VisionConstants {
     // public static final double xyStdDevSingleTag = 0.03;
     // public static final double xyStdDevMultiTag = 0.018;
 
-    public static final double xyStdDevSingleTag = 0.03;
-    public static final double xyStdDevMultiTag = 0.018;
+    public static final double xyStdDevSingleTag = 0.07;
+    public static final double xyStdDevMultiTag = 0.05;
 
     public static final int aprilTagPipelineID = 0;
     public static final int reefDetectionPipelineID = 1;

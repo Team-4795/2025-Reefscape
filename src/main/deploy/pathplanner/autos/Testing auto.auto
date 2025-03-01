@@ -34,9 +34,22 @@
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "sequential",
                 "data": {
-                  "name": "Stow"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "VStow"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Stow"
+                      }
+                    }
+                  ]
                 }
               },
               {
@@ -88,7 +101,7 @@
       ]
     }
   },
-  "resetOdom": true,
+  "resetOdom": false,
   "folder": null,
   "choreoAuto": false
 }

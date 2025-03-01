@@ -83,7 +83,6 @@ public class Intake extends SubsystemBase {
         Logger.recordOutput("Intake/Intake speed", intakeSpeed);
         Logger.recordOutput("Intake/Gamepiece detected", hasGamepiece());
         Logger.recordOutput("Intake/Curent Above", GamePieceFinal());
-        
     }
 }
 

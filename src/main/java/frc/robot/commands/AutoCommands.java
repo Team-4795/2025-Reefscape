@@ -127,8 +127,10 @@ public class AutoCommands {
 
     public static Command alignReef() {
         return new AutoAlignReef(
-            new ProfiledPIDController(5, 0, 0, new Constraints(SwerveConstants.MaxSpeed, 3)), 
-            new ProfiledPIDController(5, 0, 0, new Constraints(SwerveConstants.MaxSpeed, 3)));
+            new ProfiledPIDController(5,
+             0, 0, new Constraints(SwerveConstants.MaxSpeed, 3)), 
+            new ProfiledPIDController(5, 0, 0, new Constraints(SwerveConstants.MaxSpeed, 3))
+        ).withTimeout(4);
     }
 
     public static Command alignFeeder() {
