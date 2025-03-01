@@ -35,11 +35,10 @@ public class AutoCommands {
     }
 
     public static Command vstow() {
-        return Commands.parallel(
-            arm.setGoalCommand(Units.degreesToRadians(95)),
-            Commands.waitUntil(() -> arm.getAngle() > -Math.PI/4)
-                .andThen(elevator.setGoal(ElevatorConstants.CORAL_L4_SETPOINT))
-        ).until(() -> elevator.atGoal(ElevatorConstants.CORAL_L4_SETPOINT) && arm.atGoal(Units.degreesToRadians(95)));
+        return Commands.sequence(
+            arm.setGoalCommand(ArmConstants.VSTOW).until(() -> arm.atGoal(ArmConstants.VSTOW)),
+            elevator.setGoal(0).until(() -> elevator.atGoal(0))
+        ).withTimeout(3);
     }
 
     public static Command raiseL3() {
@@ -100,14 +99,14 @@ public class AutoCommands {
         return Commands.sequence(Commands.waitUntil(() -> intake.GamePieceFinal()),
         Commands.startEnd(() -> intake.setIntakeSpeed(IntakeConstants.reverse), 
             () -> intake.setIntakeSpeed(0)),
-            intake.reverse().withTimeout(0.05));
+            intake.reverse().withTimeout(0.1));
         //until(() -> elevator.atGoal(0) && arm.atGoal(ArmConstants.STOW));
         // .andThen(
         //     intake.intake().withTimeout(2));
     }
 
     public static Command score() {
-        return intake.intake().withTimeout(1);
+        return intake.intake().withTimeout(1.1);
     }
 
     public static Command alignReef() {

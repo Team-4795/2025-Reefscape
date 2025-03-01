@@ -84,7 +84,7 @@ public class Arm extends SubsystemBase {
     }
 
     public boolean atGoal(double goal) {
-        return MathUtil.isNear(goal, getAngle(), 0.01);
+        return MathUtil.isNear(goal, getAngle(), ArmConstants.GOAL_TOLERANCE);
     }
 
     public void resetAbsoluteEncoder() {

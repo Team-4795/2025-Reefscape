@@ -48,10 +48,10 @@ public class ArmIOReal implements ArmIO {
         config.encoder.quadratureMeasurementPeriod(20);
 
 
-        // config.softLimit.forwardSoftLimitEnabled(true);
-        // config.softLimit.reverseSoftLimitEnabled(false);
-        // config.softLimit.forwardSoftLimit(ArmConstants.Sim.MAX_ANGLE);
-        // config.softLimit.reverseSoftLimit(ArmConstants.Sim.MIN_ANGLE);
+        config.softLimit.forwardSoftLimitEnabled(true);
+        config.softLimit.reverseSoftLimitEnabled(false);
+        config.softLimit.forwardSoftLimit(ArmConstants.Sim.MAX_ANGLE);
+        config.softLimit.reverseSoftLimit(ArmConstants.Sim.MIN_ANGLE);
 
         // config.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
         // config.closedLoop.p(0);

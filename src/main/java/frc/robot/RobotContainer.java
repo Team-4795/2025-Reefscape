@@ -218,6 +218,10 @@ public class RobotContainer {
         ));
 
 
+    OIConstants.operatorController.b()
+    .onTrue(AutoCommands.vstow());
+
+
     // OIConstants.operatorController.leftBumper().whileTrue(
     // Arm.getInstance().sysIDRoutine().quasistatic(SysIdRoutine.Direction.kForward)
     // );

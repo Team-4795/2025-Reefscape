@@ -12,6 +12,9 @@ public class ArmConstants {
     public static final double CORAL_L2 = -1.0077334642410278;
     public static final double CORAL_L3 = 2.7386298179626465 - ARM_OFFSET;
     public static final double CORAL_L4 = 2.8875072 - ARM_OFFSET;
+    public static final double VSTOW = 1.24;
+    public static final double GOAL_TOLERANCE = 0.02;
+
     public static final double STOW = -Math.PI/2 - Units.degreesToRadians(18);
 
     public static final double MAX_VELOCITY = 6;
@@ -49,8 +52,8 @@ public class ArmConstants {
         public static double GEARING = 54;
         public static double MOI = 2.09670337984;
         public static double LENGTH = 0.6604;
-        public static double MIN_ANGLE = Units.degreesToRadians(-95);
-        public static double MAX_ANGLE = Units.degreesToRadians(55);
+        public static double MIN_ANGLE = STOW - Units.degreesToRadians(1);
+        public static double MAX_ANGLE = VSTOW + Units.degreesToRadians(1);
         public static boolean GRAVITY = true;
         public static double INIT_ANGLE = -Math.PI / 2;
     }

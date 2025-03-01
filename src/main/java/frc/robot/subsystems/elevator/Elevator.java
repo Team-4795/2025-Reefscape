@@ -33,7 +33,7 @@ public class Elevator extends SubsystemBase {
     }
     
     public boolean atGoal(double goal) {
-        return MathUtil.isNear(goal, getPosition(), 0.01);
+        return MathUtil.isNear(goal, getPosition(), ElevatorConstants.GOAL_TOLERANCE);
     }
 
     public Command setGoal(double goal){
