@@ -15,7 +15,7 @@ public class ArmConstants {
     public static final double VSTOW = 1.24;
     public static final double GOAL_TOLERANCE = 0.02;
 
-    public static final double STOW = -Math.PI/2 - Units.degreesToRadians(18);
+    public static final double STOW = -Math.PI/2 - Units.degreesToRadians(15);
 
     public static final double MAX_VELOCITY = 6;
     public static final double MAX_ACCELERATION = 10;
@@ -32,7 +32,7 @@ public class ArmConstants {
     public static final double DEFAULTkA = 0.08;
     public static final double DEFAULTkS = 0.01; //0.2
 
-    public static final double kP = 15.0;
+    public static final double kP = 16.0;
     public static final double kI = 0.0;
     public static final double kD = 0.5;
 
@@ -49,7 +49,7 @@ public class ArmConstants {
     public static final double CORALkS = 0.1;
 
     public static class Sim {
-        public static double GEARING = 54;
+        public static double GEARING = 72;
         public static double MOI = 2.09670337984;
         public static double LENGTH = 0.6604;
         public static double MIN_ANGLE = STOW - Units.degreesToRadians(1);

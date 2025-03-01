@@ -9,5 +9,5 @@ import frc.robot.generated.TunerConstants;
 public class SwerveConstants {
     public static double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
     public static double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond);
-    public static double slowModeMultiplier = 0.3;
+    public static double slowModeMultiplier = 0.2;
 }

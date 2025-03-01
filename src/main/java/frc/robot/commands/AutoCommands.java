@@ -73,7 +73,23 @@ public class AutoCommands {
         );
     }
 
+    public static Command Algea() {
+        return Commands.either(
+            Commands.parallel(
+                arm.setGoalCommand(ArmConstants.CORAL_L2),
+                Commands.waitUntil(() -> arm.getAngle() > -Math.PI/4)
+                    .andThen(elevator.setGoal(ElevatorConstants.ALGEA_SETPOINT))
+            ).until(() -> elevator.atGoal(ElevatorConstants.ALGEA_SETPOINT) && arm.atGoal(ArmConstants.CORAL_L2)),
+            Commands.parallel(
+                elevator.setGoal(ElevatorConstants.ALGEA_SETPOINT),
+                Commands.waitUntil(() -> elevator.getPosition() < .2)
+                    .andThen(arm.setGoalCommand(ArmConstants.CORAL_L2))
+            ).until(() -> elevator.atGoal(ElevatorConstants.ALGEA_SETPOINT) && arm.atGoal(ArmConstants.CORAL_L2)),
+            () -> 0 < elevator.getGoalHeight()
+        );
+    }
 
+    
     public static Command autoStow() {
         return Commands.parallel(
             elevator.setGoal(0),

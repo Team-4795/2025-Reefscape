@@ -8,6 +8,7 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -145,7 +146,9 @@ public class Vision extends SubsystemBase{
 
                 List<Pose3d> tagPoses = new ArrayList<>();
                 for (int tag : inputs[i].tags) {
-                    VisionConstants.aprilTagFieldLayout.getTagPose(tag).ifPresent(tagPoses::add);
+                    if(tag != 1 || tag != 2 || tag != 3) {
+                        VisionConstants.aprilTagFieldLayout.getTagPose(tag).ifPresent(tagPoses::add);
+                    }
                 }
 
                 if (tagPoses.isEmpty()) continue;
@@ -162,7 +165,7 @@ public class Vision extends SubsystemBase{
                 Logger.recordOutput("Vision/" + VisionConstants.cameraIds[i] + "/Avg distance", distance);
                 Logger.recordOutput("Vision/" + VisionConstants.cameraIds[i] + "/xy std dev", xyStdDev);
                 
-                if(shouldUpdate[i]) {
+                if(shouldUpdate[i] && !DriverStation.isAutonomousEnabled()) {
                     Swerve.getInstance().addVisionMeasurement(robotPose.toPose2d(), inputs[i].timestamp[p], stddevs);
                 }
             }

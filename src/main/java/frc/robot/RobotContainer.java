@@ -46,7 +46,7 @@ public class RobotContainer {
   // private final Vision vision;
   /* Setting up bindings for necessary control of the swerve drive platform */
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-  .withDeadband(SwerveConstants.MaxSpeed * 0.1).withRotationalDeadband(SwerveConstants.MaxAngularRate * 0.1) // Add a 10% deadband
+  .withDeadband(SwerveConstants.MaxSpeed * 0.04).withRotationalDeadband(SwerveConstants.MaxAngularRate * 0.04) // Add a 10% deadband
   .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
 
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
@@ -150,11 +150,13 @@ public class RobotContainer {
       Commands.run(() -> Arm.getInstance().manualVoltage(OIConstants.operatorController.getRightY() * 3), Arm.getInstance())
     );
 
+
     // Coral Setpoints
     Constants.OIConstants.operatorController.povUp().onTrue(AutoCommands.raiseL4());
     Constants.OIConstants.operatorController.povLeft().onTrue(AutoCommands.raiseL2());
     Constants.OIConstants.operatorController.povRight().onTrue(AutoCommands.raiseL3());
     Constants.OIConstants.operatorController.povDown().onTrue(AutoCommands.stow());
+    Constants.OIConstants.operatorController.x().onTrue(AutoCommands.Algea());
     // Constants.OIConstants.operatorController.povLeft().onTrue(AutoCommands.raiseL3());
 
     // Constants.OIConstants.operatorController.povRight().onTrue(AutoCommands.raiseL2());
