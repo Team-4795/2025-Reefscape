@@ -9,7 +9,7 @@ public class ArmConstants {
 
     //-68 degrees for algae
     public static final double CORAL_L1 = 1.3992315530776978 - ARM_OFFSET;
-    public static final double CORAL_L2 = -1.0077334642410278;
+    public static final double CORAL_L2 = -1.0077334642410278 + Units.degreesToRadians(2);
     public static final double CORAL_L3 = 2.7386298179626465 - ARM_OFFSET;
     public static final double CORAL_L4 = 2.8875072 - ARM_OFFSET;
     public static final double VSTOW = 1.24;
@@ -30,9 +30,9 @@ public class ArmConstants {
     public static final double DEFAULTkG = 1.0;
     public static final double DEFAULTkV = .91;
     public static final double DEFAULTkA = 0.08;
-    public static final double DEFAULTkS = 0.0; //0.2
+    public static final double DEFAULTkS = 0.01; //0.2
 
-    public static final double kP = 14.0;
+    public static final double kP = 15.0;
     public static final double kI = 0.0;
     public static final double kD = 0.5;
 

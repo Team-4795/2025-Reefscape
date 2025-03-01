@@ -20,8 +20,11 @@ public class VisionConstants {
     public static final double fieldBorderMargin = 0.5;
     public static final double zMargin = 0.5;
 
-    public static final double xyStdDevSingleTag = 0.03;
-    public static final double xyStdDevMultiTag = 0.018;
+    // public static final double xyStdDevSingleTag = 0.03;
+    // public static final double xyStdDevMultiTag = 0.018;
+
+    public static final double xyStdDevSingleTag = 0.1;
+    public static final double xyStdDevMultiTag = 0.5;
 
     public static final int aprilTagPipelineID = 0;
     public static final int reefDetectionPipelineID = 1;

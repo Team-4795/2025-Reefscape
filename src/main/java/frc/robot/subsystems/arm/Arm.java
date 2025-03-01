@@ -23,9 +23,11 @@ import frc.robot.Constants;
 import frc.robot.Constants.Gamepiece;
 import frc.robot.Constants.Mode;
 import frc.robot.Constants.OIConstants;
+import frc.robot.util.LoggedTunableNumber;
 
 public class Arm extends SubsystemBase {
     private ArmIOInputsAutoLogged inputs = new ArmIOInputsAutoLogged();
+    
     private ArmIO io;
     private static Arm instance;
 

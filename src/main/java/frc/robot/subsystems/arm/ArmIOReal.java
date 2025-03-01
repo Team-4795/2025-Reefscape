@@ -21,11 +21,18 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import frc.robot.util.LoggedTunableNumber;
 // 
 public class ArmIOReal implements ArmIO {
     private final SparkFlex armMotor = new SparkFlex(ArmConstants.CAN_ID, MotorType.kBrushless);
     private SparkFlexConfig config = new SparkFlexConfig();
     private SparkAbsoluteEncoder armEncoder;
+
+    LoggedTunableNumber KP = new LoggedTunableNumber("Arm/KP", ArmConstants.kP);
+    LoggedTunableNumber KI = new LoggedTunableNumber("Arm/KI", ArmConstants.kI);
+    LoggedTunableNumber KD = new LoggedTunableNumber("Arm/KD", ArmConstants.kD);    
+
+
 
     private ArmFeedforward ffmodel = new ArmFeedforward(ArmConstants.DEFAULTkS, ArmConstants.DEFAULTkG, ArmConstants.DEFAULTkV, ArmConstants.DEFAULTkA, 0.02);
     // private final SparkClosedLoopController onboardController = armMotor.getClosedLoopController();
