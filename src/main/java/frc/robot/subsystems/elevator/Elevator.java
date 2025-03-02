@@ -29,7 +29,11 @@ public class Elevator extends SubsystemBase {
         io = elevatorIO;
         io.updateInputs(inputs);
 
-        setDefaultCommand(Commands.run(() -> io.hold(), this));
+        setDefaultCommand(            
+            Commands.run(() -> {
+            // io.setGoal(inputs.goalHeight);
+            io.updateMotionProfile();
+        }, this));
     }
     
     public boolean atGoal(double goal) {
@@ -47,6 +51,10 @@ public class Elevator extends SubsystemBase {
 
     public double getGoalHeight() {
         return inputs.goalHeight;
+    }
+
+    public void setGoalHeight(double height) {
+        io.setGoal(height);
     }
 
     public double getPosition(){
@@ -75,5 +83,6 @@ public class Elevator extends SubsystemBase {
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs(getName(), inputs);
+        Logger.recordOutput("isNear", atGoal(inputs.goalHeight));
     }
 }

@@ -23,6 +23,7 @@ public interface VisionIO {
         String sortMode = "";
 
         boolean isReefAligning = false;
+        boolean isUpdating = false;
     }
 
     public default void updateInputs(VisionIOInputs inputs) {}

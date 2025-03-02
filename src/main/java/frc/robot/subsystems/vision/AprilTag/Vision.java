@@ -27,7 +27,7 @@ import java.util.List;
 public class Vision extends SubsystemBase{
     private VisionIO io[];
     private VisionIOInputsAutoLogged inputs[];
-    private boolean[] shouldUpdate = new boolean[] {true, true, true, true};
+    private boolean[] shouldUpdate = new boolean[] {true, false, false, false};
 
     public static Vision instance;
 
@@ -144,6 +144,14 @@ public class Vision extends SubsystemBase{
                 //     }
                 // }
 
+                for(int tag : inputs[i].tags) {
+                    for(int t = 0; t < VisionConstants.nonReefIds.length; t++) {
+                        if(tag == VisionConstants.nonReefIds[t]) {
+                            continue;
+                        }
+                    }
+                }
+
                 List<Pose3d> tagPoses = new ArrayList<>();
                 for (int tag : inputs[i].tags) {
                     if(tag != 1 || tag != 2 || tag != 3) {
@@ -160,7 +168,7 @@ public class Vision extends SubsystemBase{
 
                 distance /= tagPoses.size();
                 double xyStdDev = (tagPoses.size() == 1 ? xyStdDevSingleTag : xyStdDevMultiTag) * Math.pow(distance, 2);
-                var stddevs = VecBuilder.fill(xyStdDev, xyStdDev, Units.degreesToRadians(40));
+                var stddevs = VecBuilder.fill(xyStdDev, xyStdDev, Units.degreesToRadians(100));
 
                 Logger.recordOutput("Vision/" + VisionConstants.cameraIds[i] + "/Avg distance", distance);
                 Logger.recordOutput("Vision/" + VisionConstants.cameraIds[i] + "/xy std dev", xyStdDev);

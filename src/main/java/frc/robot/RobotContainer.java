@@ -113,7 +113,7 @@ public class RobotContainer {
               .withRotationalRate(-Constants.OIConstants.driverController.getRightX() * SwerveConstants.MaxAngularRate * (drivetrain.isSlowMode() ? SwerveConstants.slowModeMultiplier: 1))));
 
     // Zero heading
-    Constants.OIConstants.driverController.b().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+    Constants.OIConstants.driverController.b().onTrue(drivetrain.runOnce(() -> drivetrain.getPigeon2().setYaw(0)));
 
     // Reef/Feeder align
     Constants.OIConstants.driverController.leftBumper().whileTrue(
@@ -152,7 +152,7 @@ public class RobotContainer {
 
 
     // Coral Setpoints
-    Constants.OIConstants.operatorController.povUp().onTrue(AutoCommands.raiseL4());
+    Constants.OIConstants.operatorController.povUp().onTrue(AutoCommands.newL4());
     Constants.OIConstants.operatorController.povLeft().onTrue(AutoCommands.raiseL2());
     Constants.OIConstants.operatorController.povRight().onTrue(AutoCommands.raiseL3());
     Constants.OIConstants.operatorController.povDown().onTrue(AutoCommands.stow());
@@ -221,7 +221,7 @@ public class RobotContainer {
 
 
     OIConstants.operatorController.b()
-    .onTrue(AutoCommands.vstow());
+     .onTrue(AutoCommands.vstow());
 
 
     // OIConstants.operatorController.leftBumper().whileTrue(

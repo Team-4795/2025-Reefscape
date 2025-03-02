@@ -46,17 +46,17 @@ public class Arm extends SubsystemBase {
 
     private Arm(ArmIO io) {
         this.io = io;
-        // setDefaultCommand(
-        //     Commands.run(() -> {
-        //         double up = MathUtil.applyDeadband(Math.pow(OIConstants.operatorController.getLeftTriggerAxis(), 3), 0.1);
-        //         double down = MathUtil.applyDeadband(Math.pow(OIConstants.operatorController.getRightTriggerAxis(), 3), 0.1);
-        //         double change = (up - down) * 0.02;
-        //         // io.setGoal(inputs.goalAngle + change);
-        //     }, this)
-        // );
         setDefaultCommand(
-            Commands.runOnce(() -> io.setGoal(getAngle()), this).andThen(Commands.run(() -> io.hold(), this))
+            Commands.run(() -> {
+                double up = MathUtil.applyDeadband(Math.pow(OIConstants.operatorController.getLeftTriggerAxis(), 3), 0.1);
+                double down = MathUtil.applyDeadband(Math.pow(OIConstants.operatorController.getRightTriggerAxis(), 3), 0.1);
+                double change = (up - down) * 0.02;
+                // io.setGoal(inputs.goalAngle + change);
+            }, this)
         );
+        // setDefaultCommand(
+        //     Commands.runOnce(() -> io.setGoal(getAngle()), this).andThen(Commands.run(() -> io.hold(), this))
+        // );
         setFFMode(Constants.currentMode == Mode.SIM ? Gamepiece.SIM: Gamepiece.NONE);
     }
 

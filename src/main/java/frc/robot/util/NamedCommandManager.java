@@ -9,7 +9,9 @@ public class NamedCommandManager {
     public static void registerNamedCommands() {
         NamedCommands.registerCommand("Say Hello", Commands.print("Hello World!"));
         NamedCommands.registerCommand("Raise to L4", AutoCommands.raiseL4());
+        NamedCommands.registerCommand("Raise to new L4", AutoCommands.newL4());
         NamedCommands.registerCommand("Stow", AutoCommands.autoStow());
+        NamedCommands.registerCommand("Stow no intake", AutoCommands.stow());
         NamedCommands.registerCommand("Raise to L3", AutoCommands.raiseL3());
         NamedCommands.registerCommand("Raise to L2", AutoCommands.raiseL2());
         NamedCommands.registerCommand("Intake", AutoCommands.intake());

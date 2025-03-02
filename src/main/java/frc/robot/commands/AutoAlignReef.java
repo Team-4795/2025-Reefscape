@@ -22,6 +22,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N2;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotController;
@@ -61,6 +62,7 @@ public class AutoAlignReef extends Command{
         translationController = translation;
         translationController.setTolerance(0.1);
         rotationController = rotation;
+        rotationController.setTolerance(Units.degreesToRadians(1));
         addRequirements(Swerve.getInstance());
     }
 
@@ -71,7 +73,7 @@ public class AutoAlignReef extends Command{
 
     @Override
     public void initialize(){
-        // Vision.getInstance().toggleShouldUpdate(1);
+        // Vision.getInstance().toggleShouldUpdate(0);
         // Vision.getInstance().toggleShouldUpdate(2);
         // Vision.getInstance().toggleShouldUpdate(3);
         // Vision.getInstance().toggleIsReefAligning();
@@ -144,7 +146,7 @@ public class AutoAlignReef extends Command{
 
     @Override
     public void end(boolean interrupted) {
-        // Vision.getInstance().toggleShouldUpdate(1);
+        //Vision.getInstance().toggleShouldUpdate(0);
         // Vision.getInstance().toggleShouldUpdate(2);
         // Vision.getInstance().toggleShouldUpdate(3);
         // Vision.getInstance().toggleIsReefAligning();

@@ -34,6 +34,15 @@ public class AutoCommands {
         ).until(() -> elevator.atGoal(ElevatorConstants.CORAL_L4_SETPOINT) && arm.atGoal(ArmConstants.CORAL_L4));
     }
 
+    public static Command newL4() {
+        return Commands.deadline(
+            Commands.waitUntil(() -> elevator.atGoal(ElevatorConstants.CORAL_L4_SETPOINT + Units.inchesToMeters(1)) && arm.atGoal(ArmConstants.CORAL_L4)),
+            Commands.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L4)),
+            Commands.waitUntil(() -> arm.getAngle() > -Math.PI/4)
+                .andThen(Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.CORAL_L4_SETPOINT + Units.inchesToMeters(1))))
+        );
+    }
+
     public static Command vstow() {
         return Commands.sequence(
             arm.setGoalCommand(ArmConstants.VSTOW).until(() -> arm.atGoal(ArmConstants.VSTOW)),
@@ -125,6 +134,7 @@ public class AutoCommands {
         return intake.intake().withTimeout(1.1);
     }
 
+
     public static Command alignReef() {
         return new AutoAlignReef(
             new ProfiledPIDController(5,
@@ -134,7 +144,8 @@ public class AutoCommands {
     }
 
     public static Command alignFeeder() {
-        return new AutoAlignFeeder(
+        return new AutoAlignFeeder
+        (
             new ProfiledPIDController(1, 0, 0, new Constraints(SwerveConstants.MaxSpeed, 3)), 
             new ProfiledPIDController(1, 0, 0, new Constraints(SwerveConstants.MaxSpeed, 3)));
     }
