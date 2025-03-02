@@ -152,6 +152,10 @@ public class AutoAlignReef extends Command{
         // Vision.getInstance().toggleIsReefAligning();
     }
 
+    public boolean finishedAligning() {
+        return (translationController.atGoal() && rotationController.atGoal());
+    }
+
     private double projection(Translation2d v1, Translation2d onto){
         Vector<N2> velocity = VecBuilder.fill(v1.getX(), v1.getY());
         Vector<N2> translation = VecBuilder.fill(onto.getX(), onto.getY());

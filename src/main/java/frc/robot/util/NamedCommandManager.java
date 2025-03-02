@@ -12,11 +12,14 @@ public class NamedCommandManager {
         NamedCommands.registerCommand("Raise to new L4", AutoCommands.newL4());
         NamedCommands.registerCommand("Stow", AutoCommands.autoStow());
         NamedCommands.registerCommand("Stow no intake", AutoCommands.stow());
-        NamedCommands.registerCommand("Raise to L3", AutoCommands.raiseL3());
+        NamedCommands.registerCommand("Raise to L3", AutoCommands.noElevatorRaiseL3());
         NamedCommands.registerCommand("Raise to L2", AutoCommands.raiseL2());
         NamedCommands.registerCommand("Intake", AutoCommands.intake());
         NamedCommands.registerCommand("Align Reef", AutoCommands.alignReef());
         NamedCommands.registerCommand("Score", AutoCommands.score());
         NamedCommands.registerCommand("VStow", AutoCommands.vstow());
+        NamedCommands.registerCommand("SetIntakeSpeed", AutoCommands.setIntakeSpeed());
+        NamedCommands.registerCommand("Score left reef", AutoCommands.scoreLeftReef());
+        NamedCommands.registerCommand("Score right reef", AutoCommands.scoreRightReef());
     }
 }

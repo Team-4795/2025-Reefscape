@@ -4,7 +4,7 @@ public final class IntakeConstants {
     //PLACEHOLDERS
     public static final int canID = 18;
 
-    public static final double intake = -0.8;
+    public static final double intake = -1;
     public static final double slow = -0.3;
     public static final double reverse = 0.7;
 
@@ -13,8 +13,7 @@ public final class IntakeConstants {
 
     public static final double intakeCurrent = 0;
     public static final int currentLimit = 60; 
-    public static final double currentThreshold = 
-    50; //change later based on akit numbers for gamepiece
+    public static final double currentThreshold = 50; //change later based on akit numbers for gamepiece
 
     public static final double initialThreshold = 40;
 }

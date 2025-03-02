@@ -173,7 +173,7 @@ public class Vision extends SubsystemBase{
                 Logger.recordOutput("Vision/" + VisionConstants.cameraIds[i] + "/Avg distance", distance);
                 Logger.recordOutput("Vision/" + VisionConstants.cameraIds[i] + "/xy std dev", xyStdDev);
                 
-                if(shouldUpdate[i] && !DriverStation.isAutonomousEnabled()) {
+                if(shouldUpdate[i]) {
                     Swerve.getInstance().addVisionMeasurement(robotPose.toPose2d(), inputs[i].timestamp[p], stddevs);
                 }
             }

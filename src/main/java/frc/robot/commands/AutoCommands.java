@@ -44,10 +44,10 @@ public class AutoCommands {
     }
 
     public static Command vstow() {
-        return Commands.sequence(
-            arm.setGoalCommand(ArmConstants.VSTOW).until(() -> arm.atGoal(ArmConstants.VSTOW)),
-            elevator.setGoal(0).until(() -> elevator.atGoal(0))
-        ).withTimeout(3);
+        return //Commands.sequence(
+            arm.setGoalCommand(ArmConstants.VSTOW).until(() -> arm.atGoal(ArmConstants.VSTOW));
+            //elevator.setGoal(0).until(() -> elevator.atGoal(0))
+        //).until(() -> arm.atGoal(ArmConstants.VSTOW));
     }
 
     public static Command raiseL3() {
@@ -64,6 +64,11 @@ public class AutoCommands {
             ).until(() -> elevator.atGoal(0) && arm.atGoal(ArmConstants.CORAL_L3)),
             () -> 0 < elevator.getGoalHeight()
         );
+    }
+
+    
+    public static Command noElevatorRaiseL3() {
+        return arm.setGoalCommand(ArmConstants.CORAL_L3).until(() -> arm.atGoal(ArmConstants.CORAL_L3));
     }
 
     public static Command raiseL2() {
@@ -109,38 +114,50 @@ public class AutoCommands {
         Commands.runOnce(() -> intake.setIntakeSpeed(IntakeConstants.intake)));
     }
 
+    public static Command setIntakeSpeed() {
+        return Commands.runOnce(() -> intake.setIntakeSpeed(IntakeConstants.intake));
+    }
+
     
     public static Command stow() {
-        return Commands.parallel(
-            elevator.setGoal(0),
-            Commands.waitUntil(() -> elevator.getPosition() < .2)
-                .andThen(arm.setGoalCommand(ArmConstants.STOW))
-        ).until(() -> elevator.atGoal(0) && arm.atGoal(ArmConstants.STOW));
+        // return Commands.parallel(
+        //     elevator.setGoal(0),
+        //     Commands.waitUntil(() -> elevator.getPosition() < .2), () -> elevator.atGoal(0) && 
+                return arm.setGoalCommand(ArmConstants.STOW).until(() -> arm.atGoal(ArmConstants.STOW)).withTimeout(1);
         // .andThen(
         // Commands.runOnce(() -> intake.setIntakeSpeed(IntakeConstants.intake)));
     }
 
     public static Command intake() {
-        return Commands.sequence(Commands.waitUntil(() -> intake.GamePieceFinal()),
-        Commands.startEnd(() -> intake.setIntakeSpeed(IntakeConstants.reverse), 
-            () -> intake.setIntakeSpeed(0)),
-            intake.reverse().withTimeout(0.1));
+        return Commands.sequence(
+            Commands.runOnce(() -> intake.setIntakeSpeed(IntakeConstants.intake)), 
+            Commands.waitSeconds(0.3),
+            Commands.waitUntil(() -> intake.GamePieceFinal()),
+            Commands.waitSeconds(0.15),
+            intake.reverse().withTimeout(0.12));
         //until(() -> elevator.atGoal(0) && arm.atGoal(ArmConstants.STOW));
         // .andThen(
         //     intake.intake().withTimeout(2));
     }
 
     public static Command score() {
-        return intake.intake().withTimeout(1.1);
+        return intake.intake().withTimeout(0.2);
     }
-
 
     public static Command alignReef() {
         return new AutoAlignReef(
             new ProfiledPIDController(5,
              0, 0, new Constraints(SwerveConstants.MaxSpeed, 3)), 
-            new ProfiledPIDController(5, 0, 0, new Constraints(SwerveConstants.MaxSpeed, 3))
-        ).withTimeout(4);
+            new ProfiledPIDController(7.5, 0, 0, new Constraints(SwerveConstants.MaxSpeed, 3))
+        ).withTimeout(1.5);
+    }
+
+    public static Command scoreLeftReef() {
+        return Commands.runOnce(() -> Swerve.getInstance().setScoringLeft());
+    }
+
+    public static Command scoreRightReef() {
+        return Commands.runOnce(() -> Swerve.getInstance().setScoringRight());
     }
 
     public static Command alignFeeder() {
