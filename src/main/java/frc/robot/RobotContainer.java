@@ -152,7 +152,7 @@ public class RobotContainer {
 
 
     // Coral Setpoints
-    Constants.OIConstants.operatorController.povUp().onTrue(AutoCommands.newL4());
+    Constants.OIConstants.operatorController.povUp().onTrue(AutoCommands.raiseL4());
     Constants.OIConstants.operatorController.povLeft().onTrue(AutoCommands.raiseL2());
     Constants.OIConstants.operatorController.povRight().onTrue(AutoCommands.raiseL3());
     Constants.OIConstants.operatorController.povDown().onTrue(AutoCommands.stow());
