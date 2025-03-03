@@ -81,14 +81,15 @@ public class RobotContainer {
         intake = Intake.initialize(new IntakeIOSim());
         Arm.initialize(new ArmIOSim());
         drivetrain = Swerve.initialize(TunerConstants.createDrivetrain());
-        vision = Vision.initialize(new VisionIOSim());
+        if(Constants.visonSimEnabled) {
+          vision = Vision.initialize(new VisionIOSim());
+        }
         break;
 
       default:
         elevator = Elevator.initialize(new ElevatorIOSim());
         intake = Intake.initialize(new IntakeIOSim());
         drivetrain = Swerve.initialize(TunerConstants.createDrivetrain());
-        vision = Vision.initialize(new VisionIOSim());
         Arm.initialize(new ArmIOSim());
         break;
     }
