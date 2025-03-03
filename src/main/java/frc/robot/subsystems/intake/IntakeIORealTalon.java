@@ -12,7 +12,7 @@ import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 
 
-public class IntakeIOReal implements IntakeIO {
+public class IntakeIORealTalon implements IntakeIO {
     private final TalonFX intakeMotor = new TalonFX(IntakeConstants.canID);
     
     private TalonFXConfiguration talonFXConfig = new TalonFXConfiguration();
@@ -21,7 +21,7 @@ public class IntakeIOReal implements IntakeIO {
     private final StatusSignal<Voltage> voltage = intakeMotor.getMotorVoltage();
     private final StatusSignal<AngularVelocity> velocity = intakeMotor.getVelocity();
 
-    public IntakeIOReal() {
+    public IntakeIORealTalon() {
         talonFXConfig.MotorOutput.withInverted(InvertedValue.Clockwise_Positive);
 
         talonFXConfig.CurrentLimits.StatorCurrentLimitEnable = true;
