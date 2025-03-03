@@ -52,6 +52,7 @@ public class Arm extends SubsystemBase {
                 double down = MathUtil.applyDeadband(Math.pow(OIConstants.operatorController.getRightTriggerAxis(), 3), 0.1);
                 double change = (up - down) * 0.02;
                 // io.setGoal(inputs.goalAngle + change);
+                io.updateMotionProfile();
             }, this)
         );
         // setDefaultCommand(
