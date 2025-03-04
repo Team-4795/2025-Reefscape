@@ -60,17 +60,6 @@ public class Vision extends SubsystemBase{
     public void toggleShouldUpdate(int id) {
         shouldUpdate[id] = !shouldUpdate[id];
     }
-    
-    public void toggleIsReefAligning() {
-        for(int i = 0; i < io.length; i++)
-        {
-            io[i].toggleIsReefAligning();
-        }
-    }
-
-    public boolean getIsReefAligning() {
-        return io[0].getReefAligning();
-    }
 
     public Pose2d getBestReefPose() {
         if(Constants.currentMode == Constants.Mode.SIM)
@@ -85,34 +74,6 @@ public class Vision extends SubsystemBase{
             }
         }
         return new Pose2d();
-    }
-
-    // public void toggleReefMode() {
-    //     io[0].switchPipeline();
-    //     toggleShouldUpdate(0);
-    // }
-
-    // public void targetLeftReef() {
-    //     io[0].targetLeftReef();
-    // }
-
-    // public void targetRightReef() {
-    //     io[0].targetRightReef();
-    // }
-
-    public Command toggleReefMode() {
-        return Commands.parallel(
-            new RunCommand(() -> io[0].switchPipeline()), 
-            new RunCommand(() -> toggleShouldUpdate(0))
-        );
-    }
-
-    public Command targetLeftReef() { 
-        return Commands.run(() -> io[0].targetLeftReef());
-    }
-
-    public Command targetRightReef() { 
-        return Commands.run(() -> io[0].targetRightReef());
     }
 
     public void periodic() {
@@ -134,28 +95,13 @@ public class Vision extends SubsystemBase{
                     || robotPose.getZ() > zMargin
                 ) continue;
 
-                // if (Vision.getInstance().getIsReefAligning()) {
-                //     for(int tag : inputs[i].tags) {
-                //         for(int t = 0; t < VisionConstants.nonReefIds.length; t++) {
-                //             if(tag == VisionConstants.nonReefIds[t]) {
-                //                 continue;
-                //             }
-                //         }
-                //     }
-                // }
-
-                for(int tag : inputs[i].tags) {
-                    for(int t = 0; t < VisionConstants.nonReefIds.length; t++) {
-                        if(tag == VisionConstants.nonReefIds[t]) {
-                            continue;
-                        }
-                    }
-                }
-
                 List<Pose3d> tagPoses = new ArrayList<>();
                 for (int tag : inputs[i].tags) {
-                    if(tag != 1 || tag != 2 || tag != 3) {
+                    if(tag != 1 && tag != 2 && tag != 3 && tag != 4 && tag != 5 && tag != 12 && tag != 13 && tag != 14 && tag != 15 && tag != 16) {
                         VisionConstants.aprilTagFieldLayout.getTagPose(tag).ifPresent(tagPoses::add);
+                    }
+                    else {
+                        continue;
                     }
                 }
 

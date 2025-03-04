@@ -29,16 +29,4 @@ public interface VisionIO {
     public default void updateInputs(VisionIOInputs inputs) {}
 
     public default void setReferencePose(Pose2d reference) {}
-
-    public default void switchPipeline() {}
-
-    public default void targetLeftReef() {}
-
-    public default void targetRightReef() {}
-
-    public default void targetAprilTag() {}
-
-    public default void toggleIsReefAligning() {}
-
-    public default boolean getReefAligning() { return false; }
 }

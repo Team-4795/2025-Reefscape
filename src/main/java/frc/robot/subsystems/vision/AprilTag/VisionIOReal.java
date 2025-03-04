@@ -34,21 +34,11 @@ public class VisionIOReal implements VisionIO {
         poseEstimator = new PhotonPoseEstimator(VisionConstants.aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, VisionConstants.cameraPoses[camIndex]);
         poseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
         sortMode = PhotonTargetSortMode.Largest;
-        
     } 
 
     @Override
     public void setReferencePose(Pose2d reference) {
         poseEstimator.setReferencePose(reference);
-    }
-
-    @Override
-    public void switchPipeline() {
-        if(camera.getPipelineIndex() == VisionConstants.aprilTagPipelineID && camera.getName().equals(VisionConstants.cameraIds[0]))
-            camera.setPipelineIndex(VisionConstants.reefDetectionPipelineID);
-
-        else if(camera.getPipelineIndex() == VisionConstants.reefDetectionPipelineID && camera.getName().equals(VisionConstants.cameraIds[0]))
-            camera.setPipelineIndex(VisionConstants.aprilTagPipelineID);
     }
 
     public Pose2d getBestReefPos() {
@@ -88,68 +78,24 @@ public class VisionIOReal implements VisionIO {
     }
 
     @Override
-    public void toggleIsReefAligning() {
-        isReefAligning = !isReefAligning;
-    }
-
-    @Override
-    public boolean getReefAligning() {
-        return isReefAligning;
-    }
-
-    @Override
-    public void targetLeftReef() {
-        sortMode = PhotonTargetSortMode.Leftmost;
-    }
-
-    @Override
-    public void targetRightReef() {
-        sortMode = PhotonTargetSortMode.Rightmost;
-    }
-
-    @Override
-    public void targetAprilTag() {
-        sortMode = PhotonTargetSortMode.Largest;
-    }
-
-    @Override
     public void updateInputs(VisionIOInputs inputs) {
         inputs.pipelineIndex = camera.getPipelineIndex();
         inputs.sortMode = sortMode.toString();
 
         result = camera.getAllUnreadResults();
 
-        if(camera.getPipelineIndex() == VisionConstants.aprilTagPipelineID) { // April tag pipeline index? Change later
-            for(int i = 0; i < result.size(); i++) {
-                poseEstimator.update(result.get(i), camera.getCameraMatrix(), camera.getDistCoeffs()).ifPresentOrElse((pose) -> {
-                    inputs.pose = new Pose3d[] {pose.estimatedPose};
-                    inputs.timestamp = new double[] {pose.timestampSeconds};
-                    inputs.tags = pose.targetsUsed.stream().mapToInt((target) -> target.getFiducialId()).toArray();
-                }, () -> {
-                    inputs.pose = new Pose3d[] {};
-                    inputs.timestamp = new double[] {};
-                    inputs.tags = new int[] {};
-                });
-            }
-            
-            inputs.isReefAligning = isReefAligning;
-            inputs.reefPose = getBestReefPos();
+        for(int i = 0; i < result.size(); i++) {
+            poseEstimator.update(result.get(i), camera.getCameraMatrix(), camera.getDistCoeffs()).ifPresentOrElse((pose) -> {
+                inputs.pose = new Pose3d[] {pose.estimatedPose};
+                inputs.timestamp = new double[] {pose.timestampSeconds};
+                inputs.tags = pose.targetsUsed.stream().mapToInt((target) -> target.getFiducialId()).toArray();
+            }, () -> {
+                inputs.pose = new Pose3d[] {};
+                inputs.timestamp = new double[] {};
+                inputs.tags = new int[] {};
+            });
         }
 
-        else if(camera.getPipelineIndex() == VisionConstants.reefDetectionPipelineID) { // Reef detection pippeline index? Change later
-         
-            for(int i = 0; i < result.size(); i++)
-            {
-                result.get(i).targets.sort(sortMode.getComparator());
-                target = result.get(i).getBestTarget();
-
-                if(target != null) {
-                    inputs.roll = target.getSkew();
-                    inputs.pitch = target.getPitch();
-                    inputs.yaw = target.getYaw();
-                    inputs.area = target.getArea();
-                }
-            }
-        }
+        inputs.reefPose = getBestReefPos();
     }
 }

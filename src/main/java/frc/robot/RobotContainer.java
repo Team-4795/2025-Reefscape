@@ -72,8 +72,7 @@ public class RobotContainer {
         Arm.initialize(new ArmIOReal());
         drivetrain = Swerve.initialize(new Swerve(TunerConstants.DrivetrainConstants, 50, TunerConstants.FrontLeft, TunerConstants.FrontRight, TunerConstants.BackLeft, TunerConstants.BackRight));
         vision = Vision.initialize(
-          new VisionIOReal(0)
-          // ,new VisionIOReal(1),
+          new VisionIOReal(0), new VisionIOReal(1)
           // new VisionIOReal(2),
           // new VisionIOReal(3)
         );

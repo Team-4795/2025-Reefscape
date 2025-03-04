@@ -26,42 +26,38 @@ public class VisionConstants {
     public static final double xyStdDevSingleTag = 0.03;
     public static final double xyStdDevMultiTag = 0.018;
 
-    public static final int aprilTagPipelineID = 0;
-    public static final int reefDetectionPipelineID = 1;
-
-
     public static final String[] cameraIds =
     new String[] {
         "Jermaine Coral",
-        "Chief Reef",
+        "Cod Wave",
         "Kendrick LaBarge",
-        "Cod Wave"
+        "Chief Reef"
       };
 
     // Based on sim. Change once actually mounted
     public static final Transform3d[] cameraPoses =
     new Transform3d[] {
-        // Front Camera
+        // Front Camera Right
         new Transform3d(
             new Translation3d(
                 Units.inchesToMeters(10.5),
-                Units.inchesToMeters(-0.25),
-                Units.inchesToMeters(7)), 
+                Units.inchesToMeters(-3.5),
+                Units.inchesToMeters(8.5)), 
             new Rotation3d(
                 Units.degreesToRadians(0), 
                 Units.degreesToRadians(-20), 
-                0)),
+                Units.degreesToRadians(-20))),
 
-        // Backwards Camera
+        // Front Camera Left
         new Transform3d(
             new Translation3d(
-                -Units.inchesToMeters(0),
-                0,
-                Units.inchesToMeters(39.5)), 
+                Units.inchesToMeters(10.5),
+                Units.inchesToMeters(3.5),
+                Units.inchesToMeters(8.5)), 
             new Rotation3d(
-                Units.degreesToRadians(90), 
+                Units.degreesToRadians(0), 
                 Units.degreesToRadians(-20), 
-                Units.degreesToRadians(180))),
+                Units.degreesToRadians(20))),
 
         // Left Camera
         new Transform3d(
