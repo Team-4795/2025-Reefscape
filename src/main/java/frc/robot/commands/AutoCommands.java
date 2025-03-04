@@ -35,8 +35,7 @@ public class AutoCommands {
     }
 
     public static Command newL4() {
-        return Commands.deadline(
-            Commands.waitUntil(() -> elevator.atGoal(ElevatorConstants.CORAL_L4_SETPOINT + Units.inchesToMeters(1)) && arm.atGoal(ArmConstants.CORAL_L4)),
+        return Commands.parallel(
             Commands.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L4)),
             Commands.waitUntil(() -> arm.getAngle() > -Math.PI/4)
                 .andThen(Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.CORAL_L4_SETPOINT + Units.inchesToMeters(1))))
@@ -44,10 +43,10 @@ public class AutoCommands {
     }
 
     public static Command vstow() {
-        return //Commands.sequence(
-            arm.setGoalCommand(ArmConstants.VSTOW).until(() -> arm.atGoal(ArmConstants.VSTOW));
-            //elevator.setGoal(0).until(() -> elevator.atGoal(0))
-        //).until(() -> arm.atGoal(ArmConstants.VSTOW));
+        return Commands.sequence(
+            arm.setGoalCommand(ArmConstants.VSTOW).until(() -> arm.atGoal(ArmConstants.VSTOW)),
+            elevator.setGoal(0).until(() -> elevator.atGoal(0))
+        );
     }
 
     public static Command raiseL3() {
@@ -120,12 +119,11 @@ public class AutoCommands {
 
     
     public static Command stow() {
-        // return Commands.parallel(
-        //     elevator.setGoal(0),
-        //     Commands.waitUntil(() -> elevator.getPosition() < .2), () -> elevator.atGoal(0) && 
-                return arm.setGoalCommand(ArmConstants.STOW).until(() -> arm.atGoal(ArmConstants.STOW)).withTimeout(1);
-        // .andThen(
-        // Commands.runOnce(() -> intake.setIntakeSpeed(IntakeConstants.intake)));
+        return Commands.parallel(
+            Commands.runOnce(() -> elevator.setGoalHeight(0)),
+            Commands.waitUntil(() -> elevator.getPosition() < 0.2)
+                .andThen(Commands.runOnce(() -> arm.setGoal(ArmConstants.STOW)))
+        );
     }
 
     public static Command intake() {

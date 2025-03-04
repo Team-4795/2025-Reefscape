@@ -86,9 +86,8 @@ public class ElevatorIOReal implements ElevatorIO {
     @Override
     public void updateMotionProfile() {
         // double prevVelocity = setpoint.velocity;
-        setpoint = profile.calculate(0.02, new TrapezoidProfile.State(rightEncoder.getPosition(), rightEncoder.getVelocity()), goal);
+        setpoint = profile.calculate(0.02, setpoint, goal);
         // double acceleration = (setpoint.velocity - prevVelocity) / 0.02;
-        // double ffvolts = ffmodel.calculate(setpoint.velocity, acceleration);
         double ffvolts = ffmodel.calculate(setpoint.velocity);
         double pidvolts = controller.calculate(rightEncoder.getPosition(), setpoint.position);
         setVoltage(ffvolts + pidvolts);

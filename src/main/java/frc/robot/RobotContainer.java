@@ -15,6 +15,7 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -32,6 +33,7 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstants;
 import frc.robot.subsystems.intake.IntakeIORealVortex;
 import frc.robot.subsystems.intake.IntakeIOSim;
+import frc.robot.subsystems.leds.LEDs;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.vision.AprilTag.Vision;
@@ -40,8 +42,9 @@ import frc.robot.subsystems.vision.AprilTag.VisionIOSim;
 import frc.robot.util.NamedCommandManager;
 
 public class RobotContainer {
-  private RobotVisualizer visualizer = new RobotVisualizer();
+  private RobotVisualizer visualizer;
   private Vision vision;
+  private LEDs leds; 
 
   // private final Vision vision;
   /* Setting up bindings for necessary control of the swerve drive platform */
@@ -81,6 +84,7 @@ public class RobotContainer {
         intake = Intake.initialize(new IntakeIOSim());
         Arm.initialize(new ArmIOSim());
         drivetrain = Swerve.initialize(TunerConstants.createDrivetrain());
+        visualizer = new RobotVisualizer();
         if(Constants.visonSimEnabled) {
           vision = Vision.initialize(new VisionIOSim());
         }
@@ -93,6 +97,7 @@ public class RobotContainer {
         Arm.initialize(new ArmIOSim());
         break;
     }
+    leds = LEDs.getInstance();
 
     NamedCommandManager.registerNamedCommands();
 
@@ -114,7 +119,7 @@ public class RobotContainer {
               .withRotationalRate(-Constants.OIConstants.driverController.getRightX() * SwerveConstants.MaxAngularRate * (drivetrain.isSlowMode() ? SwerveConstants.slowModeMultiplier: 1))));
 
     // Zero heading
-    Constants.OIConstants.driverController.b().onTrue(drivetrain.runOnce(() -> drivetrain.getPigeon2().setYaw(0)));
+    Constants.OIConstants.driverController.b().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
     // Reef/Feeder align
     Constants.OIConstants.driverController.leftBumper().whileTrue(
@@ -153,7 +158,7 @@ public class RobotContainer {
 
 
     // Coral Setpoints
-    Constants.OIConstants.operatorController.povUp().onTrue(AutoCommands.raiseL4());
+    Constants.OIConstants.operatorController.povUp().onTrue(AutoCommands.newL4());
     Constants.OIConstants.operatorController.povLeft().onTrue(AutoCommands.raiseL2());
     Constants.OIConstants.operatorController.povRight().onTrue(AutoCommands.raiseL3());
     Constants.OIConstants.operatorController.povDown().onTrue(AutoCommands.stow());

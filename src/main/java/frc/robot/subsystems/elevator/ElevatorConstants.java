@@ -11,12 +11,13 @@ public final class ElevatorConstants{
 
     public static final double kD = 0; //figure this out later
     public static final double kI = 0; //figure this out later
-    public static final double kP = 6; //figure this out later
+    public static final double kP = 28; //figure this out later
     public static final int rightDeviceID = 12;
     public static final int leftDeviceID = 13;
-    public static final double ks = 0.02;
+    public static final double ks = 0.1;
     public static final double kg = 0.25;
-    public static final double kv = 6; //IS THIS RIGHT?!?!?
+    // public static final double ka = 0.03;
+    public static final double kv = 9; //IS THIS RIGHT?!?!?
     public static final double MAX_ACCELERATION = 10;
     public static final double MAX_VELOCITY = 1.75; 
     public static final double CORAL_L4_SETPOINT = 0.57;

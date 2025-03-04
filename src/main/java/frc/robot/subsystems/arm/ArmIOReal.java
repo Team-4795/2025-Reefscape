@@ -75,8 +75,10 @@ public class ArmIOReal implements ArmIO {
         armEncoder = armMotor.getAbsoluteEncoder();
         armMotor.getEncoder().setPosition(getOffsetAngle());
 
-        goal = new TrapezoidProfile.State(armMotor.getEncoder().getPosition(), 0);
-        setpoint = new TrapezoidProfile.State(armMotor.getEncoder().getPosition(), 0);
+        goal = new TrapezoidProfile.State(getOffsetAngle(), 0);
+        setpoint = new TrapezoidProfile.State(getOffsetAngle(), 0);
+        
+        Logger.recordOutput("arm offset angle", getOffsetAngle());
     }
 
     @Override
