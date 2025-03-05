@@ -29,14 +29,6 @@ public class AutoCommands {
 
     public static Command raiseL4() {
         return Commands.parallel(
-            arm.setGoalCommand(ArmConstants.CORAL_L4),
-            Commands.waitUntil(() -> arm.getAngle() > -Math.PI/4)
-                .andThen(elevator.setGoal(ElevatorConstants.CORAL_L4_SETPOINT + Units.inchesToMeters(1)))
-        ).until(() -> elevator.atGoal(ElevatorConstants.CORAL_L4_SETPOINT) && arm.atGoal(ArmConstants.CORAL_L4));
-    }
-
-    public static Command newL4() {
-        return Commands.parallel(
             Commands.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L4)),
             Commands.waitUntil(() -> arm.getAngle() > -Math.PI/4)
                 .andThen(Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.CORAL_L4_SETPOINT + Units.inchesToMeters(1))))
@@ -44,9 +36,10 @@ public class AutoCommands {
     }
 
     public static Command vstow() {
-        return Commands.sequence(
-            arm.setGoalCommand(ArmConstants.VSTOW).until(() -> arm.atGoal(ArmConstants.VSTOW)),
-            elevator.setGoal(0).until(() -> elevator.atGoal(0))
+        return Commands.parallel(
+            Commands.runOnce(() -> arm.setGoal(ArmConstants.VSTOW)),
+            Commands.waitUntil(() -> arm.getAngle() > -Math.PI/4)
+                .andThen(Commands.runOnce(() -> elevator.setGoalHeight(0)))
         );
     }
 

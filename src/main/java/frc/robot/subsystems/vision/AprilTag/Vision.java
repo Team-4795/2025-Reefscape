@@ -27,7 +27,7 @@ import java.util.List;
 public class Vision extends SubsystemBase{
     private VisionIO io[];
     private VisionIOInputsAutoLogged inputs[];
-    private boolean[] shouldUpdate = new boolean[] {true, false, false, false};
+    private boolean[] shouldUpdate = new boolean[] {true, true, false, false};
 
     public static Vision instance;
 
@@ -118,6 +118,7 @@ public class Vision extends SubsystemBase{
 
                 Logger.recordOutput("Vision/" + VisionConstants.cameraIds[i] + "/Avg distance", distance);
                 Logger.recordOutput("Vision/" + VisionConstants.cameraIds[i] + "/xy std dev", xyStdDev);
+                Logger.recordOutput("Vision/" + VisionConstants.cameraIds[i] + "/Robot Pose", robotPose);
                 
                 if(shouldUpdate[i]) {
                     Swerve.getInstance().addVisionMeasurement(robotPose.toPose2d(), inputs[i].timestamp[p], stddevs);

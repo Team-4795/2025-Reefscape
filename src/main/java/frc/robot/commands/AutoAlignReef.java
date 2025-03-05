@@ -60,7 +60,7 @@ public class AutoAlignReef extends Command{
 
     public AutoAlignReef(ProfiledPIDController translation, ProfiledPIDController rotation) {
         translationController = translation;
-        translationController.setTolerance(0.1);
+        translationController.setTolerance(Units.inchesToMeters(1));
         rotationController = rotation;
         rotationController.setTolerance(Units.degreesToRadians(1));
         addRequirements(Swerve.getInstance());

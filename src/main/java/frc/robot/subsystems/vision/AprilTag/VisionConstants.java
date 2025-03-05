@@ -23,8 +23,8 @@ public class VisionConstants {
     // public static final double xyStdDevSingleTag = 0.03;
     // public static final double xyStdDevMultiTag = 0.018;
 
-    public static final double xyStdDevSingleTag = 0.03;
-    public static final double xyStdDevMultiTag = 0.018;
+    public static final double xyStdDevSingleTag = 0.02;
+    public static final double xyStdDevMultiTag = 0.01;
 
     public static final String[] cameraIds =
     new String[] {
