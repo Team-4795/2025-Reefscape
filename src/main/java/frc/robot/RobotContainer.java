@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AutoCommands;
+import frc.robot.commands.RainbowCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;
@@ -187,7 +188,7 @@ public class RobotContainer {
     //no vision toggle
     OIConstants.driverController.x().onTrue(Commands.run(() -> vision.toggleShouldUpdate(0)).
     alongWith(Commands.run(() -> vision.toggleShouldUpdate(1)))
-    .alongWith(Commands.run(() -> leds.setColor(Color.kYellow))));
+    .alongWith(new RainbowCommand(1)));
 
     OIConstants.operatorController.b()
      .onTrue(AutoCommands.vstow());
