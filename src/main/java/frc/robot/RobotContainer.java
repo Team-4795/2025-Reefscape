@@ -188,7 +188,7 @@ public class RobotContainer {
     //no vision toggle
     OIConstants.driverController.x().onTrue(Commands.run(() -> vision.toggleShouldUpdate(0)).
     alongWith(Commands.run(() -> vision.toggleShouldUpdate(1)))
-    .alongWith(new RainbowCommand(1)));
+    .alongWith(new RainbowCommand(() -> 1)));
 
     OIConstants.operatorController.b()
      .onTrue(AutoCommands.vstow());

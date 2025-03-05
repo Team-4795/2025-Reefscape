@@ -14,22 +14,16 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class RainbowCommand extends Command {
     LEDs leds = LEDs.getInstance();
     double hue;
-    double speed;
+    DoubleSupplier speed;
 
-    // public RainbowCommand(DoubleSupplier speed) {
-    //     this.speed = speed;
-
-    //     this.hue = 0;
-
-    //     addRequirements(leds);
-    // }
-
-    public RainbowCommand(double speed) {
+    public RainbowCommand(DoubleSupplier speed) {
         this.speed = speed;
 
         this.hue = 0;
 
-        addRequirements(leds);    }
+        addRequirements(leds);
+    }
+
 
     // Called when the command is initially scheduled.
     @Override
@@ -39,7 +33,7 @@ public class RainbowCommand extends Command {
     @Override
     public void execute() {
         // Hue is 0-180
-        this.hue += speed / 20.0;
+        this.hue += speed.getAsDouble() / 20.0;
 
         for (int i = 0; i < leds.getLength(); i++) {
             double offset = (double) i / (double) leds.getLength();
