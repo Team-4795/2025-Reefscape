@@ -142,6 +142,12 @@ public class AutoAlignReef extends Command{
             drive.withVelocityX(driveSpeed * direction.getCos())
             .withVelocityY(driveSpeed * direction.getSin())
             .withRotationalRate(omega));
+        
+        if(finishedAligning()) {
+            OIConstants.aligned = true;
+        } else {
+            OIConstants.aligned = false; 
+        }
     }
 
     @Override

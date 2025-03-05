@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.swerve.Swerve;
 
 public class LEDs extends SubsystemBase {
 
@@ -248,15 +249,17 @@ public class LEDs extends SubsystemBase {
     @Override
     public void periodic() {
     // updates LEDs to show state of intake
-    if(){
-
+    if(Swerve.getInstance().isSlowMode()){
+        color = Color.kOrange;
+    } else if(OIConstants.aligned) {
+        color = Color.kRed;
     } else if (Constants.OIConstants.isScoringLeft) {
         color = Color.kBlue;
     } else if (!Constants.OIConstants.isScoringLeft) {
         color = Color.kPurple;
     }
 
-    if(Intake.getInstance().isStoring) {
+    if(Intake.getInstance().isStoring && !OIConstants.aligned) {
         blink = BlinkState.FAST;
     } else {
         blink = BlinkState.SOLID;

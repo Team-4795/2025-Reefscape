@@ -16,6 +16,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -161,6 +162,46 @@ public class RobotContainer {
     Constants.OIConstants.operatorController.povRight().onTrue(AutoCommands.raiseL3());
     Constants.OIConstants.operatorController.povDown().onTrue(AutoCommands.stow());
     Constants.OIConstants.operatorController.x().onTrue(AutoCommands.Algea());
+
+    Constants.OIConstants.operatorController.y().whileTrue(
+      Commands.startEnd(
+        () -> intake.setIntakeSpeed(1),
+        () ->  intake.setIntakeSpeed(0), 
+        intake
+      )
+    );
+
+    OIConstants.operatorController.a().onTrue(intake.intakeCommand());
+
+      
+    OIConstants.operatorController.leftBumper()
+        .onTrue(
+          Commands.runOnce(() -> drivetrain.setScoringLeft()
+        ));
+    
+    OIConstants.operatorController.rightBumper()
+        .onTrue(
+          Commands.runOnce(() -> drivetrain.setScoringRight()
+        ));
+
+    //no vision toggle
+    OIConstants.driverController.x().onTrue(Commands.run(() -> vision.toggleShouldUpdate(0)).
+    alongWith(Commands.run(() -> vision.toggleShouldUpdate(1)))
+    .alongWith(Commands.run(() -> leds.setColor(Color.kYellow))));
+
+    OIConstants.operatorController.b()
+     .onTrue(AutoCommands.vstow());
+
+     
+    Constants.OIConstants.driverController.povRight().and(Constants.OIConstants.driverController.y())
+    .whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+  Constants.OIConstants.driverController.povRight().and(Constants.OIConstants.driverController.x())
+    .whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+  Constants.OIConstants.driverController.povLeft().and(Constants.OIConstants.driverController.y())
+    .whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+  Constants.OIConstants.driverController.povLeft().and(Constants.OIConstants.driverController.x())
+    .whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+
     // Constants.OIConstants.operatorController.povLeft().onTrue(AutoCommands.raiseL3());
 
     // Constants.OIConstants.operatorController.povRight().onTrue(AutoCommands.raiseL2());
@@ -194,14 +235,6 @@ public class RobotContainer {
     //   )
     // );
 
-    Constants.OIConstants.operatorController.y().whileTrue(
-      Commands.startEnd(
-        () -> intake.setIntakeSpeed(1),
-        () ->  intake.setIntakeSpeed(0), 
-        intake
-      )
-    );
-
     // OIConstants.operatorController.a().whileTrue(
     //   Commands.startEnd(
     //     () -> intake.setIntakeSpeed(-1),
@@ -209,24 +242,6 @@ public class RobotContainer {
     //     intake
     //   )
     // );
-
-    OIConstants.operatorController.a().onTrue(intake.intakeCommand());
-
-      
-    OIConstants.operatorController.leftBumper()
-        .onTrue(
-          Commands.runOnce(() -> drivetrain.setScoringLeft()
-        ));
-    
-    OIConstants.operatorController.rightBumper()
-        .onTrue(
-          Commands.runOnce(() -> drivetrain.setScoringRight()
-        ));
-
-
-    OIConstants.operatorController.b()
-     .onTrue(AutoCommands.vstow());
-
 
     // OIConstants.operatorController.leftBumper().whileTrue(
     // Arm.getInstance().sysIDRoutine().quasistatic(SysIdRoutine.Direction.kForward)
@@ -243,15 +258,6 @@ public class RobotContainer {
     // OIConstants.operatorController.rightTrigger().whileTrue(
     // Arm.getInstance().sysIDRoutine().dynamic(SysIdRoutine.Direction.kReverse)
     // );
-
-    Constants.OIConstants.driverController.povRight().and(Constants.OIConstants.driverController.y())
-      .whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-    Constants.OIConstants.driverController.povRight().and(Constants.OIConstants.driverController.x())
-      .whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-    Constants.OIConstants.driverController.povLeft().and(Constants.OIConstants.driverController.y())
-      .whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-    Constants.OIConstants.driverController.povLeft().and(Constants.OIConstants.driverController.x())
-      .whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
     // Constants.OIConstants.operatorController.povUp()
     // .whileTrue(
