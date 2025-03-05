@@ -20,6 +20,7 @@ public class IntakeIOSim implements IntakeIO {
     isGamepieceDetected = inputs.currentAmps > IntakeConstants.currentThreshold;
     inputs.hasGamepiece = hasGamepiece();
   }
+  
   @Override
   public boolean hasGamepiece(){
     return isGamepieceDetected;

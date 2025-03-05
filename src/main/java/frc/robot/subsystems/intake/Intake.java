@@ -9,6 +9,7 @@ public class Intake extends SubsystemBase {
     private IntakeIO io;
     private IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
     private double intakeSpeed = 0.0;
+    public boolean isStoring = false; 
 
     private static Intake instance;
 
@@ -61,7 +62,8 @@ public class Intake extends SubsystemBase {
             Commands.runOnce(() -> setIntakeSpeed(IntakeConstants.intake)), 
             Commands.waitSeconds(0.3),
             Commands.waitUntil(() -> GamePieceFinal()),
-            reverse().withTimeout(0.12));
+            reverse().withTimeout(0.12),
+            Commands.runOnce(() -> isStoring()));
     }
     
     public boolean GamePieceInitial() {
@@ -74,6 +76,14 @@ public class Intake extends SubsystemBase {
 
     public boolean hasGamepiece() {
         return io.hasGamepiece();
+    }
+
+    public void isStoring() {
+        isStoring = true; 
+    }
+
+    public void outtake() {
+        isStoring = false; 
     }
     
     @Override

@@ -10,6 +10,9 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.Constants.OIConstants;
+import frc.robot.subsystems.intake.Intake;
 
 public class LEDs extends SubsystemBase {
 
@@ -18,7 +21,7 @@ public class LEDs extends SubsystemBase {
         FAST,
         SlOW;
     }
-    private final int LED_LENGTH = 27;
+    private final int LED_LENGTH = 43; //this number might be wrong
     private final int PORT = 0;
 
     private AddressableLED led;
@@ -245,6 +248,20 @@ public class LEDs extends SubsystemBase {
     @Override
     public void periodic() {
     // updates LEDs to show state of intake
+    if(){
+
+    } else if (Constants.OIConstants.isScoringLeft) {
+        color = Color.kBlue;
+    } else if (!Constants.OIConstants.isScoringLeft) {
+        color = Color.kPurple;
+    }
+
+    if(Intake.getInstance().isStoring) {
+        blink = BlinkState.FAST;
+    } else {
+        blink = BlinkState.SOLID;
+    }
+
 
     }
 
