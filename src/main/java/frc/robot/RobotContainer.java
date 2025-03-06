@@ -39,7 +39,8 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    // do this later
+    // placeholder wrist
+    // m_operatorController.a().onTrue();
   }
 
   public Command getAutonomousCommand() {

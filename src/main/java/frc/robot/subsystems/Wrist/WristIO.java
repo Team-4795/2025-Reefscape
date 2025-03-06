@@ -12,5 +12,13 @@ public interface WristIO {
 
     public default void setVoltage(double voltage){}
 
+    public default double getPosition(){
+        return 0;
+    }
+
     public default void updateInputs(WristIOInputs inputs){}
+
+    public default void setGoal(double angle){}
+
+    public default void updateMotionProfile(){}
 }
