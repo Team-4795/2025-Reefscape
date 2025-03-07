@@ -2,7 +2,13 @@
   "robotWidth": 0.914,
   "robotLength": 0.914,
   "holonomicMode": true,
-  "pathFolders": [],
+  "pathFolders": [
+    "Mid Auto",
+    "Red Vision Align Top 2",
+    "Vision Align Blue Top 2",
+    "Vision Align Blue Bottom 2",
+    "Vision Align Red Bottom 2"
+  ],
   "autoFolders": [],
   "defaultMaxVel": 5.0,
   "defaultMaxAccel": 5.0,

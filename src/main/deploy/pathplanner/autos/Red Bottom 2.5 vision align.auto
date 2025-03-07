@@ -7,26 +7,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Score right reef"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Top 2 P1"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "VStow"
-                }
-              }
-            ]
+            "name": "Score left reef"
           }
         },
         {
@@ -38,11 +19,24 @@
                 "data": {
                   "name": "Align Reef"
                 }
-              },
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
               {
                 "type": "named",
                 "data": {
                   "name": "Raise to L4"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.5
                 }
               }
             ]
@@ -61,19 +55,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Top 2 P2"
+                  "pathName": "Red Bottom 2 P2"
                 }
               },
               {
                 "type": "sequential",
                 "data": {
                   "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "VStow"
-                      }
-                    },
                     {
                       "type": "wait",
                       "data": {
@@ -99,19 +87,13 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "Score left reef"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Top 2 P3"
+                  "pathName": "Red Bottom 2 P3"
                 }
               },
               {
@@ -130,13 +112,13 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Align Reef"
+                  "name": "Raise to L4"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "Raise to L4"
+                  "name": "Align Reef"
                 }
               }
             ]
@@ -155,7 +137,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Top 2 P4"
+                  "pathName": "Red Bottom 2 P4"
                 }
               },
               {
