@@ -260,7 +260,7 @@ public class LEDs extends SubsystemBase {
     }
 
     if(Intake.getInstance().isStoring && !OIConstants.aligned) {
-        blink = BlinkState.FAST;
+        blink = BlinkState.SlOW;
     } else {
         blink = BlinkState.SOLID;
     }
