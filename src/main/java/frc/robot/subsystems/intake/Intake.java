@@ -1,8 +1,13 @@
 package frc.robot.subsystems.intake;
 
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.OIConstants;
+
+import java.util.function.ObjIntConsumer;
+
 import org.littletonrobotics.junction.Logger;
 
 public class Intake extends SubsystemBase {
@@ -62,8 +67,21 @@ public class Intake extends SubsystemBase {
             Commands.runOnce(() -> setIntakeSpeed(IntakeConstants.intake)), 
             Commands.waitSeconds(0.3),
             Commands.waitUntil(() -> GamePieceFinal()),
-            reverse().withTimeout(0.12),
-            Commands.runOnce(() -> isStoring()));
+            Commands.parallel(
+                Commands.startEnd(
+                    () -> {
+                        OIConstants.driverController.setRumble(RumbleType.kBothRumble, 0.6);
+                        OIConstants.operatorController.setRumble(RumbleType.kBothRumble, 0.6);
+                    },
+                    () -> {
+                        OIConstants.driverController.setRumble(RumbleType.kBothRumble, 0);
+                        OIConstants.operatorController.setRumble(RumbleType.kBothRumble, 0);
+                    }
+                ),
+                reverse()
+            ).withTimeout(0.12),
+            Commands.runOnce(() -> isStoring())
+        );  
     }
     
     public boolean GamePieceInitial() {

@@ -16,6 +16,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -160,6 +161,9 @@ public class RobotContainer {
 
     OIConstants.operatorController.a().onTrue(intake.intakeCommand());
 
+    OIConstants.driverController.setRumble(null, 0);
+
+
       
     OIConstants.operatorController.leftBumper()
         .onTrue(
@@ -267,6 +271,8 @@ public class RobotContainer {
     // Arm.getInstance().setGoal(-1.8)));
     // OIConstants.driverController.rightBumper().onTrue(Commands.runOnce(() ->
     // Arm.getInstance().setGoal(ArmConstants.CORAL_L2)));
+
+   
 
     drivetrain.registerTelemetry(logger::telemeterize);
   }
