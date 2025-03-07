@@ -1,0 +1,68 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 5.051,
+        "y": 2.7965
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.324,
+        "y": 1.9092499999999994
+      },
+      "isLocked": false,
+      "linkedName": "bottom 2 P1 endpoint"
+    },
+    {
+      "anchor": {
+        "x": 1.365,
+        "y": 0.85625
+      },
+      "prevControl": {
+        "x": 2.8274999999999997,
+        "y": 1.4802500000000007
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.046511627906977764,
+      "maxWaypointRelativePos": 0.214839424141748,
+      "constraints": {
+        "maxVelocity": 5.0,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 5.0,
+    "maxAcceleration": 5.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 55.619655276155086
+  },
+  "reversed": false,
+  "folder": "Red Bottom 2 Vision Align",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 122.68055474336347
+  },
+  "useDefaultConstraints": true
+}

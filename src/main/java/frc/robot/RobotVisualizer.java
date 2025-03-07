@@ -39,7 +39,7 @@ public class RobotVisualizer extends SubsystemBase {
         armLigament.setAngle(Units.radiansToDegrees(Arm.getInstance().getAngle()) - 90);
         elevatorstage2Ligament.setLength(ElevatorConstants.maxDistance/.9 + Elevator.getInstance().getPosition());
         Logger.recordOutput("RobotVisualizer", robotVisualizer);
-        Pose2d fakePose = AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape).getTagPose(7).get().toPose2d().plus(new Transform2d(1, 0, new Rotation2d(Math.PI)));
+        Pose2d fakePose = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeAndyMark).getTagPose(7).get().toPose2d().plus(new Transform2d(1, 0, new Rotation2d(Math.PI)));
         Logger.recordOutput("Fake robot pose", fakePose);
     }
 }

@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.51,
-        "y": 2.8939999999999997
+        "x": 1.453,
+        "y": 0.915
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9987500000000002,
-        "y": 1.558249999999999
+        "x": 2.2327500000000002,
+        "y": 1.3339999999999999
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.3747500000000001,
-        "y": 0.8269999999999993
+        "x": 3.34425,
+        "y": 2.1919999999999993
       },
       "prevControl": {
-        "x": 2.2815000000000003,
-        "y": 1.7337499999999992
+        "x": 2.4959999999999996,
+        "y": 1.3632499999999994
       },
       "nextControl": null,
       "isLocked": false,
@@ -45,7 +45,7 @@
     "rotation": 56.30993247402022
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Blue Bottom 2 Vision Align",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 50.96448710125311
