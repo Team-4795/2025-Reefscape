@@ -137,7 +137,7 @@ public class RobotContainer {
         () -> intake.setIntakeSpeed(-1),
         () -> intake.setIntakeSpeed(0), 
         intake
-      ).andThen(() -> intake.outtake()));                                                          
+      ).alongWith(Commands.runOnce(() -> intake.outtake())));                                                          
 
     // Arm manual control
 
