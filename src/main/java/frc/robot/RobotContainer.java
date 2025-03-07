@@ -140,29 +140,14 @@ public class RobotContainer {
       ).andThen(() -> intake.outtake()));                                                          
 
     // Arm manual control
-    Constants.OIConstants.operatorController.leftTrigger().whileTrue(
-      Commands.run(() -> Elevator.getInstance().setVoltage(3), Elevator.getInstance())
-    );
-
-    Constants.OIConstants.operatorController.rightTrigger().whileTrue(
-      Commands.run(() -> Elevator.getInstance().setVoltage(-3), Elevator.getInstance())
-    );
-
-    Constants.OIConstants.operatorController.axisGreaterThan(4, 0.1).whileTrue(
-      Commands.run(() -> Arm.getInstance().manualVoltage(OIConstants.operatorController.getRightY() * 3), Arm.getInstance())
-    );
-
-    Constants.OIConstants.operatorController.axisLessThan(4, -0.1).whileTrue(
-      Commands.run(() -> Arm.getInstance().manualVoltage(OIConstants.operatorController.getRightY() * 3), Arm.getInstance())
-    );
-
 
     // Coral Setpoints
     Constants.OIConstants.operatorController.povUp().onTrue(AutoCommands.raiseL4());
     Constants.OIConstants.operatorController.povLeft().onTrue(AutoCommands.raiseL2());
     Constants.OIConstants.operatorController.povRight().onTrue(AutoCommands.raiseL3());
     Constants.OIConstants.operatorController.povDown().onTrue(AutoCommands.stow());
-    Constants.OIConstants.operatorController.x().onTrue(AutoCommands.Algea());
+    Constants.OIConstants.operatorController.rightTrigger().onTrue(AutoCommands.AlgaeLow());
+    Constants.OIConstants.operatorController.leftTrigger().onTrue(AutoCommands.algaeHigh());
 
     Constants.OIConstants.operatorController.y().whileTrue(
       Commands.startEnd(
@@ -170,6 +155,7 @@ public class RobotContainer {
         () ->  intake.setIntakeSpeed(0), 
         intake
       )
+      
     );
 
     OIConstants.operatorController.a().onTrue(intake.intakeCommand());

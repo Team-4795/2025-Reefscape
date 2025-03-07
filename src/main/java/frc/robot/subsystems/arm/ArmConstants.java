@@ -5,7 +5,7 @@ import edu.wpi.first.math.util.Units;
 public class ArmConstants {
     public static final int CAN_ID = 14;
     public static final int CURRENT_LIMIT = 50;
-    public static final double ARM_OFFSET = 1.88;
+    public static final double ARM_OFFSET = 1.88 - .13;
 
     //-68 degrees for algae
     public static final double CORAL_L1 = 1.3992315530776978 - ARM_OFFSET;
@@ -14,6 +14,7 @@ public class ArmConstants {
     public static final double CORAL_L4 = 2.8875072 - ARM_OFFSET;
     public static final double VSTOW = 1.24;
     public static final double GOAL_TOLERANCE = 0.02;
+    public static final double ALGAE_HIGH = CORAL_L3 - Units.degreesToRadians(10);
 
     public static final double STOW = -Math.PI/2 - Units.degreesToRadians(15);
 

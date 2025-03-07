@@ -15,34 +15,28 @@
           "data": {
             "commands": [
               {
-                "type": "path",
-                "data": {
-                  "pathName": "Bottom 2 Vision Align"
-                }
-              },
-              {
                 "type": "named",
                 "data": {
-                  "name": "VStow"
+                  "name": "Align Reef"
                 }
               }
             ]
           }
         },
         {
-          "type": "parallel",
+          "type": "sequential",
           "data": {
             "commands": [
               {
                 "type": "named",
                 "data": {
-                  "name": "Align Reef"
+                  "name": "Raise to L4"
                 }
               },
               {
-                "type": "named",
+                "type": "wait",
                 "data": {
-                  "name": "Raise to L3"
+                  "waitTime": 0.5
                 }
               }
             ]
@@ -71,7 +65,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.3
+                        "waitTime": 0.5
                       }
                     },
                     {
@@ -118,7 +112,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Raise to L3"
+                  "name": "Raise to L4"
                 }
               },
               {
@@ -153,7 +147,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.3
+                        "waitTime": 0.5
                       }
                     },
                     {
@@ -172,56 +166,6 @@
           "type": "named",
           "data": {
             "name": "Intake"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Bottom 2 P5"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "VStow"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Score right reef"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Raise to L3"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Align Reef"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Score"
           }
         }
       ]

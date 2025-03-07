@@ -18,6 +18,7 @@ public interface VisionIO {
         double pitch = 0.0;
         double yaw = 0.0;
         double area = 0.0;
+        double poseAmbiguity = 0.0;
 
         int pipelineIndex = 10;
         String sortMode = "";

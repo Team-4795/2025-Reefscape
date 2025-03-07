@@ -80,7 +80,7 @@ public class AutoCommands {
         );
     }
 
-    public static Command Algea() {
+    public static Command AlgaeLow() {
         return Commands.either(
             Commands.parallel(
                 arm.setGoalCommand(ArmConstants.CORAL_L2),
@@ -92,6 +92,22 @@ public class AutoCommands {
                 Commands.waitUntil(() -> elevator.getPosition() < .2)
                     .andThen(arm.setGoalCommand(ArmConstants.CORAL_L2))
             ).until(() -> elevator.atGoal(ElevatorConstants.ALGEA_SETPOINT) && arm.atGoal(ArmConstants.CORAL_L2)),
+            () -> 0 < elevator.getGoalHeight()
+        );
+    }
+
+    public static Command algaeHigh() {
+        return Commands.either(
+            Commands.parallel(
+                arm.setGoalCommand(ArmConstants.ALGAE_HIGH),
+                Commands.waitUntil(() -> arm.getAngle() > -Math.PI/4)
+                    .andThen(elevator.setGoal(ElevatorConstants.CORAL_L2_SETPOINT))
+            ).until(() -> elevator.atGoal(ElevatorConstants.CORAL_L2_SETPOINT) && arm.atGoal(ArmConstants.ALGAE_HIGH)),
+            Commands.parallel(
+                elevator.setGoal(ElevatorConstants.CORAL_L2_SETPOINT),
+                Commands.waitUntil(() -> elevator.getPosition() < .2)
+                    .andThen(arm.setGoalCommand(ArmConstants.ALGAE_HIGH))
+            ).until(() -> elevator.atGoal(ElevatorConstants.CORAL_L2_SETPOINT) && arm.atGoal(ArmConstants.ALGAE_HIGH)),
             () -> 0 < elevator.getGoalHeight()
         );
     }
@@ -114,7 +130,7 @@ public class AutoCommands {
     
     public static Command stow() {
         return Commands.parallel(
-            Commands.runOnce(() -> elevator.setGoalHeight(0)),
+            Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.STOW)),
             Commands.waitUntil(() -> elevator.getPosition() < 0.2)
                 .andThen(Commands.runOnce(() -> arm.setGoal(ArmConstants.STOW)))
         );
@@ -141,7 +157,7 @@ public class AutoCommands {
             new ProfiledPIDController(5,
              0, 0, new Constraints(SwerveConstants.MaxSpeed, 3)), 
             new ProfiledPIDController(7.5, 0, 0, new Constraints(SwerveConstants.MaxSpeed, 3))
-        ).until(() -> OIConstants.aligned);
+        ).withTimeout(2);
     }
 
     public static Command scoreLeftReef() {

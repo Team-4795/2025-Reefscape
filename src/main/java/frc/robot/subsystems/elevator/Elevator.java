@@ -4,7 +4,9 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.OIConstants;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 
 
@@ -31,7 +33,11 @@ public class Elevator extends SubsystemBase {
 
         setDefaultCommand(            
             Commands.run(() -> {
-            // io.setGoal(inputs.goalHeight);
+                // double change = MathUtil.applyDeadband(OIConstants.operatorController.getLeftY(), OIConstants.KAxisDeadband);
+                // change = .033 * Math.pow(change, 3);
+                // if(DriverStation.isTeleopEnabled() && change != 0) {
+                //     io.setGoal(inputs.goalHeight + change);
+                // }
             io.updateMotionProfile();
         }, this));
     }

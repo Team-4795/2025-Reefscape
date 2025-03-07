@@ -120,7 +120,7 @@ public class Vision extends SubsystemBase{
                 Logger.recordOutput("Vision/" + VisionConstants.cameraIds[i] + "/xy std dev", xyStdDev);
                 Logger.recordOutput("Vision/" + VisionConstants.cameraIds[i] + "/Robot Pose", robotPose);
                 
-                if(shouldUpdate[i]) {
+                if(inputs[i].poseAmbiguity < 0.1 && shouldUpdate[i]) {
                     Swerve.getInstance().addVisionMeasurement(robotPose.toPose2d(), inputs[i].timestamp[p], stddevs);
                 }
             }

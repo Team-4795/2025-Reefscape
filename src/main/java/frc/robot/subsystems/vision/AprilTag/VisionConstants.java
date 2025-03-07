@@ -23,8 +23,8 @@ public class VisionConstants {
     // public static final double xyStdDevSingleTag = 0.03;
     // public static final double xyStdDevMultiTag = 0.018;
 
-    public static final double xyStdDevSingleTag = 0.02;
-    public static final double xyStdDevMultiTag = 0.01;
+    public static final double xyStdDevSingleTag = 0.08;
+    public static final double xyStdDevMultiTag = 0.04;
 
     public static final String[] cameraIds =
     new String[] {
@@ -133,12 +133,12 @@ public class VisionConstants {
     
     public static final Pose2d[] blueReefScoringPoses =
     new Pose2d[] {
-        blueReefTag[0].plus(new Transform2d(0.6, 0, new Rotation2d(Math.PI))),
-        blueReefTag[1].plus(new Transform2d(0.6, 0, new Rotation2d(Math.PI))),
-        blueReefTag[2].plus(new Transform2d(0.6, 0, new Rotation2d(Math.PI))),
-        blueReefTag[3].plus(new Transform2d(0.6, 0, new Rotation2d(Math.PI))),
-        blueReefTag[4].plus(new Transform2d(0.6, 0, new Rotation2d(Math.PI))),
-        blueReefTag[5].plus(new Transform2d(0.6, 0, new Rotation2d(Math.PI))),
+        blueReefTag[0].plus(new Transform2d(0.47, 0, new Rotation2d(Math.PI))),
+        blueReefTag[1].plus(new Transform2d(0.47, 0, new Rotation2d(Math.PI))),
+        blueReefTag[2].plus(new Transform2d(0.47, 0, new Rotation2d(Math.PI))),
+        blueReefTag[3].plus(new Transform2d(0.47, 0, new Rotation2d(Math.PI))),
+        blueReefTag[4].plus(new Transform2d(0.47, 0, new Rotation2d(Math.PI))),
+        blueReefTag[5].plus(new Transform2d(0.47, 0, new Rotation2d(Math.PI))),
     };
 
     public static final double areaCutoff = 11;

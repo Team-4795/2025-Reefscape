@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -48,9 +49,11 @@ public class Arm extends SubsystemBase {
         this.io = io;
         setDefaultCommand(
             Commands.run(() -> {
-                double up = MathUtil.applyDeadband(Math.pow(OIConstants.operatorController.getLeftTriggerAxis(), 3), 0.1);
-                double down = MathUtil.applyDeadband(Math.pow(OIConstants.operatorController.getRightTriggerAxis(), 3), 0.1);
-                double change = (up - down) * 0.02;
+            //   double change = MathUtil.applyDeadband(OIConstants.operatorController.getRightY(), OIConstants.KAxisDeadband);
+            //     change = .1 * Math.pow(change, 3);
+            //     if(DriverStation.isTeleopEnabled() && change != 0) {
+            //         io.setGoal(inputs.goalAngle + change);
+            //     }
                 io.updateMotionProfile();
             }, this)
         );

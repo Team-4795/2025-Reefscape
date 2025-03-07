@@ -83,12 +83,20 @@ public class VisionIOReal implements VisionIO {
         inputs.sortMode = sortMode.toString();
 
         result = camera.getAllUnreadResults();
+    
 
         for(int i = 0; i < result.size(); i++) {
+            if(result.get(i).getBestTarget() != null) {
+                inputs.poseAmbiguity = result.get(i).getBestTarget().getPoseAmbiguity();
+            }
+            
             poseEstimator.update(result.get(i), camera.getCameraMatrix(), camera.getDistCoeffs()).ifPresentOrElse((pose) -> {
                 inputs.pose = new Pose3d[] {pose.estimatedPose};
                 inputs.timestamp = new double[] {pose.timestampSeconds};
-                inputs.tags = pose.targetsUsed.stream().mapToInt((target) -> target.getFiducialId()).toArray();
+                inputs.tags = pose.targetsUsed.stream().mapToInt((target) -> {
+                    return target.getFiducialId();
+                }).toArray();
+               
             }, () -> {
                 inputs.pose = new Pose3d[] {};
                 inputs.timestamp = new double[] {};
