@@ -254,7 +254,7 @@ public class LEDs extends SubsystemBase {
     } else if(OIConstants.aligned) {
         color = Color.kRed;
     } else if (Constants.OIConstants.isScoringLeft) {
-        color = Color.kBlue;
+        color = Color.kCyan;
     } else if (!Constants.OIConstants.isScoringLeft) {
         color = Color.kPurple;
     }
