@@ -36,9 +36,9 @@ public class AutoCommands {
     }
 
     public static Command vstow() {
-        return Commands.parallel(
+        return Commands.sequence(
             Commands.runOnce(() -> arm.setGoal(ArmConstants.VSTOW)),
-            Commands.waitUntil(() -> arm.getAngle() > -Math.PI/4)
+            Commands.waitSeconds(.25)
                 .andThen(Commands.runOnce(() -> elevator.setGoalHeight(0)))
         );
     }
@@ -158,6 +158,22 @@ public class AutoCommands {
              0, 0, new Constraints(SwerveConstants.MaxSpeed, 3)), 
             new ProfiledPIDController(7.5, 0, 0, new Constraints(SwerveConstants.MaxSpeed, 3))
         ).withTimeout(2);
+    }
+
+    public static Command longerAlignReef() {
+        return new AutoAlignReef(
+            new ProfiledPIDController(5,
+             0, 0, new Constraints(SwerveConstants.MaxSpeed, 3)), 
+            new ProfiledPIDController(7.5, 0, 0, new Constraints(SwerveConstants.MaxSpeed, 3))
+        ).withTimeout(5);
+    }
+
+    public static Command alignReefUntil() {
+        return new AutoAlignReef(
+            new ProfiledPIDController(5,
+             0, 0, new Constraints(SwerveConstants.MaxSpeed, 3)), 
+            new ProfiledPIDController(7.5, 0, 0, new Constraints(SwerveConstants.MaxSpeed, 3))
+        ).until(() -> OIConstants.aligned);
     }
 
     public static Command scoreLeftReef() {

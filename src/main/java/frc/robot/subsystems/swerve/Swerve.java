@@ -313,6 +313,10 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
     public void periodic() {
         Logger.recordOutput("Odometry/omega", getState().Speeds.omegaRadiansPerSecond);
         Logger.recordOutput("Odometry/Pose", getState().Pose);
+        Logger.recordOutput("Swerve/Module0TurnPosition", getState().ModulePositions[0].angle.getRadians());
+        Logger.recordOutput("Swerve/Module0TurnSetpoint", getState().ModuleTargets[0].angle.getRadians());
+        Logger.recordOutput("Swerve/Module0DrivePosition", getState().ModuleStates[0].speedMetersPerSecond);
+        Logger.recordOutput("Swerve/Module0DriveSetpoint", getState().ModuleTargets[0].speedMetersPerSecond);
         /*
          * Periodically try to apply the operator perspective.
          * If we haven't applied the operator perspective before, then we should apply it regardless of DS state.

@@ -160,10 +160,6 @@ public class RobotContainer {
     );
 
     OIConstants.operatorController.a().onTrue(intake.intakeCommand());
-
-    OIConstants.driverController.setRumble(null, 0);
-
-
       
     OIConstants.operatorController.leftBumper()
         .onTrue(
@@ -180,6 +176,10 @@ public class RobotContainer {
     alongWith(Commands.run(() -> vision.toggleShouldUpdate(1)))
     .alongWith(new RainbowCommand(() -> 1)));
 
+    // toggle using reef tags only
+    OIConstants.driverController.povUp().onTrue(Commands.runOnce(() -> vision.toggleReefTag()));
+
+    // vertical stow
     OIConstants.operatorController.b()
      .onTrue(AutoCommands.vstow());
 

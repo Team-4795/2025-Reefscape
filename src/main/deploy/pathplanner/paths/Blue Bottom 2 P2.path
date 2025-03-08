@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 1.365,
-        "y": 0.85625
+        "x": 1.1505,
+        "y": 0.7879999999999996
       },
       "prevControl": {
-        "x": 2.8274999999999997,
-        "y": 1.4802500000000007
+        "x": 2.6130000000000004,
+        "y": 1.4120000000000004
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Blue Bottom 2 Feeder"
     }
   ],
   "rotationTargets": [],
@@ -56,7 +56,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 55.619655276155086
+    "rotation": 53.5
   },
   "reversed": false,
   "folder": "Vision Align Blue Bottom 2",

@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class Constants {
     public static final boolean tuningMode = false;
-    public static final Mode currentMode = Mode.SIM;
+    public static final Mode currentMode = Mode.REAL;
     public static final boolean visonSimEnabled = false;
 
     public static final class driveConstants {
@@ -34,6 +34,7 @@ public class Constants {
         public static final double KAxisDeadband = 0.1;  
         public static boolean isScoringLeft = true;
         public static boolean aligned = false; 
+        public static boolean isReefTagOnly = true;
     }
 
     public static enum Gamepiece {

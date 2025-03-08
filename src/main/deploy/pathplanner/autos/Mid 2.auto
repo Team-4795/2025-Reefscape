@@ -5,6 +5,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "Score left reef"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Mid 2 P1"
@@ -77,6 +83,12 @@
           "type": "named",
           "data": {
             "name": "Intake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score right reef"
           }
         },
         {

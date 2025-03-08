@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.521,
-        "y": 0.983
+        "x": 1.1895,
+        "y": 0.75875
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1255,
-        "y": 1.353499999999999
+        "x": 1.7940000000000003,
+        "y": 1.1292499999999992
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Red Bottom 2 Feeder"
     },
     {
       "anchor": {
@@ -45,14 +45,7 @@
     }
   ],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "Raise to L4",
-      "waypointRelativePos": 0.24141749723145162,
-      "endWaypointRelativePos": null,
-      "command": null
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 5.0,
     "maxAcceleration": 5.0,
@@ -69,7 +62,7 @@
   "folder": "Vision Align Red Bottom 2",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 55.62
+    "rotation": 53.5
   },
   "useDefaultConstraints": true
 }

@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.51,
-        "y": 2.8939999999999997
+        "x": 8.06325,
+        "y": 4.727
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9987500000000002,
-        "y": 1.558249999999999
+        "x": 7.81325,
+        "y": 4.727
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.1505,
-        "y": 0.7879999999999996
+        "x": 5.7525,
+        "y": 5.4582500000000005
       },
       "prevControl": {
-        "x": 2.0572500000000007,
-        "y": 1.6947499999999995
+        "x": 6.549500000000002,
+        "y": 5.3260000000000005
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Blue Bottom 2 Feeder"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 53.5
+    "rotation": -169.28433588147956
   },
   "reversed": false,
   "folder": "Vision Align Blue Bottom 2",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 50.96448710125311
+    "rotation": -178.7546357332315
   },
   "useDefaultConstraints": true
 }

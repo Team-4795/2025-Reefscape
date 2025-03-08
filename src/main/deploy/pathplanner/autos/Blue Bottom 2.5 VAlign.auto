@@ -7,88 +7,6 @@
         {
           "type": "named",
           "data": {
-            "name": "Score right reef"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Red Top 2 P1"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Raise to L4"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Align Reef"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Score"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Red Top 2 P2"
-                }
-              },
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.3
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Stow no intake"
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "Score left reef"
           }
         },
@@ -99,13 +17,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Red Top 2 P3"
+                  "pathName": "Blue Bottom 2 Vision Align"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "Raise to L4"
+                  "name": "VStow"
                 }
               }
             ]
@@ -119,6 +37,12 @@
                 "type": "named",
                 "data": {
                   "name": "Align Reef"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Raise to L4"
                 }
               }
             ]
@@ -137,7 +61,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Red Top 2 P4"
+                  "pathName": "Blue Bottom 2 P2"
                 }
               },
               {
@@ -169,6 +93,107 @@
           }
         },
         {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Blue Bottom 2 P3"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "VStow"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Raise to L4"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Align Reef"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Blue Bottom 2 P4"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.3
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Stow no intake"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Blue Bottom 2 P5"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "VStow"
+                }
+              }
+            ]
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "Score right reef"
@@ -179,24 +204,11 @@
           "data": {
             "commands": [
               {
-                "type": "path",
-                "data": {
-                  "pathName": "Red Top 2 P5"
-                }
-              },
-              {
                 "type": "named",
                 "data": {
                   "name": "Raise to L4"
                 }
-              }
-            ]
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
+              },
               {
                 "type": "named",
                 "data": {

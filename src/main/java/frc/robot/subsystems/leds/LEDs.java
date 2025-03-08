@@ -22,7 +22,7 @@ public class LEDs extends SubsystemBase {
         FAST,
         SlOW;
     }
-    private final int LED_LENGTH = 43; //this number might be wrong
+    private final int LED_LENGTH = 59; //this number might be wrong
     private final int PORT = 0;
 
     private AddressableLED led;

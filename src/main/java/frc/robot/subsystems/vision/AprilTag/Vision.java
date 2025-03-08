@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.FieldConstants;
+import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.vision.AprilTag.VisionIOInputsAutoLogged;
 import frc.robot.Constants;
@@ -61,6 +62,11 @@ public class Vision extends SubsystemBase{
         shouldUpdate[id] = !shouldUpdate[id];
     }
 
+    public void toggleReefTag() {
+        OIConstants.isReefTagOnly = !OIConstants.isReefTagOnly;
+    }
+
+
     public Pose2d getBestReefPose() {
         if(Constants.currentMode == Constants.Mode.SIM)
         {
@@ -96,12 +102,15 @@ public class Vision extends SubsystemBase{
                 ) continue;
 
                 List<Pose3d> tagPoses = new ArrayList<>();
-                for (int tag : inputs[i].tags) {
-                    if(tag != 1 && tag != 2 && tag != 3 && tag != 4 && tag != 5 && tag != 12 && tag != 13 && tag != 14 && tag != 15 && tag != 16) {
-                        VisionConstants.aprilTagFieldLayout.getTagPose(tag).ifPresent(tagPoses::add);
-                    }
-                    else {
-                        continue;
+                
+                if(OIConstants.isReefTagOnly) {
+                    for (int tag : inputs[i].tags) {
+                        if(tag != 1 && tag != 2 && tag != 3 && tag != 4 && tag != 5 && tag != 12 && tag != 13 && tag != 14 && tag != 15 && tag != 16) {
+                            VisionConstants.aprilTagFieldLayout.getTagPose(tag).ifPresent(tagPoses::add);
+                        }
+                        else {
+                            continue;
+                        }
                     }
                 }
 
@@ -114,6 +123,12 @@ public class Vision extends SubsystemBase{
 
                 distance /= tagPoses.size();
                 double xyStdDev = (tagPoses.size() == 1 ? xyStdDevSingleTag : xyStdDevMultiTag) * Math.pow(distance, 2);
+
+                if(distance > Units.feetToMeters(6)) {
+                    //xyStdDev *= 2;
+                    continue;
+                }
+
                 var stddevs = VecBuilder.fill(xyStdDev, xyStdDev, Units.degreesToRadians(100));
 
                 Logger.recordOutput("Vision/" + VisionConstants.cameraIds[i] + "/Avg distance", distance);
