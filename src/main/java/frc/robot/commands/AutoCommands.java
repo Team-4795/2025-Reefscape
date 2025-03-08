@@ -43,19 +43,34 @@ public class AutoCommands {
         );
     }
 
+    // public static Command raiseL3() {
+    //     return Commands.either(
+    //         Commands.parallel(
+    //             arm.setGoalCommand(ArmConstants.CORAL_L3),
+    //             Commands.waitUntil(() -> arm.getAngle() > -Math.PI/4)
+    //                 .andThen(elevator.setGoal(0))
+    //         ).until(() -> elevator.atGoal(0) && arm.atGoal(ArmConstants.CORAL_L3)),
+    //         Commands.parallel(
+    //             elevator.setGoal(0),
+    //             Commands.waitUntil(() -> elevator.getPosition() < .2)
+    //                 .andThen(arm.setGoalCommand(ArmConstants.CORAL_L3))
+    //         ).until(() -> elevator.atGoal(0) && arm.atGoal(ArmConstants.CORAL_L3)),
+    //         () -> 0 < elevator.getGoalHeight()
+    //     );
+    // }
+
+    
     public static Command raiseL3() {
         return Commands.either(
-            Commands.parallel(
-                arm.setGoalCommand(ArmConstants.CORAL_L3),
-                Commands.waitUntil(() -> arm.getAngle() > -Math.PI/4)
-                    .andThen(elevator.setGoal(0))
-            ).until(() -> elevator.atGoal(0) && arm.atGoal(ArmConstants.CORAL_L3)),
-            Commands.parallel(
-                elevator.setGoal(0),
-                Commands.waitUntil(() -> elevator.getPosition() < .2)
-                    .andThen(arm.setGoalCommand(ArmConstants.CORAL_L3))
-            ).until(() -> elevator.atGoal(0) && arm.atGoal(ArmConstants.CORAL_L3)),
-            () -> 0 < elevator.getGoalHeight()
+            Commands.sequence(
+                Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.STOW)),
+                Commands.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L3))
+            ),
+            Commands.sequence(
+                Commands.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L3)),
+                Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.STOW))
+            ),
+            () -> elevator.getPosition() >= ElevatorConstants.STOW
         );
     }
 
@@ -63,54 +78,51 @@ public class AutoCommands {
     public static Command noElevatorRaiseL3() {
         return arm.setGoalCommand(ArmConstants.CORAL_L3).until(() -> arm.atGoal(ArmConstants.CORAL_L3));
     }
-
     public static Command raiseL2() {
         return Commands.either(
-            Commands.parallel(
-                arm.setGoalCommand(ArmConstants.CORAL_L2),
-                Commands.waitUntil(() -> arm.getAngle() > -Math.PI/4)
-                    .andThen(elevator.setGoal(ElevatorConstants.CORAL_L2_SETPOINT))
-            ).until(() -> elevator.atGoal(ElevatorConstants.CORAL_L2_SETPOINT) && arm.atGoal(ArmConstants.CORAL_L2)),
-            Commands.parallel(
-                elevator.setGoal(ElevatorConstants.CORAL_L2_SETPOINT),
-                Commands.waitUntil(() -> elevator.getPosition() < .2)
-                    .andThen(arm.setGoalCommand(ArmConstants.CORAL_L2))
-            ).until(() -> elevator.atGoal(ElevatorConstants.CORAL_L2_SETPOINT) && arm.atGoal(ArmConstants.CORAL_L2)),
-            () -> 0 < elevator.getGoalHeight()
+            Commands.sequence(
+                Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.CORAL_L2_SETPOINT)),
+                Commands.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L2))
+            ),
+            Commands.sequence(
+                Commands.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L2)),
+                Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.CORAL_L2_SETPOINT))
+            ),
+            () -> elevator.getPosition() >= ElevatorConstants.CORAL_L2_SETPOINT
         );
     }
 
-    public static Command AlgaeLow() {
-        return Commands.either(
-            Commands.parallel(
-                arm.setGoalCommand(ArmConstants.CORAL_L2),
-                Commands.waitUntil(() -> arm.getAngle() > -Math.PI/4)
-                    .andThen(elevator.setGoal(ElevatorConstants.ALGEA_SETPOINT))
-            ).until(() -> elevator.atGoal(ElevatorConstants.ALGEA_SETPOINT) && arm.atGoal(ArmConstants.CORAL_L2)),
-            Commands.parallel(
-                elevator.setGoal(ElevatorConstants.ALGEA_SETPOINT),
-                Commands.waitUntil(() -> elevator.getPosition() < .2)
-                    .andThen(arm.setGoalCommand(ArmConstants.CORAL_L2))
-            ).until(() -> elevator.atGoal(ElevatorConstants.ALGEA_SETPOINT) && arm.atGoal(ArmConstants.CORAL_L2)),
-            () -> 0 < elevator.getGoalHeight()
-        );
-    }
+    // // public static Command AlgaeLow() {
+    // //     return Commands.either(
+    // //         Commands.parallel(
+    // //             arm.setGoalCommand(ArmConstants.CORAL_L2),
+    // //             Commands.waitUntil(() -> arm.getAngle() > -Math.PI/4)
+    // //                 .andThen(elevator.setGoal(ElevatorConstants.ALGEA_SETPOINT))
+    // //         ).until(() -> elevator.atGoal(ElevatorConstants.ALGEA_SETPOINT) && arm.atGoal(ArmConstants.CORAL_L2)),
+    // //         Commands.parallel(
+    // //             elevator.setGoal(ElevatorConstants.ALGEA_SETPOINT),
+    // //             Commands.waitUntil(() -> elevator.getPosition() < .2)
+    // //                 .andThen(arm.setGoalCommand(ArmConstants.CORAL_L2))
+    // //         ).until(() -> elevator.atGoal(ElevatorConstants.ALGEA_SETPOINT) && arm.atGoal(ArmConstants.CORAL_L2)),
+    // //         () -> 0 < elevator.getGoalHeight()
+    // //     );
+    // // }
 
-    public static Command algaeHigh() {
-        return Commands.either(
-            Commands.parallel(
-                arm.setGoalCommand(ArmConstants.ALGAE_HIGH),
-                Commands.waitUntil(() -> arm.getAngle() > -Math.PI/4)
-                    .andThen(elevator.setGoal(ElevatorConstants.CORAL_L2_SETPOINT))
-            ).until(() -> elevator.atGoal(ElevatorConstants.CORAL_L2_SETPOINT) && arm.atGoal(ArmConstants.ALGAE_HIGH)),
-            Commands.parallel(
-                elevator.setGoal(ElevatorConstants.CORAL_L2_SETPOINT),
-                Commands.waitUntil(() -> elevator.getPosition() < .2)
-                    .andThen(arm.setGoalCommand(ArmConstants.ALGAE_HIGH))
-            ).until(() -> elevator.atGoal(ElevatorConstants.CORAL_L2_SETPOINT) && arm.atGoal(ArmConstants.ALGAE_HIGH)),
-            () -> 0 < elevator.getGoalHeight()
-        );
-    }
+    // // public static Command algaeHigh() {
+    // //     return Commands.either(
+    // //         Commands.parallel(
+    // //             arm.setGoalCommand(ArmConstants.ALGAE_HIGH),
+    // //             Commands.waitUntil(() -> arm.getAngle() > -Math.PI/4)
+    // //                 .andThen(elevator.setGoal(ElevatorConstants.CORAL_L2_SETPOINT))
+    // //         ).until(() -> elevator.atGoal(ElevatorConstants.CORAL_L2_SETPOINT) && arm.atGoal(ArmConstants.ALGAE_HIGH)),
+    // //         Commands.parallel(
+    // //             elevator.setGoal(ElevatorConstants.CORAL_L2_SETPOINT),
+    // //             Commands.waitUntil(() -> elevator.getPosition() < .2)
+    // //                 .andThen(arm.setGoalCommand(ArmConstants.ALGAE_HIGH))
+    // //         ).until(() -> elevator.atGoal(ElevatorConstants.CORAL_L2_SETPOINT) && arm.atGoal(ArmConstants.ALGAE_HIGH)),
+    // //         () -> 0 < elevator.getGoalHeight()
+    // //     );
+    // // }
 
     
     public static Command autoStow() {

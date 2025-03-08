@@ -147,8 +147,8 @@ public class RobotContainer {
     Constants.OIConstants.operatorController.povLeft().onTrue(AutoCommands.raiseL2());
     Constants.OIConstants.operatorController.povRight().onTrue(AutoCommands.raiseL3());
     Constants.OIConstants.operatorController.povDown().onTrue(AutoCommands.stow());
-    Constants.OIConstants.operatorController.rightTrigger().onTrue(AutoCommands.AlgaeLow());
-    Constants.OIConstants.operatorController.leftTrigger().onTrue(AutoCommands.algaeHigh());
+    // Constants.OIConstants.operatorController.rightTrigger().onTrue(AutoCommands.AlgaeLow());
+    // Constants.OIConstants.operatorController.leftTrigger().onTrue(AutoCommands.algaeHigh());
 
     Constants.OIConstants.operatorController.y().whileTrue(
       Commands.startEnd(
