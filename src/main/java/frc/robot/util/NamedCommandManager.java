@@ -22,5 +22,6 @@ public class NamedCommandManager {
         NamedCommands.registerCommand("SetIntakeSpeed", AutoCommands.setIntakeSpeed());
         NamedCommands.registerCommand("Score left reef", AutoCommands.scoreLeftReef());
         NamedCommands.registerCommand("Score right reef", AutoCommands.scoreRightReef());
+        NamedCommands.registerCommand("Zero Arm", AutoCommands.zeroArm());
     }
 }

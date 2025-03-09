@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.1505,
-        "y": 0.7879999999999996
+        "x": 1.3186475409836067,
+        "y": 1.0340676229508199
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.7550000000000003,
-        "y": 1.1584999999999992
+        "x": 1.923147540983607,
+        "y": 1.4045676229508195
       },
       "isLocked": false,
       "linkedName": "Blue Bottom 2 Feeder"
@@ -55,7 +55,7 @@
   ],
   "globalConstraints": {
     "maxVelocity": 5.0,
-    "maxAcceleration": 5.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,

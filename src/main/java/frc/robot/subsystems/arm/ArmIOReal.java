@@ -128,7 +128,7 @@ public class ArmIOReal implements ArmIO {
 
     @Override
     public void resetEncoder() {
-        armMotor.getEncoder().setPosition(0);
+        armMotor.getEncoder().setPosition(-ArmConstants.ARM_OFFSET);
     }
 
     @Override

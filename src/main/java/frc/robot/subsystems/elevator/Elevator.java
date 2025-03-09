@@ -46,7 +46,7 @@ public class Elevator extends SubsystemBase {
         return MathUtil.isNear(goal, getPosition(), ElevatorConstants.GOAL_TOLERANCE);
     }
 
-    public Command setGoal(double goal){
+    private Command setGoal(double goal){
         return Commands.runOnce(() -> io.setGoal(goal), this)
         .andThen(Commands.run(() -> io.updateMotionProfile(), this));
     }

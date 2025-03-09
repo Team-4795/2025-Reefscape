@@ -71,7 +71,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.3
+                        "waitTime": 0.5
                       }
                     },
                     {
@@ -153,7 +153,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.3
+                        "waitTime": 0.5
                       }
                     },
                     {
@@ -182,12 +182,6 @@
                 "type": "path",
                 "data": {
                   "pathName": "Blue Bottom 2 P5"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "VStow"
                 }
               }
             ]
@@ -227,7 +221,7 @@
       ]
     }
   },
-  "resetOdom": false,
+  "resetOdom": true,
   "folder": null,
   "choreoAuto": false
 }

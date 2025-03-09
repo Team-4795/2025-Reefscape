@@ -109,6 +109,10 @@ public class RobotContainer {
     
   }
 
+  public void zeroArm() {
+    Arm.getInstance().seedRelativeEncoder();
+  }
+
 
   private void configureBindings() {
     // Drive command
@@ -141,14 +145,13 @@ public class RobotContainer {
       ).alongWith(Commands.runOnce(() -> intake.outtake())));                                                          
 
     // Arm manual control
-
     // Coral Setpoints
     Constants.OIConstants.operatorController.povUp().onTrue(AutoCommands.raiseL4());
     Constants.OIConstants.operatorController.povLeft().onTrue(AutoCommands.raiseL2());
     Constants.OIConstants.operatorController.povRight().onTrue(AutoCommands.raiseL3());
     Constants.OIConstants.operatorController.povDown().onTrue(AutoCommands.stow());
-    // Constants.OIConstants.operatorController.rightTrigger().onTrue(AutoCommands.AlgaeLow());
-    // Constants.OIConstants.operatorController.leftTrigger().onTrue(AutoCommands.algaeHigh());
+    Constants.OIConstants.operatorController.rightTrigger().onTrue(AutoCommands.AlgaeLow());
+    Constants.OIConstants.operatorController.leftTrigger().onTrue(AutoCommands.algaeHigh());
 
     Constants.OIConstants.operatorController.y().whileTrue(
       Commands.startEnd(
@@ -177,7 +180,7 @@ public class RobotContainer {
     .alongWith(new RainbowCommand(() -> 1)));
 
     // toggle using reef tags only
-    OIConstants.driverController.povUp().onTrue(Commands.runOnce(() -> vision.toggleReefTag()));
+    OIConstants.driverController.povUp().onTrue(Commands.runOnce(() -> Arm.getInstance().seedRelativeEncoder()));
 
     // vertical stow
     OIConstants.operatorController.b()

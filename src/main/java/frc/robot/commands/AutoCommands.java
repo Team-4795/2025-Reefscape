@@ -28,19 +28,24 @@ public class AutoCommands {
     private static Intake intake = Intake.getInstance();
 
     public static Command raiseL4() {
-        return Commands.parallel(
+        return Commands.either(
+        Commands.parallel(
+        Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.CORAL_L4_SETPOINT)),
+        Commands.waitUntil(() -> elevator.getPosition() > 0.4)
+        .andThen(Commands.runOnce( () -> arm.setGoal(ArmConstants.CORAL_L4))
+        )),
+        Commands.parallel(
             Commands.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L4)),
-            Commands.waitUntil(() -> arm.getAngle() > -Math.PI/4)
-                .andThen(Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.CORAL_L4_SETPOINT + Units.inchesToMeters(1))))
-        );
+            Commands.sequence(Commands.waitUntil(() -> arm.getAngle() > -Math.PI/4),
+            Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.CORAL_L4_SETPOINT)))), 
+        () -> arm.getAngle() > ArmConstants.CORAL_L4);
     }
 
     public static Command vstow() {
         return Commands.sequence(
             Commands.runOnce(() -> arm.setGoal(ArmConstants.VSTOW)),
-            Commands.waitSeconds(.25)
-                .andThen(Commands.runOnce(() -> elevator.setGoalHeight(0)))
-        );
+            Commands.waitUntil( () -> arm.atGoal(ArmConstants.VSTOW)))
+                .andThen(Commands.runOnce(() -> elevator.setGoalHeight(0)));
     }
 
     // public static Command raiseL3() {
@@ -92,45 +97,40 @@ public class AutoCommands {
         );
     }
 
-    // // public static Command AlgaeLow() {
-    // //     return Commands.either(
-    // //         Commands.parallel(
-    // //             arm.setGoalCommand(ArmConstants.CORAL_L2),
-    // //             Commands.waitUntil(() -> arm.getAngle() > -Math.PI/4)
-    // //                 .andThen(elevator.setGoal(ElevatorConstants.ALGEA_SETPOINT))
-    // //         ).until(() -> elevator.atGoal(ElevatorConstants.ALGEA_SETPOINT) && arm.atGoal(ArmConstants.CORAL_L2)),
-    // //         Commands.parallel(
-    // //             elevator.setGoal(ElevatorConstants.ALGEA_SETPOINT),
-    // //             Commands.waitUntil(() -> elevator.getPosition() < .2)
-    // //                 .andThen(arm.setGoalCommand(ArmConstants.CORAL_L2))
-    // //         ).until(() -> elevator.atGoal(ElevatorConstants.ALGEA_SETPOINT) && arm.atGoal(ArmConstants.CORAL_L2)),
-    // //         () -> 0 < elevator.getGoalHeight()
-    // //     );
-    // // }
+    public static Command AlgaeLow() {
+        return Commands.either(
+            Commands.sequence(
+                Commands.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L2)),
+                Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.ALGEA_SETPOINT))
+            ),
+            Commands.sequence(
+                Commands.runOnce( ()-> elevator.setGoalHeight(ElevatorConstants.ALGEA_SETPOINT)),
+                Commands.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L2))),
+            () -> 0 < elevator.getGoalHeight()
+        );
+    }
 
-    // // public static Command algaeHigh() {
-    // //     return Commands.either(
-    // //         Commands.parallel(
-    // //             arm.setGoalCommand(ArmConstants.ALGAE_HIGH),
-    // //             Commands.waitUntil(() -> arm.getAngle() > -Math.PI/4)
-    // //                 .andThen(elevator.setGoal(ElevatorConstants.CORAL_L2_SETPOINT))
-    // //         ).until(() -> elevator.atGoal(ElevatorConstants.CORAL_L2_SETPOINT) && arm.atGoal(ArmConstants.ALGAE_HIGH)),
-    // //         Commands.parallel(
-    // //             elevator.setGoal(ElevatorConstants.CORAL_L2_SETPOINT),
-    // //             Commands.waitUntil(() -> elevator.getPosition() < .2)
-    // //                 .andThen(arm.setGoalCommand(ArmConstants.ALGAE_HIGH))
-    // //         ).until(() -> elevator.atGoal(ElevatorConstants.CORAL_L2_SETPOINT) && arm.atGoal(ArmConstants.ALGAE_HIGH)),
-    // //         () -> 0 < elevator.getGoalHeight()
-    // //     );
-    // // }
+    public static Command algaeHigh() {
+        return Commands.either(
+            Commands.sequence(
+                Commands.runOnce(() -> arm.setGoal(ArmConstants.ALGAE_HIGH)),
+            Commands.runOnce(() -> elevator.setGoalHeight(Units.inchesToMeters(3)))
+            ),
+            Commands.sequence(
+                Commands.runOnce(() -> elevator.setGoalHeight(Units.inchesToMeters(3))),
+                Commands.runOnce(() -> arm.setGoal(ArmConstants.ALGAE_HIGH))
+            ),
+            () -> 0 < elevator.getGoalHeight()
+        );
+    }
 
     
     public static Command autoStow() {
         return Commands.parallel(
-            elevator.setGoal(0),
+            Commands.runOnce(() -> elevator.setGoalHeight(0)),
             Commands.waitUntil(() -> elevator.getPosition() < .2)
-                .andThen(arm.setGoalCommand(ArmConstants.STOW))
-        ).until(() -> elevator.atGoal(0) && arm.atGoal(ArmConstants.STOW))
+                .andThen(Commands.runOnce(() -> arm.setGoal(ArmConstants.STOW)))    
+                ).until(() -> elevator.atGoal(0) && arm.atGoal(ArmConstants.STOW))
         .andThen(
         Commands.runOnce(() -> intake.setIntakeSpeed(IntakeConstants.intake)));
     }
@@ -158,6 +158,16 @@ public class AutoCommands {
         //until(() -> elevator.atGoal(0) && arm.atGoal(ArmConstants.STOW));
         // .andThen(
         //     intake.intake().withTimeout(2));
+    }
+
+    public static Command zeroArm() {
+        return Commands.parallel(
+            Commands.startEnd(
+            () -> arm.manualVoltage(-3),
+            () -> arm.manualVoltage(0),
+            arm
+        ).withTimeout(1), 
+        Commands.waitSeconds(0.9).andThen(Commands.runOnce(() -> arm.seedRelativeEncoder())));
     }
 
     public static Command score() {

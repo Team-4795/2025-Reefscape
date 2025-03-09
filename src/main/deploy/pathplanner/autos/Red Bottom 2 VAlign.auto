@@ -15,15 +15,34 @@
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "Align Reef 5 Seconds"
+                  "pathName": "Red Bottom 2 P1"
                 }
               },
               {
                 "type": "named",
                 "data": {
+                  "name": "VStow"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
                   "name": "Raise to L4"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Align Reef"
                 }
               }
             ]
@@ -52,7 +71,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.3
+                        "waitTime": 0.5
                       }
                     },
                     {
@@ -134,7 +153,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.3
+                        "waitTime": 0.5
                       }
                     },
                     {
@@ -158,7 +177,7 @@
       ]
     }
   },
-  "resetOdom": false,
+  "resetOdom": true,
   "folder": null,
   "choreoAuto": false
 }

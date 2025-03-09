@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.1895,
-        "y": 0.75875
+        "x": 1.1992500000000001,
+        "y": 0.85625
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9692500000000002,
-        "y": 1.1777499999999999
+        "x": 1.979,
+        "y": 1.2752499999999998
       },
       "isLocked": false,
       "linkedName": "Red Bottom 2 Feeder"
@@ -34,7 +34,7 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 5.0,
-    "maxAcceleration": 5.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,

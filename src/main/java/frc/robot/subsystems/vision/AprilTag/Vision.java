@@ -17,7 +17,6 @@ import frc.robot.RobotContainer;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.swerve.Swerve;
-import frc.robot.subsystems.vision.AprilTag.VisionIOInputsAutoLogged;
 import frc.robot.Constants;
 
 import static frc.robot.subsystems.vision.AprilTag.VisionConstants.*;
@@ -124,10 +123,9 @@ public class Vision extends SubsystemBase{
                 distance /= tagPoses.size();
                 double xyStdDev = (tagPoses.size() == 1 ? xyStdDevSingleTag : xyStdDevMultiTag) * Math.pow(distance, 2);
 
-                if(distance > Units.feetToMeters(6)) {
-                    //xyStdDev *= 2;
-                    continue;
-                }
+                // if(distance > Units.feetToMeters(6)) {
+                //     xyStdDev *= 2;
+                // }
 
                 var stddevs = VecBuilder.fill(xyStdDev, xyStdDev, Units.degreesToRadians(100));
 

@@ -49,11 +49,11 @@ public class Arm extends SubsystemBase {
         this.io = io;
         setDefaultCommand(
             Commands.run(() -> {
-            //   double change = MathUtil.applyDeadband(OIConstants.operatorController.getRightY(), OIConstants.KAxisDeadband);
-            //     change = .1 * Math.pow(change, 3);
-            //     if(DriverStation.isTeleopEnabled() && change != 0) {
-            //         io.setGoal(inputs.goalAngle + change);
-            //     }
+                double change = MathUtil.applyDeadband(-OIConstants.operatorController.getRightY(), OIConstants.OperatorLAxisDeadband);
+                change = .05 * Math.pow(change, 3);
+                if(DriverStation.isTeleopEnabled() && change != 0) {
+                    io.setGoal(inputs.goalAngle + change);
+                }
                 io.updateMotionProfile();
             }, this)
         );
@@ -92,8 +92,10 @@ public class Arm extends SubsystemBase {
         return MathUtil.isNear(goal, getAngle(), ArmConstants.GOAL_TOLERANCE);
     }
 
-    public void resetAbsoluteEncoder() {
+    public void seedRelativeEncoder() {
         io.resetEncoder();
+        
+        io.setGoal(inputs.relativeEncoderPosition);
     }
 
     public SysIdRoutine sysIDRoutine() {
@@ -135,5 +137,6 @@ public class Arm extends SubsystemBase {
         Logger.recordOutput(getName() + "/Pose", getArmPose());
         io.updateInputs(inputs);
         Logger.processInputs(getName(), inputs);
+        Logger.recordOutput("At Goal", atGoal(inputs.goalAngle));
     }
 }
