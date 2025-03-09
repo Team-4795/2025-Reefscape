@@ -95,7 +95,7 @@ public class Arm extends SubsystemBase {
     public void seedRelativeEncoder() {
         io.resetEncoder();
         
-        io.setGoal(inputs.relativeEncoderPosition);
+        io.setGoal(-ArmConstants.ARM_OFFSET);
     }
 
     public SysIdRoutine sysIDRoutine() {

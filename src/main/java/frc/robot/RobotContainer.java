@@ -132,6 +132,11 @@ public class RobotContainer {
         AutoCommands.alignReef()
     );
 
+    // Algae align
+    Constants.OIConstants.driverController.rightBumper().whileTrue(
+        AutoCommands.alignAlgae()
+    );
+
     // Slow mode
     Constants.OIConstants.driverController.leftTrigger().onTrue(Commands.runOnce(() -> drivetrain.setSlowMode(true)));
     Constants.OIConstants.driverController.leftTrigger().onFalse(Commands.runOnce(() -> drivetrain.setSlowMode(false)));
@@ -152,6 +157,7 @@ public class RobotContainer {
     Constants.OIConstants.operatorController.povDown().onTrue(AutoCommands.stow());
     Constants.OIConstants.operatorController.rightTrigger().onTrue(AutoCommands.AlgaeLow());
     Constants.OIConstants.operatorController.leftTrigger().onTrue(AutoCommands.algaeHigh());
+    Constants.OIConstants.operatorController.x().onTrue((AutoCommands.processor()));
 
     Constants.OIConstants.operatorController.y().whileTrue(
       Commands.startEnd(
@@ -269,7 +275,7 @@ public class RobotContainer {
     //     () -> intake.setIntakeSpeed(0), intake));
 
     // OIConstants.driverController.povUp().onTrue(Commands.runOnce(() ->
-    // Arm.getInstance().setGoal(ArmConstants.CORAL_L3)));
+    // Arm.getInstance().setGoal(ArmConstants.CORAL_L3)));  
     // OIConstants.driverController.leftBumper().onTrue(Commands.runOnce(() ->
     // Arm.getInstance().setGoal(-1.8)));
     // OIConstants.driverController.rightBumper().onTrue(Commands.runOnce(() ->

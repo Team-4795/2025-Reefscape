@@ -23,6 +23,8 @@ public final class ElevatorConstants{
     public static final double CORAL_L4_SETPOINT = 0.57 + Units.inchesToMeters(1);
     public static final double CORAL_L2_SETPOINT = 0.38840916752815247 + Units.inchesToMeters(1);
     public static final double ALGEA_SETPOINT = 0.19420458376407623 - Units.inchesToMeters(1);
+    public static final double HIGH_ALGAE_SETPOINT = 0.12916289269924164;
+    public static final double PROCESSOR_SETPOINT = 0.0;
     public static final double GOAL_TOLERANCE = 0.02;
     public static final double STOW = 0.01;
     

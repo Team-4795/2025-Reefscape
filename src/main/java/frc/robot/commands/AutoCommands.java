@@ -45,7 +45,7 @@ public class AutoCommands {
         return Commands.sequence(
             Commands.runOnce(() -> arm.setGoal(ArmConstants.VSTOW)),
             Commands.waitUntil( () -> arm.atGoal(ArmConstants.VSTOW)))
-                .andThen(Commands.runOnce(() -> elevator.setGoalHeight(0)));
+                .andThen(Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.STOW)));
     }
 
     // public static Command raiseL3() {
@@ -100,13 +100,26 @@ public class AutoCommands {
     public static Command AlgaeLow() {
         return Commands.either(
             Commands.sequence(
+                Commands.runOnce(() -> arm.setGoal(ArmConstants.ALGAE_LOW)),
+                Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.STOW))
+            ),
+            Commands.sequence(
+                Commands.runOnce( ()-> elevator.setGoalHeight(ElevatorConstants.STOW)),
+                Commands.runOnce(() -> arm.setGoal(ArmConstants.ALGAE_LOW))),
+            () -> ElevatorConstants.STOW <= elevator.getPosition()
+        );
+    }
+
+    public static Command processor() {
+        return Commands.either(
+            Commands.sequence(
                 Commands.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L2)),
                 Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.ALGEA_SETPOINT))
             ),
             Commands.sequence(
                 Commands.runOnce( ()-> elevator.setGoalHeight(ElevatorConstants.ALGEA_SETPOINT)),
                 Commands.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L2))),
-            () -> 0 < elevator.getGoalHeight()
+            () -> ElevatorConstants.ALGEA_SETPOINT <= elevator.getPosition()
         );
     }
 
@@ -114,13 +127,13 @@ public class AutoCommands {
         return Commands.either(
             Commands.sequence(
                 Commands.runOnce(() -> arm.setGoal(ArmConstants.ALGAE_HIGH)),
-            Commands.runOnce(() -> elevator.setGoalHeight(Units.inchesToMeters(3)))
+            Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.HIGH_ALGAE_SETPOINT))
             ),
             Commands.sequence(
-                Commands.runOnce(() -> elevator.setGoalHeight(Units.inchesToMeters(3))),
+                Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.HIGH_ALGAE_SETPOINT)),
                 Commands.runOnce(() -> arm.setGoal(ArmConstants.ALGAE_HIGH))
             ),
-            () -> 0 < elevator.getGoalHeight()
+            () -> ElevatorConstants.HIGH_ALGAE_SETPOINT <= elevator.getPosition()
         );
     }
 
@@ -180,6 +193,14 @@ public class AutoCommands {
              0, 0, new Constraints(SwerveConstants.MaxSpeed, 3)), 
             new ProfiledPIDController(7.5, 0, 0, new Constraints(SwerveConstants.MaxSpeed, 3))
         ).withTimeout(2);
+    }
+
+    public static Command alignAlgae() {
+        return new AutoAlignAlgae( 
+            new ProfiledPIDController(5,
+            0, 0, new Constraints(SwerveConstants.MaxSpeed, 3)), 
+            new ProfiledPIDController(7.5, 0, 0, new Constraints(SwerveConstants.MaxSpeed, 3))
+       );
     }
 
     public static Command longerAlignReef() {
