@@ -21,7 +21,7 @@ public final class ElevatorConstants{
     public static final double MAX_ACCELERATION = 10;
     public static final double MAX_VELOCITY = 1.75; 
     public static final double CORAL_L4_SETPOINT = 0.57 + Units.inchesToMeters(1);
-    public static final double CORAL_L2_SETPOINT = 0.38840916752815247 + Units.inchesToMeters(1);
+    public static final double CORAL_L2_SETPOINT = 0.39241382479667664;
     public static final double ALGEA_SETPOINT = 0.19420458376407623 - Units.inchesToMeters(1);
     public static final double HIGH_ALGAE_SETPOINT = 0.12916289269924164;
     public static final double PROCESSOR_SETPOINT = 0.0;

@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.OIConstants;
+import frc.robot.subsystems.GenericRequirement;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.elevator.Elevator;
@@ -28,7 +29,7 @@ public class AutoCommands {
     private static Intake intake = Intake.getInstance();
 
     public static Command raiseL4() {
-        return Commands.either(
+        Command command = Commands.either(
         Commands.parallel(
         Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.CORAL_L4_SETPOINT)),
         Commands.waitUntil(() -> elevator.getPosition() > 0.4)
@@ -39,13 +40,21 @@ public class AutoCommands {
             Commands.sequence(Commands.waitUntil(() -> arm.getAngle() > -Math.PI/4),
             Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.CORAL_L4_SETPOINT)))), 
         () -> arm.getAngle() > ArmConstants.CORAL_L4);
+
+        command.addRequirements(GenericRequirement.getInstance());
+
+        return command;
     }
 
     public static Command vstow() {
-        return Commands.sequence(
+        Command command = Commands.sequence(
             Commands.runOnce(() -> arm.setGoal(ArmConstants.VSTOW)),
             Commands.waitUntil( () -> arm.atGoal(ArmConstants.VSTOW)))
                 .andThen(Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.STOW)));
+
+        command.addRequirements(GenericRequirement.getInstance());
+
+        return command;
     }
 
     // public static Command raiseL3() {
@@ -66,7 +75,7 @@ public class AutoCommands {
 
     
     public static Command raiseL3() {
-        return Commands.either(
+        Command command = Commands.either(
             Commands.sequence(
                 Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.STOW)),
                 Commands.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L3))
@@ -77,6 +86,10 @@ public class AutoCommands {
             ),
             () -> elevator.getPosition() >= ElevatorConstants.STOW
         );
+
+        command.addRequirements(GenericRequirement.getInstance());
+
+        return command;
     }
 
     
@@ -84,7 +97,7 @@ public class AutoCommands {
         return arm.setGoalCommand(ArmConstants.CORAL_L3).until(() -> arm.atGoal(ArmConstants.CORAL_L3));
     }
     public static Command raiseL2() {
-        return Commands.either(
+        Command command = Commands.either(
             Commands.sequence(
                 Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.CORAL_L2_SETPOINT)),
                 Commands.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L2))
@@ -95,10 +108,14 @@ public class AutoCommands {
             ),
             () -> elevator.getPosition() >= ElevatorConstants.CORAL_L2_SETPOINT
         );
+
+        command.addRequirements(GenericRequirement.getInstance());
+
+        return command;
     }
 
     public static Command AlgaeLow() {
-        return Commands.either(
+        Command command = Commands.either(
             Commands.sequence(
                 Commands.runOnce(() -> arm.setGoal(ArmConstants.ALGAE_LOW)),
                 Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.STOW))
@@ -108,10 +125,14 @@ public class AutoCommands {
                 Commands.runOnce(() -> arm.setGoal(ArmConstants.ALGAE_LOW))),
             () -> ElevatorConstants.STOW <= elevator.getPosition()
         );
+
+        command.addRequirements(GenericRequirement.getInstance());
+
+        return command;
     }
 
     public static Command processor() {
-        return Commands.either(
+        Command command = Commands.either(
             Commands.sequence(
                 Commands.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L2)),
                 Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.ALGEA_SETPOINT))
@@ -121,10 +142,14 @@ public class AutoCommands {
                 Commands.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L2))),
             () -> ElevatorConstants.ALGEA_SETPOINT <= elevator.getPosition()
         );
+
+        command.addRequirements(GenericRequirement.getInstance());
+
+        return command;
     }
 
     public static Command algaeHigh() {
-        return Commands.either(
+        Command command = Commands.either(
             Commands.sequence(
                 Commands.runOnce(() -> arm.setGoal(ArmConstants.ALGAE_HIGH)),
             Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.HIGH_ALGAE_SETPOINT))
@@ -135,6 +160,10 @@ public class AutoCommands {
             ),
             () -> ElevatorConstants.HIGH_ALGAE_SETPOINT <= elevator.getPosition()
         );
+
+        command.addRequirements(GenericRequirement.getInstance());
+
+        return command;
     }
 
     
@@ -154,11 +183,15 @@ public class AutoCommands {
 
     
     public static Command stow() {
-        return Commands.parallel(
+        Command command = Commands.parallel(
             Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.STOW)),
             Commands.waitUntil(() -> elevator.getPosition() < 0.2)
                 .andThen(Commands.runOnce(() -> arm.setGoal(ArmConstants.STOW)))
         );
+
+        command.addRequirements(GenericRequirement.getInstance());
+
+        return command;
     }
 
     public static Command intake() {

@@ -79,7 +79,7 @@ public class Intake extends SubsystemBase {
                     }
                 ),
                 reverse()
-            ).withTimeout(0.14),
+            ).withTimeout(0.12),
             Commands.runOnce(() -> isStoring())
         );  
     }

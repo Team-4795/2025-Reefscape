@@ -8,7 +8,7 @@ public class ArmConstants {
     public static final double ARM_OFFSET = 1.842;
 
     public static final double CORAL_L1 = 1.3992315530776978 - ARM_OFFSET;
-    public static final double CORAL_L2 = -1.0077334642410278 + Units.degreesToRadians(2);
+    public static final double CORAL_L2 = -0.8030015826225281;
     public static final double CORAL_L3 = 2.7386298179626465 - ARM_OFFSET;
     public static final double CORAL_L4 = 2.8875072 - ARM_OFFSET;
     public static final double VSTOW = 1.34;

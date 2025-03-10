@@ -25,6 +25,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AutoCommands;
 import frc.robot.commands.RainbowCommand;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.GenericRequirement;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmIOReal;
@@ -68,6 +69,7 @@ public class RobotContainer {
   LoggedDashboardChooser<Command> autoChooser;
 
   public RobotContainer() throws IOException, ParseException {
+    GenericRequirement.initialize();
     switch (Constants.currentMode) {
       case REAL:
         elevator = Elevator.initialize(new ElevatorIOReal());
@@ -78,7 +80,7 @@ public class RobotContainer {
           new VisionIOReal(0), new VisionIOReal(1)
           // new VisionIOReal(2),
           // new VisionIOReal(3)
-        );
+        );  
         break;
 
       case SIM:
