@@ -1,16 +1,9 @@
 package frc.robot.commands;
 
-import com.pathplanner.lib.path.ConstraintsZone;
-
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-import frc.robot.Constants;
-import frc.robot.RobotContainer;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.GenericRequirement;
 import frc.robot.subsystems.arm.Arm;
@@ -57,23 +50,6 @@ public class AutoCommands {
         return command;
     }
 
-    // public static Command raiseL3() {
-    //     return Commands.either(
-    //         Commands.parallel(
-    //             arm.setGoalCommand(ArmConstants.CORAL_L3),
-    //             Commands.waitUntil(() -> arm.getAngle() > -Math.PI/4)
-    //                 .andThen(elevator.setGoal(0))
-    //         ).until(() -> elevator.atGoal(0) && arm.atGoal(ArmConstants.CORAL_L3)),
-    //         Commands.parallel(
-    //             elevator.setGoal(0),
-    //             Commands.waitUntil(() -> elevator.getPosition() < .2)
-    //                 .andThen(arm.setGoalCommand(ArmConstants.CORAL_L3))
-    //         ).until(() -> elevator.atGoal(0) && arm.atGoal(ArmConstants.CORAL_L3)),
-    //         () -> 0 < elevator.getGoalHeight()
-    //     );
-    // }
-
-    
     public static Command raiseL3() {
         Command command = Commands.either(
             Commands.sequence(

@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.MetersPerSecond;
-
 import java.io.IOException;
 
 import org.json.simple.parser.ParseException;
@@ -15,9 +13,6 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -27,14 +22,12 @@ import frc.robot.commands.RainbowCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.GenericRequirement;
 import frc.robot.subsystems.arm.Arm;
-import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmIOReal;
 import frc.robot.subsystems.arm.ArmIOSim;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorIOReal;
 import frc.robot.subsystems.elevator.ElevatorIOSim;
 import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.intake.IntakeConstants;
 import frc.robot.subsystems.intake.IntakeIORealVortex;
 import frc.robot.subsystems.intake.IntakeIOSim;
 import frc.robot.subsystems.leds.LEDs;
@@ -167,7 +160,6 @@ public class RobotContainer {
         () ->  intake.setIntakeSpeed(0), 
         intake
       )
-      
     );
 
     OIConstants.operatorController.a().onTrue(intake.intakeCommand());
@@ -193,7 +185,6 @@ public class RobotContainer {
     // vertical stow
     OIConstants.operatorController.b()
      .onTrue(AutoCommands.vstow());
-
      
     Constants.OIConstants.driverController.povRight().and(Constants.OIConstants.driverController.y())
     .whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
@@ -203,87 +194,6 @@ public class RobotContainer {
     .whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
   Constants.OIConstants.driverController.povLeft().and(Constants.OIConstants.driverController.x())
     .whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
-
-    // Constants.OIConstants.operatorController.povLeft().onTrue(AutoCommands.raiseL3());
-
-    // Constants.OIConstants.operatorController.povRight().onTrue(AutoCommands.raiseL2());
-
-    // arm setpoint testing
-    // Constants.OIConstants.operatorController.povUp().onTrue(
-    //   Arm.getInstance().setGoalCommand(.8)
-    // );
-
-    // Constants.OIConstants.operatorController.povDown().onTrue(
-    //   Arm.getInstance().setGoalCommand(-1)
-    // );
-
-    // Constants.OIConstants.operatorController.povUp().onTrue(
-    //   Elevator.getInstance().setGoal(.4)
-    // );
-
-    // Constants.OIConstants.operatorController.povDown().onTrue(
-    //   Elevator.getInstance().setGoal(0)
-    // );
-
-    // Stow
-
-
-    // Reverse intake
-    // Constants.OIConstants.operatorController.a().whileTrue(
-    //   Commands.startEnd(
-    //     () -> intake.setIntakeSpeed(-1),
-    //     () ->  intake.setIntakeSpeed(0), 
-    //     intake
-    //   )
-    // );
-
-    // OIConstants.operatorController.a().whileTrue(
-    //   Commands.startEnd(
-    //     () -> intake.setIntakeSpeed(-1),
-    //     () -> intake.setIntakeSpeed(0), 
-    //     intake
-    //   )
-    // );
-
-    // OIConstants.operatorController.leftBumper().whileTrue(
-    // Arm.getInstance().sysIDRoutine().quasistatic(SysIdRoutine.Direction.kForward)
-    // );
-
-    // OIConstants.operatorController.rightBumper().whileTrue(
-    // Arm.getInstance().sysIDRoutine().quasistatic(SysIdRoutine.Direction.kReverse)
-    // );
-
-    // OIConstants.operatorController.leftTrigger().whileTrue(
-    // Arm.getInstance().sysIDRoutine().dynamic(SysIdRoutine.Direction.kForward)
-    // );
-
-    // OIConstants.operatorController.rightTrigger().whileTrue(
-    // Arm.getInstance().sysIDRoutine().dynamic(SysIdRoutine.Direction.kReverse)
-    // );
-
-    // Constants.OIConstants.operatorController.povUp()
-    // .whileTrue(
-    // Commands.sequence(
-    // intake.intake().until(() -> intake.GamePieceInitial()),
-    // intake.intakeSlow().until(() -> intake.GamePieceFinal()),
-    // Commands.run(() -> intake.setIntakeSpeed(0))
-    // )
-    // );
-
-    // Constants.OIConstants.operatorController.x().whileTrue(Commands.startEnd(() -> intake.setIntakeSpeed(-1),
-    //     () -> intake.setIntakeSpeed(0), intake));
-
-    // Constants.OIConstants.operatorController.b().whileTrue(Commands.startEnd(() -> intake.setIntakeSpeed(1),
-    //     () -> intake.setIntakeSpeed(0), intake));
-
-    // OIConstants.driverController.povUp().onTrue(Commands.runOnce(() ->
-    // Arm.getInstance().setGoal(ArmConstants.CORAL_L3)));  
-    // OIConstants.driverController.leftBumper().onTrue(Commands.runOnce(() ->
-    // Arm.getInstance().setGoal(-1.8)));
-    // OIConstants.driverController.rightBumper().onTrue(Commands.runOnce(() ->
-    // Arm.getInstance().setGoal(ArmConstants.CORAL_L2)));
-
-   
 
     drivetrain.registerTelemetry(logger::telemeterize);
   }
