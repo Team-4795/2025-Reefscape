@@ -182,6 +182,18 @@ public class AutoCommands {
         //     intake.intake().withTimeout(2));
     }
 
+    public static Command autoScore(int setpoint) {
+        return Commands.sequence(
+            Commands.parallel(
+                alignReefUntil(),
+                vstow()
+            ),
+            (setpoint == 1 ? raiseL4() : raiseL3()).withTimeout(2),
+            score(),
+            vstow()
+        );
+    }
+
     public static Command zeroArm() {
         return Commands.parallel(
             Commands.startEnd(

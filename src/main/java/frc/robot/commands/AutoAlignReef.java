@@ -46,7 +46,7 @@ public class AutoAlignReef extends Command{
     private boolean isScoringLeft;
     private double offset = 0.0;
 
-    private final double maxDistance = 0.6;
+    private final double maxDistance = 0.2;
     private final double minDistance = -0.1;
 
     private ProfiledPIDController translationController;
@@ -137,17 +137,14 @@ public class AutoAlignReef extends Command{
         Logger.recordOutput("AutoAlign/Distance", currentPose.getTranslation().getDistance(targetPose.getTranslation()));
         Logger.recordOutput("AutoAlign/Distance at goal", translationController.atGoal());
         Logger.recordOutput("AutoAlign/PID input", drivePIDOutput);
+        Logger.recordOutput("AutoAlign/is Aligned", OIConstants.aligned);
 
         Swerve.getInstance().setControl(
             drive.withVelocityX(driveSpeed * direction.getCos())
             .withVelocityY(driveSpeed * direction.getSin())
             .withRotationalRate(omega));
         
-        if(finishedAligning()) {
-            OIConstants.aligned = true;
-        } else {
-            OIConstants.aligned = false; 
-        }
+        OIConstants.aligned = finishedAligning();
     }
 
     @Override
@@ -159,7 +156,7 @@ public class AutoAlignReef extends Command{
     }
 
     public boolean finishedAligning() {
-        return (translationController.atGoal() && rotationController.atGoal());
+        return (distance < Units.inchesToMeters(1.5));
     }
 
     private double projection(Translation2d v1, Translation2d onto){

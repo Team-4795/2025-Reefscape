@@ -56,6 +56,8 @@ public class RobotContainer {
 
   public final Swerve drivetrain;
 
+  private int autoScoreMode = 1;
+
   private Elevator elevator;
   // private Drive drive;
   private Intake intake;
@@ -124,7 +126,7 @@ public class RobotContainer {
 
     // Reef/Feeder align
     Constants.OIConstants.driverController.leftBumper().whileTrue(
-        AutoCommands.alignReef()
+        AutoCommands.autoScore(autoScoreMode)
     );
 
     // Algae align
@@ -146,9 +148,12 @@ public class RobotContainer {
 
     // Arm manual control
     // Coral Setpoints
-    Constants.OIConstants.operatorController.povUp().onTrue(AutoCommands.raiseL4());
+
+    Constants.OIConstants.operatorController.povUp().onTrue(Commands.runOnce(() -> autoScoreMode = 1));
+    Constants.OIConstants.operatorController.povRight().onTrue(Commands.runOnce(() -> autoScoreMode = 0));
+    // Constants.OIConstants.operatorController.povUp().onTrue(AutoCommands.raiseL4());
     Constants.OIConstants.operatorController.povLeft().onTrue(AutoCommands.raiseL2());
-    Constants.OIConstants.operatorController.povRight().onTrue(AutoCommands.raiseL3());
+    // Constants.OIConstants.operatorController.povRight().onTrue(AutoCommands.raiseL3());
     Constants.OIConstants.operatorController.povDown().onTrue(AutoCommands.stow());
     Constants.OIConstants.operatorController.rightTrigger().onTrue(AutoCommands.AlgaeLow());
     Constants.OIConstants.operatorController.leftTrigger().onTrue(AutoCommands.algaeHigh());
@@ -199,6 +204,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return autoChooser.get();
+    return AutoCommands.autoScore(autoScoreMode);
+    // return autoChooser.get();
   }
 }
