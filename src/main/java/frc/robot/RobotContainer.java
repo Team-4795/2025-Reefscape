@@ -7,6 +7,7 @@ package frc.robot;
 import java.io.IOException;
 
 import org.json.simple.parser.ParseException;
+import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
@@ -56,7 +57,7 @@ public class RobotContainer {
 
   public final Swerve drivetrain;
 
-  private int autoScoreMode = 1;
+  public int autoScoreMode = 1;
 
   private Elevator elevator;
   // private Drive drive;
@@ -126,7 +127,7 @@ public class RobotContainer {
 
     // Reef/Feeder align
     Constants.OIConstants.driverController.leftBumper().whileTrue(
-        AutoCommands.autoScore(autoScoreMode)
+        AutoCommands.autoScore(() -> autoScoreMode)
     );
 
     // Algae align
@@ -149,8 +150,8 @@ public class RobotContainer {
     // Arm manual control
     // Coral Setpoints
 
-    Constants.OIConstants.operatorController.povUp().onTrue(Commands.runOnce(() -> autoScoreMode = 1));
-    Constants.OIConstants.operatorController.povRight().onTrue(Commands.runOnce(() -> autoScoreMode = 0));
+    Constants.OIConstants.operatorController.povUp().onTrue(Commands.runOnce(() -> {autoScoreMode = 1; Logger.recordOutput("autoScoreMode", autoScoreMode);}));
+    Constants.OIConstants.operatorController.povRight().onTrue(Commands.runOnce(() -> {autoScoreMode = 0; Logger.recordOutput("autoScoreMode", autoScoreMode);}));
     // Constants.OIConstants.operatorController.povUp().onTrue(AutoCommands.raiseL4());
     Constants.OIConstants.operatorController.povLeft().onTrue(AutoCommands.raiseL2());
     // Constants.OIConstants.operatorController.povRight().onTrue(AutoCommands.raiseL3());
@@ -204,7 +205,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return AutoCommands.autoScore(autoScoreMode);
-    // return autoChooser.get();
+    // return AutoCommands.autoScore(autoScoreMode);
+    return autoChooser.get();
   }
 }

@@ -149,6 +149,10 @@ public class AutoAlignReef extends Command{
 
     @Override
     public void end(boolean interrupted) {
+        Swerve.getInstance().setControl(
+            drive.withVelocityX(0)
+            .withVelocityY(0)
+            .withRotationalRate(0));
         //Vision.getInstance().toggleShouldUpdate(0);
         // Vision.getInstance().toggleShouldUpdate(2);
         // Vision.getInstance().toggleShouldUpdate(3);

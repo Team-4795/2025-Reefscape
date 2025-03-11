@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import java.util.function.IntSupplier;
+
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -182,14 +184,15 @@ public class AutoCommands {
         //     intake.intake().withTimeout(2));
     }
 
-    public static Command autoScore(int setpoint) {
+    public static Command autoScore(IntSupplier setpoint) {
         return Commands.sequence(
             Commands.parallel(
                 alignReefUntil(),
                 vstow()
             ),
-            (setpoint == 1 ? raiseL4() : raiseL3()).withTimeout(2),
+            (setpoint.getAsInt() == 1 ? raiseL4() : raiseL3()).andThen(Commands.waitSeconds(1)),
             score(),
+            Commands.runOnce(() -> OIConstants.aligned = false),
             vstow()
         );
     }
