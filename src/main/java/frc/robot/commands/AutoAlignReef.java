@@ -1,16 +1,11 @@
 
 package frc.robot.commands;
 
-import static edu.wpi.first.units.Units.*;
-
 import frc.robot.Constants;
 
-import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
-import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
-import com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.MathUtil;
@@ -25,29 +20,19 @@ import edu.wpi.first.math.numbers.N2;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.RobotContainer;
-import frc.robot.Telemetry;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.vision.AprilTag.Vision;
-import frc.robot.subsystems.vision.AprilTag.VisionConstants;
-import frc.robot.generated.TunerConstants;
 
-
-public class AutoAlignReef extends Command{
+public class AutoAlignReef extends Command {
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
-
-    private static final Pose2d[] RED_SCORING_AREAS = VisionConstants.redReefScoringPoses;
-    private static final Pose2d[] BLUE_SCORING_AREAS = VisionConstants.blueReefScoringPoses;
 
     private boolean isScoringLeft;
     private double offset = 0.0;
 
     private final double maxDistance = 0.2;
-    private final double minDistance = -0.1;
+    private final double minDistance = 0;
 
     private ProfiledPIDController translationController;
     private ProfiledPIDController rotationController;
@@ -73,13 +58,7 @@ public class AutoAlignReef extends Command{
 
     @Override
     public void initialize(){
-        // Vision.getInstance().toggleShouldUpdate(0);
-        // Vision.getInstance().toggleShouldUpdate(2);
-        // Vision.getInstance().toggleShouldUpdate(3);
-        // Vision.getInstance().toggleIsReefAligning();
-
         DriverStation.getAlliance().ifPresent((alliance) -> {
-            // targetPose = (alliance == Alliance.Blue) ? BLUE_SCORING_AREAS[0] : RED_SCORING_AREAS[0];
             mult = (alliance == Alliance.Red) ? -1.0 : 1.0;
         });
 
@@ -153,10 +132,6 @@ public class AutoAlignReef extends Command{
             drive.withVelocityX(0)
             .withVelocityY(0)
             .withRotationalRate(0));
-        //Vision.getInstance().toggleShouldUpdate(0);
-        // Vision.getInstance().toggleShouldUpdate(2);
-        // Vision.getInstance().toggleShouldUpdate(3);
-        // Vision.getInstance().toggleIsReefAligning();
     }
 
     public boolean finishedAligning() {

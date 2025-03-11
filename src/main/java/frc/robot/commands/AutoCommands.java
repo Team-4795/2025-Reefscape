@@ -184,17 +184,25 @@ public class AutoCommands {
         //     intake.intake().withTimeout(2));
     }
 
-    public static Command autoScore(int autoScoreMode) {
-        return Commands.sequence(
-            Commands.parallel(
-                alignReefUntil(),
-                vstow()
-            ),
-            (autoScoreMode == 1 ? raiseL4() : raiseL3()).andThen(Commands.waitSeconds(1)),
-            score(),
-            Commands.runOnce(() -> OIConstants.aligned = false),
-            vstow()
-        );
+    public static Command autoScore() {
+        return Commands.either(
+            Commands.sequence(
+                Commands.parallel(
+                    alignReefUntil(),
+                    vstow()),
+                raiseL4().andThen(Commands.waitSeconds(1)),
+                score(),
+                Commands.runOnce(() -> OIConstants.aligned = false),
+                vstow()), 
+
+            Commands.sequence(
+                Commands.parallel(
+                    alignReefUntil(),
+                    raiseL3()),
+                score(),
+                Commands.runOnce(() -> OIConstants.aligned = false)), 
+                
+            () -> OIConstants.autoScoreMode == 1);
     }
 
     public static Command zeroArm() {
@@ -239,7 +247,7 @@ public class AutoCommands {
         return new AutoAlignReef(
             new ProfiledPIDController(5,
              0, 0, new Constraints(SwerveConstants.MaxSpeed, 3)), 
-            new ProfiledPIDController(7.5, 0, 0, new Constraints(SwerveConstants.MaxSpeed, 3))
+            new ProfiledPIDController(7.5, 0, 0, new Constraints(SwerveConstants.MaxAngularRate, 3))
         ).until(() -> OIConstants.aligned);
     }
 

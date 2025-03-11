@@ -111,27 +111,20 @@ public class RobotContainer {
     Arm.getInstance().seedRelativeEncoder();
   }
 
-
   private void configureBindings() {
     // Drive command
-     // Drive command
-
-     drivetrain.setDefaultCommand(
+    drivetrain.setDefaultCommand(
       drivetrain
-          .applyRequest(() -> drive.withVelocityX(-Constants.OIConstants.driverController.getLeftY() * SwerveConstants.MaxSpeed * (drivetrain.isSlowMode() ? SwerveConstants.slowModeMultiplier: 1))
-              .withVelocityY(-Constants.OIConstants.driverController.getLeftX() * SwerveConstants.MaxSpeed * (drivetrain.isSlowMode() ? SwerveConstants.slowModeMultiplier: 1))
-              .withRotationalRate(-Constants.OIConstants.driverController.getRightX() * SwerveConstants.MaxAngularRate * (drivetrain.isSlowMode() ? SwerveConstants.slowModeMultiplier: 1))));
+          .applyRequest(() -> drive.withVelocityX(-Constants.OIConstants.driverController.getLeftY() * SwerveConstants.MaxSpeed * (drivetrain.isSlowMode() ? SwerveConstants.slowModeMultiplier : 1))
+              .withVelocityY(-Constants.OIConstants.driverController.getLeftX() * SwerveConstants.MaxSpeed * (drivetrain.isSlowMode() ? SwerveConstants.slowModeMultiplier : 1))
+              .withRotationalRate(-Constants.OIConstants.driverController.getRightX() * SwerveConstants.MaxAngularRate * (drivetrain.isSlowMode() ? SwerveConstants.slowModeMultiplier : 1))));
 
     // Zero heading
     Constants.OIConstants.driverController.b().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
     // Reef/Feeder align
     Constants.OIConstants.driverController.leftBumper().whileTrue(
-      Commands.either(
-        AutoCommands.autoScore(1),
-        AutoCommands.autoScore(0),
-        () -> OIConstants.autoScoreMode == 1
-      )
+      AutoCommands.autoScore()
     );
 
     // Algae align
@@ -149,61 +142,63 @@ public class RobotContainer {
         () -> intake.setIntakeSpeed(-1),
         () -> intake.setIntakeSpeed(0), 
         intake
-      ).alongWith(Commands.runOnce(() -> intake.outtake())));                                                          
+      ).alongWith(Commands.runOnce(() -> intake.outtake())));           
 
-    // Arm manual control
     // Coral Setpoints
-
     Constants.OIConstants.operatorController.povUp().onTrue(Commands.runOnce(() -> {OIConstants.autoScoreMode = 1;}));
     Constants.OIConstants.operatorController.povRight().onTrue(Commands.runOnce(() -> {OIConstants.autoScoreMode = 0;}));
-    // Constants.OIConstants.operatorController.povUp().onTrue(AutoCommands.raiseL4());
     Constants.OIConstants.operatorController.povLeft().onTrue(AutoCommands.raiseL2());
-    // Constants.OIConstants.operatorController.povRight().onTrue(AutoCommands.raiseL3());
     Constants.OIConstants.operatorController.povDown().onTrue(AutoCommands.stow());
+    // Constants.OIConstants.operatorController.povUp().onTrue(AutoCommands.raiseL4());
+    // Constants.OIConstants.operatorController.povRight().onTrue(AutoCommands.raiseL3());
+
+    // Algae setpoints
     Constants.OIConstants.operatorController.rightTrigger().onTrue(AutoCommands.AlgaeLow());
     Constants.OIConstants.operatorController.leftTrigger().onTrue(AutoCommands.algaeHigh());
     Constants.OIConstants.operatorController.x().onTrue((AutoCommands.processor()));
 
+    // Reverse intake
     Constants.OIConstants.operatorController.y().whileTrue(
       Commands.startEnd(
         () -> intake.setIntakeSpeed(1),
         () ->  intake.setIntakeSpeed(0), 
         intake
-      )
-    );
+      ));
 
+    // Intake
     OIConstants.operatorController.a().onTrue(intake.intakeCommand());
       
-    OIConstants.operatorController.leftBumper()
-        .onTrue(
-          Commands.runOnce(() -> drivetrain.setScoringLeft()
-        ));
-    
-    OIConstants.operatorController.rightBumper()
-        .onTrue(
-          Commands.runOnce(() -> drivetrain.setScoringRight()
-        ));
+    // Change reef scoring stem
+    OIConstants.operatorController.leftBumper().onTrue(
+        Commands.runOnce(() -> drivetrain.setScoringLeft()
+      ));
+    OIConstants.operatorController.rightBumper().onTrue(
+        Commands.runOnce(() -> drivetrain.setScoringRight()
+      ));
 
-    //no vision toggle
-    OIConstants.driverController.x().onTrue(Commands.run(() -> vision.toggleShouldUpdate(0)).
-    alongWith(Commands.run(() -> vision.toggleShouldUpdate(1)))
-    .alongWith(new RainbowCommand(() -> 1)));
+    // No vision toggle
+    OIConstants.driverController.x().onTrue(
+      Commands.run(() -> vision.toggleShouldUpdate(0)).alongWith(
+      Commands.run(() -> vision.toggleShouldUpdate(1))).alongWith(
+      new RainbowCommand(() -> 1))
+      );
 
-    // toggle using reef tags only
+    // Seed arm
     OIConstants.driverController.povUp().onTrue(Commands.runOnce(() -> Arm.getInstance().seedRelativeEncoder()));
 
-    // vertical stow
+    // Vertical stow
     OIConstants.operatorController.b()
      .onTrue(AutoCommands.vstow());
      
+    // Drive sysid
     Constants.OIConstants.driverController.povRight().and(Constants.OIConstants.driverController.y())
-    .whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-  Constants.OIConstants.driverController.povRight().and(Constants.OIConstants.driverController.x())
-    .whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-  Constants.OIConstants.driverController.povLeft().and(Constants.OIConstants.driverController.y())
-    .whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-  Constants.OIConstants.driverController.povLeft().and(Constants.OIConstants.driverController.x())
-    .whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+      .whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+    Constants.OIConstants.driverController.povRight().and(Constants.OIConstants.driverController.x())
+      .whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+    Constants.OIConstants.driverController.povLeft().and(Constants.OIConstants.driverController.y())
+      .whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+    Constants.OIConstants.driverController.povLeft().and(Constants.OIConstants.driverController.x())
+      .whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
     drivetrain.registerTelemetry(logger::telemeterize);
   }
