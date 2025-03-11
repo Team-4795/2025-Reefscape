@@ -39,11 +39,7 @@ public class Elevator extends SubsystemBase {
                 // if(DriverStation.isTeleopEnabled() && change != 0) {
                 //     io.setGoal(inputs.goalHeight + change);
                 // }
-
-                if(StateManagerV2.getInstance().elevatorCanMove()) {
-                io.updateMotionProfile();
-            }
-            // io.updateMotionProfile();
+            io.updateMotionProfile();
         }, this));
     }
     

@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.OIConstants;
@@ -48,6 +49,19 @@ public class AutoCommands {
         command.addRequirements(GenericRequirement.getInstance());
 
         return command;
+    }
+
+    public static Command rumbleCommand() {
+        return Commands.startEnd(
+            () -> {
+                OIConstants.driverController.setRumble(RumbleType.kBothRumble, 0.6);
+                OIConstants.operatorController.setRumble(RumbleType.kBothRumble, 0.6);
+            },
+            () -> {
+                OIConstants.driverController.setRumble(RumbleType.kBothRumble, 0);
+                OIConstants.operatorController.setRumble(RumbleType.kBothRumble, 0);
+            }
+        );
     }
 
     public static Command raiseL3() {

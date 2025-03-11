@@ -55,9 +55,7 @@ public class Arm extends SubsystemBase {
                 if(DriverStation.isTeleopEnabled() && change != 0) {
                     io.setGoal(inputs.goalAngle + change);
                 }
-                if(StateManagerV2.getInstance().armCanMove()) {
-                    io.updateMotionProfile();
-                }
+                io.updateMotionProfile();
             }, this)
         );
         // setDefaultCommand(

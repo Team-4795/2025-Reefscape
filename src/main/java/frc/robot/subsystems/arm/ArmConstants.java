@@ -12,7 +12,7 @@ public class ArmConstants {
     public static final double CORAL_L3 = 2.7386298179626465 - ARM_OFFSET;
     public static final double CORAL_L4 = 2.8875072 - ARM_OFFSET;
     public static final double VSTOW = 1.34;
-    public static final double GOAL_TOLERANCE = 0.02;
+    public static final double GOAL_TOLERANCE = 0.05;
     public static final double ALGAE_LOW = 0.3129383325576782;
     public static final double ALGAE_HIGH = 0.8301816582679749;
     public static final double PROCESSOR = 0.0;

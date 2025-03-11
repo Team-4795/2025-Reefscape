@@ -6,6 +6,7 @@ package frc.robot;
 
 import java.io.IOException;
 
+import org.ejml.interfaces.decomposition.LUDecomposition_F32;
 import org.json.simple.parser.ParseException;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -15,6 +16,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AutoCommands;
@@ -33,6 +35,7 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIORealVortex;
 import frc.robot.subsystems.intake.IntakeIOSim;
 import frc.robot.subsystems.leds.LEDs;
+import frc.robot.subsystems.statemanager.StateConstants;
 import frc.robot.subsystems.statemanager.StateManagerV2;
 import frc.robot.subsystems.statemanager.StateManagerV2.StateRequest;
 import frc.robot.subsystems.swerve.Swerve;
@@ -59,6 +62,7 @@ public class RobotContainer {
   public final Telemetry logger = new Telemetry(SwerveConstants.MaxSpeed);
 
   public final Swerve drivetrain;
+  public final StateManagerV2 stateManager;
 
   private Elevator elevator;
   // private Drive drive;
@@ -101,6 +105,7 @@ public class RobotContainer {
     leds = LEDs.getInstance();
 
     StateManagerV2.initalize();
+    stateManager = StateManagerV2.getInstance();
 
     NamedCommandManager.registerNamedCommands();
 
@@ -184,6 +189,17 @@ public class RobotContainer {
     alongWith(Commands.run(() -> vision.toggleShouldUpdate(1)))
     .alongWith(new RainbowCommand(() -> 1)));
 
+    Commands.sequence(
+      stateManager.stateCommand(StateConstants.Intake),
+      Commands.waitSeconds(0.3),
+      Commands.waitUntil(() -> intake.GamePieceFinal()),
+      Commands.parallel(
+        AutoCommands.rumbleCommand(),
+        intake.reverse()
+      ).withTimeout(12)
+    );
+    
+
     // toggle using reef tags only
     OIConstants.driverController.povUp().onTrue(Commands.runOnce(() -> Arm.getInstance().seedRelativeEncoder()));
 
@@ -204,11 +220,11 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() { 
-    return StateManagerV2.getInstance().stateCommand(
-      new StateRequest()
-        .withArmAngle(ArmConstants.CORAL_L4)
-        .withElevatorHeight(ElevatorConstants.CORAL_L4_SETPOINT)
-    );
-    // return AutoCommands.coralSetpoint(CoralSetpoint.L4);
+    // return stateManager.stateCommand(StateConstants.L4)
+    //   .andThen(stateManager.stateCommand(StateConstants.L3))
+    //   .andThen(stateManager.stateCommand(StateConstants.L2))
+    //   .andThen(stateManager.stateCommand(StateConstants.STOW))
+    //   .andThen(stateManager.stateCommand(StateConstants.VSTOW));
+    return autoChooser.get();
   }
 }

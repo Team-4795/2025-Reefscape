@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class Constants {
     public static final boolean tuningMode = false;
-    public static final Mode currentMode = Mode.SIM;
+    public static final Mode currentMode = Robot.isReal() ? Mode.REAL : Mode.SIM;
     public static final boolean visonSimEnabled = true;
 
     public static final class driveConstants {
