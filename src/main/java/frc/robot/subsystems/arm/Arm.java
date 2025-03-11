@@ -53,7 +53,7 @@ public class Arm extends SubsystemBase {
                 double change = MathUtil.applyDeadband(-OIConstants.operatorController.getRightY(), OIConstants.OperatorLAxisDeadband);
                 change = .05 * Math.pow(change, 3);
                 if(DriverStation.isTeleopEnabled() && change != 0) {
-                    io.setGoal(inputs.goalAngle + change);
+                    // io.setGoal(inputs.goalAngle + change);
                 }
                 io.updateMotionProfile();
             }, this)

@@ -156,13 +156,21 @@ public class RobotContainer {
 
     // Arm manual control
     // Coral Setpoints
-    Constants.OIConstants.operatorController.povUp().onTrue(AutoCommands.raiseL4());
-    Constants.OIConstants.operatorController.povLeft().onTrue(AutoCommands.raiseL2());
-    Constants.OIConstants.operatorController.povRight().onTrue(AutoCommands.raiseL3());
-    Constants.OIConstants.operatorController.povDown().onTrue(AutoCommands.stow());
-    Constants.OIConstants.operatorController.rightTrigger().onTrue(AutoCommands.AlgaeLow());
-    Constants.OIConstants.operatorController.leftTrigger().onTrue(AutoCommands.algaeHigh());
-    Constants.OIConstants.operatorController.x().onTrue((AutoCommands.processor()));
+    // Constants.OIConstants.operatorController.povUp().onTrue(AutoCommands.raiseL4());
+    // Constants.OIConstants.operatorController.povLeft().onTrue(AutoCommands.raiseL2());
+    // Constants.OIConstants.operatorController.povRight().onTrue(AutoCommands.raiseL3());
+    // Constants.OIConstants.operatorController.povDown().onTrue(AutoCommands.stow());
+    // Constants.OIConstants.operatorController.rightTrigger().onTrue(AutoCommands.AlgaeLow());
+    // Constants.OIConstants.operatorController.leftTrigger().onTrue(AutoCommands.algaeHigh());
+    // Constants.OIConstants.operatorController.x().onTrue((AutoCommands.processor()));
+
+    Constants.OIConstants.operatorController.povUp().onTrue(stateManager.stateCommand(StateConstants.L4));
+    Constants.OIConstants.operatorController.povLeft().onTrue(stateManager.stateCommand(StateConstants.L2));
+    Constants.OIConstants.operatorController.povRight().onTrue(stateManager.stateCommand(StateConstants.L3));
+    Constants.OIConstants.operatorController.povDown().onTrue(stateManager.stateCommand(StateConstants.STOW));
+    Constants.OIConstants.operatorController.rightTrigger().onTrue(stateManager.stateCommand(StateConstants.LOW_ALGAE));
+    Constants.OIConstants.operatorController.leftTrigger().onTrue(stateManager.stateCommand(StateConstants.HIGH_ALGAE));
+    Constants.OIConstants.operatorController.x().onTrue(stateManager.stateCommand(StateConstants.PROCESSOR));
 
     Constants.OIConstants.operatorController.y().whileTrue(
       Commands.startEnd(

@@ -122,7 +122,7 @@ public class StateManagerV2 extends SubsystemBase {
             elevator.setGoalHeight(requestedState.elevatorHeight);
         }
 
-        intake.setIntakeSpeed(requestedState.intakeSpeed);
+        // intake.setIntakeSpeed(requestedState.intakeSpeed);
 
         Logger.recordOutput("StateManager/armCanMove", armCanMove());
         Logger.recordOutput("StateManager/elevatorCanMove", elevatorCanMove());
