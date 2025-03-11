@@ -24,6 +24,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.Gamepiece;
 import frc.robot.Constants.Mode;
 import frc.robot.Constants.OIConstants;
+import frc.robot.subsystems.statemanager.StateManagerV2;
 import frc.robot.util.LoggedTunableNumber;
 
 public class Arm extends SubsystemBase {
@@ -54,7 +55,9 @@ public class Arm extends SubsystemBase {
                 if(DriverStation.isTeleopEnabled() && change != 0) {
                     io.setGoal(inputs.goalAngle + change);
                 }
-                io.updateMotionProfile();
+                if(StateManagerV2.getInstance().armCanMove()) {
+                    io.updateMotionProfile();
+                }
             }, this)
         );
         // setDefaultCommand(

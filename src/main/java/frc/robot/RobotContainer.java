@@ -22,15 +22,19 @@ import frc.robot.commands.RainbowCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.GenericRequirement;
 import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmIOReal;
 import frc.robot.subsystems.arm.ArmIOSim;
 import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorIOReal;
 import frc.robot.subsystems.elevator.ElevatorIOSim;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIORealVortex;
 import frc.robot.subsystems.intake.IntakeIOSim;
 import frc.robot.subsystems.leds.LEDs;
+import frc.robot.subsystems.statemanager.StateManagerV2;
+import frc.robot.subsystems.statemanager.StateManagerV2.StateRequest;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.vision.AprilTag.Vision;
@@ -96,12 +100,13 @@ public class RobotContainer {
     }
     leds = LEDs.getInstance();
 
+    StateManagerV2.initalize();
+
     NamedCommandManager.registerNamedCommands();
 
     autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser("Driver Forward Straight"));
     autoChooser.addOption("BottomBarge C BB BF", AutoBuilder.buildAuto("BottomBarge C BB BF"));
     configureBindings();
-    
   }
 
   public void zeroArm() {
@@ -198,7 +203,12 @@ public class RobotContainer {
     drivetrain.registerTelemetry(logger::telemeterize);
   }
 
-  public Command getAutonomousCommand() {
-    return autoChooser.get();
+  public Command getAutonomousCommand() { 
+    return StateManagerV2.getInstance().stateCommand(
+      new StateRequest()
+        .withArmAngle(ArmConstants.CORAL_L4)
+        .withElevatorHeight(ElevatorConstants.CORAL_L4_SETPOINT)
+    );
+    // return AutoCommands.coralSetpoint(CoralSetpoint.L4);
   }
 }

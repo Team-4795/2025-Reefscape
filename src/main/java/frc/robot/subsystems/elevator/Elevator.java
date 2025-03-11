@@ -5,6 +5,7 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.OIConstants;
+import frc.robot.subsystems.statemanager.StateManagerV2;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -38,7 +39,11 @@ public class Elevator extends SubsystemBase {
                 // if(DriverStation.isTeleopEnabled() && change != 0) {
                 //     io.setGoal(inputs.goalHeight + change);
                 // }
-            io.updateMotionProfile();
+
+                if(StateManagerV2.getInstance().elevatorCanMove()) {
+                io.updateMotionProfile();
+            }
+            // io.updateMotionProfile();
         }, this));
     }
     
