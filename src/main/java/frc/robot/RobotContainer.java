@@ -127,12 +127,16 @@ public class RobotContainer {
 
     // Reef/Feeder align
     Constants.OIConstants.driverController.leftBumper().whileTrue(
-        AutoCommands.autoScore(() -> autoScoreMode)
+      Commands.either(
+        AutoCommands.autoScore(1),
+        AutoCommands.autoScore(0),
+        () -> OIConstants.autoScoreMode == 1
+      )
     );
 
     // Algae align
     Constants.OIConstants.driverController.rightBumper().whileTrue(
-        AutoCommands.alignAlgae()
+      AutoCommands.alignAlgae()
     );
 
     // Slow mode
@@ -150,8 +154,8 @@ public class RobotContainer {
     // Arm manual control
     // Coral Setpoints
 
-    Constants.OIConstants.operatorController.povUp().onTrue(Commands.runOnce(() -> {autoScoreMode = 1; Logger.recordOutput("autoScoreMode", autoScoreMode);}));
-    Constants.OIConstants.operatorController.povRight().onTrue(Commands.runOnce(() -> {autoScoreMode = 0; Logger.recordOutput("autoScoreMode", autoScoreMode);}));
+    Constants.OIConstants.operatorController.povUp().onTrue(Commands.runOnce(() -> {OIConstants.autoScoreMode = 1;}));
+    Constants.OIConstants.operatorController.povRight().onTrue(Commands.runOnce(() -> {OIConstants.autoScoreMode = 0;}));
     // Constants.OIConstants.operatorController.povUp().onTrue(AutoCommands.raiseL4());
     Constants.OIConstants.operatorController.povLeft().onTrue(AutoCommands.raiseL2());
     // Constants.OIConstants.operatorController.povRight().onTrue(AutoCommands.raiseL3());

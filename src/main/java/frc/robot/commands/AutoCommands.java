@@ -184,13 +184,13 @@ public class AutoCommands {
         //     intake.intake().withTimeout(2));
     }
 
-    public static Command autoScore(IntSupplier setpoint) {
+    public static Command autoScore(int autoScoreMode) {
         return Commands.sequence(
             Commands.parallel(
                 alignReefUntil(),
                 vstow()
             ),
-            (setpoint.getAsInt() == 1 ? raiseL4() : raiseL3()).andThen(Commands.waitSeconds(1)),
+            (autoScoreMode == 1 ? raiseL4() : raiseL3()).andThen(Commands.waitSeconds(1)),
             score(),
             Commands.runOnce(() -> OIConstants.aligned = false),
             vstow()
