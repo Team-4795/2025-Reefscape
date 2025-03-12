@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import java.util.function.IntSupplier;
+
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
@@ -196,6 +198,27 @@ public class AutoCommands {
         //     intake.intake().withTimeout(2));
     }
 
+    public static Command autoScore() {
+        return Commands.either(
+            Commands.sequence(
+                Commands.parallel(
+                    alignReefUntil(),
+                    vstow()),
+                raiseL4().andThen(Commands.waitSeconds(1)),
+                score(),
+                Commands.runOnce(() -> OIConstants.aligned = false),
+                vstow()), 
+
+            Commands.sequence(
+                Commands.parallel(
+                    alignReefUntil(),
+                    raiseL3()),
+                score(),
+                Commands.runOnce(() -> OIConstants.aligned = false)), 
+                
+            () -> OIConstants.autoScoreMode == 1);
+    }
+
     public static Command zeroArm() {
         return Commands.parallel(
             Commands.startEnd(
@@ -207,15 +230,19 @@ public class AutoCommands {
     }
 
     public static Command score() {
-        return intake.intake().withTimeout(0.2);
+        return intake.intake().withTimeout(0.2).alongWith(Commands.runOnce(() -> intake.outtake()));
+    }
+
+    public static Command setScoringState() {
+        return Commands.runOnce(() -> OIConstants.autoScoreMode = 1);
     }
 
     public static Command alignReef() {
         return new AutoAlignReef(
             new ProfiledPIDController(5,
              0, 0, new Constraints(SwerveConstants.MaxSpeed, 3)), 
-            new ProfiledPIDController(7.5, 0, 0, new Constraints(SwerveConstants.MaxSpeed, 3))
-        ).withTimeout(2);
+            new ProfiledPIDController(7.5, 0, 0, new Constraints(SwerveConstants.MaxAngularRate, 3))
+        ).until(() -> OIConstants.aligned);
     }
 
     public static Command alignAlgae() {
@@ -238,7 +265,7 @@ public class AutoCommands {
         return new AutoAlignReef(
             new ProfiledPIDController(5,
              0, 0, new Constraints(SwerveConstants.MaxSpeed, 3)), 
-            new ProfiledPIDController(7.5, 0, 0, new Constraints(SwerveConstants.MaxSpeed, 3))
+            new ProfiledPIDController(7.5, 0, 0, new Constraints(SwerveConstants.MaxAngularRate, 3))
         ).until(() -> OIConstants.aligned);
     }
 

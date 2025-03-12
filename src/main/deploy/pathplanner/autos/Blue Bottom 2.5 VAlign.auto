@@ -11,6 +11,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Score left reef"
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -18,12 +24,6 @@
                 "type": "path",
                 "data": {
                   "pathName": "Blue Bottom 2 Vision Align"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "VStow"
                 }
               }
             ]
@@ -38,20 +38,8 @@
                 "data": {
                   "name": "Align Reef"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Raise to L4"
-                }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Score"
           }
         },
         {
@@ -101,12 +89,6 @@
                 "data": {
                   "pathName": "Blue Bottom 2 P3"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "VStow"
-                }
               }
             ]
           }
@@ -118,22 +100,10 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Raise to L4"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
                   "name": "Align Reef"
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Score"
           }
         },
         {
@@ -200,22 +170,10 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Raise to L4"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
                   "name": "Align Reef"
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Score"
           }
         }
       ]

@@ -27,7 +27,7 @@ import java.util.List;
 public class Vision extends SubsystemBase{
     private VisionIO io[];
     private VisionIOInputsAutoLogged inputs[];
-    private boolean[] shouldUpdate = new boolean[] {true, true, false, false};
+    private boolean[] shouldUpdate = new boolean[] {true, true};
 
     public static Vision instance;
 
@@ -57,8 +57,14 @@ public class Vision extends SubsystemBase{
         }
     }
 
-    public void toggleShouldUpdate(int id) {
-        shouldUpdate[id] = !shouldUpdate[id];
+    public void toggleShouldUpdate() {
+        for(int i = 0; i < io.length; i++) {
+            shouldUpdate[i] = !shouldUpdate[i];
+        }
+    }
+
+    public boolean isVisionUpdating() {
+        return shouldUpdate[0];
     }
 
     public void toggleReefTag() {
@@ -85,8 +91,8 @@ public class Vision extends SubsystemBase{
         for (int i = 0; i < io.length; i++) {
             io[i].updateInputs(inputs[i]);
             Logger.processInputs("Vision/" + VisionConstants.cameraIds[i], inputs[i]);
+            Logger.recordOutput("Vision/" + VisionConstants.cameraIds[i] + "/is updating", isVisionUpdating());
         }
-
 
         for (int i = 0; i < io.length; i++) {
             for (int p = 0; p < inputs[i].pose.length; p++) {

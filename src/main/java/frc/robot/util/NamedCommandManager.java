@@ -23,5 +23,6 @@ public class NamedCommandManager {
         NamedCommands.registerCommand("Score left reef", AutoCommands.scoreLeftReef());
         NamedCommands.registerCommand("Score right reef", AutoCommands.scoreRightReef());
         NamedCommands.registerCommand("Zero Arm", AutoCommands.zeroArm());
+        NamedCommands.registerCommand("Set Score L4", AutoCommands.setScoringState());
     }
 }
