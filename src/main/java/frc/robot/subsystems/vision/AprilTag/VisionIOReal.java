@@ -83,7 +83,6 @@ public class VisionIOReal implements VisionIO {
         inputs.sortMode = sortMode.toString();
 
         result = camera.getAllUnreadResults();
-    
 
         for(int i = 0; i < result.size(); i++) {
             if(result.get(i).getBestTarget() != null) {

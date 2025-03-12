@@ -145,12 +145,18 @@ public class RobotContainer {
       ).alongWith(Commands.runOnce(() -> intake.outtake())));           
 
     // Coral Setpoints
-    Constants.OIConstants.operatorController.povUp().onTrue(Commands.runOnce(() -> {OIConstants.autoScoreMode = 1;}));
-    Constants.OIConstants.operatorController.povRight().onTrue(Commands.runOnce(() -> {OIConstants.autoScoreMode = 0;}));
+    Constants.OIConstants.operatorController.povUp().onTrue(
+        Commands.either(
+            Commands.runOnce(() -> OIConstants.autoScoreMode = 1), 
+            AutoCommands.raiseL4(), 
+            () -> vision.isVisionUpdating()));
+    Constants.OIConstants.operatorController.povRight().onTrue(
+        Commands.either(
+            Commands.runOnce(() -> OIConstants.autoScoreMode = 0), 
+            AutoCommands.raiseL3(), 
+            () -> vision.isVisionUpdating()));
     Constants.OIConstants.operatorController.povLeft().onTrue(AutoCommands.raiseL2());
     Constants.OIConstants.operatorController.povDown().onTrue(AutoCommands.stow());
-    // Constants.OIConstants.operatorController.povUp().onTrue(AutoCommands.raiseL4());
-    // Constants.OIConstants.operatorController.povRight().onTrue(AutoCommands.raiseL3());
 
     // Algae setpoints
     Constants.OIConstants.operatorController.rightTrigger().onTrue(AutoCommands.AlgaeLow());
@@ -177,9 +183,8 @@ public class RobotContainer {
       ));
 
     // No vision toggle
-    OIConstants.driverController.x().onTrue(
-      Commands.run(() -> vision.toggleShouldUpdate(0)).alongWith(
-      Commands.run(() -> vision.toggleShouldUpdate(1))).alongWith(
+    OIConstants.operatorController.x().onTrue(
+      Commands.run(() -> vision.toggleShouldUpdate()).alongWith(
       new RainbowCommand(() -> 1))
       );
 
