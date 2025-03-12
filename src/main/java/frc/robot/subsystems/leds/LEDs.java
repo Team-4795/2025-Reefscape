@@ -264,8 +264,10 @@ public class LEDs extends SubsystemBase {
     switch(OIConstants.autoScoreMode) {
         case 0: 
         setBottomColor(Color.kYellow);
+        break;
         case 1: 
-        setTopColor(Color.kWhite);
+        setBottomColor(Color.kWhite);
+        break;
     }
 
 
