@@ -216,15 +216,19 @@ public class AutoCommands {
     }
 
     public static Command score() {
-        return intake.intake().withTimeout(0.2);
+        return intake.intake().withTimeout(0.2).alongWith(Commands.runOnce(() -> intake.outtake()));
+    }
+
+    public static Command setScoringState() {
+        return Commands.runOnce(() -> OIConstants.autoScoreMode = 1);
     }
 
     public static Command alignReef() {
         return new AutoAlignReef(
             new ProfiledPIDController(5,
              0, 0, new Constraints(SwerveConstants.MaxSpeed, 3)), 
-            new ProfiledPIDController(7.5, 0, 0, new Constraints(SwerveConstants.MaxSpeed, 3))
-        ).withTimeout(2);
+            new ProfiledPIDController(7.5, 0, 0, new Constraints(SwerveConstants.MaxAngularRate, 3))
+        ).until(() -> OIConstants.aligned);
     }
 
     public static Command alignAlgae() {

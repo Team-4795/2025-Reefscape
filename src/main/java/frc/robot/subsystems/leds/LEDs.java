@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.RainbowCommand;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.swerve.Swerve;
 
@@ -68,25 +69,25 @@ public class LEDs extends SubsystemBase {
     // Blue 1 195 203
 
     private void setTeamColors() {
-        setColorNoOutput(174, 19, 186, false, 1, 8);
-        setColorNoOutput(1, 195, 203, false, 8, 14);
+        setColorNoOutput(174, 19, 186, false, 1, 12);
+        setColorNoOutput(1, 195, 203, false, 12, 22);
 
         // Flip for other led strip
-        setColorNoOutput(1, 195, 203, false, 14, 20);
-        setColorNoOutput(174, 19, 186, false, 20, 27);
+        setColorNoOutput(1, 195, 203, false, 22, 32);
+        setColorNoOutput(174, 19, 186, false, 32, 42);
 
         setOutput();
     }
 
     public void setTopColor(Color color) {
-        setColorNoOutput((int) (color.red * 255), (int) (color.green * 255), (int) (color.blue * 255), false, 8, 14);
-        setColorNoOutput((int) (color.red * 255), (int) (color.green * 255), (int) (color.blue * 255), false, 14, 20);
+        setColorNoOutput((int) (color.red * 255), (int) (color.green * 255), (int) (color.blue * 255), false, 12, 22);
+        setColorNoOutput((int) (color.red * 255), (int) (color.green * 255), (int) (color.blue * 255), false, 22, 32);
         setOutput();
     }
 
     public void setBottomColor(Color color) {
-        setColorNoOutput((int) (color.red * 255), (int) (color.green * 255), (int) (color.blue * 255), false, 1, 8);
-        setColorNoOutput((int) (color.red * 255), (int) (color.green * 255), (int) (color.blue * 255), false, 20, 27);
+        setColorNoOutput((int) (color.red * 255), (int) (color.green * 255), (int) (color.blue * 255), false, 1, 12);
+        setColorNoOutput((int) (color.red * 255), (int) (color.green * 255), (int) (color.blue * 255), false, 32, 42);
         setOutput();
     }
 
@@ -254,10 +255,19 @@ public class LEDs extends SubsystemBase {
     } else if(OIConstants.aligned) {
         color = Color.kRed;
     } else if (Constants.OIConstants.isScoringLeft) {
-        color = Color.kCyan;
+        setTopColor(Color.kAqua);
     } else if (!Constants.OIConstants.isScoringLeft) {
         color = Color.kPurple;
+        setTopColor(Color.kPurple);
     }
+
+    switch(OIConstants.autoScoreMode) {
+        case 0: 
+        setBottomColor(Color.kYellow);
+        case 1: 
+        setTopColor(Color.kWhite);
+    }
+
 
     if(Intake.getInstance().isStoring && !OIConstants.aligned) {
         blink = BlinkState.SlOW;
