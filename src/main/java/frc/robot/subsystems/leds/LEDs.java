@@ -250,6 +250,15 @@ public class LEDs extends SubsystemBase {
     @Override
     public void periodic() {
     // updates LEDs to show state of intake
+    switch(OIConstants.autoScoreMode) {
+        case 0: 
+        setBottomColor(Color.kYellow);
+        break;
+        case 1: 
+        setBottomColor(Color.kWhite);
+        break;
+    }
+
     if(Swerve.getInstance().isSlowMode()){
         color = Color.kOrange;
     } else if(OIConstants.aligned) {
@@ -259,15 +268,6 @@ public class LEDs extends SubsystemBase {
     } else if (!Constants.OIConstants.isScoringLeft) {
         color = Color.kPurple;
         setTopColor(Color.kPurple);
-    }
-
-    switch(OIConstants.autoScoreMode) {
-        case 0: 
-        setBottomColor(Color.kYellow);
-        break;
-        case 1: 
-        setBottomColor(Color.kWhite);
-        break;
     }
 
 

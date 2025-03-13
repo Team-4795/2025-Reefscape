@@ -190,7 +190,7 @@ public class AutoCommands {
                 Commands.parallel(
                     alignReefUntil(),
                     vstow()),
-                raiseL4().andThen(Commands.waitSeconds(1)),
+                raiseL4().andThen(Commands.waitSeconds(0.75)),
                 score(),
                 Commands.runOnce(() -> OIConstants.aligned = false),
                 vstow()), 
