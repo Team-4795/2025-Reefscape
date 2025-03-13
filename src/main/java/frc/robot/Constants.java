@@ -35,6 +35,7 @@ public class Constants {
         public static final double OperatorLAxisDeadband = 0.3;
         public static boolean isScoringLeft = true;
         public static boolean aligned = false; 
+        public static boolean inScoringDistance = false;
         public static boolean isReefTagOnly = true;
         public static int autoScoreMode = 1;
     }

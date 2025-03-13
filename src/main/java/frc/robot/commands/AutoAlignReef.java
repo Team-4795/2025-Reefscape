@@ -124,6 +124,7 @@ public class AutoAlignReef extends Command {
             .withRotationalRate(omega));
         
         OIConstants.aligned = finishedAligning();
+        OIConstants.inScoringDistance = inScoringDistance();
     }
 
     @Override
@@ -136,6 +137,10 @@ public class AutoAlignReef extends Command {
 
     public boolean finishedAligning() {
         return (distance < Units.inchesToMeters(1.5));
+    }
+
+    public boolean inScoringDistance() {
+        return (distance < 1);
     }
 
     private double projection(Translation2d v1, Translation2d onto){

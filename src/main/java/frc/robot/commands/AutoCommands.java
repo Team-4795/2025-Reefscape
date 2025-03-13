@@ -189,8 +189,11 @@ public class AutoCommands {
             Commands.sequence(
                 Commands.parallel(
                     alignReefUntil(),
-                    vstow()),
-                raiseL4().andThen(Commands.waitSeconds(0.75)),
+                    Commands.sequence(
+                        vstow(),
+                        Commands.waitUntil(() -> OIConstants.inScoringDistance),
+                        raiseL4())
+                    ),
                 score(),
                 Commands.runOnce(() -> OIConstants.aligned = false),
                 vstow()), 
