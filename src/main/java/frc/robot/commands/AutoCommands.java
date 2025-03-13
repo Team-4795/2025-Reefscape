@@ -204,6 +204,13 @@ public class AutoCommands {
             Commands.sequence(
                 Commands.parallel(
                     alignReefUntil(),
+                    Commands.select(autoScoreMap(), () -> OIConstants.autoScoreMode)),
+                score(),
+                Commands.runOnce(() -> OIConstants.aligned = false)), 
+
+            Commands.sequence(
+                Commands.parallel(
+                    alignReefUntil(),
                     Commands.sequence(
                         vstow(),
                         Commands.waitUntil(() -> OIConstants.inScoringDistance),
@@ -212,15 +219,8 @@ public class AutoCommands {
                 score(),
                 Commands.runOnce(() -> OIConstants.aligned = false),
                 vstow()), 
-
-            Commands.sequence(
-                Commands.parallel(
-                    alignReefUntil(),
-                    raiseL3()),
-                score(),
-                Commands.runOnce(() -> OIConstants.aligned = false)), 
                 
-            () -> OIConstants.autoScoreMode != 3);
+            () -> OIConstants.autoScoreMode != 4);
     }
 
     public static Command zeroArm() {
