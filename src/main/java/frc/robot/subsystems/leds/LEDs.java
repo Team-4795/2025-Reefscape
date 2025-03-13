@@ -252,9 +252,11 @@ public class LEDs extends SubsystemBase {
     // updates LEDs to show state of intake
     switch(OIConstants.autoScoreMode) {
         case 0: 
+        if(!DriverStation.isDisabled())
         setBottomColor(Color.kYellow);
         break;
         case 1: 
+        if(!DriverStation.isDisabled())
         setBottomColor(Color.kWhite);
         break;
     }
@@ -266,7 +268,6 @@ public class LEDs extends SubsystemBase {
     } else if (Constants.OIConstants.isScoringLeft) {
         setTopColor(Color.kAqua);
     } else if (!Constants.OIConstants.isScoringLeft) {
-        color = Color.kPurple;
         setTopColor(Color.kPurple);
     }
 
