@@ -34,7 +34,8 @@ public class LEDs extends SubsystemBase {
     private boolean teamColorsAnimation = false;
 
     
-    private Color color = Color.kBlack;
+    private Color color1 = Color.kBlack;
+    private Color color2 = Color.kBlack;
     private BlinkState blink = BlinkState.SOLID;
 
     private static LEDs instance;
@@ -98,15 +99,15 @@ public class LEDs extends SubsystemBase {
 
     public Command blink(double pause){
         return Commands.sequence(
-            // runOnce(() -> setColor(color)),
+            runOnce(() -> setColors(color1, color2)),
             Commands.waitSeconds(pause),
-            runOnce(() -> setColor(Color.kBlack)),
+            runOnce(() -> setColors(color1, color2)),
             Commands.waitSeconds(pause)
         );
     }
 
     public Command setSolidColor(){
-        return Commands.runOnce(() -> this.setColor(color));
+        return Commands.runOnce(() -> this.setColors(color1, color2));
     }
 
     public Command intakingAlgae() {
@@ -251,21 +252,29 @@ public class LEDs extends SubsystemBase {
     public void periodic() {
     // updates LEDs to show state of intake
     if(Swerve.getInstance().isSlowMode()) {
-        color = Color.kOrange;
+        color1 = Color.kBlack;
+        color2 = Color.kBlack;
     } else if (OIConstants.aligned) {
-        color = Color.kRed;
-    } else if(Constants.OIConstants.isScoringLeft && OIConstants.autoScoreMode == 1) {
-        setTopColor(Color.kAqua);
-        setBottomColor(Color.kWhite);
-    } else if(!Constants.OIConstants.isScoringLeft && OIConstants.autoScoreMode == 1) {
-        setTopColor(Color.kPurple);
-        setBottomColor(Color.kWhite);
-    } else if(Constants.OIConstants.isScoringLeft && OIConstants.autoScoreMode == 0) {
-        setTopColor(Color.kAqua);
-        setBottomColor(Color.kYellow);
-    } else if(!Constants.OIConstants.isScoringLeft && OIConstants.autoScoreMode == 0) {
-        setTopColor(Color.kPurple);
-        setBottomColor(Color.kYellow);
+        color1 = Color.kOrange;
+        color2 = Color.kOrange;
+    } else if(Constants.OIConstants.isScoringLeft && OIConstants.autoScoreMode == 4) {
+        color1 = Color.kAqua;
+        color2 = Color.kGreen;
+    } else if(!Constants.OIConstants.isScoringLeft && OIConstants.autoScoreMode == 4) {
+        color1 = Color.kPurple;
+        color2 = Color.kGreen;
+    } else if(Constants.OIConstants.isScoringLeft && OIConstants.autoScoreMode == 3) {
+        color1 = Color.kAqua;
+        color2 = Color.kYellow;
+    } else if(!Constants.OIConstants.isScoringLeft && OIConstants.autoScoreMode == 3) {
+        color1 = Color.kPurple;
+        color2 = Color.kYellow;
+    }  else if(Constants.OIConstants.isScoringLeft && OIConstants.autoScoreMode == 2) {
+        color1 = Color.kAqua;
+        color2 = Color.kRed;
+    }  else if(!Constants.OIConstants.isScoringLeft && OIConstants.autoScoreMode == 2) {
+        color1 = Color.kPurple;
+        color2 = Color.kRed;
     } 
 
 

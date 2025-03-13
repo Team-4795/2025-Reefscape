@@ -216,6 +216,7 @@ public class AutoCommands {
                         Commands.waitUntil(() -> OIConstants.inScoringDistance),
                         Commands.select(autoScoreMap(), () -> OIConstants.autoScoreMode))
                     ),
+                Commands.waitSeconds(0.2),
                 score(),
                 Commands.runOnce(() -> OIConstants.aligned = false),
                 vstow()), 
