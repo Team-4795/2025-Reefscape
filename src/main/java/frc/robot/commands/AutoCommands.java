@@ -102,7 +102,9 @@ public class AutoCommands {
                 Commands.runOnce( ()-> elevator.setGoalHeight(ElevatorConstants.STOW)),
                 Commands.runOnce(() -> arm.setGoal(ArmConstants.ALGAE_LOW))),
             () -> ElevatorConstants.STOW <= elevator.getPosition()
-        );
+        ).andThen(Commands.runOnce(
+            () -> intake.setIntakeSpeed(1)
+        ));
 
         command.addRequirements(GenericRequirement.getInstance());
 
@@ -119,7 +121,7 @@ public class AutoCommands {
                 Commands.runOnce( ()-> elevator.setGoalHeight(ElevatorConstants.ALGEA_SETPOINT)),
                 Commands.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L2))),
             () -> ElevatorConstants.ALGEA_SETPOINT <= elevator.getPosition()
-        );
+        ).andThen(Commands.runOnce(() -> intake.setIntakeSpeed(1)));
 
         command.addRequirements(GenericRequirement.getInstance());
 
@@ -137,7 +139,9 @@ public class AutoCommands {
                 Commands.runOnce(() -> arm.setGoal(ArmConstants.ALGAE_HIGH))
             ),
             () -> ElevatorConstants.HIGH_ALGAE_SETPOINT <= elevator.getPosition()
-        );
+        ).andThen(Commands.runOnce(
+            () -> intake.setIntakeSpeed(1)
+        ));
 
         command.addRequirements(GenericRequirement.getInstance());
 
