@@ -252,6 +252,7 @@ public class LEDs extends SubsystemBase {
     public void periodic() {
     // updates LEDs to show state of intake
     if(Swerve.getInstance().isSlowMode()) {
+<<<<<<< Updated upstream
         color1 = Color.kBlack;
         color2 = Color.kBlack;
     } else if (OIConstants.aligned) {
@@ -275,6 +276,25 @@ public class LEDs extends SubsystemBase {
     }  else if(!Constants.OIConstants.isScoringLeft && OIConstants.autoScoreMode == 2) {
         color1 = Color.kPurple;
         color2 = Color.kRed;
+=======
+        setTopColor(Color.kOrange);
+        setBottomColor(Color.kOrange);
+    } else if (OIConstants.aligned) {
+        setTopColor(Color.kRed);
+        setBottomColor(Color.kRed);
+    } else if(Constants.OIConstants.isScoringLeft && OIConstants.autoScoreMode == 1) {
+        setTopColor(Color.kAqua);
+        setBottomColor(Color.kWhite);
+    } else if(!Constants.OIConstants.isScoringLeft && OIConstants.autoScoreMode == 1) {
+        setTopColor(Color.kPurple);
+        setBottomColor(Color.kWhite);
+    } else if(Constants.OIConstants.isScoringLeft && OIConstants.autoScoreMode == 0) {
+        setTopColor(Color.kAqua);
+        setBottomColor(Color.kYellow);
+    } else if(!Constants.OIConstants.isScoringLeft && OIConstants.autoScoreMode == 0) {
+        setTopColor(Color.kPurple);
+        setBottomColor(Color.kYellow);
+>>>>>>> Stashed changes
     } 
 
 
