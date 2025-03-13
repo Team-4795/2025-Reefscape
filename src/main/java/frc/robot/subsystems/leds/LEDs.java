@@ -250,26 +250,23 @@ public class LEDs extends SubsystemBase {
     @Override
     public void periodic() {
     // updates LEDs to show state of intake
-    switch(OIConstants.autoScoreMode) {
-        case 0: 
-        if(!DriverStation.isDisabled())
-        setBottomColor(Color.kYellow);
-        break;
-        case 1: 
-        if(!DriverStation.isDisabled())
-        setBottomColor(Color.kWhite);
-        break;
-    }
-
-    if(Swerve.getInstance().isSlowMode()){
+    if(Swerve.getInstance().isSlowMode()) {
         color = Color.kOrange;
-    } else if(OIConstants.aligned) {
+    } else if (OIConstants.aligned) {
         color = Color.kRed;
-    } else if (Constants.OIConstants.isScoringLeft) {
+    } else if(Constants.OIConstants.isScoringLeft && OIConstants.autoScoreMode == 1) {
         setTopColor(Color.kAqua);
-    } else if (!Constants.OIConstants.isScoringLeft) {
+        setBottomColor(Color.kWhite);
+    } else if(!Constants.OIConstants.isScoringLeft && OIConstants.autoScoreMode == 1) {
         setTopColor(Color.kPurple);
-    }
+        setBottomColor(Color.kWhite);
+    } else if(Constants.OIConstants.isScoringLeft && OIConstants.autoScoreMode == 0) {
+        setTopColor(Color.kAqua);
+        setBottomColor(Color.kYellow);
+    } else if(!Constants.OIConstants.isScoringLeft && OIConstants.autoScoreMode == 0) {
+        setTopColor(Color.kPurple);
+        setBottomColor(Color.kYellow);
+    } 
 
 
     if(Intake.getInstance().isStoring && !OIConstants.aligned) {
