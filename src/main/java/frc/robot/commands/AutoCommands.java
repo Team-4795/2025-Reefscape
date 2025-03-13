@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import java.util.HashMap;
 import java.util.function.IntSupplier;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -188,6 +189,16 @@ public class AutoCommands {
         //     intake.intake().withTimeout(2));
     }
 
+    public static HashMap<Integer, Command> autoScoreMap() {
+        HashMap<Integer, Command> map = new HashMap<>();
+
+        map.put(2, raiseL2());
+        map.put(3, raiseL3());
+        map.put(4, raiseL4());
+
+        return map;
+    }
+
     public static Command autoScore() {
         return Commands.either(
             Commands.sequence(
@@ -196,7 +207,7 @@ public class AutoCommands {
                     Commands.sequence(
                         vstow(),
                         Commands.waitUntil(() -> OIConstants.inScoringDistance),
-                        raiseL4())
+                        Commands.select(autoScoreMap(), () -> OIConstants.autoScoreMode))
                     ),
                 score(),
                 Commands.runOnce(() -> OIConstants.aligned = false),
@@ -209,7 +220,7 @@ public class AutoCommands {
                 score(),
                 Commands.runOnce(() -> OIConstants.aligned = false)), 
                 
-            () -> OIConstants.autoScoreMode == 1);
+            () -> OIConstants.autoScoreMode != 3);
     }
 
     public static Command zeroArm() {

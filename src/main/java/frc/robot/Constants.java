@@ -37,7 +37,7 @@ public class Constants {
         public static boolean aligned = false; 
         public static boolean inScoringDistance = false;
         public static boolean isReefTagOnly = true;
-        public static int autoScoreMode = 1;
+        public static int autoScoreMode = 4;
     }
 
     public static enum Gamepiece {

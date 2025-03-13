@@ -31,7 +31,7 @@ public class AutoAlignReef extends Command {
     private boolean isScoringLeft;
     private double offset = 0.0;
 
-    private final double maxDistance = 0.2;
+    private final double maxDistance = 0.3;
     private final double minDistance = -0.1;
 
     private ProfiledPIDController translationController;

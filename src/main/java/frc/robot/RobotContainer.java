@@ -147,15 +147,20 @@ public class RobotContainer {
     // Coral Setpoints
     Constants.OIConstants.operatorController.povUp().onTrue(
         Commands.either(
-            Commands.runOnce(() -> OIConstants.autoScoreMode = 1), 
+            Commands.runOnce(() -> OIConstants.autoScoreMode = 4), 
             AutoCommands.raiseL4(), 
             () -> vision.isVisionUpdating()));
     Constants.OIConstants.operatorController.povRight().onTrue(
         Commands.either(
-            Commands.runOnce(() -> OIConstants.autoScoreMode = 0), 
+            Commands.runOnce(() -> OIConstants.autoScoreMode = 3), 
             AutoCommands.raiseL3(), 
             () -> vision.isVisionUpdating()));
-    Constants.OIConstants.operatorController.povLeft().onTrue(AutoCommands.raiseL2());
+    Constants.OIConstants.operatorController.povLeft().onTrue(
+      Commands.either(
+          Commands.runOnce(() -> OIConstants.autoScoreMode = 2), 
+          AutoCommands.raiseL2(), 
+          () -> vision.isVisionUpdating()));
+    
     Constants.OIConstants.operatorController.povDown().onTrue(AutoCommands.stow());
 
     // Algae setpoints
