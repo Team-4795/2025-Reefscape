@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.51,
-        "y": 2.8939999999999997
+        "x": 3.609715909090909,
+        "y": 2.923139204545454
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9987500000000002,
-        "y": 1.558249999999999
+        "x": 2.0984659090909092,
+        "y": 1.5873892045454532
       },
       "isLocked": false,
       "linkedName": null
@@ -48,7 +48,7 @@
   "folder": "Vision Align Blue Bottom 2",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 50.96448710125311
+    "rotation": 55.048812872227465
   },
   "useDefaultConstraints": true
 }

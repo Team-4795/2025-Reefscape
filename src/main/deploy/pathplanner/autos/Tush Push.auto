@@ -5,6 +5,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "Score right reef"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Tush Push P1"
@@ -14,6 +20,12 @@
           "type": "path",
           "data": {
             "pathName": "Tush Push P2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Align Reef"
           }
         },
         {
