@@ -115,10 +115,10 @@ public class AutoCommands {
         Command command = Commands.either(
             Commands.sequence(
                 Commands.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L2)),
-                Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.ALGEA_SETPOINT))
+                Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.PROCESSOR_SETPOINT))
             ),
             Commands.sequence(
-                Commands.runOnce( ()-> elevator.setGoalHeight(ElevatorConstants.ALGEA_SETPOINT)),
+                Commands.runOnce( ()-> elevator.setGoalHeight(ElevatorConstants.PROCESSOR_SETPOINT)),
                 Commands.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L2))),
             () -> ElevatorConstants.ALGEA_SETPOINT <= elevator.getPosition()
         ).andThen(Commands.runOnce(() -> intake.setIntakeSpeed(1)));

@@ -98,7 +98,7 @@ public class LEDs extends SubsystemBase {
 
     public Command blink(double pause){
         return Commands.sequence(
-            runOnce(() -> setColor(color)),
+            // runOnce(() -> setColor(color)),
             Commands.waitSeconds(pause),
             runOnce(() -> setColor(Color.kBlack)),
             Commands.waitSeconds(pause)
