@@ -68,7 +68,6 @@ public class AutoAlignAlgae extends Command{
         // Vision.getInstance().toggleIsReefAligning();
 
         DriverStation.getAlliance().ifPresent((alliance) -> {
-            // targetPose = (alliance == Alliance.Blue) ? BLUE_SCORING_AREAS[0] : RED_SCORING_AREAS[0];
             mult = (alliance == Alliance.Red) ? -1.0 : 1.0;
         });
 

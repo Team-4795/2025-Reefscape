@@ -60,7 +60,6 @@ public class RobotContainer {
   public int autoScoreMode = 1;
 
   private Elevator elevator;
-  // private Drive drive;
   private Intake intake;
   LoggedDashboardChooser<Command> autoChooser;
 
@@ -73,9 +72,8 @@ public class RobotContainer {
         Arm.initialize(new ArmIOReal());
         drivetrain = Swerve.initialize(new Swerve(TunerConstants.DrivetrainConstants, 50, TunerConstants.FrontLeft, TunerConstants.FrontRight, TunerConstants.BackLeft, TunerConstants.BackRight));
         vision = Vision.initialize(
-          new VisionIOReal(0), new VisionIOReal(1)
-          // new VisionIOReal(2),
-          // new VisionIOReal(3)
+          new VisionIOReal(0), 
+          new VisionIOReal(1)
         );  
         break;
 
@@ -215,6 +213,5 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
      return autoChooser.get();
-    //  return AutoCommands.algaeHigh();
   }
 }
