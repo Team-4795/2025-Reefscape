@@ -56,8 +56,8 @@ public class LEDs extends SubsystemBase {
             Commands.runOnce(this::setTeamColors), 
             Commands.select(Map.ofEntries(
                 Map.entry(BlinkState.SOLID, this.setSolidColor()),
-                Map.entry(BlinkState.SlOW, this.blink(0.12)),
-                Map.entry(BlinkState.FAST, this.blink(0.06))
+                Map.entry(BlinkState.SlOW, this.blink(0.06)),
+                Map.entry(BlinkState.FAST, this.blink(0.04))
             ), () -> blink), 
             DriverStation::isDisabled
         ).ignoringDisable(true));
@@ -79,6 +79,10 @@ public class LEDs extends SubsystemBase {
         setOutput();
     }
 
+    public void setColorByIndex(Color color, int startIndex, int endIndex) {
+        setColorNoOutput((int) (color.red * 255), (int) (color.green * 255), (int) (color.blue * 255), false, startIndex, endIndex);
+    }
+
     public void setTopColor(Color color) {
         setColorNoOutput((int) (color.red * 255), (int) (color.green * 255), (int) (color.blue * 255), false, 12, 22);
         setColorNoOutput((int) (color.red * 255), (int) (color.green * 255), (int) (color.blue * 255), false, 22, 32);
@@ -98,9 +102,15 @@ public class LEDs extends SubsystemBase {
 
     public Command blink(double pause){
         return Commands.sequence(
-            runOnce(() -> setColors(color1, color2)),
+            runOnce(() -> setColorByIndex(Color.kBlack, 1, 12)),
             Commands.waitSeconds(pause),
-            runOnce(() -> setColors(color1, color2)),
+            runOnce(() -> setColorByIndex(color1, 1, 12)),
+            runOnce(() -> setColorByIndex(Color.kBlack, 12, 32)),
+            Commands.waitSeconds(pause),
+            runOnce(() -> setColorByIndex(color2, 12, 32)),
+            runOnce(() -> setColorByIndex(Color.kBlack, 32, 42)),
+            Commands.waitSeconds(pause),
+            runOnce(() -> setColorByIndex(color1, 32, 42)),
             Commands.waitSeconds(pause)
         );
     }
@@ -254,8 +264,8 @@ public class LEDs extends SubsystemBase {
         color1 = Color.kBlack;
         color2 = Color.kBlack;
     } else if (OIConstants.aligned) {
-        color1 = Color.kOrange;
-        color2 = Color.kOrange;
+        color1 = Color.kWhite;
+        color2 = Color.kWhite;
     } else if(Constants.OIConstants.isScoringLeft && OIConstants.autoScoreMode == 4) {
         color1 = Color.kAqua;
         color2 = Color.kGreen;
