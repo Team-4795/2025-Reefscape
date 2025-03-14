@@ -71,10 +71,10 @@ public class AutoCommands {
         return command;
     }
 
-    
     public static Command noElevatorRaiseL3() {
         return arm.setGoalCommand(ArmConstants.CORAL_L3).until(() -> arm.atGoal(ArmConstants.CORAL_L3));
     }
+    
     public static Command raiseL2() {
         Command command = Commands.either(
             Commands.sequence(
@@ -184,9 +184,6 @@ public class AutoCommands {
             Commands.waitUntil(() -> intake.GamePieceFinal()),
             Commands.waitSeconds(0.15),
             intake.reverse().withTimeout(0.12));
-        //until(() -> elevator.atGoal(0) && arm.atGoal(ArmConstants.STOW));
-        // .andThen(
-        //     intake.intake().withTimeout(2));
     }
 
     public static HashMap<Integer, Command> autoScoreMap() {
@@ -239,15 +236,7 @@ public class AutoCommands {
     }
 
     public static Command setScoringState() {
-        return Commands.runOnce(() -> OIConstants.autoScoreMode = 1);
-    }
-
-    public static Command alignReef() {
-        return new AutoAlignReef(
-            new ProfiledPIDController(5,
-             0, 0, new Constraints(SwerveConstants.MaxSpeed, 3)), 
-            new ProfiledPIDController(7.5, 0, 0, new Constraints(SwerveConstants.MaxAngularRate, 3))
-        ).until(() -> OIConstants.aligned);
+        return Commands.runOnce(() -> OIConstants.autoScoreMode = 4);
     }
 
     public static Command alignAlgae() {
@@ -256,14 +245,6 @@ public class AutoCommands {
             0, 0, new Constraints(SwerveConstants.MaxSpeed, 3)), 
             new ProfiledPIDController(7.5, 0, 0, new Constraints(SwerveConstants.MaxSpeed, 3))
        );
-    }
-
-    public static Command longerAlignReef() {
-        return new AutoAlignReef(
-            new ProfiledPIDController(5,
-             0, 0, new Constraints(SwerveConstants.MaxSpeed, 3)), 
-            new ProfiledPIDController(7.5, 0, 0, new Constraints(SwerveConstants.MaxSpeed, 3))
-        ).withTimeout(5);
     }
 
     public static Command alignReefUntil() {
@@ -280,12 +261,5 @@ public class AutoCommands {
 
     public static Command scoreRightReef() {
         return Commands.runOnce(() -> Swerve.getInstance().setScoringRight());
-    }
-
-    public static Command alignFeeder() {
-        return new AutoAlignFeeder
-        (
-            new ProfiledPIDController(1, 0, 0, new Constraints(SwerveConstants.MaxSpeed, 3)), 
-            new ProfiledPIDController(1, 0, 0, new Constraints(SwerveConstants.MaxSpeed, 3)));
     }
 }
