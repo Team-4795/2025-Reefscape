@@ -4,12 +4,10 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.leds.LEDs;
-
 import java.util.function.DoubleSupplier;
-import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.leds.LEDs;
 
 public class RainbowCommand extends Command {
     LEDs leds = LEDs.getInstance();

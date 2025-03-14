@@ -6,7 +6,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 
 public class ElevatorIOSim implements ElevatorIO {
     private ElevatorSim elevatorSim = new ElevatorSim(ElevatorConstants.kv, ElevatorConstants.ks, DCMotor.getNeoVortex(2), 0, 0.7112, true, 0);

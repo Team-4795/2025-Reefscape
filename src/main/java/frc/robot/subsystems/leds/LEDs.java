@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.RainbowCommand;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.swerve.Swerve;
 
@@ -227,7 +226,7 @@ public class LEDs extends SubsystemBase {
         }
     }
 
-    private void updateTeamColor() {
+    public void updateTeamColor() {
         if ((frame / 10) % 2 == 0) {
             setStripRGB(143, 139, 189);
         } else {

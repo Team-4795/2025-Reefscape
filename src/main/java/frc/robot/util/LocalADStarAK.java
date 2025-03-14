@@ -1,26 +1,22 @@
 package frc.robot.util;
 
-import edu.wpi.first.math.Pair;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj2.command.Command;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-import com.pathplanner.lib.auto.AutoBuilder;
+import org.littletonrobotics.junction.LogTable;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.inputs.LoggableInputs;
+
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPoint;
-import com.pathplanner.lib.pathfinding.Pathfinder;
-import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.pathfinding.LocalADStar;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import org.littletonrobotics.junction.LogTable;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.inputs.LoggableInputs;
+import com.pathplanner.lib.pathfinding.Pathfinder;
+
+import edu.wpi.first.math.Pair;
+import edu.wpi.first.math.geometry.Translation2d;
 
 public class LocalADStarAK implements Pathfinder {
   private final ADStarIO io = new ADStarIO();

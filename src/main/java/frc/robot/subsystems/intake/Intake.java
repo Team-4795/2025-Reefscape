@@ -1,14 +1,12 @@
 package frc.robot.subsystems.intake;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.OIConstants;
-
-import java.util.function.ObjIntConsumer;
-
-import org.littletonrobotics.junction.Logger;
 
 public class Intake extends SubsystemBase {
     private IntakeIO io;

@@ -1,7 +1,5 @@
 package frc.robot.subsystems.vision.AprilTag;
 
-import static frc.robot.subsystems.vision.AprilTag.VisionConstants.aprilTagFieldLayout;
-
 import java.io.IOException;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;

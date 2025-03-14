@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import java.util.HashMap;
-import java.util.function.IntSupplier;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
