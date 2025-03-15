@@ -140,7 +140,7 @@ public class AutoAlignReef extends Command {
     }
 
     public boolean inScoringDistance() {
-        return (distance < 1);
+        return (distance < 1 + Units.inchesToMeters(6));
     }
 
     private double projection(Translation2d v1, Translation2d onto){

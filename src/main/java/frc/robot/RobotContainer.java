@@ -7,6 +7,7 @@ package frc.robot;
 import java.io.IOException;
 
 import org.json.simple.parser.ParseException;
+import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
@@ -186,9 +187,8 @@ public class RobotContainer {
 
     // No vision toggle
     OIConstants.driverController.x().onTrue(
-      Commands.run(() -> vision.toggleShouldUpdate()).alongWith(
-      new RainbowCommand(() -> 1))
-      );
+      Commands.runOnce(() -> vision.toggleShouldUpdate()).andThen(
+      new RainbowCommand(() -> 1).withTimeout(2)));
 
     // Seed arm
     OIConstants.driverController.povUp().onTrue(Commands.runOnce(() -> Arm.getInstance().seedRelativeEncoder()));
@@ -212,5 +212,14 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
      return autoChooser.get();
+  }
+
+  public void periodic() {
+    Logger.recordOutput("Score/isLeftL4", OIConstants.autoScoreMode == 4 && OIConstants.isScoringLeft);
+    Logger.recordOutput("Score/isLeftL3", OIConstants.autoScoreMode == 3 && OIConstants.isScoringLeft);
+    Logger.recordOutput("Score/isLeftL2", OIConstants.autoScoreMode == 2 && OIConstants.isScoringLeft);
+    Logger.recordOutput("Score/isRightL4", OIConstants.autoScoreMode == 4 && !OIConstants.isScoringLeft);
+    Logger.recordOutput("Score/isRightL3", OIConstants.autoScoreMode == 3 && !OIConstants.isScoringLeft);
+    Logger.recordOutput("Score/isRightL2", OIConstants.autoScoreMode == 2 && !OIConstants.isScoringLeft);
   }
 }

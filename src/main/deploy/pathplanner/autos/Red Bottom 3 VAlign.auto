@@ -7,7 +7,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Score left reef"
+            "name": "Score right reef"
           }
         },
         {
@@ -74,7 +74,7 @@
           }
         },
         {
-          "type": "race",
+          "type": "parallel",
           "data": {
             "commands": [
               {

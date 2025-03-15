@@ -17,7 +17,8 @@ public class ArmConstants {
     public static final double ALGAE_HIGH = 0.8301816582679749;
     public static final double PROCESSOR = 0.0;
 
-    public static final double STOW = -1.75;
+    public static final double STOW = -1.8162786960601807;
+    
 
     public static final double MAX_VELOCITY = 6;
     public static final double MAX_ACCELERATION = 10;

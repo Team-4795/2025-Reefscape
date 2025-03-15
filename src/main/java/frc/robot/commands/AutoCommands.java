@@ -214,10 +214,9 @@ public class AutoCommands {
                     ),
                 Commands.waitSeconds(0.2),
                 score(),
-                Commands.runOnce(() -> OIConstants.aligned = false),
                 vstow()), 
                 
-            () -> OIConstants.autoScoreMode != 4);
+            () -> OIConstants.autoScoreMode != 4).finallyDo(() -> OIConstants.aligned = false);
     }
 
     public static Command zeroArm() {
@@ -249,7 +248,7 @@ public class AutoCommands {
     public static Command alignReefUntil() {
         return new AutoAlignReef(
             new ProfiledPIDController(5,
-             0, 0, new Constraints(SwerveConstants.MaxSpeed, 3)), 
+             0, 0, new Constraints(SwerveConstants.MaxSpeed, 3.2)), 
             new ProfiledPIDController(7.5, 0, 0, new Constraints(SwerveConstants.MaxAngularRate, 3))
         ).until(() -> OIConstants.aligned);
     }

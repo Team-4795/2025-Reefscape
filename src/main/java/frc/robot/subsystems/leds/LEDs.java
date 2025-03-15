@@ -14,6 +14,8 @@ import frc.robot.Constants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.vision.AprilTag.Vision;
+import frc.robot.commands.RainbowCommand;
 
 public class LEDs extends SubsystemBase {
 
@@ -129,7 +131,6 @@ public class LEDs extends SubsystemBase {
 //     }
 
 // }
-    } 
 
     public Command intakingAlgae() {
         return Commands.repeatingSequence(
