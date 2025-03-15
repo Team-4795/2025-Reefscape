@@ -16,12 +16,15 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstants;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
+import frc.robot.util.LoggedTunableNumber;
 
 public class AutoCommands {
     private static Swerve drive = Swerve.getInstance();
     private static Arm arm = Arm.getInstance();
     private static Elevator elevator = Elevator.getInstance();
     private static Intake intake = Intake.getInstance();
+
+    private static LoggedTunableNumber maxAccel = new LoggedTunableNumber("AutoAlign/maxAccel", 3.2);
 
     public static Command raiseL4() {
         Command command = Commands.either(
@@ -248,7 +251,7 @@ public class AutoCommands {
     public static Command alignReefUntil() {
         return new AutoAlignReef(
             new ProfiledPIDController(5,
-             0, 0, new Constraints(SwerveConstants.MaxSpeed, 3.2)), 
+             0, 0, new Constraints(SwerveConstants.MaxSpeed, maxAccel.get())), 
             new ProfiledPIDController(7.5, 0, 0, new Constraints(SwerveConstants.MaxAngularRate, 3))
         ).until(() -> OIConstants.aligned);
     }

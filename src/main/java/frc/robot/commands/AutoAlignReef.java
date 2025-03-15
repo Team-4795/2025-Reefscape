@@ -22,8 +22,10 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.OIConstants;
+import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.vision.AprilTag.Vision;
+import frc.robot.util.LoggedTunableNumber;
 
 public class AutoAlignReef extends Command {
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
@@ -31,7 +33,6 @@ public class AutoAlignReef extends Command {
     private boolean isScoringLeft;
     private double offset = 0.0;
 
-    private final double maxDistance = 0.3;
     private final double minDistance = -0.1;
 
     private ProfiledPIDController translationController;
@@ -42,6 +43,8 @@ public class AutoAlignReef extends Command {
     private Pose2d reefScoringPose;
     private Pose2d targetPose;
     private double distance;
+
+    private LoggedTunableNumber maxDistance = new LoggedTunableNumber("AutoAlign/maxDistance", 0.3);
 
     public AutoAlignReef(ProfiledPIDController translation, ProfiledPIDController rotation) {
         translationController = translation;
@@ -155,10 +158,10 @@ public class AutoAlignReef extends Command {
     }
 
     private double scalar(double distance){
-        if(distance > maxDistance){
+        if(distance > maxDistance.get()){
             return 1.0;
-        } else if (minDistance < distance && distance < maxDistance){
-            return MathUtil.clamp((1 / (maxDistance - minDistance)) * (distance - minDistance), 0, 1);
+        } else if (minDistance < distance && distance < maxDistance.get()){
+            return MathUtil.clamp((1 / (maxDistance.get() - minDistance)) * (distance - minDistance), 0, 1);
         } else {
             return 0.0;
         }

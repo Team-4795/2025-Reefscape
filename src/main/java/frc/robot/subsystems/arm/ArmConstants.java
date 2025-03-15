@@ -9,8 +9,8 @@ public class ArmConstants {
 
     public static final double CORAL_L1 = 1.3992315530776978 - ARM_OFFSET;
     public static final double CORAL_L2 = -0.8030015826225281;
-    public static final double CORAL_L3 = 2.7386298179626465 - ARM_OFFSET;
-    public static final double CORAL_L4 = 2.8875072 - ARM_OFFSET;
+    public static final double CORAL_L3 = 2.7386298179626465 - ARM_OFFSET; // 
+    public static final double CORAL_L4 = 2.8875072 - ARM_OFFSET; // 0.876012921333313
     public static final double VSTOW = 1.34 + Units.degreesToRadians(2);
     public static final double GOAL_TOLERANCE = 0.03;
     public static final double ALGAE_LOW = 0.3129383325576782;
