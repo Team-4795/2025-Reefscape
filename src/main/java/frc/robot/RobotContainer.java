@@ -196,6 +196,9 @@ public class RobotContainer {
     // Vertical stow
     OIConstants.operatorController.b()
      .onTrue(AutoCommands.vstow());
+
+     //One Coral Away 
+     OIConstants.driverController.y().onTrue(AutoCommands.oneCoralAway());
      
     // Drive sysid
     Constants.OIConstants.driverController.povRight().and(Constants.OIConstants.driverController.y())

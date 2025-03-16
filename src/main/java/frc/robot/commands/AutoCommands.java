@@ -236,6 +236,20 @@ public class AutoCommands {
         return intake.intake().withTimeout(0.2).alongWith(Commands.runOnce(() -> intake.outtake()));
     }
 
+    public static Command oneCoralAway() {
+        Command command = Commands.sequence(
+            Commands.runOnce(
+            () -> elevator.setGoalHeight(ElevatorConstants.ONE_CORAL_AWAY), elevator), 
+            Commands.runOnce(() -> arm.setGoal(ArmConstants.ONE_CORAL_AWAY)), 
+            Commands.waitSeconds(0.3),
+            score() 
+            );
+
+            command.addRequirements(GenericRequirement.getInstance());
+
+            return command; 
+        }
+
     public static Command setScoringState() {
         return Commands.runOnce(() -> OIConstants.autoScoreMode = 4);
     }
