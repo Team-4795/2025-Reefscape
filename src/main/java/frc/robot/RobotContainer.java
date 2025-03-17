@@ -122,7 +122,20 @@ public class RobotContainer {
 
     // Reef/Feeder align
     Constants.OIConstants.driverController.leftBumper().whileTrue(
-      AutoCommands.autoScore()
+      Commands.either(
+        AutoCommands.autoScore(),
+        Commands.startEnd(
+          () -> {
+              OIConstants.driverController.setRumble(RumbleType.kBothRumble, 0.6);
+              OIConstants.operatorController.setRumble(RumbleType.kBothRumble, 0.6);
+          },
+          () -> {
+              OIConstants.driverController.setRumble(RumbleType.kBothRumble, 0);
+              OIConstants.operatorController.setRumble(RumbleType.kBothRumble, 0);
+          }
+        ),
+        () -> Vision.getInstance().isVisionUpdating()
+      )
     );
 
     // Algae align
@@ -152,7 +165,7 @@ public class RobotContainer {
         Commands.either(
             Commands.runOnce(() -> OIConstants.autoScoreMode = 3), 
             AutoCommands.raiseL3(), 
-            () -> vision.isVisionUpdating()));
+            () -> vision.isVisionUpdating()))
     Constants.OIConstants.operatorController.povLeft().onTrue(
       Commands.either(
           Commands.runOnce(() -> OIConstants.autoScoreMode = 2), 

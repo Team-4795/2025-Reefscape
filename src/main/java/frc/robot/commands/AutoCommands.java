@@ -238,12 +238,12 @@ public class AutoCommands {
 
     public static Command oneCoralAway() {
         Command command = Commands.sequence(
-            Commands.runOnce(
-            () -> elevator.setGoalHeight(ElevatorConstants.ONE_CORAL_AWAY), elevator), 
-            Commands.runOnce(() -> arm.setGoal(ArmConstants.ONE_CORAL_AWAY)), 
-            Commands.waitSeconds(0.3),
-            score() 
-            );
+                Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.ONE_CORAL_AWAY)), 
+                Commands.runOnce(() -> arm.setGoal(ArmConstants.ONE_CORAL_AWAY)), 
+                Commands.waitUntil(() -> arm.atGoal(ArmConstants.ONE_CORAL_AWAY) && elevator.atGoal(ElevatorConstants.ONE_CORAL_AWAY)),
+                score(),
+                vstow()
+        );
 
             command.addRequirements(GenericRequirement.getInstance());
 
@@ -254,7 +254,7 @@ public class AutoCommands {
         return Commands.runOnce(() -> OIConstants.autoScoreMode = 4);
     }
 
-    public static Command alignAlgae() {
+    public static Command alignAlgae() { 
         return new AutoAlignAlgae( 
             new ProfiledPIDController(5,
             0, 0, new Constraints(SwerveConstants.MaxSpeed, 3)), 
