@@ -35,7 +35,7 @@ import frc.robot.subsystems.intake.IntakeIOSim;
 import frc.robot.subsystems.leds.LEDs;
 import frc.robot.subsystems.state.State;
 import frc.robot.subsystems.state.StateManager;
-import frc.robot.subsystems.state.StateManager.OperationState;
+import frc.robot.subsystems.state.StateManager.OperationStates;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.vision.AprilTag.Vision;
@@ -109,9 +109,7 @@ public class RobotContainer {
     NamedCommandManager.registerNamedCommands();
 
     autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser("Driver Forward Straight"));
-    autoChooser.addOption("BottomBarge C BB BF", AutoBuilder.buildAuto("BottomBarge C BB BF"));
-    configureBindings();
-    
+    configureBindings(); 
   }
 
   public void zeroArm() {
@@ -162,23 +160,25 @@ public class RobotContainer {
         () -> intake.setIntakeSpeed(-1),
         () -> intake.setIntakeSpeed(0), 
         intake
-      ).alongWith(Commands.runOnce(() -> intake.outtake())));           
+      ).alongWith(Commands.runOnce(() -> intake.outtake())));
 
     // Coral Setpoints
     Constants.OIConstants.operatorController.povUp().onTrue(
         Commands.either(
-            Commands.runOnce(() -> OIConstants.autoScoreMode = 4), 
-            AutoCommands.raiseL4(), 
+            Commands.runOnce(() -> OperationStates.autoScoreMode = 4), 
+            stateManager.stateCommand(State.L4), 
             () -> vision.isVisionUpdating()));
+
     Constants.OIConstants.operatorController.povRight().onTrue(
         Commands.either(
-            Commands.runOnce(() -> OIConstants.autoScoreMode = 3), 
-            AutoCommands.raiseL3(), 
+            Commands.runOnce(() -> OperationStates.autoScoreMode = 3), 
+            stateManager.stateCommand(State.L3), 
             () -> vision.isVisionUpdating()));
+      
     Constants.OIConstants.operatorController.povLeft().onTrue(
       Commands.either(
-          Commands.runOnce(() -> OIConstants.autoScoreMode = 2), 
-          AutoCommands.raiseL2(), 
+          Commands.runOnce(() -> OperationStates.autoScoreMode = 2), 
+          stateManager.stateCommand(State.L2), 
           () -> vision.isVisionUpdating()));
     
     Constants.OIConstants.operatorController.povDown().onTrue(AutoCommands.stow());
@@ -237,14 +237,5 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
      return autoChooser.get();
-  }
-
-  public void periodic() {
-    Logger.recordOutput("Score/isLeftL4", OIConstants.autoScoreMode == 4 && OIConstants.isScoringLeft);
-    Logger.recordOutput("Score/isLeftL3", OIConstants.autoScoreMode == 3 && OIConstants.isScoringLeft);
-    Logger.recordOutput("Score/isLeftL2", OIConstants.autoScoreMode == 2 && OIConstants.isScoringLeft);
-    Logger.recordOutput("Score/isRightL4", OIConstants.autoScoreMode == 4 && !OIConstants.isScoringLeft);
-    Logger.recordOutput("Score/isRightL3", OIConstants.autoScoreMode == 3 && !OIConstants.isScoringLeft);
-    Logger.recordOutput("Score/isRightL2", OIConstants.autoScoreMode == 2 && !OIConstants.isScoringLeft);
   }
 }

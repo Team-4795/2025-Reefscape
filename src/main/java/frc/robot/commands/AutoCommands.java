@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import java.rmi.server.Operation;
 import java.util.HashMap;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -14,6 +15,7 @@ import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstants;
+import frc.robot.subsystems.state.StateManager.OperationStates;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.util.LoggedTunableNumber;
@@ -203,23 +205,24 @@ public class AutoCommands {
             Commands.sequence(
                 Commands.parallel(
                     alignReefUntil(),
-                    Commands.select(autoScoreMap(), () -> OIConstants.autoScoreMode)),
+                    Commands.select(autoScoreMap(), () -> OperationStates.autoScoreMode)),
                 score(),
-                Commands.runOnce(() -> OIConstants.aligned = false)), 
+                Commands.runOnce(() -> OperationStates.aligned = false)), 
 
             Commands.sequence(
                 Commands.parallel(
                     alignReefUntil(),
                     Commands.sequence(
                         vstow(),
-                        Commands.waitUntil(() -> OIConstants.inScoringDistance),
-                        Commands.select(autoScoreMap(), () -> OIConstants.autoScoreMode))
-                    ),
+                        Commands.waitUntil(() -> OperationStates.inScoringDistance),
+                        Commands.select(autoScoreMap(), () -> OperationStates.autoScoreMode)
+                    )
+                ),
                 Commands.waitSeconds(0.2),
                 score(),
                 vstow()), 
                 
-            () -> OIConstants.autoScoreMode != 4).finallyDo(() -> OIConstants.aligned = false);
+            () -> OperationStates.autoScoreMode != 4).finallyDo(() -> OperationStates.aligned = false);
     }
 
     public static Command zeroArm() {
@@ -251,7 +254,7 @@ public class AutoCommands {
         }
 
     public static Command setScoringState() {
-        return Commands.runOnce(() -> OIConstants.autoScoreMode = 4);
+        return Commands.runOnce(() -> OperationStates.autoScoreMode = 4);
     }
 
     public static Command alignAlgae() { 
@@ -267,7 +270,7 @@ public class AutoCommands {
             new ProfiledPIDController(5,
              0, 0, new Constraints(SwerveConstants.MaxSpeed, maxAccel.get())), 
             new ProfiledPIDController(7.5, 0, 0, new Constraints(SwerveConstants.MaxAngularRate, 3))
-        ).until(() -> OIConstants.aligned);
+        ).until(() -> OperationStates.aligned);
     }
 
     public static Command scoreLeftReef() {

@@ -21,8 +21,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.OIConstants;
-import frc.robot.subsystems.arm.ArmConstants;
+import frc.robot.subsystems.state.StateManager.OperationStates;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.vision.AprilTag.Vision;
 import frc.robot.util.LoggedTunableNumber;
@@ -65,7 +64,7 @@ public class AutoAlignReef extends Command {
             mult = (alliance == Alliance.Red) ? -1.0 : 1.0;
         });
 
-        isScoringLeft = OIConstants.isScoringLeft;
+        isScoringLeft = OperationStates.isScoringLeft;
         reefScoringPose = Vision.getInstance().getBestReefPose();
         
         offset = getScoringPositionOffset(isScoringLeft);
@@ -86,7 +85,7 @@ public class AutoAlignReef extends Command {
 
     @Override
     public void execute() {
-        isScoringLeft = Constants.OIConstants.isScoringLeft;
+        isScoringLeft = OperationStates.isScoringLeft;
         reefScoringPose = Vision.getInstance().getBestReefPose();
         
         offset = getScoringPositionOffset(isScoringLeft);
@@ -119,15 +118,15 @@ public class AutoAlignReef extends Command {
         Logger.recordOutput("AutoAlign/Distance", currentPose.getTranslation().getDistance(targetPose.getTranslation()));
         Logger.recordOutput("AutoAlign/Distance at goal", translationController.atGoal());
         Logger.recordOutput("AutoAlign/PID input", drivePIDOutput);
-        Logger.recordOutput("AutoAlign/is Aligned", OIConstants.aligned);
+        Logger.recordOutput("AutoAlign/is Aligned", OperationStates.aligned);
 
         Swerve.getInstance().setControl(
             drive.withVelocityX(driveSpeed * direction.getCos())
             .withVelocityY(driveSpeed * direction.getSin())
             .withRotationalRate(omega));
         
-        OIConstants.aligned = finishedAligning();
-        OIConstants.inScoringDistance = inScoringDistance();
+        OperationStates.aligned = finishedAligning();
+        OperationStates.inScoringDistance = inScoringDistance();
     }
 
     @Override

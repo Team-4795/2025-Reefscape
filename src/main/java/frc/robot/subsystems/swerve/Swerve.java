@@ -41,6 +41,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
+import frc.robot.subsystems.state.StateManager.OperationStates;
 
 /**
  * Class that extends the Phoenix 6 SwerveDrivetrain class and implements
@@ -324,11 +325,11 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
         }
     }
     public void setScoringLeft() {
-        OIConstants.isScoringLeft = true;
+        OperationStates.isScoringLeft = true;
     }
     
     public void setScoringRight() {
-        OIConstants.isScoringLeft = false;
+        OperationStates.isScoringLeft = false;
     }
 
     private void startSimThread() {

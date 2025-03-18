@@ -2,9 +2,13 @@ package frc.robot.subsystems.state;
 
 import java.util.Map;
 
+import org.littletonrobotics.junction.Logger;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.intake.Intake;
@@ -19,7 +23,7 @@ public class StateManager extends SubsystemBase {
     private Elevator elevator = Elevator.getInstance();
 
     // non-setpoint robot stuff
-    public static class OperationState {
+    public static class OperationStates {
         public static boolean isScoringLeft = true;
         public static boolean aligned = false; 
         public static boolean inScoringDistance = false;
@@ -88,5 +92,22 @@ public class StateManager extends SubsystemBase {
 
     public State getState() {
         return state;
+    }
+
+    @Override
+    public void periodic() {
+        Logger.recordOutput("StateManager/OperationStates/autoScoreMode", OperationStates.autoScoreMode);
+        Logger.recordOutput("StateManager/OperationStates/aligned", OperationStates.aligned);
+        Logger.recordOutput("StateManager/OperationStates/inScoringDistance", OperationStates.inScoringDistance);
+        Logger.recordOutput("StateManager/OperationStates/isReefTagOnly", OperationStates.isReefTagOnly);
+
+        SmartDashboard.putBoolean("Score/isLeftL4", OperationStates.autoScoreMode == 4 && OperationStates.isScoringLeft);
+        SmartDashboard.putBoolean("Score/isLeftL3", OperationStates.autoScoreMode == 3 && OperationStates.isScoringLeft);
+        SmartDashboard.putBoolean("Score/isLeftL2", OperationStates.autoScoreMode == 2 && OperationStates.isScoringLeft);
+        SmartDashboard.putBoolean("Score/isRightL4", OperationStates.autoScoreMode == 4 && !OperationStates.isScoringLeft);
+        SmartDashboard.putBoolean("Score/isRightL3", OperationStates.autoScoreMode == 3 && !OperationStates.isScoringLeft);
+        SmartDashboard.putBoolean("Score/isRightL2", OperationStates.autoScoreMode == 2 && !OperationStates.isScoringLeft);
+
+        SmartDashboard.updateValues();
     }
 }
