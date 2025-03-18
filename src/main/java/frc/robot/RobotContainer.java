@@ -80,7 +80,7 @@ public class RobotContainer {
         vision = Vision.initialize(
           new VisionIOReal(0), 
           new VisionIOReal(1)
-        );  
+        );
         break;
 
       case SIM:
@@ -109,7 +109,7 @@ public class RobotContainer {
     NamedCommandManager.registerNamedCommands();
 
     autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser("Driver Forward Straight"));
-    configureBindings(); 
+    configureBindings();
   }
 
   public void zeroArm() {
@@ -198,7 +198,7 @@ public class RobotContainer {
 
     // Intake
     OIConstants.operatorController.a().onTrue(intake.intakeCommand());
-      
+
     // Change reef scoring stem
     OIConstants.operatorController.leftBumper().onTrue(
         Commands.runOnce(() -> drivetrain.setScoringLeft()
@@ -219,8 +219,8 @@ public class RobotContainer {
     OIConstants.operatorController.b()
      .onTrue(AutoCommands.vstow());
 
-     //One Coral Away 
-     OIConstants.driverController.y().onTrue(AutoCommands.oneCoralAway());
+    //One Coral Away 
+    OIConstants.driverController.y().onTrue(AutoCommands.oneCoralAway());
      
     // Drive sysid
     Constants.OIConstants.driverController.povRight().and(Constants.OIConstants.driverController.y())
