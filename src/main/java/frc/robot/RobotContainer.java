@@ -33,6 +33,9 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIORealVortex;
 import frc.robot.subsystems.intake.IntakeIOSim;
 import frc.robot.subsystems.leds.LEDs;
+import frc.robot.subsystems.state.State;
+import frc.robot.subsystems.state.StateManager;
+import frc.robot.subsystems.state.StateManager.OperationState;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.vision.AprilTag.Vision;
@@ -55,6 +58,8 @@ public class RobotContainer {
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
   public final Telemetry logger = new Telemetry(SwerveConstants.MaxSpeed);
+
+  private StateManager stateManager;
 
   public final Swerve drivetrain;
 
@@ -96,6 +101,9 @@ public class RobotContainer {
         Arm.initialize(new ArmIOSim());
         break;
     }
+
+    stateManager = StateManager.initalize();
+
     leds = LEDs.getInstance();
 
     NamedCommandManager.registerNamedCommands();
