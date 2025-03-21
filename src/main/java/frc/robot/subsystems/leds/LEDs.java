@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.state.StateManager;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.vision.AprilTag.Vision;
 import frc.robot.commands.RainbowCommand;
@@ -276,25 +277,25 @@ public class LEDs extends SubsystemBase {
     if(Swerve.getInstance().isSlowMode()) {
         color1 = Color.kBlack;
         color2 = Color.kBlack;
-    } else if (OIConstants.aligned) {
+    } else if (StateManager.OperationStates.aligned) {
         color1 = Color.kWhite;
         color2 = Color.kWhite;
-    } else if(Constants.OIConstants.isScoringLeft && OIConstants.autoScoreMode == 4) {
+    } else if(StateManager.OperationStates.isScoringLeft && StateManager.OperationStates.autoScoreMode == 4) {
         color1 = Color.kAqua;
         color2 = Color.kGreen;
-    } else if(!Constants.OIConstants.isScoringLeft && OIConstants.autoScoreMode == 4) {
+    } else if(!StateManager.OperationStates.isScoringLeft && StateManager.OperationStates.autoScoreMode == 4) {
         color1 = Color.kPurple;
         color2 = Color.kGreen;
-    } else if(Constants.OIConstants.isScoringLeft && OIConstants.autoScoreMode == 3) {
+    } else if(StateManager.OperationStates.isScoringLeft && StateManager.OperationStates.autoScoreMode == 3) {
         color1 = Color.kAqua;
         color2 = Color.kYellow;
-    } else if(!Constants.OIConstants.isScoringLeft && OIConstants.autoScoreMode == 3) {
+    } else if(!StateManager.OperationStates.isScoringLeft && StateManager.OperationStates.autoScoreMode == 3) {
         color1 = Color.kPurple;
         color2 = Color.kYellow;
-    }  else if(Constants.OIConstants.isScoringLeft && OIConstants.autoScoreMode == 2) {
+    }  else if(StateManager.OperationStates.isScoringLeft && StateManager.OperationStates.autoScoreMode == 2) {
         color1 = Color.kAqua;
         color2 = Color.kRed;
-    }  else if(!Constants.OIConstants.isScoringLeft && OIConstants.autoScoreMode == 2) {
+    }  else if(!StateManager.OperationStates.isScoringLeft && StateManager.OperationStates.autoScoreMode == 2) {
         color1 = Color.kPurple;
         color2 = Color.kRed;
     } 
