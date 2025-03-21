@@ -25,7 +25,7 @@ public class StateManager extends SubsystemBase {
         public static boolean aligned = false; 
         public static boolean inScoringDistance = false;
         public static boolean isReefTagOnly = true;
-        public static int autoScoreMode = 4;
+        public static State autoScoreMode = State.L4;
     }
 
     private static StateManager instance;
@@ -98,12 +98,12 @@ public class StateManager extends SubsystemBase {
         Logger.recordOutput("StateManager/OperationStates/inScoringDistance", OperationStates.inScoringDistance);
         Logger.recordOutput("StateManager/OperationStates/isReefTagOnly", OperationStates.isReefTagOnly);
 
-        SmartDashboard.putBoolean("Score/isLeftL4", OperationStates.autoScoreMode == 4 && OperationStates.isScoringLeft);
-        SmartDashboard.putBoolean("Score/isLeftL3", OperationStates.autoScoreMode == 3 && OperationStates.isScoringLeft);
-        SmartDashboard.putBoolean("Score/isLeftL2", OperationStates.autoScoreMode == 2 && OperationStates.isScoringLeft);
-        SmartDashboard.putBoolean("Score/isRightL4", OperationStates.autoScoreMode == 4 && !OperationStates.isScoringLeft);
-        SmartDashboard.putBoolean("Score/isRightL3", OperationStates.autoScoreMode == 3 && !OperationStates.isScoringLeft);
-        SmartDashboard.putBoolean("Score/isRightL2", OperationStates.autoScoreMode == 2 && !OperationStates.isScoringLeft);
+        SmartDashboard.putBoolean("Score/isLeftL4", OperationStates.autoScoreMode == State.L4 && OperationStates.isScoringLeft);
+        SmartDashboard.putBoolean("Score/isLeftL3", OperationStates.autoScoreMode == State.L3 && OperationStates.isScoringLeft);
+        SmartDashboard.putBoolean("Score/isLeftL2", OperationStates.autoScoreMode == State.L2 && OperationStates.isScoringLeft);
+        SmartDashboard.putBoolean("Score/isRightL4", OperationStates.autoScoreMode == State.L4 && !OperationStates.isScoringLeft);
+        SmartDashboard.putBoolean("Score/isRightL3", OperationStates.autoScoreMode == State.L3 && !OperationStates.isScoringLeft);
+        SmartDashboard.putBoolean("Score/isRightL2", OperationStates.autoScoreMode == State.L2 && !OperationStates.isScoringLeft);
 
         SmartDashboard.updateValues();
     }

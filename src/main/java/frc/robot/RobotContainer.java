@@ -165,19 +165,19 @@ public class RobotContainer {
     // Coral Setpoints
     Constants.OIConstants.operatorController.povUp().onTrue(
         Commands.either(
-            Commands.runOnce(() -> OperationStates.autoScoreMode = 4), 
+            Commands.runOnce(() -> OperationStates.autoScoreMode = State.L4), 
             stateManager.stateCommand(State.L4), 
             () -> vision.isVisionUpdating()));
 
     Constants.OIConstants.operatorController.povRight().onTrue(
         Commands.either(
-            Commands.runOnce(() -> OperationStates.autoScoreMode = 3), 
+            Commands.runOnce(() -> OperationStates.autoScoreMode = State.L4), 
             stateManager.stateCommand(State.L3), 
             () -> vision.isVisionUpdating()));
       
     Constants.OIConstants.operatorController.povLeft().onTrue(
       Commands.either(
-          Commands.runOnce(() -> OperationStates.autoScoreMode = 2), 
+          Commands.runOnce(() -> OperationStates.autoScoreMode = State.L2), 
           stateManager.stateCommand(State.L2), 
           () -> vision.isVisionUpdating()));
     

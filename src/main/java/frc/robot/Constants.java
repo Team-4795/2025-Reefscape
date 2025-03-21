@@ -27,9 +27,6 @@ public class Constants {
         public static final CommandXboxController operatorController = new CommandXboxController(1);
         public static final double KAxisDeadband = 0.1;  
         public static final double OperatorLAxisDeadband = 0.3;
-        public static boolean isScoringLeft = true;
-        public static boolean aligned = false; 
-        public static int autoScoreMode = 4;
     }
 
     public static enum Gamepiece {

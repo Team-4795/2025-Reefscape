@@ -15,6 +15,8 @@ import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstants;
+import frc.robot.subsystems.state.State;
+import frc.robot.subsystems.state.StateManager;
 import frc.robot.subsystems.state.StateManager.OperationStates;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
@@ -25,6 +27,7 @@ public class AutoCommands {
     private static Arm arm = Arm.getInstance();
     private static Elevator elevator = Elevator.getInstance();
     private static Intake intake = Intake.getInstance();
+    private static StateManager stateManager = StateManager.getInstance();
 
     private static LoggedTunableNumber maxAccel = new LoggedTunableNumber("AutoAlign/maxAccel", 3.2);
 
@@ -190,24 +193,26 @@ public class AutoCommands {
             intake.reverse().withTimeout(0.12));
     }
 
-    public static HashMap<Integer, Command> autoScoreMap() {
-        HashMap<Integer, Command> map = new HashMap<>();
+    // private static HashMap<Integer, Command> autoScoreMap() {
+    //     HashMap<Integer, Command> map = new HashMap<>();
 
-        map.put(2, raiseL2());
-        map.put(3, raiseL3());
-        map.put(4, raiseL4());
+    //     map.put(2, raiseL2());
+    //     map.put(3, raiseL3());
+    //     map.put(4, raiseL4());
 
-        return map;
-    }
+    //     return map;
+    // }
 
     public static Command autoScore() {
         return Commands.either(
             Commands.sequence(
                 Commands.parallel(
                     alignReefUntil(),
-                    Commands.select(autoScoreMap(), () -> OperationStates.autoScoreMode)),
+                    Commands.deferredProxy(() -> stateManager.stateCommand(OperationStates.autoScoreMode))
+                ),
                 score(),
-                Commands.runOnce(() -> OperationStates.aligned = false)), 
+                Commands.runOnce(() -> OperationStates.aligned = false)
+            ),
 
             Commands.sequence(
                 Commands.parallel(
@@ -215,14 +220,13 @@ public class AutoCommands {
                     Commands.sequence(
                         vstow(),
                         Commands.waitUntil(() -> OperationStates.inScoringDistance),
-                        Commands.select(autoScoreMap(), () -> OperationStates.autoScoreMode)
+                        Commands.deferredProxy(() -> stateManager.stateCommand(OperationStates.autoScoreMode))
                     )
                 ),
                 Commands.waitSeconds(0.2),
                 score(),
                 vstow()), 
-                
-            () -> OperationStates.autoScoreMode != 4).finallyDo(() -> OperationStates.aligned = false);
+            () -> OperationStates.autoScoreMode != State.L4).finallyDo(() -> OperationStates.aligned = false);
     }
 
     public static Command zeroArm() {
@@ -254,7 +258,7 @@ public class AutoCommands {
         }
 
     public static Command setScoringState() {
-        return Commands.runOnce(() -> OperationStates.autoScoreMode = 4);
+        return Commands.runOnce(() -> OperationStates.autoScoreMode = State.L4);
     }
 
     public static Command alignAlgae() { 
