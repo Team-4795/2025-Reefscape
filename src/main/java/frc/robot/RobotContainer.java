@@ -103,7 +103,7 @@ public class RobotContainer {
     }
 
     stateManager = StateManager.initalize();
-
+    
     leds = LEDs.getInstance();
 
     NamedCommandManager.registerNamedCommands();
@@ -236,6 +236,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-     return autoChooser.get();
+    return stateManager.stateCommand(State.L4_DYNAMIC);
+    //  return autoChooser.get();
   }
 }
