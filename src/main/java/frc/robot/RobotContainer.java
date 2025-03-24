@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.Wrist.Wrist;
+import frc.robot.subsystems.Wrist.WristConstants;
 import frc.robot.subsystems.Wrist.WristIOReal;
 import frc.robot.subsystems.Wrist.WristIOSim;
 
@@ -40,7 +41,7 @@ public class RobotContainer {
 
   private void configureBindings() {
     // placeholder wrist
-    // m_operatorController.a().onTrue();
+    m_operatorController.povUp().onTrue(Commands.runOnce( ()-> wrist.setGoal(WristConstants.VFBAngle), wrist));
   }
 
   public Command getAutonomousCommand() {

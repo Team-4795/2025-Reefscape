@@ -27,23 +27,33 @@ public class WristIOReal implements WristIO{
     private TrapezoidProfile.State setpoint;
 
     public WristIOReal() {
-        config.smartCurrentLimit(WristConstants.stallLimit, WristConstants.freeLimit);
+        config.smartCurrentLimit(WristConstants.currentLimit);
         wristMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        wristMotor.clearFaults();
+        wristMotor.setCANTimeout(20);
 
-        config.encoder.positionConversionFactor(2*Math.PI / 72.0);
-        config.encoder.velocityConversionFactor(2*Math.PI / 60.0 / 72.0);
+        config.encoder.positionConversionFactor(2*Math.PI / WristConstants.gearing);
+        config.encoder.velocityConversionFactor(2*Math.PI / 60.0 / WristConstants.gearing);
 
     }
 
+
     @Override
     public double getPosition(){
-        return encoder.getPosition() + WristConstants.offset;
+        return encoder.getPosition();
+    }
+
+    @Override
+    public double getVelocity(){
+        return encoder.getVelocity();
     }
 
     @Override
     public void setGoal(double angle){
-        setpoint = new TrapezoidProfile.State(getPosition(), encoder.getVelocity());
-        goal = new TrapezoidProfile.State(angle, 0);
+        if (angle != goal.position){
+        setpoint = new TrapezoidProfile.State(getPosition(), getVelocity());
+        goal = new TrapezoidProfile.State(angle, WristConstants.maxV);
+        }
     }
 
     @Override

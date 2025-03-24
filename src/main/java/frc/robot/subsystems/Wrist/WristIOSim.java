@@ -8,7 +8,7 @@ public class WristIOSim implements WristIO {
     public SingleJointedArmSim sim = new SingleJointedArmSim(
         LinearSystemId.createDCMotorSystem(DCMotor.getNeoVortex(1),1, 1),
         DCMotor.getNeoVortex(1),
-        WristConstants.simGearing, WristConstants.simLength, 0, 2, false, 0);
+        WristConstants.gearing, WristConstants.gearing, 0, 2, false, 0);
     private double updateVolts = 0;
     
     @Override

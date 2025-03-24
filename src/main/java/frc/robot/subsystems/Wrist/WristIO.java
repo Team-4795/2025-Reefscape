@@ -10,15 +10,27 @@ public interface WristIO {
         public double velocity = 0;
     }
 
-    public default void setVoltage(double voltage){}
+    public default void setVoltage(double voltage){
+
+    }
 
     public default double getPosition(){
         return 0;
     }
 
-    public default void updateInputs(WristIOInputs inputs){}
+    public default double getVelocity(){
+        return 0;
+    }
 
-    public default void setGoal(double angle){}
+    public default void updateInputs(WristIOInputs inputs){
 
-    public default void updateMotionProfile(){}
+    }
+
+    public default void setGoal(double angle){
+
+    }
+
+    public default void updateMotionProfile(){
+
+    }
 }
