@@ -40,16 +40,7 @@ public class WristIOSim implements WristIO {
         goal = new TrapezoidProfile.State(MathUtil.clamp(angle, WristConstants.minPosition, WristConstants.maxPosition), WristConstants.maxV);
         }
     }
-      @Override 
-    public void moveUp (double voltage){
-        wristSim.setInputVoltage(voltage);
-    }
-
-    @Override
-    public void moveDown (double voltage){
-        wristSim.setInputVoltage(voltage);
-    }
-
+ 
     @Override
     public void updateMotionProfile(){
         setpoint = profile.calculate(0.02, setpoint, goal);

@@ -37,11 +37,4 @@ public interface WristIO {
 
     }
 
-    public default void moveUp (double voltage){
-
-    }
-
-    public default void moveDown (double voltage){
-
-    }
 }

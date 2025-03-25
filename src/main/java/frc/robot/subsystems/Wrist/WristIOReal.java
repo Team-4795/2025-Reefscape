@@ -75,15 +75,6 @@ public class WristIOReal implements WristIO{
         wristMotor.setVoltage(voltage);
     }
 
-    @Override 
-    public void moveUp (double voltage){
-        wristMotor.setVoltage(voltage);
-    }
-
-    @Override
-    public void moveDown (double voltage){
-        wristMotor.setVoltage(voltage);
-    }
 
     @Override
     public void updateMotionProfile(){

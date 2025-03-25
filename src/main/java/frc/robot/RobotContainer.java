@@ -37,13 +37,6 @@ public class RobotContainer {
       Commands.runOnce( 
         ()-> wrist.setGoal(WristConstants.VFBAngle), wrist));
 
-    Constants.OIConstants.operatorController.leftTrigger().whileTrue(
-      Commands.run(
-        () -> wrist.moveDown(WristConstants.moveDown), wrist));
-
-    Constants.OIConstants.operatorController.rightTrigger().onTrue(
-      Commands.run(
-        () -> wrist.moveUp(WristConstants.moveUp), wrist));
   }
 
   public Command getAutonomousCommand() {
