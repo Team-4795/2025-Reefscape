@@ -14,6 +14,7 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import frc.robot.subsystems.intake.Intake;
 import frc.robot.util.LoggedTunableNumber;
 // 
 public class ArmIOReal implements ArmIO {
@@ -63,7 +64,7 @@ public class ArmIOReal implements ArmIO {
         armMotor.clearFaults();
         armMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        armEncoder = armMotor.getAbsoluteEncoder();
+        armEncoder = Intake.getInstance().getArmAbsoluteEncoder();
         armMotor.getEncoder().setPosition(getOffsetAngle());
 
         goal = new TrapezoidProfile.State(getOffsetAngle(), 0);

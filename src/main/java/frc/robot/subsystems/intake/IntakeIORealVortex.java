@@ -1,6 +1,7 @@
 package frc.robot.subsystems.intake;
 
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -19,6 +20,8 @@ public class IntakeIORealVortex implements IntakeIO {
         intakeMotor.clearFaults();
         config.smartCurrentLimit(IntakeConstants.currentLimit);
         config.idleMode(IdleMode.kCoast);
+        config.absoluteEncoder.positionConversionFactor(2 * Math.PI);
+        config.absoluteEncoder.velocityConversionFactor(2 * Math.PI / 60);
         intakeMotor.setCANTimeout(20);
         intakeMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
@@ -28,6 +31,11 @@ public class IntakeIORealVortex implements IntakeIO {
         inputs.angularPositionRot = encoder.getPosition();
         inputs.currentAmps = intakeMotor.getOutputCurrent();
         inputs.voltage = intakeMotor.getBusVoltage();
+    }
+
+    @Override
+    public SparkAbsoluteEncoder getArmAbsoluteEncoder() {
+        return intakeMotor.getAbsoluteEncoder();
     }
 
     @Override
