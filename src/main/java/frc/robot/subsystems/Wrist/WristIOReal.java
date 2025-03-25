@@ -8,17 +8,15 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
-import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.units.measure.Voltage;
 
 
 public class WristIOReal implements WristIO{
-    // neo vortex motor
-    private SparkFlex wristMotor = new SparkFlex(WristConstants.id, MotorType.kBrushless);
+
+    public SparkFlex wristMotor = new SparkFlex(WristConstants.id, MotorType.kBrushless);
     private SparkFlexConfig config = new SparkFlexConfig();
     private RelativeEncoder wristEncoder = wristMotor.getEncoder();
     private ProfiledPIDController controller = new ProfiledPIDController(WristConstants.kP, WristConstants.kI, WristConstants.kD, 
@@ -40,6 +38,7 @@ public class WristIOReal implements WristIO{
         config.softLimit.forwardSoftLimit(WristConstants.maxPosition);
         config.softLimit.reverseSoftLimit(WristConstants.minPosition);
 
+        // on board pid if needed later
         // config.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
         // config.closedLoop.p(0);
         // config.closedLoop.i(0);
@@ -99,7 +98,12 @@ public class WristIOReal implements WristIO{
     @Override
     public void updateInputs (WristIOInputs inputs){
         inputs.voltage = wristMotor.getBusVoltage();
-        inputs.pos = getPosition();
+        inputs.position = getPosition();
         inputs.velocity = wristEncoder.getVelocity();
+        inputs.current = wristMotor.getOutputCurrent();
+        inputs.goalPosition = goal.position;
+        inputs.setPointVelocity = setpoint.velocity;
+
+
     }
 }

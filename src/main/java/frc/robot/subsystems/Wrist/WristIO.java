@@ -6,8 +6,11 @@ public interface WristIO {
     @AutoLog
     public static class WristIOInputs{
         public double voltage = 0;
-        public double pos = 0;
+        public double position = 0;
         public double velocity = 0;
+        public double current = 0;
+        public double goalPosition = 0;
+        public double setPointVelocity = 0;
     }
 
     public default void setVoltage(double voltage){

@@ -1,7 +1,6 @@
 package frc.robot.subsystems.Wrist;
 
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.Unit;
 
 public class WristConstants {
     // all placeholders

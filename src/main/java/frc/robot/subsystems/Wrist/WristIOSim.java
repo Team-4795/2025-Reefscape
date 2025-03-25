@@ -1,5 +1,4 @@
 package frc.robot.subsystems.Wrist;
-import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -27,14 +26,11 @@ public class WristIOSim implements WristIO {
     private final TrapezoidProfile profile = new TrapezoidProfile(constraints);
     private TrapezoidProfile.State goal = new TrapezoidProfile.State(WristConstants.Sim.INIT_ANGLE, 0);
     private TrapezoidProfile.State setpoint = new TrapezoidProfile.State(WristConstants.Sim.INIT_ANGLE, 0);
-    private double voltage = 0;
-    
-    private double updateVolts = 0;
-    
+    private double voltage = 0;    
     @Override
     public void setVoltage(double voltage){
         wristSim.setInputVoltage(voltage);
-        this.updateVolts = voltage;
+        this.voltage = voltage;
     }
 
      @Override
@@ -44,30 +40,30 @@ public class WristIOSim implements WristIO {
         goal = new TrapezoidProfile.State(MathUtil.clamp(angle, WristConstants.minPosition, WristConstants.maxPosition), WristConstants.maxV);
         }
     }
-    //   @Override 
-    // public void moveUp (double voltage){
-    //     wristMotor.setVoltage(voltage);
-    // }
+      @Override 
+    public void moveUp (double voltage){
+        wristSim.setInputVoltage(voltage);
+    }
 
-    // @Override
-    // public void moveDown (double voltage){
-    //     wristMotor.setVoltage(voltage);
-    // }
+    @Override
+    public void moveDown (double voltage){
+        wristSim.setInputVoltage(voltage);
+    }
 
     @Override
     public void updateMotionProfile(){
         setpoint = profile.calculate(0.02, setpoint, goal);
-        double pidVolts = controller.calculate(getPosition(), setpoint.position);
-        Logger.recordOutput("pid volts", pidVolts);
-        double ffVolts = setpoint.velocity * WristConstants.kV;
-        Logger.recordOutput("ff volts", ffVolts);
-        setVoltage(ffVolts + pidVolts);
+        setVoltage(ffmodel.calculate(wristSim.getAngleRads(), setpoint.velocity) + controller.calculate(wristSim.getAngleRads(),setpoint.position));
     }
 
     @Override
     public void updateInputs (WristIOInputs inputs){
-        inputs.voltage = updateVolts;
-        inputs.pos = wristSim.getAngleRads();
+        inputs.voltage = voltage;
+        inputs.position = wristSim.getAngleRads();
         inputs.velocity = wristSim.getVelocityRadPerSec();
+        inputs.current = wristSim.getCurrentDrawAmps();
+        inputs.goalPosition = goal.position;
+        inputs.setPointVelocity = setpoint.velocity;
+        wristSim.update(0.02);
     }
 }

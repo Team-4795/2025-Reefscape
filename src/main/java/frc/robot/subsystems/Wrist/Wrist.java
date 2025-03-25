@@ -2,7 +2,8 @@ package frc.robot.subsystems.Wrist;
 
 import org.littletonrobotics.junction.Logger;
 
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -13,12 +14,28 @@ public class Wrist extends SubsystemBase {
     
 
 
-    public Wrist(WristIO type) {
-        this.io = type;
+    public Wrist(WristIO io) {
+   
+        this.io = io;
         io.updateInputs(inputs);
         setDefaultCommand(Commands.run(()-> io.updateMotionProfile(), this));
     }
 
+    // should switch to when merging
+
+    // this.io = io;
+    //     setDefaultCommand(
+    //         Commands.run(() -> {
+    //             double change = MathUtil.applyDeadband(-OIConstants.operatorController.getLeftY(), OIConstants.OperatorLAxisDeadband);
+    //             change = .05 * Math.pow(change, 3);
+    //             if(DriverStation.isTeleopEnabled() && change != 0) {
+    //                 io.setGoal(inputs.goalPosition + change);
+    //             }
+    //             io.updateMotionProfile();
+    //         }, this)
+    //     );
+
+    
     public static Wrist initialize(WristIO init){
         if (instance == null) {
             instance = new Wrist(init);
