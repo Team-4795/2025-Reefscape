@@ -9,7 +9,6 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
 
-import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
@@ -19,7 +18,6 @@ public class WristIOReal implements WristIO{
     private SparkFlex wristMotor = new SparkFlex(WristConstants.id, MotorType.kBrushless);
     private SparkFlexConfig config = new SparkFlexConfig();
     private RelativeEncoder encoder = wristMotor.getEncoder();
-    private ArmFeedforward ff = new ArmFeedforward(WristConstants.kS, WristConstants.kG, WristConstants.kV);
     private ProfiledPIDController controller = new ProfiledPIDController(WristConstants.kP, WristConstants.kI, WristConstants.kD, 
     new TrapezoidProfile.Constraints(WristConstants.maxV, WristConstants.maxA));
     private TrapezoidProfile profile = new TrapezoidProfile(new TrapezoidProfile.Constraints(WristConstants.maxV, WristConstants.maxA));
@@ -66,7 +64,7 @@ public class WristIOReal implements WristIO{
         setpoint = profile.calculate(0.02, setpoint, goal);
         double pidVolts = controller.calculate(getPosition(), setpoint.position);
         Logger.recordOutput("pid volts", pidVolts);
-        double ffVolts = ff.calculate(getPosition(), setpoint.velocity);
+        double ffVolts = setpoint.velocity * WristConstants.kV;
         Logger.recordOutput("ff volts", ffVolts);
         setVoltage(ffVolts + pidVolts);
     }
