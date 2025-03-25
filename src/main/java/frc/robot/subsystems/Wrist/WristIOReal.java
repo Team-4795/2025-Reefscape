@@ -19,7 +19,7 @@ public class WristIOReal implements WristIO{
     public SparkFlex wristMotor = new SparkFlex(WristConstants.id, MotorType.kBrushless);
     private SparkFlexConfig config = new SparkFlexConfig();
     private RelativeEncoder wristEncoder = wristMotor.getEncoder();
-    private ProfiledPIDController controller = new ProfiledPIDController(WristConstants.kP, WristConstants.kI, WristConstants.kD, 
+    private ProfiledPIDController controller = new ProfiledPIDController(WristConstants.Coral_kP, WristConstants.Coral_kI, WristConstants.Coral_kD, 
     new TrapezoidProfile.Constraints(WristConstants.maxV, WristConstants.maxA));
     private TrapezoidProfile profile = new TrapezoidProfile(new TrapezoidProfile.Constraints(WristConstants.maxV, WristConstants.maxA));
     private TrapezoidProfile.State goal;
@@ -81,7 +81,7 @@ public class WristIOReal implements WristIO{
         setpoint = profile.calculate(0.02, setpoint, goal);
         double pidVolts = controller.calculate(getPosition(), setpoint.position);
         Logger.recordOutput("pid volts", pidVolts);
-        double ffVolts = setpoint.velocity * WristConstants.kV;
+        double ffVolts = setpoint.velocity * WristConstants.Coral_kV;
         Logger.recordOutput("ff volts", ffVolts);
         setVoltage(ffVolts + pidVolts);
     }
