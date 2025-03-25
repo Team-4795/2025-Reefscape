@@ -2,6 +2,8 @@ package frc.robot.subsystems.Wrist;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.revrobotics.spark.SparkAbsoluteEncoder;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -49,4 +51,10 @@ public class Wrist extends SubsystemBase {
         io.updateInputs(inputs);
         Logger.processInputs("Wrist", inputs);
     } 
+
+    public SparkAbsoluteEncoder getArmAbsoluteEncoder(){
+       return io.getArmAbsoluteEncoder();
+    }
+
+
 }

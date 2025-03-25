@@ -2,6 +2,8 @@ package frc.robot.subsystems.Wrist;
 
 import org.littletonrobotics.junction.AutoLog;
 
+import com.revrobotics.spark.SparkAbsoluteEncoder;
+
 public interface WristIO {
     @AutoLog
     public static class WristIOInputs{
@@ -35,6 +37,10 @@ public interface WristIO {
 
     public default void updateMotionProfile(){
 
+    }
+
+    public default SparkAbsoluteEncoder getArmAbsoluteEncoder(){
+        return null;
     }
 
 }

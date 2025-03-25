@@ -2,9 +2,11 @@ package frc.robot.subsystems.Wrist;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
@@ -17,6 +19,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 public class WristIOReal implements WristIO{
 
     public SparkFlex wristMotor = new SparkFlex(WristConstants.id, MotorType.kBrushless);
+    public SparkAbsoluteEncoder armAbsoluteEncoder = wristMotor.getAbsoluteEncoder();
     private SparkFlexConfig config = new SparkFlexConfig();
     private RelativeEncoder wristEncoder = wristMotor.getEncoder();
     private ProfiledPIDController controller = new ProfiledPIDController(WristConstants.Coral_kP, WristConstants.Coral_kI, WristConstants.Coral_kD, 
@@ -44,6 +47,10 @@ public class WristIOReal implements WristIO{
         // config.closedLoop.i(0);
         // config.closedLoop.d(0);
 
+        config.absoluteEncoder.positionConversionFactor(2*Math.PI);
+        config.absoluteEncoder.velocityConversionFactor(2*Math.PI/60);
+        config.absoluteEncoder.inverted(false);
+
         config.voltageCompensation(WristConstants.voltageCompensation);
         config.inverted(WristConstants.isInverted);
         wristMotor.clearFaults();
@@ -62,6 +69,11 @@ public class WristIOReal implements WristIO{
         return wristEncoder.getVelocity();
     }
 
+    @Override
+    public SparkAbsoluteEncoder getArmAbsoluteEncoder(){
+        return wristMotor.getAbsoluteEncoder();
+        
+    }
     @Override
     public void setGoal(double angle){
         if (angle != goal.position){
