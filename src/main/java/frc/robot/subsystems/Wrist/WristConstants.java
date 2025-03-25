@@ -4,7 +4,7 @@ import edu.wpi.first.math.util.Units;
 
 public class WristConstants {
 
-    public final static int id = 20;
+    public final static int id = 19;
     
     public final static int currentLimit = 60;
     public final static boolean isInverted = false;
