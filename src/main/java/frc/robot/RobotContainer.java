@@ -6,8 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.Wrist.Wrist;
 import frc.robot.subsystems.Wrist.WristConstants;
 import frc.robot.subsystems.Wrist.WristIOReal;
@@ -15,11 +13,6 @@ import frc.robot.subsystems.Wrist.WristIOSim;
 
 public class RobotContainer {
   private final Wrist wrist;
-  
-  private final CommandXboxController m_driverController =
-    new CommandXboxController(OperatorConstants.kDriverControllerPort);
-
-    private final CommandXboxController m_operatorController = new CommandXboxController(1);
   
   public RobotContainer() {
     
@@ -39,11 +32,18 @@ public class RobotContainer {
 
   private void configureBindings() {
     // placeholder wrist
-    // m_operatorController.povUp().onTrue(Commands.runOnce( ()-> wrist.setGoal(WristConstants.VFBAngle), wrist));
+  
+    Constants.OIConstants.operatorController.povUp().onTrue(
+      Commands.runOnce( 
+        ()-> wrist.setGoal(WristConstants.VFBAngle), wrist));
 
-    m_operatorController.leftTrigger().onTrue(Commands.run(() -> wrist.moveDown(WristConstants.moveDown), wrist));
+    Constants.OIConstants.operatorController.leftTrigger().whileTrue(
+      Commands.run(
+        () -> wrist.moveDown(WristConstants.moveDown), wrist));
 
-    m_operatorController.rightTrigger().onTrue(Commands.run(() -> wrist.moveUp(WristConstants.moveUp), wrist));
+    Constants.OIConstants.operatorController.rightTrigger().onTrue(
+      Commands.run(
+        () -> wrist.moveUp(WristConstants.moveUp), wrist));
   }
 
   public Command getAutonomousCommand() {

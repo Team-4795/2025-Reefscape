@@ -38,7 +38,7 @@ public class WristIOReal implements WristIO{
         config.softLimit.forwardSoftLimit(WristConstants.maxPosition);
         config.softLimit.reverseSoftLimit(WristConstants.minPosition);
 
-        // on board pid if needed later
+        // on board PID if needed later
         // config.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
         // config.closedLoop.p(0);
         // config.closedLoop.i(0);

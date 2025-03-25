@@ -3,7 +3,7 @@ package frc.robot.subsystems.Wrist;
 import edu.wpi.first.math.util.Units;
 
 public class WristConstants {
-    // all placeholders
+
     public final static int id = 20;
     
     public final static int currentLimit = 60;
@@ -33,7 +33,6 @@ public class WristConstants {
     public final static double intakePosition = 1;
     public final static double stowPosition = 3;
     
-    // sim constants
     public static class Sim {
         public static final double length = 1;
         public static final double minAngle = 0;

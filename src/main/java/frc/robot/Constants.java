@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public final class Constants {
     public static final class IntakeSetpoints{
@@ -16,6 +17,8 @@ public final class Constants {
         SIM,
     
         REPLAY;
+
+      
     
         static Mode fromState() {
           if (Robot.isReal()) {
@@ -25,8 +28,13 @@ public final class Constants {
           }
         }
       }
-    public static class OperatorConstants {
-      public static final int kDriverControllerPort = 0;
+
+      public static class OIConstants {
+        public static final CommandXboxController driverController = new CommandXboxController(0);
+        public static final CommandXboxController operatorController = new CommandXboxController(1);
+        public static final double KAxisDeadband = 0.1;  
+        public static final double OperatorLAxisDeadband = 0.3;
     }
+ 
 }
 
