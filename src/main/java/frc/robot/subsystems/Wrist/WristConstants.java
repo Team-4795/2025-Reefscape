@@ -19,7 +19,7 @@ public class WristConstants {
     public final static double maxA = 1;
 
     public final static double offset = 0;
-    public final static double gearing = (64.0 / 18.0) * (60.0 / 7.0);
+    public final static double VFBAngle = 14;
     
     // sim constants
     public static class Sim {
