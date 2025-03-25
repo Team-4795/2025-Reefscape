@@ -34,6 +34,14 @@ public class Wrist extends SubsystemBase {
         io.setGoal(angle);
     }
 
+    public void moveUp (double voltage){
+        io.moveUp(voltage);
+    }
+
+    public void moveDown (double voltage){
+        io.moveDown(voltage);
+    }
+
     @Override
     public void periodic(){
         io.updateInputs(inputs);

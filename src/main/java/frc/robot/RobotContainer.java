@@ -41,7 +41,11 @@ public class RobotContainer {
 
   private void configureBindings() {
     // placeholder wrist
-    m_operatorController.povUp().onTrue(Commands.runOnce( ()-> wrist.setGoal(WristConstants.VFBAngle), wrist));
+    // m_operatorController.povUp().onTrue(Commands.runOnce( ()-> wrist.setGoal(WristConstants.VFBAngle), wrist));
+
+    m_operatorController.leftTrigger().onTrue(Commands.run(() -> wrist.moveDown(WristConstants.moveDown), wrist));
+
+    m_operatorController.rightTrigger().onTrue(Commands.run(() -> wrist.moveUp(WristConstants.moveUp), wrist));
   }
 
   public Command getAutonomousCommand() {

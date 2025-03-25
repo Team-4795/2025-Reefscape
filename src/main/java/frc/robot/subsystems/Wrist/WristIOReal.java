@@ -8,16 +8,19 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
+import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.units.measure.Voltage;
 
 
 public class WristIOReal implements WristIO{
     // neo vortex motor
     private SparkFlex wristMotor = new SparkFlex(WristConstants.id, MotorType.kBrushless);
     private SparkFlexConfig config = new SparkFlexConfig();
-    private RelativeEncoder encoder = wristMotor.getEncoder();
+    private RelativeEncoder wristEncoder = wristMotor.getEncoder();
     private ProfiledPIDController controller = new ProfiledPIDController(WristConstants.kP, WristConstants.kI, WristConstants.kD, 
     new TrapezoidProfile.Constraints(WristConstants.maxV, WristConstants.maxA));
     private TrapezoidProfile profile = new TrapezoidProfile(new TrapezoidProfile.Constraints(WristConstants.maxV, WristConstants.maxA));
@@ -25,37 +28,61 @@ public class WristIOReal implements WristIO{
     private TrapezoidProfile.State setpoint;
 
     public WristIOReal() {
-        config.smartCurrentLimit(WristConstants.currentLimit);
-        wristMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        wristMotor.clearFaults();
+      
+        config.smartCurrentLimit(WristConstants.currentLimit);        
         wristMotor.setCANTimeout(20);
 
         config.encoder.positionConversionFactor(2*Math.PI / WristConstants.gearing);
         config.encoder.velocityConversionFactor(2*Math.PI / 60.0 / WristConstants.gearing);
 
+        config.softLimit.forwardSoftLimitEnabled(true);
+        config.softLimit.reverseSoftLimitEnabled(true);
+        config.softLimit.forwardSoftLimit(WristConstants.maxPosition);
+        config.softLimit.reverseSoftLimit(WristConstants.minPosition);
+
+        // config.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+        // config.closedLoop.p(0);
+        // config.closedLoop.i(0);
+        // config.closedLoop.d(0);
+
+        config.voltageCompensation(WristConstants.voltageCompensation);
+        config.inverted(WristConstants.isInverted);
+        wristMotor.clearFaults();
+
+        wristMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
 
     @Override
     public double getPosition(){
-        return encoder.getPosition();
+        return wristEncoder.getPosition();
     }
 
     @Override
     public double getVelocity(){
-        return encoder.getVelocity();
+        return wristEncoder.getVelocity();
     }
 
     @Override
     public void setGoal(double angle){
         if (angle != goal.position){
         setpoint = new TrapezoidProfile.State(getPosition(), getVelocity());
-        goal = new TrapezoidProfile.State(angle, WristConstants.maxV);
+        goal = new TrapezoidProfile.State(MathUtil.clamp(angle, WristConstants.minPosition, WristConstants.maxPosition), WristConstants.maxV);
         }
     }
 
     @Override
     public void setVoltage(double voltage) {
+        wristMotor.setVoltage(voltage);
+    }
+
+    @Override 
+    public void moveUp (double voltage){
+        wristMotor.setVoltage(voltage);
+    }
+
+    @Override
+    public void moveDown (double voltage){
         wristMotor.setVoltage(voltage);
     }
 
@@ -73,6 +100,6 @@ public class WristIOReal implements WristIO{
     public void updateInputs (WristIOInputs inputs){
         inputs.voltage = wristMotor.getBusVoltage();
         inputs.pos = getPosition();
-        inputs.velocity = encoder.getVelocity();
+        inputs.velocity = wristEncoder.getVelocity();
     }
 }
