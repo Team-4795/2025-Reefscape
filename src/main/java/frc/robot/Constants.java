@@ -3,16 +3,12 @@ package frc.robot;
 import static edu.wpi.first.units.Units.*;
 
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.vision.AprilTag.VisionConstants;
-
 public class Constants {
     public static final boolean tuningMode = false;
     public static final Mode currentMode = Robot.isReal() ? Mode.REAL : Mode.SIM;
     public static final boolean visonSimEnabled = true;
 
     public static final class driveConstants {
-        public static double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
         public static double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond);
 
     }
@@ -41,8 +37,5 @@ public class Constants {
         SIM,
     }
 
-    public static final class FieldConstants {
-        public static final double fieldLength = VisionConstants.aprilTagFieldLayout.getFieldLength();
-        public static final double fieldWidth = VisionConstants.aprilTagFieldLayout.getFieldWidth();
-    }
+   
 }
