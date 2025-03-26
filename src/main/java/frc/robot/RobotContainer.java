@@ -89,9 +89,7 @@ public class RobotContainer {
         Arm.initialize(new ArmIOSim());
         drivetrain = Swerve.initialize(TunerConstants.createDrivetrain());
         visualizer = new RobotVisualizer();
-        if(Constants.visonSimEnabled) {
-          vision = Vision.initialize(new VisionIOSim());
-        }
+        vision = Vision.initialize(new VisionIOSim());
         break;
 
       default:
@@ -147,7 +145,7 @@ public class RobotContainer {
 
     // Algae align
     Constants.OIConstants.driverController.rightBumper().whileTrue(
-      AutoCommands.alignAlgae()
+      AutoCommands.autoAlgae()
     );
 
     // Slow mode

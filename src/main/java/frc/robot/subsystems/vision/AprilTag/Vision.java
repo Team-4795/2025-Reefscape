@@ -69,18 +69,23 @@ public class Vision extends SubsystemBase{
 
 
     public Pose2d getBestReefPose() {
-        if(Constants.currentMode == Constants.Mode.SIM)
-        {
-            return VisionConstants.redReefScoringPoses[0];
-        }
-        
         for(int i = 0; i < io.length; i++) {
             if(inputs[i].reefPose != new Pose2d())
             {
                 return inputs[i].reefPose;
             }
         }
-        return new Pose2d();
+        return new Pose2d();  
+    }
+
+    public int getReefTag() {
+        for(int i = 0; i < io.length; i++) {
+            if(inputs[i].reefTag != 0)
+            {
+                return inputs[i].reefTag;
+            }
+        }
+        return 0;  
     }
 
     public void periodic() {

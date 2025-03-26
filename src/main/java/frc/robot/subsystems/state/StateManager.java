@@ -26,6 +26,7 @@ public class StateManager extends SubsystemBase {
         public static boolean inScoringDistance = false;
         public static boolean isReefTagOnly = true;
         public static State autoScoreMode = State.L4;
+        public static State autoAlgaeMode = State.HIGH_ALGAE;
     }
 
     private static StateManager instance;

@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.subsystems.swerve.Swerve;
 
 public class VisionIOReal implements VisionIO {
@@ -42,37 +43,70 @@ public class VisionIOReal implements VisionIO {
     public Pose2d getBestReefPos() {
         Translation2d odometry = Swerve.getInstance().getState().Pose.getTranslation();
         Pose2d bestPose = new Pose2d();
+        Alliance alliance = DriverStation.getAlliance().orElse(null);
 
-        if(DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red))
+        if(alliance != null)
         {
-            double distance = VisionConstants.redReefScoringPoses[0].getTranslation().getDistance(odometry);
-
-            for(int i = 0; i < VisionConstants.redReefScoringPoses.length; i++)
+            if(DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red))
             {
-                if(VisionConstants.redReefScoringPoses[i].getTranslation().getDistance(odometry) <= distance)
+                double distance = VisionConstants.redReefScoringPoses[0].getTranslation().getDistance(odometry);
+
+                for(int i = 0; i < VisionConstants.redReefScoringPoses.length; i++)
                 {
-                    distance = VisionConstants.redReefScoringPoses[i].getTranslation().getDistance(odometry);
-                    bestPose = VisionConstants.redReefScoringPoses[i];
+                    if(VisionConstants.redReefScoringPoses[i].getTranslation().getDistance(odometry) <= distance)
+                    {
+                        distance = VisionConstants.redReefScoringPoses[i].getTranslation().getDistance(odometry);
+                        bestPose = VisionConstants.redReefScoringPoses[i];
+                    }
                 }
+                
             }
-            
-        }
-
-        if(DriverStation.getAlliance().get().equals(DriverStation.Alliance.Blue))
-        {
-            double distance = VisionConstants.blueReefScoringPoses[0].getTranslation().getDistance(odometry);
-
-            for(int i = 0; i < VisionConstants.blueReefScoringPoses.length; i++)
+            if(DriverStation.getAlliance().get().equals(DriverStation.Alliance.Blue))
             {
-                if(VisionConstants.blueReefScoringPoses[i].getTranslation().getDistance(odometry) <= distance)
+                double distance = VisionConstants.blueReefScoringPoses[0].getTranslation().getDistance(odometry);
+
+                for(int i = 0; i < VisionConstants.blueReefScoringPoses.length; i++)
                 {
-                    distance = VisionConstants.blueReefScoringPoses[i].getTranslation().getDistance(odometry);
-                    bestPose = VisionConstants.blueReefScoringPoses[i];
+                    if(VisionConstants.blueReefScoringPoses[i].getTranslation().getDistance(odometry) <= distance)
+                    {
+                        distance = VisionConstants.blueReefScoringPoses[i].getTranslation().getDistance(odometry);
+                        bestPose = VisionConstants.blueReefScoringPoses[i];
+                    }
                 }
             }
         }
 
         return bestPose;
+    }
+
+    public int getReefTag() {
+        Pose2d bestReefPose = getBestReefPos();
+        Alliance alliance = DriverStation.getAlliance().orElse(null);
+
+        if(alliance != null)
+        {
+            if(alliance.equals(DriverStation.Alliance.Red))
+            {
+                for(int i = 0; i < VisionConstants.redReefScoringPoses.length; i++)
+                {
+                    if(VisionConstants.redReefScoringPoses[i] == bestReefPose)
+                    {
+                        return i + 6;
+                    }
+                }
+            }
+            if(alliance.equals(DriverStation.Alliance.Blue))
+            {
+                for(int i = 0; i < VisionConstants.blueReefScoringPoses.length; i++)
+                {
+                    if(VisionConstants.blueReefScoringPoses[i] == bestReefPose)
+                    {
+                        return i + 17;
+                    }
+                }
+            }
+        }
+        return 0;
     }
 
     @Override
@@ -102,5 +136,6 @@ public class VisionIOReal implements VisionIO {
         }
 
         inputs.reefPose = getBestReefPos();
+        inputs.reefTag = getReefTag();
     }
 }

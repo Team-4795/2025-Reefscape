@@ -229,6 +229,13 @@ public class AutoCommands {
             () -> OperationStates.autoScoreMode != State.L4).finallyDo(() -> OperationStates.aligned = false);
     }
 
+    public static Command autoAlgae() {
+        return Commands.parallel(
+            alignAlgae(),
+            Commands.deferredProxy(() -> stateManager.stateCommand(OperationStates.autoAlgaeMode))
+        );
+    }
+
     public static Command zeroArm() {
         return Commands.parallel(
             Commands.startEnd(
@@ -266,7 +273,7 @@ public class AutoCommands {
             new ProfiledPIDController(5,
             0, 0, new Constraints(SwerveConstants.MaxSpeed, 3)), 
             new ProfiledPIDController(7.5, 0, 0, new Constraints(SwerveConstants.MaxSpeed, 3))
-       );
+       ).until(() -> OperationStates.aligned);
     }
 
     public static Command alignReefUntil() {
