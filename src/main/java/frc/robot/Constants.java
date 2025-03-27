@@ -40,4 +40,5 @@ public class Constants {
         public static final double fieldLength = VisionConstants.aprilTagFieldLayout.getFieldLength();
         public static final double fieldWidth = VisionConstants.aprilTagFieldLayout.getFieldWidth();
     }
+ 
 }

@@ -9,6 +9,13 @@ import java.io.IOException;
 import org.json.simple.parser.ParseException;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.subsystems.Wrist.Wrist;
+import frc.robot.subsystems.Wrist.WristConstants;
+import frc.robot.subsystems.Wrist.WristIOReal;
+import frc.robot.subsystems.Wrist.WristIOSim;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -67,6 +74,7 @@ public class RobotContainer {
 
   private Elevator elevator;
   private Intake intake;
+  private Wrist wrist; 
   LoggedDashboardChooser<Command> autoChooser;
 
   public RobotContainer() throws IOException, ParseException {
@@ -81,6 +89,7 @@ public class RobotContainer {
           new VisionIOReal(0), 
           new VisionIOReal(1)
         );
+        wrist = Wrist.initialize(new WristIOReal());
         break;
 
       case SIM:
@@ -90,6 +99,7 @@ public class RobotContainer {
         drivetrain = Swerve.initialize(TunerConstants.createDrivetrain());
         visualizer = new RobotVisualizer();
         vision = Vision.initialize(new VisionIOSim());
+        wrist = Wrist.initialize(new WristIOSim());
         break;
 
       default:
@@ -97,7 +107,9 @@ public class RobotContainer {
         intake = Intake.initialize(new IntakeIOSim());
         drivetrain = Swerve.initialize(TunerConstants.createDrivetrain());
         Arm.initialize(new ArmIOSim());
+        wrist = Wrist.initialize(new WristIOSim());
         break;
+  
     }
 
     stateManager = StateManager.initalize();
@@ -159,6 +171,16 @@ public class RobotContainer {
         () -> intake.setIntakeSpeed(0), 
         intake
       ).alongWith(Commands.runOnce(() -> intake.outtake())));
+    // placeholder wrist
+  
+    // Constants.OIConstants.operatorController.povUp().onTrue(
+    //   Commands.runOnce( 
+    //     ()-> wrist.setGoal(WristConstants.VFBAngle), wrist));
+
+    //   Constants.OIConstants.operatorController.povDown().onTrue(
+    //     Commands.runOnce(
+    //       () -> wrist.setGoal(Units.degreesToRadians(90)), wrist)
+    //   );
 
     // Coral Setpoints
     Constants.OIConstants.operatorController.povUp().onTrue(
