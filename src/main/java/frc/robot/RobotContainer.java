@@ -6,37 +6,30 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.subsystems.Wrist.Wrist;
-import frc.robot.subsystems.Wrist.WristConstants;
-import frc.robot.subsystems.Wrist.WristIOReal;
-import frc.robot.subsystems.Wrist.WristIOSim;
+import frc.robot.subsystems.Climb.Climb;
+import frc.robot.subsystems.Climb.ClimbIOReal;
+import frc.robot.subsystems.Climb.ClimbIOSim;
 
 public class RobotContainer {
-  private final Wrist wrist;
+  private final Climb climb;
   
   public RobotContainer() {
     
     switch (Constants.currentMode) {
       case REAL:
-        wrist = Wrist.initialize(new WristIOReal());
+        climb = Climb.initialize(new ClimbIOReal());
         break;
       case SIM:
-        wrist = Wrist.initialize(new WristIOSim());
+        climb = Climb.initialize(new ClimbIOSim());
         break;
       default:
-        wrist = Wrist.initialize(new WristIOSim());
+        climb = Climb.initialize(new ClimbIOSim());
   
     }
     configureBindings();
   }
 
   private void configureBindings() {
-    // placeholder wrist
-  
-    Constants.OIConstants.operatorController.povUp().onTrue(
-      Commands.runOnce( 
-        ()-> wrist.setGoal(WristConstants.VFBAngle), wrist));
-
   }
 
   public Command getAutonomousCommand() {
