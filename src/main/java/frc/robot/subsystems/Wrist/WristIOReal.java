@@ -2,7 +2,6 @@ package frc.robot.subsystems.Wrist;
 
 import org.littletonrobotics.junction.Logger;
 
-import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -22,6 +21,14 @@ public class WristIOReal implements WristIO{
     public SparkAbsoluteEncoder armAbsoluteEncoder = wristMotor.getAbsoluteEncoder();
     private SparkFlexConfig config = new SparkFlexConfig();
     private RelativeEncoder wristEncoder = wristMotor.getEncoder();
+
+    // LoggedTunableNumber KP = new LoggedTunableNumber("Wrist/KP", WristConstants.Coral_kP);
+    // LoggedTunableNumber KI = new LoggedTunableNumber("Wrist/KI", WristConstants.Coral_kI);
+    // LoggedTunableNumber KD = new LoggedTunableNumber("Wrist/KD", WristConstants.Coral_kD);    
+    // LoggedTunableNumber KV = new LoggedTunableNumber("Wrist/KP", WristConstants.Coral_kV);
+    // LoggedTunableNumber KA = new LoggedTunableNumber("Wrist/KI", WristConstants.Coral_KA);
+    // LoggedTunableNumber KG = new LoggedTunableNumber("Wrist/KD", WristConstants.Coral_kG);    
+
     private ProfiledPIDController controller = new ProfiledPIDController(WristConstants.Coral_kP, WristConstants.Coral_kI, WristConstants.Coral_kD, 
     new TrapezoidProfile.Constraints(WristConstants.maxV, WristConstants.maxA));
     private TrapezoidProfile profile = new TrapezoidProfile(new TrapezoidProfile.Constraints(WristConstants.maxV, WristConstants.maxA));
