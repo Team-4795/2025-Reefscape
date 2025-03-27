@@ -10,7 +10,7 @@ public final class Constants {
         public static final double reverse = 0.7;
     }
     
-    public static final Mode currentMode = Mode.SIM;
+    public static final Mode currentMode = Mode.REAL;
     public static enum Mode {
         REAL,
     

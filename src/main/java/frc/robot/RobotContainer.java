@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.Wrist.Wrist;
@@ -36,6 +37,11 @@ public class RobotContainer {
     Constants.OIConstants.operatorController.povUp().onTrue(
       Commands.runOnce( 
         ()-> wrist.setGoal(WristConstants.VFBAngle), wrist));
+
+      Constants.OIConstants.operatorController.povDown().onTrue(
+        Commands.runOnce(
+          () -> wrist.setGoal(Units.degreesToRadians(25)), wrist)
+      );
 
   }
 

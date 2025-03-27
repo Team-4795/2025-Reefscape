@@ -32,7 +32,7 @@ public class WristIOReal implements WristIO{
     private ProfiledPIDController controller = new ProfiledPIDController(WristConstants.Coral_kP, WristConstants.Coral_kI, WristConstants.Coral_kD, 
     new TrapezoidProfile.Constraints(WristConstants.maxV, WristConstants.maxA));
     private TrapezoidProfile profile = new TrapezoidProfile(new TrapezoidProfile.Constraints(WristConstants.maxV, WristConstants.maxA));
-    private TrapezoidProfile.State goal;
+    private TrapezoidProfile.State goal ;
     private TrapezoidProfile.State setpoint;
 
     public WristIOReal() {
@@ -63,6 +63,10 @@ public class WristIOReal implements WristIO{
         wristMotor.clearFaults();
 
         wristMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+        goal = new TrapezoidProfile.State(wristEncoder.getPosition(),0);
+        setpoint = new TrapezoidProfile.State(wristEncoder.getPosition(), 0);
+
     }
 
 

@@ -34,12 +34,10 @@ public class WristConstants {
     public final static double minPosition = Units.degreesToRadians(-60); //1
     public final static double maxPosition = Units.degreesToRadians(60); //43
 
-    public final static double moveUp = 0.2;
-    public final static double moveDown = -0.2;
     public final static double voltageCompensation = 12.0;
 
     public final static double offset = 0;
-    public final static double VFBAngle = 14;
+    public final static double VFBAngle = Units.degreesToRadians(14);
     public final static double intakePosition = 1;
     public final static double stowPosition = 3;
     
