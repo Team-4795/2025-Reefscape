@@ -55,22 +55,15 @@ public class AutoAlignAlgae extends Command{
         });
         
         reefTag = Vision.getInstance().getReefTag();
-        if(DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red)) {
-            if(reefTag % 2 == 0) {
-                OperationStates.autoAlgaeMode = State.LOW_ALGAE;
-            }
-            else {
-                OperationStates.autoAlgaeMode = State.HIGH_ALGAE;
-            }
-        }
 
-        if(DriverStation.getAlliance().get().equals(DriverStation.Alliance.Blue)) {
-            if(reefTag % 2 == 0) {
-                OperationStates.autoAlgaeMode = State.HIGH_ALGAE;
-            }
-            else {
-                OperationStates.autoAlgaeMode = State.LOW_ALGAE;
-            }
+        if(reefTag == 7 || reefTag == 9 || reefTag == 11 || reefTag == 18 || reefTag == 20 || reefTag == 22) {
+            OperationStates.autoAlgaeMode = State.HIGH_ALGAE;
+        }
+        else if(reefTag == 6 || reefTag == 8 || reefTag == 10 || reefTag == 17 || reefTag == 19 || reefTag == 21) {
+            OperationStates.autoAlgaeMode = State.LOW_ALGAE;
+        }
+        else {
+            OperationStates.autoAlgaeMode = State.DYNAMIC;
         }
 
         targetPose = Vision.getInstance().getBestReefPose();
@@ -130,7 +123,10 @@ public class AutoAlignAlgae extends Command{
 
     @Override
     public void end(boolean interrupted) {
-
+        Swerve.getInstance().setControl(
+            drive.withVelocityX(0)
+            .withVelocityY(0)
+            .withRotationalRate(0));
     }
 
     public boolean finishedAligning() {

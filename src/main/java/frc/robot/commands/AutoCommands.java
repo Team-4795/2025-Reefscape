@@ -233,7 +233,7 @@ public class AutoCommands {
         return Commands.parallel(
             alignAlgae(),
             Commands.deferredProxy(() -> stateManager.stateCommand(OperationStates.autoAlgaeMode))
-        );
+        ).finallyDo(() -> OperationStates.aligned = false);
     }
 
     public static Command zeroArm() {

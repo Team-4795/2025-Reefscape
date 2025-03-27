@@ -139,9 +139,4 @@ public class VisionConstants {
         blueReefTag[4].plus(new Transform2d(targetPoseXOffset.get(), 0, new Rotation2d(Math.PI))),
         blueReefTag[5].plus(new Transform2d(targetPoseXOffset.get(), 0, new Rotation2d(Math.PI)))
     };
-
-    public static final double areaCutoff = 11;
-    public static final double timeDelay = 0.5;
-    public static final double intakeCamOffset = 0.3;
-    public static final double degreeTolerance = 6.5;
 }

@@ -21,6 +21,7 @@ public class VisionIOSim implements VisionIO {
     PhotonCamera camera;
     PhotonCameraSim cameraSim;
     int cameraId;
+    int reefTag;
 
     public VisionIOSim() {
         if(Constants.photonVisonSimEnabled)
@@ -37,7 +38,6 @@ public class VisionIOSim implements VisionIO {
             cameraProperties.setLatencyStdDevMs(5);
 
             camera = new PhotonCamera(VisionConstants.cameraIds[cameraId]);
-            // camera.setPipelineIndex(1);
 
             cameraSim = new PhotonCameraSim(camera, cameraProperties);
 
@@ -70,6 +70,7 @@ public class VisionIOSim implements VisionIO {
                     {
                         distance = VisionConstants.redReefScoringPoses[i].getTranslation().getDistance(odometry);
                         bestPose = VisionConstants.redReefScoringPoses[i];
+                        reefTag = i + 6;
                     }
                 }
                 
@@ -85,46 +86,13 @@ public class VisionIOSim implements VisionIO {
                     {
                         distance = VisionConstants.blueReefScoringPoses[i].getTranslation().getDistance(odometry);
                         bestPose = VisionConstants.blueReefScoringPoses[i];
+                        reefTag = i + 17;
                     }
                 }
             }
         }
-
         return bestPose;
     }
-
-    public int getReefTag() {
-        Pose2d bestReefPose = getBestReefPos();
-        Alliance alliance = DriverStation.getAlliance().orElse(null);
-
-        if(alliance != null)
-        {
-            if(alliance.equals(DriverStation.Alliance.Red))
-            {
-                for(int i = 0; i < VisionConstants.redReefScoringPoses.length; i++)
-                {
-                    if(VisionConstants.redReefScoringPoses[i] == bestReefPose)
-                    {
-                        return i + 6;
-                    }
-                }
-            }
-            
-            if(alliance.equals(DriverStation.Alliance.Blue))
-            {
-                for(int i = 0; i < VisionConstants.blueReefScoringPoses.length; i++)
-                {
-                    if(VisionConstants.blueReefScoringPoses[i] == bestReefPose)
-                    {
-                        return i + 17;
-                    }
-                }
-            }
-        }
-
-        return 0;
-    }
-
     
     @Override
     public void updateInputs(VisionIOInputs inputs) {
@@ -135,6 +103,6 @@ public class VisionIOSim implements VisionIO {
         }
 
         inputs.reefPose = getBestReefPos();
-        inputs.reefTag = getReefTag();
+        inputs.reefTag = reefTag;
     }
 }

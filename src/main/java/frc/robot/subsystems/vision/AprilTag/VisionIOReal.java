@@ -26,6 +26,7 @@ public class VisionIOReal implements VisionIO {
     PhotonTrackedTarget target;
 
     boolean isReefAligning;
+    int reefTag;
 
     public VisionIOReal(int camIndex) {
         camera = new PhotonCamera(VisionConstants.cameraIds[camIndex]); 
@@ -57,6 +58,7 @@ public class VisionIOReal implements VisionIO {
                     {
                         distance = VisionConstants.redReefScoringPoses[i].getTranslation().getDistance(odometry);
                         bestPose = VisionConstants.redReefScoringPoses[i];
+                        reefTag = i + 6;
                     }
                 }
                 
@@ -71,42 +73,12 @@ public class VisionIOReal implements VisionIO {
                     {
                         distance = VisionConstants.blueReefScoringPoses[i].getTranslation().getDistance(odometry);
                         bestPose = VisionConstants.blueReefScoringPoses[i];
+                        reefTag = i + 17;
                     }
                 }
             }
         }
-
         return bestPose;
-    }
-
-    public int getReefTag() {
-        Pose2d bestReefPose = getBestReefPos();
-        Alliance alliance = DriverStation.getAlliance().orElse(null);
-
-        if(alliance != null)
-        {
-            if(alliance.equals(DriverStation.Alliance.Red))
-            {
-                for(int i = 0; i < VisionConstants.redReefScoringPoses.length; i++)
-                {
-                    if(VisionConstants.redReefScoringPoses[i] == bestReefPose)
-                    {
-                        return i + 6;
-                    }
-                }
-            }
-            if(alliance.equals(DriverStation.Alliance.Blue))
-            {
-                for(int i = 0; i < VisionConstants.blueReefScoringPoses.length; i++)
-                {
-                    if(VisionConstants.blueReefScoringPoses[i] == bestReefPose)
-                    {
-                        return i + 17;
-                    }
-                }
-            }
-        }
-        return 0;
     }
 
     @Override
@@ -136,6 +108,6 @@ public class VisionIOReal implements VisionIO {
         }
 
         inputs.reefPose = getBestReefPos();
-        inputs.reefTag = getReefTag();
+        inputs.reefTag = reefTag;
     }
 }
