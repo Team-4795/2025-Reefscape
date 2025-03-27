@@ -11,6 +11,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
@@ -31,6 +32,7 @@ public class WristIOReal implements WristIO{
 
     private ProfiledPIDController controller = new ProfiledPIDController(WristConstants.Coral_kP, WristConstants.Coral_kI, WristConstants.Coral_kD, 
     new TrapezoidProfile.Constraints(WristConstants.maxV, WristConstants.maxA));
+    private ArmFeedforward feedForward = new ArmFeedforward(WristConstants.Coral_kS, WristConstants.Coral_kG, WristConstants.Coral_kV, WristConstants.Coral_KA, 0.02);
     private TrapezoidProfile profile = new TrapezoidProfile(new TrapezoidProfile.Constraints(WristConstants.maxV, WristConstants.maxA));
     private TrapezoidProfile.State goal ;
     private TrapezoidProfile.State setpoint;
@@ -43,10 +45,10 @@ public class WristIOReal implements WristIO{
         config.encoder.positionConversionFactor(2*Math.PI / WristConstants.gearing);
         config.encoder.velocityConversionFactor(2*Math.PI / 60.0 / WristConstants.gearing);
 
-        config.softLimit.forwardSoftLimitEnabled(true);
-        config.softLimit.reverseSoftLimitEnabled(true);
-        config.softLimit.forwardSoftLimit(WristConstants.maxPosition);
-        config.softLimit.reverseSoftLimit(WristConstants.minPosition);
+        // config.softLimit.forwardSoftLimitEnabled(true);
+        // config.softLimit.reverseSoftLimitEnabled(true);
+        // config.softLimit.forwardSoftLimit(WristConstants.maxPosition);
+        // config.softLimit.reverseSoftLimit(WristConstants.minPosition);
 
         // on board PID if needed later
         // config.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
@@ -89,7 +91,7 @@ public class WristIOReal implements WristIO{
     public void setGoal(double angle){
         if (angle != goal.position){
         setpoint = new TrapezoidProfile.State(getPosition(), getVelocity());
-        goal = new TrapezoidProfile.State(MathUtil.clamp(angle, WristConstants.minPosition, WristConstants.maxPosition), WristConstants.maxV);
+        goal = new TrapezoidProfile.State(MathUtil.clamp(angle, WristConstants.minPosition, WristConstants.maxPosition), 0);
         }
     }
 
@@ -104,7 +106,7 @@ public class WristIOReal implements WristIO{
         setpoint = profile.calculate(0.02, setpoint, goal);
         double pidVolts = controller.calculate(getPosition(), setpoint.position);
         Logger.recordOutput("pid volts", pidVolts);
-        double ffVolts = setpoint.velocity * WristConstants.Coral_kV;
+        double ffVolts = feedForward.calculate(getPosition(), setpoint.velocity);
         Logger.recordOutput("ff volts", ffVolts);
         setVoltage(ffVolts + pidVolts);
     }

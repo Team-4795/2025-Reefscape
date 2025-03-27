@@ -40,7 +40,7 @@ public class RobotContainer {
 
       Constants.OIConstants.operatorController.povDown().onTrue(
         Commands.runOnce(
-          () -> wrist.setGoal(Units.degreesToRadians(25)), wrist)
+          () -> wrist.setGoal(Units.degreesToRadians(90)), wrist)
       );
 
   }

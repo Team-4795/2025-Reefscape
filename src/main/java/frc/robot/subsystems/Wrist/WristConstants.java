@@ -7,16 +7,16 @@ public class WristConstants {
     public final static int id = 19;
     
     public final static int currentLimit = 60;
-    public final static boolean isInverted = false;
+    public final static boolean isInverted = true;
     
     public final static double gearing = 30;
-    public final static double Coral_kP = 1;
+    public final static double Coral_kP = 1.3;
     public final static double Coral_kI = 0;
     public final static double Coral_kD = 0;
 
-    public final static double Coral_kS = 0;
+    public final static double Coral_kS = 0.5;
     public final static double Coral_kG = 0;
-    public final static double Coral_kV = 0;
+    public final static double Coral_kV = 0.5;
     public final static double Coral_KA = 0;
 
 
@@ -24,15 +24,15 @@ public class WristConstants {
     public final static double Algae_kI = 0;
     public final static double Algae_kD = 0;
 
-    public final static double Algae_kS = 0;
+    public final static double Algae_kS = 1;
     public final static double Algae_kG = 0;
     public final static double Algae_kV = 0;
     public final static double Algae_KA = 0;
 
-    public final static double maxV = 2;
-    public final static double maxA = 1;
+    public final static double maxV = 3;
+    public final static double maxA = 5;
     public final static double minPosition = Units.degreesToRadians(-60); //1
-    public final static double maxPosition = Units.degreesToRadians(60); //43
+    public final static double maxPosition = Units.degreesToRadians(180); //43
 
     public final static double voltageCompensation = 12.0;
 
