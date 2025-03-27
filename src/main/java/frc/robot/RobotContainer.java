@@ -81,6 +81,7 @@ public class RobotContainer {
     GenericRequirement.initialize();
     switch (Constants.currentMode) {
       case REAL:
+        wrist = Wrist.initialize(new WristIOReal());
         elevator = Elevator.initialize(new ElevatorIOReal());
         intake = Intake.initialize(new IntakeIORealVortex());
         Arm.initialize(new ArmIOReal());
@@ -89,7 +90,6 @@ public class RobotContainer {
           new VisionIOReal(0), 
           new VisionIOReal(1)
         );
-        wrist = Wrist.initialize(new WristIOReal());
         break;
 
       case SIM:

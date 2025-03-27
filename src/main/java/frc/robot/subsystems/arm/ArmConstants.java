@@ -14,15 +14,15 @@ public class ArmConstants {
     public static final double ONE_CORAL_AWAY = 0.876012921333313;
     public static final double VSTOW = 1.34 + Units.degreesToRadians(2);
     public static final double GOAL_TOLERANCE = 0.03;
-    public static final double ALGAE_LOW = 0.3129383325576782;
+    public static final double ALGAE_LOW = 0.3129383325576782 - Units.degreesToRadians(5);
     public static final double ALGAE_HIGH = 0.8301816582679749;
     public static final double PROCESSOR = 0.0;
 
     public static final double STOW = -1.8162786960601807;
     
 
-    public static final double MAX_VELOCITY = 2;  // 6
-    public static final double MAX_ACCELERATION = 3; // 10
+    public static final double MAX_VELOCITY = 6;
+    public static final double MAX_ACCELERATION = 10;
 
     // Simulation FF
     public static final double SIMkG = 1.3;

@@ -20,6 +20,7 @@ public class IntakeIORealVortex implements IntakeIO {
         intakeMotor.clearFaults();
         config.smartCurrentLimit(IntakeConstants.currentLimit);
         config.idleMode(IdleMode.kCoast);
+        config.inverted(true);
         config.absoluteEncoder.positionConversionFactor(2 * Math.PI);
         config.absoluteEncoder.velocityConversionFactor(2 * Math.PI / 60);
         intakeMotor.setCANTimeout(20);

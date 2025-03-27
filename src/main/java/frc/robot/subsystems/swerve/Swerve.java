@@ -1,9 +1,6 @@
 package frc.robot.subsystems.swerve;
 
-import static edu.wpi.first.units.Units.Rotations;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
-import static edu.wpi.first.units.Units.Second;
-import static edu.wpi.first.units.Units.Volts;
+import static edu.wpi.first.units.Units.*;
 
 import java.util.function.Supplier;
 
@@ -18,19 +15,12 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.pathplanner.lib.util.PathPlannerLogging;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
@@ -38,8 +28,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.Constants;
-import frc.robot.Constants.OIConstants;
+
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 import frc.robot.subsystems.state.StateManager.OperationStates;
 
@@ -58,26 +47,15 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
     private static final Rotation2d kRedAlliancePerspectiveRotation = Rotation2d.k180deg;
     /* Keep track if we've ever applied the operator perspective before or not */
     private boolean m_hasAppliedOperatorPerspective = false;
-
-    private boolean slowMode = false;
+    private static Swerve instance; 
+    private boolean slowMode = false; 
 
     /* Swerve requests to apply during SysId characterization */
     private final SwerveRequest.SysIdSwerveTranslation m_translationCharacterization = new SwerveRequest.SysIdSwerveTranslation();
     private final SwerveRequest.SysIdSwerveSteerGains m_steerCharacterization = new SwerveRequest.SysIdSwerveSteerGains();
     private final SwerveRequest.SysIdSwerveRotation m_rotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
-
     private final SwerveRequest.ApplyRobotSpeeds m_pathApplyRobotSpeeds = new SwerveRequest.ApplyRobotSpeeds();
 
-    private static Swerve instance;
-
-    public static Swerve initialize(Swerve swerve) {
-        instance = swerve;
-        return swerve;
-    }
-
-    public static Swerve getInstance() {
-        return instance;
-    }
 
     /* SysId routine for characterizing translation. This is used to find PID gains for the drive motors. */
     private final SysIdRoutine m_sysIdRoutineTranslation = new SysIdRoutine(
@@ -90,16 +68,30 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
         ),
         new SysIdRoutine.Mechanism(
             output -> setControl(m_translationCharacterization.withVolts(output)),
-            log -> {
-            log.motor("drive motor")
-                .voltage(Voltage.ofBaseUnits(Swerve.getInstance().getModule(0).getDriveMotor().getMotorVoltage().getValueAsDouble(), Volts))
-                .angularPosition(Angle.ofBaseUnits(Swerve.getInstance().getModule(0).getEncoder().getAbsolutePosition().getValueAsDouble(), Rotations))
-                .angularVelocity(AngularVelocity.ofBaseUnits(Swerve.getInstance().getModule(0).getEncoder().getVelocity().getValueAsDouble(), RotationsPerSecond));
-             }, this)
-        );
+            null,
+            this
+        )
+    );
+
+    public static Swerve initialize(Swerve swerve) {
+        instance = swerve; 
+        return swerve;
+    }
+
+    public static Swerve getInstance() {
+        return instance; 
+    }
+
+    public boolean isSlowMode() {
+        return slowMode; 
+    }
+
+    public void setSlowMode(boolean isSlowMode) {
+        slowMode = isSlowMode;
+    }
 
     /* SysId routine for characterizing steer. This is used to find PID gains for the steer motors. */
-    public final SysIdRoutine m_sysIdRoutineSteer = new SysIdRoutine(
+    private final SysIdRoutine m_sysIdRoutineSteer = new SysIdRoutine(
         new SysIdRoutine.Config(
             null,        // Use default ramp rate (1 V/s)
             Volts.of(7), // Use dynamic voltage of 7 V
@@ -119,7 +111,7 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
      * This is used to find PID gains for the FieldCentricFacingAngle HeadingController.
      * See the documentation of SwerveRequest.SysIdSwerveRotation for info on importing the log to SysId.
      */
-    public final SysIdRoutine m_sysIdRoutineRotation = new SysIdRoutine(
+    private final SysIdRoutine m_sysIdRoutineRotation = new SysIdRoutine(
         new SysIdRoutine.Config(
             /* This is in radians per second², but SysId only supports "volts per second" */
             Volts.of(Math.PI / 6).per(Second),
@@ -220,20 +212,7 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
         if (Utils.isSimulation()) {
             startSimThread();
         }
-
         configureAutoBuilder();
-
-        PathPlannerLogging.setLogActivePathCallback(
-                (activePath) -> {
-                    Logger.recordOutput(
-                            "Odometry/Trajectory", activePath.toArray(new Pose2d[activePath.size()]));
-                }); // Adds a way for PathPlanner to log what poses it's trying to get the robot to
-                    // go to
-        
-        PathPlannerLogging.setLogTargetPoseCallback(
-                (targetPose) -> {
-                    Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
-                }); // Adds a way for PathPlanner to log what pose it's currently trying to go to
     }
 
     private void configureAutoBuilder() {
@@ -275,7 +254,6 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
         return run(() -> this.setControl(requestSupplier.get()));
     }
 
-
     /**
      * Runs the SysId Quasistatic test in the given direction for the routine
      * specified by {@link #m_sysIdRoutineToApply}.
@@ -300,12 +278,15 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
 
     @Override
     public void periodic() {
+
         Logger.recordOutput("Odometry/omega", getState().Speeds.omegaRadiansPerSecond);
         Logger.recordOutput("Odometry/Pose", getState().Pose);
         Logger.recordOutput("Swerve/Module0TurnPosition", getState().ModulePositions[0].angle.getRadians());
         Logger.recordOutput("Swerve/Module0TurnSetpoint", getState().ModuleTargets[0].angle.getRadians());
         Logger.recordOutput("Swerve/Module0DrivePosition", getState().ModuleStates[0].speedMetersPerSecond);
         Logger.recordOutput("Swerve/Module0DriveSetpoint", getState().ModuleTargets[0].speedMetersPerSecond);
+
+        
         /*
          * Periodically try to apply the operator perspective.
          * If we haven't applied the operator perspective before, then we should apply it regardless of DS state.
@@ -324,13 +305,6 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
             });
         }
     }
-    public void setScoringLeft() {
-        OperationStates.isScoringLeft = true;
-    }
-    
-    public void setScoringRight() {
-        OperationStates.isScoringLeft = false;
-    }
 
     private void startSimThread() {
         m_lastSimTime = Utils.getCurrentTimeSeconds();
@@ -347,6 +321,14 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
         m_simNotifier.startPeriodic(kSimLoopPeriod);
     }
 
+    public void setScoringLeft() {
+        OperationStates.isScoringLeft = true; 
+    }
+
+    public void setScoringRight() {
+        OperationStates.isScoringLeft = false; 
+    }
+
     /**
      * Adds a vision measurement to the Kalman Filter. This will correct the odometry pose estimate
      * while still accounting for measurement noise.
@@ -357,26 +339,6 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
     @Override
     public void addVisionMeasurement(Pose2d visionRobotPoseMeters, double timestampSeconds) {
         super.addVisionMeasurement(visionRobotPoseMeters, Utils.fpgaToCurrentTime(timestampSeconds));
-    }
-
-    public Pose2d processJoystickInput() {
-        double x = -OIConstants.driverController.getLeftX();
-        double y = -OIConstants.driverController.getLeftY();
-        double omega = -Constants.OIConstants.driverController.getRightX();
-        double speed = Math.hypot(x, y);
-        double direction = Math.atan2(y, x);
-
-        speed = MathUtil.applyDeadband(speed, OIConstants.KAxisDeadband);
-        omega = MathUtil.applyDeadband(omega, OIConstants.KAxisDeadband);
-
-        speed = speed * speed;
-        omega = Math.copySign(omega * omega, omega);
-
-        Translation2d velocity = new Pose2d(new Translation2d(), new Rotation2d(direction))
-            .transformBy(new Transform2d(speed, 0, new Rotation2d()))
-            .getTranslation();
-
-        return new Pose2d(velocity, new Rotation2d(omega));
     }
 
     /**
@@ -399,13 +361,5 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
         Matrix<N3, N1> visionMeasurementStdDevs
     ) {
         super.addVisionMeasurement(visionRobotPoseMeters, Utils.fpgaToCurrentTime(timestampSeconds), visionMeasurementStdDevs);
-    }
-
-    public boolean isSlowMode() {
-        return slowMode;
-    }
-    
-    public void setSlowMode(boolean isSlowMode) {
-        slowMode = isSlowMode;
     }
 }
