@@ -64,6 +64,7 @@ public class ArmIOReal implements ArmIO {
         armMotor.clearFaults();
         armMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
+        // armEncoder = Wrist.getInstance().getArmAbsoluteEncoder();
         armEncoder = Intake.getInstance().getArmAbsoluteEncoder();
         armMotor.getEncoder().setPosition(getOffsetAngle());
 
