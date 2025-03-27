@@ -24,7 +24,11 @@ public class ArmIOReal implements ArmIO {
 
     LoggedTunableNumber KP = new LoggedTunableNumber("Arm/KP", ArmConstants.kP);
     LoggedTunableNumber KI = new LoggedTunableNumber("Arm/KI", ArmConstants.kI);
-    LoggedTunableNumber KD = new LoggedTunableNumber("Arm/KD", ArmConstants.kD);    
+    LoggedTunableNumber KD = new LoggedTunableNumber("Arm/KD", ArmConstants.kD); 
+    
+    LoggedTunableNumber KG = new LoggedTunableNumber("Arm/KG", ArmConstants.DEFAULTkG);
+    LoggedTunableNumber KV = new LoggedTunableNumber("Arm/KV", ArmConstants.DEFAULTkV);
+    LoggedTunableNumber KA = new LoggedTunableNumber("Arm/KA", ArmConstants.DEFAULTkA);  
 
     private ArmFeedforward ffmodel = new ArmFeedforward(ArmConstants.DEFAULTkS, ArmConstants.DEFAULTkG, ArmConstants.DEFAULTkV, ArmConstants.DEFAULTkA, 0.02);
     // private final SparkClosedLoopController onboardController = armMotor.getClosedLoopController();
