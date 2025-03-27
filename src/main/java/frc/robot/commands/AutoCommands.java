@@ -1,13 +1,9 @@
 package frc.robot.commands;
 
-import java.rmi.server.Operation;
-import java.util.HashMap;
-
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.GenericRequirement;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;

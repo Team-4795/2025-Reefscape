@@ -21,8 +21,8 @@ public class ArmConstants {
     public static final double STOW = -1.8162786960601807;
     
 
-    public static final double MAX_VELOCITY = 6;
-    public static final double MAX_ACCELERATION = 10;
+    public static final double MAX_VELOCITY = 2;  // 6
+    public static final double MAX_ACCELERATION = 3; // 10
 
     // Simulation FF
     public static final double SIMkG = 1.3;

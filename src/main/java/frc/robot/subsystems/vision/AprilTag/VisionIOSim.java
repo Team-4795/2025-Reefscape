@@ -1,6 +1,5 @@
 package frc.robot.subsystems.vision.AprilTag;
 
-import org.littletonrobotics.junction.Logger;
 import org.photonvision.PhotonCamera;
 import org.photonvision.estimation.TargetModel;
 import org.photonvision.simulation.PhotonCameraSim;
