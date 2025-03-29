@@ -3,6 +3,9 @@ package frc.robot.commands;
 import java.rmi.server.Operation;
 import java.util.HashMap;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathPlannerPath;
+
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -20,7 +23,7 @@ import frc.robot.subsystems.state.StateManager;
 import frc.robot.subsystems.state.StateManager.OperationStates;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
-import frc.robot.util.LoggedTunableNumber;
+import frc.robot.Util.LoggedTunableNumber;
 
 public class AutoCommands {
     private static Swerve drive = Swerve.getInstance();
@@ -31,6 +34,11 @@ public class AutoCommands {
 
     private static LoggedTunableNumber maxAccel = new LoggedTunableNumber("AutoAlign/maxAccel", 3.2);
 
+     //DO NOT MIND THIS FOR NOW   
+    public static Command followTrajectory(PathPlannerPath PathName) {
+        return AutoBuilder.followPath(PathName);
+      }
+
     public static Command raiseL4() {
         Command command = Commands.either(
         Commands.parallel(
@@ -40,6 +48,7 @@ public class AutoCommands {
         )),
         Commands.parallel(
             Commands.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L4)),
+            
             Commands.sequence(Commands.waitUntil(() -> arm.getAngle() > -Math.PI/4),
             Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.CORAL_L4_SETPOINT)))), 
         () -> arm.getAngle() > ArmConstants.CORAL_L4);

@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 5.969877049180327,
-        "y": 2.1249487704918035
+        "x": 5.364715909090909,
+        "y": 2.923139204545454
       },
       "prevControl": {
-        "x": 7.345127492595954,
-        "y": 1.1728809406404785
+        "x": 6.739966352506536,
+        "y": 1.9710713746941289
       },
       "nextControl": null,
       "isLocked": false,
@@ -71,7 +71,7 @@
     "rotation": 122.68055474336347
   },
   "reversed": false,
-  "folder": "Vision Align Blue Bottom 2",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": 133.42438206851483

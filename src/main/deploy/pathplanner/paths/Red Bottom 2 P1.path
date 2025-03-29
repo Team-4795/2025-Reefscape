@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 5.969877049180327,
-        "y": 2.1249487704918035
+        "x": 5.364715909090909,
+        "y": 2.923139204545454
       },
       "prevControl": {
-        "x": 6.6651639344262295,
-        "y": 1.6094774590163934
+        "x": 6.060002794336811,
+        "y": 2.4076678930700437
       },
       "nextControl": null,
       "isLocked": false,
@@ -59,7 +59,7 @@
     "rotation": 122.68055474336347
   },
   "reversed": false,
-  "folder": "Vision Align Red Bottom 2",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": 133.42438206851483

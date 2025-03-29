@@ -1,4 +1,4 @@
-package frc.robot.util;
+package frc.robot.Util;
 
 import java.util.function.DoubleConsumer;
 

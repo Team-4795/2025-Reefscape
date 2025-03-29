@@ -14,7 +14,7 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import frc.robot.util.LoggedTunableNumber;
+import frc.robot.Util.LoggedTunableNumber;
 // 
 public class ArmIOReal implements ArmIO {
     private final SparkFlex armMotor = new SparkFlex(ArmConstants.CAN_ID, MotorType.kBrushless);

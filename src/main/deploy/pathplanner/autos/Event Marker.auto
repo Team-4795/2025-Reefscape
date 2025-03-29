@@ -17,33 +17,9 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "Auto Score"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "Event Marker Test"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Auto Score"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Blue Bottom 2 P4"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Auto Score"
           }
         }
       ]
