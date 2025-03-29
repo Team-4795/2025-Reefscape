@@ -12,6 +12,7 @@ import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N2;
 import edu.wpi.first.math.util.Units;
@@ -36,6 +37,7 @@ public class AutoAlignAlgae extends Command{
     private int reefTag;
     private double mult;
     private Pose2d currentPose;
+    private Pose2d reefPose;
     private Pose2d targetPose;
     private double distance;
 
@@ -66,7 +68,8 @@ public class AutoAlignAlgae extends Command{
             OperationStates.autoAlgaeMode = State.DYNAMIC;
         }
 
-        targetPose = Vision.getInstance().getBestReefPose();
+        reefPose = Vision.getInstance().getBestReefPose();
+        targetPose = reefPose.transformBy(new Transform2d(-0.16, 0 , new Rotation2d()));
 
         currentPose = Swerve.getInstance().getState().Pose;
         double velocity = mult * projection(new Translation2d(Swerve.getInstance().getState().Speeds.vxMetersPerSecond, Swerve.getInstance().getState().Speeds.vyMetersPerSecond), targetPose.getTranslation().minus(currentPose.getTranslation()));
@@ -83,7 +86,7 @@ public class AutoAlignAlgae extends Command{
 
     @Override
     public void execute() {
-        targetPose = Vision.getInstance().getBestReefPose();
+        targetPose = reefPose.transformBy(new Transform2d(-0.16, 0 , new Rotation2d()));
 
         currentPose = Swerve.getInstance().getState().Pose;
         distance = currentPose.getTranslation().getDistance(targetPose.getTranslation());
