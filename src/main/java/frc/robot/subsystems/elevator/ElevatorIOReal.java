@@ -7,7 +7,7 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
-
+import frc.robot.util.LoggedTunableNumber;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -22,6 +22,13 @@ public class ElevatorIOReal implements ElevatorIO {
     // private SparkClosedLoopController controller = rightElevatorMotor.getClosedLoopController();
 
     // private AbsoluteEncoder leftAbsoluteEncoder = leftElevatorMotor.getAbsoluteEncoder();
+
+    LoggedTunableNumber KP = new LoggedTunableNumber("Elevator/KP", ElevatorConstants.kP);
+    LoggedTunableNumber KI = new LoggedTunableNumber("Elevator/KI", ElevatorConstants.kI);
+    LoggedTunableNumber KD = new LoggedTunableNumber("Elevator/KD", ElevatorConstants.kD); 
+    
+    LoggedTunableNumber KG = new LoggedTunableNumber("Elevator/Kg", ElevatorConstants.kg);
+    LoggedTunableNumber KV = new LoggedTunableNumber("Elevator/Kv", ElevatorConstants.kv);
 
     private final ElevatorFeedforward ffmodel = new ElevatorFeedforward(ElevatorConstants.ks, ElevatorConstants.kg, ElevatorConstants.kv);
     private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(ElevatorConstants.MAX_VELOCITY, ElevatorConstants.MAX_ACCELERATION);

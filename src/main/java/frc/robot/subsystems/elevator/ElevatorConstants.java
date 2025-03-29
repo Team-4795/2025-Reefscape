@@ -16,16 +16,16 @@ public final class ElevatorConstants{
     public static final int leftDeviceID = 13;
     public static final double ks = 0.1;
     public static final double kg = 0.25;
-    // public static final double ka = 0.03;
     public static final double kv = 8.5;
     public static final double MAX_ACCELERATION = 10;
-    public static final double MAX_VELOCITY = 1.75; 
+    public static final double MAX_VELOCITY = 1.75;
     public static final double CORAL_L4_SETPOINT = 0.57 + Units.inchesToMeters(1); 
     public static final double ONE_CORAL_AWAY = 0.6761819124221802;
     public static final double CORAL_L2_SETPOINT = 0.39241382479667664;
     public static final double ALGEA_SETPOINT = 0.19420458376407623 - Units.inchesToMeters(1);
     public static final double HIGH_ALGAE_SETPOINT = 0.12916289269924164;
     public static final double PROCESSOR_SETPOINT = 0.19420458376407623 - Units.inchesToMeters(2);
+    public static final double NET_SETPOINT = 0.7;
     public static final double GOAL_TOLERANCE = 0.02;
     public static final double STOW = 0.01;
     

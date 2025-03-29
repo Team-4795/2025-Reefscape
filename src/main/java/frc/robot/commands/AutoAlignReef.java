@@ -1,7 +1,6 @@
 
 package frc.robot.commands;
 
-import frc.robot.Constants;
 
 import org.littletonrobotics.junction.Logger;
 
@@ -119,6 +118,7 @@ public class AutoAlignReef extends Command {
         Logger.recordOutput("AutoAlign/Distance at goal", translationController.atGoal());
         Logger.recordOutput("AutoAlign/PID input", drivePIDOutput);
         Logger.recordOutput("AutoAlign/is Aligned", OperationStates.aligned);
+        Logger.recordOutput("AutoAlign/In scoring distance", OperationStates.inScoringDistance);
 
         Swerve.getInstance().setControl(
             drive.withVelocityX(driveSpeed * direction.getCos())

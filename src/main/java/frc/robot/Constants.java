@@ -9,7 +9,7 @@ import frc.robot.subsystems.vision.AprilTag.VisionConstants;
 public class Constants {
     public static final boolean tuningMode = false;
     public static final Mode currentMode = Robot.isReal() ? Mode.REAL : Mode.SIM;
-    public static final boolean visonSimEnabled = false;
+    public static final boolean visonSimEnabled = true;
 
     public static final class driveConstants {
         public static double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
@@ -40,4 +40,5 @@ public class Constants {
         public static final double fieldLength = VisionConstants.aprilTagFieldLayout.getFieldLength();
         public static final double fieldWidth = VisionConstants.aprilTagFieldLayout.getFieldWidth();
     }
+ 
 }

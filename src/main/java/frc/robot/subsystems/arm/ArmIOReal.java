@@ -14,7 +14,7 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import frc.robot.Util.LoggedTunableNumber;
+import frc.robot.util.LoggedTunableNumber;
 // 
 public class ArmIOReal implements ArmIO {
     private final SparkFlex armMotor = new SparkFlex(ArmConstants.CAN_ID, MotorType.kBrushless);
@@ -23,7 +23,11 @@ public class ArmIOReal implements ArmIO {
 
     LoggedTunableNumber KP = new LoggedTunableNumber("Arm/KP", ArmConstants.kP);
     LoggedTunableNumber KI = new LoggedTunableNumber("Arm/KI", ArmConstants.kI);
-    LoggedTunableNumber KD = new LoggedTunableNumber("Arm/KD", ArmConstants.kD);    
+    LoggedTunableNumber KD = new LoggedTunableNumber("Arm/KD", ArmConstants.kD); 
+    
+    LoggedTunableNumber KG = new LoggedTunableNumber("Arm/KG", ArmConstants.DEFAULTkG);
+    LoggedTunableNumber KV = new LoggedTunableNumber("Arm/KV", ArmConstants.DEFAULTkV);
+    LoggedTunableNumber KA = new LoggedTunableNumber("Arm/KA", ArmConstants.DEFAULTkA);  
 
     private ArmFeedforward ffmodel = new ArmFeedforward(ArmConstants.DEFAULTkS, ArmConstants.DEFAULTkG, ArmConstants.DEFAULTkV, ArmConstants.DEFAULTkA, 0.02);
     // private final SparkClosedLoopController onboardController = armMotor.getClosedLoopController();
@@ -63,7 +67,7 @@ public class ArmIOReal implements ArmIO {
         armMotor.clearFaults();
         armMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        armEncoder = armMotor.getAbsoluteEncoder();
+        armEncoder = Wrist.getInstance().getArmAbsoluteEncoder();
         armMotor.getEncoder().setPosition(getOffsetAngle());
 
         goal = new TrapezoidProfile.State(getOffsetAngle(), 0);

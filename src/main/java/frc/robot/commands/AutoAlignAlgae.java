@@ -18,6 +18,8 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.state.State;
+import frc.robot.subsystems.state.StateManager.OperationStates;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.vision.AprilTag.Vision;
 
@@ -31,6 +33,7 @@ public class AutoAlignAlgae extends Command{
     private ProfiledPIDController translationController;
     private ProfiledPIDController rotationController;
 
+    private int reefTag;
     private double mult;
     private Pose2d currentPose;
     private Pose2d targetPose;
@@ -46,15 +49,22 @@ public class AutoAlignAlgae extends Command{
 
 
     @Override
-    public void initialize(){
-        // Vision.getInstance().toggleShouldUpdate(0);
-        // Vision.getInstance().toggleShouldUpdate(2);
-        // Vision.getInstance().toggleShouldUpdate(3);
-        // Vision.getInstance().toggleIsReefAligning();
-
+    public void initialize() {
         DriverStation.getAlliance().ifPresent((alliance) -> {
             mult = (alliance == Alliance.Red) ? -1.0 : 1.0;
         });
+        
+        reefTag = Vision.getInstance().getReefTag();
+
+        if(reefTag == 7 || reefTag == 9 || reefTag == 11 || reefTag == 18 || reefTag == 20 || reefTag == 22) {
+            OperationStates.autoAlgaeMode = State.HIGH_ALGAE;
+        }
+        else if(reefTag == 6 || reefTag == 8 || reefTag == 10 || reefTag == 17 || reefTag == 19 || reefTag == 21) {
+            OperationStates.autoAlgaeMode = State.LOW_ALGAE;
+        }
+        else {
+            OperationStates.autoAlgaeMode = State.DYNAMIC;
+        }
 
         targetPose = Vision.getInstance().getBestReefPose();
 
@@ -107,15 +117,20 @@ public class AutoAlignAlgae extends Command{
             .withVelocityY(driveSpeed * direction.getSin())
             .withRotationalRate(omega));
         
+
+        OperationStates.aligned = finishedAligning();
     }
 
     @Override
     public void end(boolean interrupted) {
-
+        Swerve.getInstance().setControl(
+            drive.withVelocityX(0)
+            .withVelocityY(0)
+            .withRotationalRate(0));
     }
 
     public boolean finishedAligning() {
-        return (translationController.atGoal() && rotationController.atGoal());
+        return (distance < Units.inchesToMeters(1.5));
     }
 
     private double projection(Translation2d v1, Translation2d onto){

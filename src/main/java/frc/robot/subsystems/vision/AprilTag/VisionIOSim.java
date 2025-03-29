@@ -6,7 +6,12 @@ import org.photonvision.simulation.PhotonCameraSim;
 import org.photonvision.simulation.SimCameraProperties;
 import org.photonvision.simulation.VisionSystemSim;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.robot.Constants;
 import frc.robot.subsystems.swerve.Swerve;
 public class VisionIOSim implements VisionIO {
     VisionSystemSim visionSim;
@@ -15,46 +20,88 @@ public class VisionIOSim implements VisionIO {
     PhotonCamera camera;
     PhotonCameraSim cameraSim;
     int cameraId;
+    int reefTag;
 
     public VisionIOSim() {
-        cameraId = 0;
-        visionSim = new VisionSystemSim("main");
-        visionSim.addAprilTags(VisionConstants.aprilTagFieldLayout);
+        if(Constants.photonVisonSimEnabled)
+        {
+            cameraId = 0;
+            visionSim = new VisionSystemSim("main");
+            visionSim.addAprilTags(VisionConstants.aprilTagFieldLayout);
 
-        cameraProperties = new SimCameraProperties();
-        cameraProperties.setCalibration(1280, 800, Rotation2d.fromDegrees(78));
-        cameraProperties.setCalibError(0.38, 0.2);
-        cameraProperties.setFPS(30);
-        cameraProperties.setAvgLatencyMs(35);
-        cameraProperties.setLatencyStdDevMs(5);
+            cameraProperties = new SimCameraProperties();
+            cameraProperties.setCalibration(1280, 800, Rotation2d.fromDegrees(78));
+            cameraProperties.setCalibError(0.38, 0.2);
+            cameraProperties.setFPS(30);
+            cameraProperties.setAvgLatencyMs(35);
+            cameraProperties.setLatencyStdDevMs(5);
 
-        camera = new PhotonCamera(VisionConstants.cameraIds[cameraId]);
-        // camera.setPipelineIndex(1);
+            camera = new PhotonCamera(VisionConstants.cameraIds[cameraId]);
 
-        cameraSim = new PhotonCameraSim(camera, cameraProperties);
+            cameraSim = new PhotonCameraSim(camera, cameraProperties);
 
-        visionSim.addCamera(
-            cameraSim, 
-            VisionConstants.cameraPoses[cameraId]);
-            
+            visionSim.addCamera(
+                cameraSim, 
+                VisionConstants.cameraPoses[cameraId]);
+                
 
-        cameraSim.enableRawStream(true);
-        cameraSim.enableProcessedStream(true);
-        cameraSim.enableDrawWireframe(true);
+            cameraSim.enableRawStream(true);
+            cameraSim.enableProcessedStream(true);
+            cameraSim.enableDrawWireframe(true);
+        }
 
+    }
+
+    public Pose2d getBestReefPos() {
+        Translation2d odometry = Swerve.getInstance().getState().Pose.getTranslation();
+        Pose2d bestPose = new Pose2d();
+        Alliance alliance = DriverStation.getAlliance().orElse(null);
+
+        if(alliance != null)
+        {
+            if(DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red))
+            {
+                double distance = VisionConstants.redReefScoringPoses[0].getTranslation().getDistance(odometry);
+
+                for(int i = 0; i < VisionConstants.redReefScoringPoses.length; i++)
+                {
+                    if(VisionConstants.redReefScoringPoses[i].getTranslation().getDistance(odometry) <= distance)
+                    {
+                        distance = VisionConstants.redReefScoringPoses[i].getTranslation().getDistance(odometry);
+                        bestPose = VisionConstants.redReefScoringPoses[i];
+                        reefTag = i + 6;
+                    }
+                }
+                
+            }
+
+            if(DriverStation.getAlliance().get().equals(DriverStation.Alliance.Blue))
+            {
+                double distance = VisionConstants.blueReefScoringPoses[0].getTranslation().getDistance(odometry);
+
+                for(int i = 0; i < VisionConstants.blueReefScoringPoses.length; i++)
+                {
+                    if(VisionConstants.blueReefScoringPoses[i].getTranslation().getDistance(odometry) <= distance)
+                    {
+                        distance = VisionConstants.blueReefScoringPoses[i].getTranslation().getDistance(odometry);
+                        bestPose = VisionConstants.blueReefScoringPoses[i];
+                        reefTag = i + 17;
+                    }
+                }
+            }
+        }
+        return bestPose;
     }
     
     @Override
     public void updateInputs(VisionIOInputs inputs) {
-        // if (Drive.getInstance() != null) {
-            // Pose2d drivePose = Drive.getInstance().getPose();
-            // inputs.barbaryFigPose = Optional.of(new EstimatedPose(drivePose, Timer.getFPGATimestamp()));
-        // }
+        if(Constants.photonVisonSimEnabled)
+        {
+            visionSim.update(Swerve.getInstance().getState().Pose);
+            visionSim.getDebugField();
+        }
 
-        // Uncomment once drive is done
-        visionSim.update(Swerve.getInstance().getState().Pose);
-        
-        // visionSim.update(new Pose2d(12, 12, new Rotation2d(45)));
-        visionSim.getDebugField();
+        inputs.reefPose = getBestReefPos();
+        inputs.reefTag = reefTag;
     }
 }

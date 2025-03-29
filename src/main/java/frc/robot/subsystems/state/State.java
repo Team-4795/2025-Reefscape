@@ -5,9 +5,10 @@ public enum State {
     L4(StateConstants.L4),
     L3(StateConstants.L3),
     L2(StateConstants.L2),
-    STOW(StateConstants.HIGH_ALGAE),
-    VSTOW(StateConstants.HIGH_ALGAE),
-    LOW_ALGAE(StateConstants.LOW_ALGAE);
+    STOW(StateConstants.STOW),
+    VSTOW(StateConstants.VSTOW),
+    LOW_ALGAE(StateConstants.LOW_ALGAE),
+    HIGH_ALGAE(StateConstants.HIGH_ALGAE);
 
     public Setpoint setpoint;
 
