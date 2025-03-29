@@ -85,7 +85,7 @@ public class StateManager extends SubsystemBase {
     }
 
     public boolean armCanMove() {
-        return elevator.getPosition() < .2;
+        return elevator.getPosition() < .4;
     }
 
     public State getState() {

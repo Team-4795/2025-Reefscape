@@ -5,8 +5,10 @@ import java.lang.invoke.WrongMethodTypeException;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.GenericRequirement;
 import frc.robot.subsystems.Wrist.Wrist;
 import frc.robot.subsystems.Wrist.WristConstants;
@@ -35,7 +37,9 @@ public class AutoCommands {
     private static LoggedTunableNumber maxAccel = new LoggedTunableNumber("AutoAlign/maxAccel", 3.2);
 
     public static Command raiseL4() {
-        Command command = Commands.either(
+        Command command = Commands.sequence(
+        Commands.runOnce(() -> wrist.setGoal(WristConstants.CORAL_L4_SETPOINT)),
+        Commands.either(
         Commands.parallel(
         Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.CORAL_L4_SETPOINT)),
         Commands.waitUntil(() -> elevator.getPosition() > 0.4)
@@ -45,7 +49,7 @@ public class AutoCommands {
             Commands.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L4)),
             Commands.sequence(Commands.waitUntil(() -> arm.getAngle() > -Math.PI/4),
             Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.CORAL_L4_SETPOINT)))), 
-        () -> arm.getAngle() > ArmConstants.CORAL_L4);
+        () -> arm.getAngle() > ArmConstants.CORAL_L4));
 
         command.addRequirements(GenericRequirement.getInstance());
 
@@ -64,7 +68,9 @@ public class AutoCommands {
     }
 
     public static Command raiseL3() {
-        Command command = Commands.either(
+        Command command = Commands.sequence(
+        Commands.runOnce(() -> wrist.setGoal(WristConstants.CORAL_L3_SETPOINT)),
+        Commands.either(
             Commands.sequence(
                 Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.STOW)),
                 Commands.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L3))
@@ -74,7 +80,7 @@ public class AutoCommands {
                 Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.STOW))
             ),
             () -> elevator.getPosition() >= ElevatorConstants.STOW
-        );
+        ));
 
         command.addRequirements(GenericRequirement.getInstance());
 
@@ -86,7 +92,8 @@ public class AutoCommands {
     }
     
     public static Command raiseL2() {
-        Command command = Commands.either(
+        Command command = Commands.sequence(Commands.runOnce(() -> wrist.setGoal(WristConstants.CORAL_L2_SETPOINT)),
+        Commands.either(
             Commands.sequence(
                 Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.CORAL_L2_SETPOINT)),
                 Commands.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L2))
@@ -96,7 +103,7 @@ public class AutoCommands {
                 Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.CORAL_L2_SETPOINT))
             ),
             () -> elevator.getPosition() >= ElevatorConstants.CORAL_L2_SETPOINT
-        );
+        ));
 
         command.addRequirements(GenericRequirement.getInstance());
 
@@ -170,17 +177,42 @@ public class AutoCommands {
         Commands.runOnce(() -> intake.setIntakeSpeed(IntakeConstants.intake)));
     }
 
+        public static Command intakeCommand() {
+        return Commands.sequence(
+            Commands.runOnce(() -> intake.setIntakeSpeed(IntakeConstants.intake)), 
+            Commands.waitUntil(() -> intake.hasGamepiece()),
+            Commands.waitUntil(() -> !intake.hasGamepiece()),
+            Commands.parallel(
+                Commands.startEnd(
+                    () -> {
+                        OIConstants.driverController.setRumble(RumbleType.kBothRumble, 0.6);
+                        OIConstants.operatorController.setRumble(RumbleType.kBothRumble, 0.6);
+                    },
+                    () -> {
+                        OIConstants.driverController.setRumble(RumbleType.kBothRumble, 0);
+                        OIConstants.operatorController.setRumble(RumbleType.kBothRumble, 0);
+                    }
+                ),
+                intake.reverseCoral()
+            ).until(() ->intake.hasGamepiece()),
+            Commands.runOnce(() -> intake.isStoring()),
+            Commands.runOnce(() -> arm.setGoal(ArmConstants.STOW + 0.2)),
+            Commands.runOnce(() -> wrist.setGoal(WristConstants.VFBAngle))
+        );  
+    }
+
     public static Command setIntakeSpeed() {
         return Commands.runOnce(() -> intake.setIntakeSpeed(IntakeConstants.intake));
     }
 
     
     public static Command stow() {
-        Command command = Commands.parallel(
+        Command command = Commands.sequence(Commands.runOnce(() -> wrist.setGoal(WristConstants.intakePosition)), 
+        Commands.parallel(
             Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.STOW)),
             Commands.waitUntil(() -> elevator.getPosition() < 0.2)
                 .andThen(Commands.runOnce(() -> arm.setGoal(ArmConstants.STOW))),
-            Commands.runOnce(()-> wrist.setGoal(WristConstants.VFBAngle))
+            Commands.runOnce(()-> wrist.setGoal(0)))
         );
 
         command.addRequirements(GenericRequirement.getInstance());
@@ -194,7 +226,7 @@ public class AutoCommands {
             Commands.waitSeconds(0.3),
             Commands.waitUntil(() -> intake.GamePieceFinal()),
             Commands.waitSeconds(0.15),
-            intake.reverse().withTimeout(0.12));
+            intake.reverseCoral().withTimeout(0.12));
     }
 
     // private static HashMap<Integer, Command> autoScoreMap() {
@@ -220,16 +252,18 @@ public class AutoCommands {
             Commands.runOnce(()-> wrist.setGoal(WristConstants.VFBAngle)),
             Commands.waitUntil(()-> wrist.atGoal(WristConstants.VFBAngle))
                 .andThen(() -> wrist.setGoal(WristConstants.NET_SETPOINT)),
-            Commands.waitUntil(()-> wrist.getPosition() >= Units.degreesToRadians(85))
+            Commands.waitUntil(()-> wrist.getPosition() <= -1.55)
                 .andThen(()-> intake.setIntakeSpeed(IntakeConstants.intake)));
     }
 
     public static Command scoreNetBakwards(){
         return Commands.sequence(
+            Commands.runOnce(() -> arm.setGoal(ArmConstants.STOW + 0.4)),
+            Commands.waitSeconds(0.5),
             Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.NET_SETPOINT)),
-            Commands.waitUntil(()-> elevator.atGoal(ElevatorConstants.NET_SETPOINT))
+            Commands.waitUntil(()-> elevator.atGoal(0.4))
                 .andThen(() -> arm.setGoal(ArmConstants.NET_SETPOINT)),
-            Commands.waitUntil(() -> arm.atGoal(ArmConstants.NET_SETPOINT - Units.degreesToRadians(3)))
+            Commands.waitUntil(() -> arm.atGoal(ArmConstants.NET_SETPOINT - Units.degreesToRadians(5)))
                 .andThen(yeet()));
     }
 
@@ -240,7 +274,7 @@ public class AutoCommands {
                     alignReefUntil(),
                     Commands.deferredProxy(() -> stateManager.stateCommand(OperationStates.autoScoreMode))
                 ),
-                score(),
+                //score(),
                 Commands.runOnce(() -> OperationStates.aligned = false)
             ),
 
@@ -253,8 +287,8 @@ public class AutoCommands {
                         Commands.deferredProxy(() -> stateManager.stateCommand(OperationStates.autoScoreMode))
                     )
                 ),
-                Commands.waitSeconds(0.2),
-                score(),
+                Commands.waitSeconds(0.6),
+                //score(),
                 vstow()), 
             () -> OperationStates.autoScoreMode != State.L4).finallyDo(() -> OperationStates.aligned = false);
     }
@@ -280,19 +314,6 @@ public class AutoCommands {
         return intake.intake().withTimeout(0.2).alongWith(Commands.runOnce(() -> intake.outtake()));
     }
 
-    public static Command oneCoralAway() {
-        Command command = Commands.sequence(
-                Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.ONE_CORAL_AWAY)), 
-                Commands.runOnce(() -> arm.setGoal(ArmConstants.ONE_CORAL_AWAY)), 
-                Commands.waitUntil(() -> arm.atGoal(ArmConstants.ONE_CORAL_AWAY) && elevator.atGoal(ElevatorConstants.ONE_CORAL_AWAY)),
-                score(),
-                vstow()
-        );
-
-            command.addRequirements(GenericRequirement.getInstance());
-
-            return command; 
-        }
 
     public static Command setScoringState() {
         return Commands.runOnce(() -> OperationStates.autoScoreMode = State.L4);
@@ -300,7 +321,7 @@ public class AutoCommands {
 
     public static Command alignAlgae() { 
         return new AutoAlignAlgae( 
-            new ProfiledPIDController(5,
+            new ProfiledPIDController(6,
             0, 0, new Constraints(SwerveConstants.MaxSpeed, 3)), 
             new ProfiledPIDController(7.5, 0, 0, new Constraints(SwerveConstants.MaxSpeed, 3))
        ).until(() -> OperationStates.aligned);

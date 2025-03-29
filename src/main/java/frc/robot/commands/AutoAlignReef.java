@@ -31,7 +31,7 @@ public class AutoAlignReef extends Command {
     private boolean isScoringLeft;
     private double offset = 0.0;
 
-    private final double minDistance = -0.1;
+    private final double minDistance = 0;
 
     private ProfiledPIDController translationController;
     private ProfiledPIDController rotationController;
@@ -46,9 +46,9 @@ public class AutoAlignReef extends Command {
 
     public AutoAlignReef(ProfiledPIDController translation, ProfiledPIDController rotation) {
         translationController = translation;
-        translationController.setTolerance(Units.inchesToMeters(1));
+        translationController.setTolerance(Units.inchesToMeters(0.5));
         rotationController = rotation;
-        rotationController.setTolerance(Units.degreesToRadians(1));
+        rotationController.setTolerance(Units.degreesToRadians(0.5));
         addRequirements(Swerve.getInstance());
     }
 
@@ -138,7 +138,7 @@ public class AutoAlignReef extends Command {
     }
 
     public boolean finishedAligning() {
-        return (distance < Units.inchesToMeters(1.5));
+        return (distance < Units.inchesToMeters(0.5));
     }
 
     public boolean inScoringDistance() {

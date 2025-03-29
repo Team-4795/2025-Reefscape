@@ -62,26 +62,8 @@ public class Intake extends SubsystemBase {
         return startEnd(() -> setIntakeSpeed(IntakeConstants.reverse), () -> setIntakeSpeed(0));
     }
 
-    public Command intakeCommand() {
-        return Commands.sequence(
-            Commands.runOnce(() -> setIntakeSpeed(IntakeConstants.intake)), 
-            Commands.waitSeconds(0.3),
-            Commands.waitUntil(() -> GamePieceFinal()),
-            Commands.parallel(
-                Commands.startEnd(
-                    () -> {
-                        OIConstants.driverController.setRumble(RumbleType.kBothRumble, 0.6);
-                        OIConstants.operatorController.setRumble(RumbleType.kBothRumble, 0.6);
-                    },
-                    () -> {
-                        OIConstants.driverController.setRumble(RumbleType.kBothRumble, 0);
-                        OIConstants.operatorController.setRumble(RumbleType.kBothRumble, 0);
-                    }
-                ),
-                reverse()
-            ).withTimeout(0.12),
-            Commands.runOnce(() -> isStoring())
-        );  
+    public Command reverseCoral() {
+        return startEnd(() -> setIntakeSpeed(IntakeConstants.coralReverse), () -> setIntakeSpeed(0));
     }
     
     public boolean GamePieceInitial() {
@@ -107,6 +89,10 @@ public class Intake extends SubsystemBase {
     public void outtake() {
         isStoring = false; 
     }
+
+    public double voltage() {
+        return io.voltage();
+    }
     
     @Override
     public void periodic(){
@@ -115,6 +101,7 @@ public class Intake extends SubsystemBase {
         Logger.recordOutput("Intake/Intake speed", intakeSpeed);
         Logger.recordOutput("Intake/Gamepiece detected", hasGamepiece());
         Logger.recordOutput("Intake/Curent Above", GamePieceFinal());
+        Logger.recordOutput("Intake/hasGamepiece", voltage());
     }
 }
 

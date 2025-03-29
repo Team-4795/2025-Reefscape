@@ -25,7 +25,7 @@ public class VisionConstants {
     public static final double xyStdDevSingleTag = 0.08;
     public static final double xyStdDevMultiTag = 0.04;
 
-    private static LoggedTunableNumber targetPoseXOffset = new LoggedTunableNumber("AutoAlign/targetPoseXOffset", .48);
+    private static LoggedTunableNumber targetPoseXOffset = new LoggedTunableNumber("AutoAlign/targetPoseXOffset", .48 + .16);
 
     public static final String[] cameraIds =
     new String[] {

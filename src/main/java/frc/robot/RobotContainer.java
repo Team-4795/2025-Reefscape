@@ -31,6 +31,7 @@ import frc.robot.commands.RainbowCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.GenericRequirement;
 import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmIOReal;
 import frc.robot.subsystems.arm.ArmIOSim;
 import frc.robot.subsystems.elevator.Elevator;
@@ -182,16 +183,24 @@ public class RobotContainer {
     //       () -> wrist.setGoal(Units.degreesToRadians(90)), wrist)
     //   );
 
-    // Coral Setpoints
+    //Coral Setpoints
     Constants.OIConstants.operatorController.povUp().onTrue(
         Commands.either(
             Commands.runOnce(() -> OperationStates.autoScoreMode = State.L4), 
             stateManager.stateCommand(State.L4), 
             () -> vision.isVisionUpdating()));
 
+    // Constants.OIConstants.operatorController.povUp().onTrue(
+    //   Commands.runOnce(() -> wrist.setGoal(WristConstants.VFBAngle), wrist)
+    // );
+
+    // Constants.OIConstants.operatorController.povDown().onTrue(
+    //   Commands.runOnce(() -> wrist.setGoal(WristConstants.NET_SETPOINT), wrist)
+    // );
+
     Constants.OIConstants.operatorController.povRight().onTrue(
         Commands.either(
-            Commands.runOnce(() -> OperationStates.autoScoreMode = State.L4), 
+            Commands.runOnce(() -> OperationStates.autoScoreMode = State.L3), 
             stateManager.stateCommand(State.L3), 
             () -> vision.isVisionUpdating()));
       
@@ -221,7 +230,8 @@ public class RobotContainer {
       ));
 
     // Intake
-    OIConstants.operatorController.a().onTrue(intake.intakeCommand());
+    OIConstants.operatorController.a().onTrue(
+    AutoCommands.intakeCommand());
 
     // Change reef scoring stem
     OIConstants.operatorController.leftBumper().onTrue(
@@ -244,7 +254,7 @@ public class RobotContainer {
      .onTrue(AutoCommands.vstow());
 
     //One Coral Away 
-    OIConstants.driverController.y().onTrue(AutoCommands.oneCoralAway());
+    // OIConstants.driverController.y().onTrue(AutoCommands.oneCoralAway());
      
     // Drive sysid
     Constants.OIConstants.driverController.povRight().and(Constants.OIConstants.driverController.y())
