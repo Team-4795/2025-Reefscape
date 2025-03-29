@@ -6,6 +6,7 @@ public class ClimberConstants {
 
     public static double gearing = 250;
 
+    public static double currentLimit = 80;
 
     public class SimConstants {
     
