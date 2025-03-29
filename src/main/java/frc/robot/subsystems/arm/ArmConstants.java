@@ -16,6 +16,7 @@ public class ArmConstants {
     public static final double GOAL_TOLERANCE = 0.03;
     public static final double ALGAE_LOW = 0.3129383325576782 - Units.degreesToRadians(5);
     public static final double ALGAE_HIGH = 0.8301816582679749;
+    public static final double NET_SETPOINT = Units.degreesToRadians(90);
     public static final double PROCESSOR = 0.0;
 
     public static final double STOW = -1.8162786960601807;
@@ -57,7 +58,7 @@ public class ArmConstants {
         public static double MOI = 2.09670337984;
         public static double LENGTH = 0.6604;
         public static double MIN_ANGLE = STOW - Units.degreesToRadians(1);
-        public static double MAX_ANGLE = VSTOW + Units.degreesToRadians(1);
+        public static double MAX_ANGLE = Units.degreesToRadians(92);
         public static boolean GRAVITY = true;
         public static double INIT_ANGLE = -Math.PI / 2;
     }

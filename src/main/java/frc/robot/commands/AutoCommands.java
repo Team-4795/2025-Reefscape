@@ -1,10 +1,15 @@
 package frc.robot.commands;
 
+import java.lang.invoke.WrongMethodTypeException;
+
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.GenericRequirement;
+import frc.robot.subsystems.Wrist.Wrist;
+import frc.robot.subsystems.Wrist.WristConstants;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.elevator.Elevator;
@@ -23,7 +28,9 @@ public class AutoCommands {
     private static Arm arm = Arm.getInstance();
     private static Elevator elevator = Elevator.getInstance();
     private static Intake intake = Intake.getInstance();
+    private static Wrist wrist = Wrist.getInstance();
     private static StateManager stateManager = StateManager.getInstance();
+    
 
     private static LoggedTunableNumber maxAccel = new LoggedTunableNumber("AutoAlign/maxAccel", 3.2);
 
@@ -198,6 +205,32 @@ public class AutoCommands {
 
     //     return map;
     // }
+
+    public static Command scoreNetForward(){
+        return Commands.sequence(
+            Commands.runOnce(()-> elevator.setGoalHeight(ElevatorConstants.NET_SETPOINT)),
+            Commands.runOnce(()-> arm.setGoal(ArmConstants.NET_SETPOINT)),
+            Commands.runOnce(()-> wrist.setGoal(WristConstants.NET_SETPOINT))
+        );
+    }
+
+    public static Command flickWrist(){
+        return Commands.parallel(
+            Commands.runOnce(()-> wrist.setGoal(WristConstants.VFBAngle)),
+            Commands.waitUntil(()-> wrist.atGoal(WristConstants.VFBAngle))
+                .andThen(() -> wrist.setGoal(WristConstants.NET_SETPOINT)),
+            Commands.waitUntil(()-> wrist.getPosition() >= Units.degreesToRadians(85))
+                .andThen(()-> intake.setIntakeSpeed(IntakeConstants.intake)));
+    }
+
+    public static Command scoreNetBakwards(){
+        return Commands.sequence(
+            Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.NET_SETPOINT)),
+            Commands.waitUntil(()-> elevator.atGoal(ElevatorConstants.NET_SETPOINT))
+                .andThen(() -> arm.setGoal(ArmConstants.NET_SETPOINT)),
+            Commands.waitUntil(() -> arm.atGoal(ArmConstants.NET_SETPOINT - Units.degreesToRadians(3)))
+                .andThen(flickWrist()));
+    }
 
     public static Command autoScore() {
         return Commands.either(
