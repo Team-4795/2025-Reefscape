@@ -46,6 +46,14 @@ public class Wrist extends SubsystemBase {
         io.setGoal(angle);
     }
 
+    public double getPosition() {
+        return inputs.position;
+    }
+    
+    public boolean atGoal(double goal) {
+        return MathUtil.isNear(goal, getPosition(), WristConstants.GOAL_TOLERANCE);
+    }
+
     @Override
     public void periodic(){
         io.updateInputs(inputs);

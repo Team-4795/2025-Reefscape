@@ -40,6 +40,8 @@ public class WristConstants {
     public final static double VFBAngle = Units.degreesToRadians(14);
     public final static double intakePosition = 1;
     public final static double stowPosition = 3;
+
+    public static final double GOAL_TOLERANCE = 0.1; //change later
     
     public static class Sim {
         public static final double length = 1;
