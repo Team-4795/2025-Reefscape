@@ -37,7 +37,7 @@ public class WristConstants {
     public static final double voltageCompensation = 12.0;
 
     public static final double offset = 0;
-    public static final double VFBAngle = Units.degreesToRadians(14);
+    public static final double VFBAngle = Units.degreesToRadians(18);
     public static final double NET_SETPOINT = Units.degreesToRadians(90);
     public static final double intakePosition = 1;
     public static final double stowPosition = 3;

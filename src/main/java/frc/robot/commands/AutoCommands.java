@@ -179,7 +179,8 @@ public class AutoCommands {
         Command command = Commands.parallel(
             Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.STOW)),
             Commands.waitUntil(() -> elevator.getPosition() < 0.2)
-                .andThen(Commands.runOnce(() -> arm.setGoal(ArmConstants.STOW)))
+                .andThen(Commands.runOnce(() -> arm.setGoal(ArmConstants.STOW))),
+            Commands.runOnce(()-> wrist.setGoal(WristConstants.VFBAngle))
         );
 
         command.addRequirements(GenericRequirement.getInstance());
@@ -214,7 +215,7 @@ public class AutoCommands {
         );
     }
 
-    public static Command flickWrist(){
+    public static Command yeet(){
         return Commands.parallel(
             Commands.runOnce(()-> wrist.setGoal(WristConstants.VFBAngle)),
             Commands.waitUntil(()-> wrist.atGoal(WristConstants.VFBAngle))
@@ -229,7 +230,7 @@ public class AutoCommands {
             Commands.waitUntil(()-> elevator.atGoal(ElevatorConstants.NET_SETPOINT))
                 .andThen(() -> arm.setGoal(ArmConstants.NET_SETPOINT)),
             Commands.waitUntil(() -> arm.atGoal(ArmConstants.NET_SETPOINT - Units.degreesToRadians(3)))
-                .andThen(flickWrist()));
+                .andThen(yeet()));
     }
 
     public static Command autoScore() {
