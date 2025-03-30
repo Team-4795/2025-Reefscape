@@ -23,7 +23,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.state.StateManager.OperationStates;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.vision.AprilTag.Vision;
-import frc.robot.Util.LoggedTunableNumber;
+import frc.robot.util.LoggedTunableNumber;
 
 public class AutoAlignReef extends Command {
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);

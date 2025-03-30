@@ -10,7 +10,7 @@ import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.state.State.Setpoint;
-import frc.robot.Util.Util;
+import frc.robot.util.Util;
 
 public class StateManager extends SubsystemBase {
     private State state;

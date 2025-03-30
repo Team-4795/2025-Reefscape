@@ -14,6 +14,7 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import frc.robot.subsystems.Wrist.Wrist;
 import frc.robot.util.LoggedTunableNumber;
 // 
 public class ArmIOReal implements ArmIO {

@@ -23,7 +23,7 @@ public class VisionIOSim implements VisionIO {
     int reefTag;
 
     public VisionIOSim() {
-        if(Constants.photonVisonSimEnabled)
+        if(Constants.visonSimEnabled)
         {
             cameraId = 0;
             visionSim = new VisionSystemSim("main");
@@ -95,7 +95,7 @@ public class VisionIOSim implements VisionIO {
     
     @Override
     public void updateInputs(VisionIOInputs inputs) {
-        if(Constants.photonVisonSimEnabled)
+        if(Constants.visonSimEnabled)
         {
             visionSim.update(Swerve.getInstance().getState().Pose);
             visionSim.getDebugField();
