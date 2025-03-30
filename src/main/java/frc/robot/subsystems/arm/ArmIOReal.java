@@ -41,10 +41,6 @@ public class ArmIOReal implements ArmIO {
         config.smartCurrentLimit(ArmConstants.CURRENT_LIMIT);
         config.idleMode(IdleMode.kBrake);
 
-        config.absoluteEncoder.positionConversionFactor(Math.PI);
-        config.absoluteEncoder.velocityConversionFactor(Math.PI / 60);
-        config.absoluteEncoder.inverted(false);
-
         config.encoder.positionConversionFactor(2 * Math.PI / ArmConstants.Sim.GEARING);
         config.encoder.velocityConversionFactor(2 * Math.PI / ArmConstants.Sim.GEARING / 60);
         config.encoder.quadratureMeasurementPeriod(20);
@@ -62,10 +58,10 @@ public class ArmIOReal implements ArmIO {
 
         config.voltageCompensation(12.0);
         config.inverted(false);
-        config.absoluteEncoder.inverted(false);
 
         armMotor.clearFaults();
         armMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
 
         armEncoder = Wrist.getInstance().getArmAbsoluteEncoder();
         armMotor.getEncoder().setPosition(getOffsetAngle());
@@ -79,15 +75,15 @@ public class ArmIOReal implements ArmIO {
     @Override
     public void setGoal(double angle) {
         if(angle != goal.position) {
-            setpoint = new TrapezoidProfile.State(armMotor.getEncoder().getPosition(), armEncoder.getVelocity());
+            setpoint = new TrapezoidProfile.State(getOffsetAngle(), armEncoder.getVelocity());
             goal = new TrapezoidProfile.State(angle, 0);
         }
     }
 
     @Override
     public void hold() {
-        double ffvolts = ffmodel.calculate(armMotor.getEncoder().getPosition(), 0);
-        double pidvolts = controller.calculate(armMotor.getEncoder().getPosition(), goal.position);
+        double ffvolts = ffmodel.calculate(getOffsetAngle(), 0);
+        double pidvolts = controller.calculate(getOffsetAngle(), goal.position);
         setVoltage(ffvolts + pidvolts);
     }
  
@@ -102,8 +98,8 @@ public class ArmIOReal implements ArmIO {
         // double acceleration = (setpoint.velocity - prevVelocity) / 0.02;
         // double ffvolts = ffmodel.calculate(armMotor.getEncoder().getPosition(), setpoint.velocity, acceleration);
         setpoint = profile.calculate(0.02, setpoint, goal);
-        double ffvolts = ffmodel.calculate(armMotor.getEncoder().getPosition(), setpoint.velocity);
-        double pidvolts = controller.calculate(armMotor.getEncoder().getPosition(), setpoint.position);
+        double ffvolts = ffmodel.calculate(getOffsetAngle(), setpoint.velocity);
+        double pidvolts = controller.calculate(getOffsetAngle(), setpoint.position);
   
         setVoltage(ffvolts + pidvolts);
         // onboardController.setReference(setpoint.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, ffvolts);
@@ -139,7 +135,7 @@ public class ArmIOReal implements ArmIO {
     @Override
     public void updateInputs(ArmIOInputs inputs) {
         // inputs.angularPosition = getOffsetAngle();
-        inputs.angularPosition = armEncoder.getPosition();
+        inputs.angularPosition = getOffsetAngle();
         inputs.angularVelocity = armEncoder.getVelocity();
         inputs.current = armMotor.getOutputCurrent();
         inputs.voltage = armMotor.getAppliedOutput() * armMotor.getBusVoltage();

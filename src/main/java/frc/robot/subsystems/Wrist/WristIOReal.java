@@ -14,6 +14,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import frc.robot.util.LoggedTunableNumber;
 
 
 public class WristIOReal implements WristIO{
@@ -23,12 +24,12 @@ public class WristIOReal implements WristIO{
     private SparkFlexConfig config = new SparkFlexConfig();
     private RelativeEncoder wristEncoder = wristMotor.getEncoder();
 
-    // LoggedTunableNumber KP = new LoggedTunableNumber("Wrist/KP", WristConstants.Coral_kP);
-    // LoggedTunableNumber KI = new LoggedTunableNumber("Wrist/KI", WristConstants.Coral_kI);
-    // LoggedTunableNumber KD = new LoggedTunableNumber("Wrist/KD", WristConstants.Coral_kD);    
-    // LoggedTunableNumber KV = new LoggedTunableNumber("Wrist/KP", WristConstants.Coral_kV);
-    // LoggedTunableNumber KA = new LoggedTunableNumber("Wrist/KI", WristConstants.Coral_KA);
-    // LoggedTunableNumber KG = new LoggedTunableNumber("Wrist/KD", WristConstants.Coral_kG);    
+    LoggedTunableNumber KP = new LoggedTunableNumber("Wrist/KP", WristConstants.Coral_kP);
+    LoggedTunableNumber KI = new LoggedTunableNumber("Wrist/KI", WristConstants.Coral_kI);
+    LoggedTunableNumber KD = new LoggedTunableNumber("Wrist/KD", WristConstants.Coral_kD);    
+    LoggedTunableNumber KV = new LoggedTunableNumber("Wrist/KP", WristConstants.Coral_kV);
+    LoggedTunableNumber KA = new LoggedTunableNumber("Wrist/KI", WristConstants.Coral_KA);
+    LoggedTunableNumber KG = new LoggedTunableNumber("Wrist/KD", WristConstants.Coral_kG);    
 
     private ProfiledPIDController controller = new ProfiledPIDController(WristConstants.Coral_kP, WristConstants.Coral_kI, WristConstants.Coral_kD, 
     new TrapezoidProfile.Constraints(WristConstants.maxV, WristConstants.maxA));
@@ -58,7 +59,7 @@ public class WristIOReal implements WristIO{
 
         config.absoluteEncoder.positionConversionFactor(2*Math.PI);
         config.absoluteEncoder.velocityConversionFactor(2*Math.PI/60);
-        config.absoluteEncoder.inverted(false);
+        config.absoluteEncoder.inverted(true);
 
         config.voltageCompensation(WristConstants.voltageCompensation);
         config.inverted(WristConstants.isInverted);
@@ -91,10 +92,10 @@ public class WristIOReal implements WristIO{
     public void setGoal(double angle){
         if (angle != goal.position){
         setpoint = new TrapezoidProfile.State(getPosition(), getVelocity());
-        goal = new TrapezoidProfile.State(MathUtil.clamp(angle, WristConstants.minPosition, WristConstants.maxPosition), 0);
+        goal = new TrapezoidProfile.State(angle, 0);
         }
     }
-
+//MathUtil.clamp(angle, WristConstants.minPosition, WristConstants.maxPosition)
     @Override
     public void setVoltage(double voltage) {
         wristMotor.setVoltage(voltage);

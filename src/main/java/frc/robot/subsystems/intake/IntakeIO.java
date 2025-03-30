@@ -26,4 +26,9 @@ public interface IntakeIO {
     public default boolean hasGamepiece() {
         return false;
     }
+
+    public default double voltage() {
+        return 0.0;
+    }
 }
+

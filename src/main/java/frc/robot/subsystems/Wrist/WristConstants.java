@@ -10,13 +10,13 @@ public class WristConstants {
     public static final boolean isInverted = true;
     
     public static final double gearing = 30;
-    public static final double Coral_kP = 1.3;
+    public static final double Coral_kP = 5;
     public static final double Coral_kI = 0;
     public static final double Coral_kD = 0;
 
-    public static final double Coral_kS = 0.5;
+    public static final double Coral_kS = 1;
     public static final double Coral_kG = 0;
-    public static final double Coral_kV = 0.5;
+    public static final double Coral_kV = 0.25;
     public static final double Coral_KA = 0;
 
 
@@ -29,18 +29,22 @@ public class WristConstants {
     public static final double Algae_kV = 0;
     public static final double Algae_KA = 0;
 
-    public static final double maxV = 3;
-    public static final double maxA = 5;
+    public static final double maxV = 5;
+    public static final double maxA = 8;
     public static final double minPosition = Units.degreesToRadians(-60); //1
-    public static final double maxPosition = Units.degreesToRadians(180); //43
+    public static final double maxPosition = Units.degreesToRadians(360); //43
 
     public static final double voltageCompensation = 12.0;
 
+    public static final double CORAL_L4_SETPOINT = 0.2096;
+    public static final double CORAL_L3_SETPOINT = 0.2692209;
+    public static final double CORAL_L2_SETPOINT = 0.32433;
+    public static final double CORAL_L1_SETPOINT = 0;
     public static final double offset = 0;
-    public static final double VFBAngle = Units.degreesToRadians(18);
-    public static final double NET_SETPOINT = Units.degreesToRadians(90);
-    public static final double intakePosition = 1;
-    public static final double stowPosition = 3;
+    public static final double VFBAngle = 0.2468;
+    public static final double NET_SETPOINT = -1.7;
+    public static final double intakePosition = 0.24;
+    public static final double stowPosition = 1;
 
     public static double GOAL_TOLERANCE = 0.1; //change later
     

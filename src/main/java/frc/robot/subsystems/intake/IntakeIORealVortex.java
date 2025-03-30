@@ -9,10 +9,14 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.DigitalInput;
+
 
 public class IntakeIORealVortex implements IntakeIO {
     private final SparkFlex intakeMotor = new SparkFlex(IntakeConstants.canID, MotorType.kBrushless);
     private final RelativeEncoder encoder = intakeMotor.getEncoder();
+    private final DigitalInput coralSensor = new DigitalInput(IntakeConstants.sensorChannel);
     
     private SparkFlexConfig config = new SparkFlexConfig();
 
@@ -37,12 +41,18 @@ public class IntakeIORealVortex implements IntakeIO {
     @Override
     public SparkAbsoluteEncoder getArmAbsoluteEncoder() {
         return intakeMotor.getAbsoluteEncoder();
+    }  
+
+    // @Override
+    // public double voltage() {
+    //     return coralSensor.getVoltage();
+    // }
+
+    @Override 
+    public boolean hasGamepiece() {
+        return !coralSensor.get(); 
     }
 
-    @Override
-    public boolean hasGamepiece() {
-        return intakeMotor.getOutputCurrent() > IntakeConstants.currentThreshold;
-    }
 
     @Override
     public void setMotorSpeed(double speed) {

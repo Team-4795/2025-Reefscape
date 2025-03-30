@@ -7,6 +7,8 @@ public final class IntakeConstants {
     public static final double intake = -1;
     public static final double slow = -0.3;
     public static final double reverse = 0.7;
+    public static final double coralReverse = 0.5; 
+    public static final int sensorChannel = 9;
 
     public static final double simGearRatio = 0;
     public static final double overrideSpeed = -0.0;
