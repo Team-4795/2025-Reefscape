@@ -31,7 +31,7 @@ public class AutoAlignReef extends Command {
     private boolean isScoringLeft;
     private double offset = 0.0;
 
-    private final double minDistance = 0;
+    private final double minDistance = -0.05;
 
     private ProfiledPIDController translationController;
     private ProfiledPIDController rotationController;
@@ -41,6 +41,7 @@ public class AutoAlignReef extends Command {
     private Pose2d reefScoringPose;
     private Pose2d targetPose;
     private double distance;
+    private double rotationError;
 
     private LoggedTunableNumber maxDistance = new LoggedTunableNumber("AutoAlign/maxDistance", 0.3);
 
@@ -79,6 +80,8 @@ public class AutoAlignReef extends Command {
 
         distance = currentPose.getTranslation().getDistance(targetPose.getTranslation());
         translationController.reset(distance, velocity);
+
+        rotationError = currentPose.getRotation().getRadians() - targetPose.getRotation().getRadians();
         rotationController.reset(MathUtil.angleModulus(currentPose.getRotation().getRadians()), Swerve.getInstance().getState().Speeds.omegaRadiansPerSecond);
     }
 
@@ -95,6 +98,7 @@ public class AutoAlignReef extends Command {
 
         translationController.reset(distance, translationController.getSetpoint().velocity);
 
+        rotationError = currentPose.getRotation().getRadians() - targetPose.getRotation().getRadians();
         double rotationPIDOutput = rotationController.calculate(MathUtil.angleModulus(currentPose.getRotation().getRadians()), targetPose.getRotation().getRadians());
         double omega = rotationController.getSetpoint().velocity + rotationPIDOutput;
         
@@ -119,6 +123,7 @@ public class AutoAlignReef extends Command {
         Logger.recordOutput("AutoAlign/PID input", drivePIDOutput);
         Logger.recordOutput("AutoAlign/is Aligned", OperationStates.aligned);
         Logger.recordOutput("AutoAlign/In scoring distance", OperationStates.inScoringDistance);
+        Logger.recordOutput("AutoAlign/Rotation error", rotationError);
 
         Swerve.getInstance().setControl(
             drive.withVelocityX(driveSpeed * direction.getCos())
@@ -138,7 +143,7 @@ public class AutoAlignReef extends Command {
     }
 
     public boolean finishedAligning() {
-        return (distance < Units.inchesToMeters(0.5));
+        return (distance < Units.inchesToMeters(0.5)) && (Math.abs(rotationError) < Units.degreesToRadians(0.5));
     }
 
     public boolean inScoringDistance() {

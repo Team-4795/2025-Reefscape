@@ -69,7 +69,7 @@ public class AutoAlignAlgae extends Command{
         }
 
         reefPose = Vision.getInstance().getBestReefPose();
-        targetPose = reefPose.transformBy(new Transform2d(-0.16, 0 , new Rotation2d()));
+        targetPose = reefPose.transformBy(new Transform2d(0.16, 0 , new Rotation2d()));
 
         currentPose = Swerve.getInstance().getState().Pose;
         double velocity = mult * projection(new Translation2d(Swerve.getInstance().getState().Speeds.vxMetersPerSecond, Swerve.getInstance().getState().Speeds.vyMetersPerSecond), targetPose.getTranslation().minus(currentPose.getTranslation()));
@@ -86,7 +86,7 @@ public class AutoAlignAlgae extends Command{
 
     @Override
     public void execute() {
-        targetPose = reefPose.transformBy(new Transform2d(-0.16, 0 , new Rotation2d()));
+        targetPose = reefPose.transformBy(new Transform2d(0.16, 0 , new Rotation2d()));
 
         currentPose = Swerve.getInstance().getState().Pose;
         distance = currentPose.getTranslation().getDistance(targetPose.getTranslation());

@@ -27,12 +27,13 @@ public class ArmIOReal implements ArmIO {
     LoggedTunableNumber KD = new LoggedTunableNumber("Arm/KD", ArmConstants.kD); 
     
     LoggedTunableNumber KG = new LoggedTunableNumber("Arm/KG", ArmConstants.DEFAULTkG);
+    LoggedTunableNumber KS = new LoggedTunableNumber("Arm/KS", ArmConstants.DEFAULTkS);
     LoggedTunableNumber KV = new LoggedTunableNumber("Arm/KV", ArmConstants.DEFAULTkV);
     LoggedTunableNumber KA = new LoggedTunableNumber("Arm/KA", ArmConstants.DEFAULTkA);  
 
     private ArmFeedforward ffmodel = new ArmFeedforward(ArmConstants.DEFAULTkS, ArmConstants.DEFAULTkG, ArmConstants.DEFAULTkV, ArmConstants.DEFAULTkA, 0.02);
     // private final SparkClosedLoopController onboardController = armMotor.getClosedLoopController();
-    private final PIDController controller = new PIDController(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD);
+    private PIDController controller = new PIDController(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD);
     private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(ArmConstants.MAX_VELOCITY, ArmConstants.MAX_ACCELERATION);
     private final TrapezoidProfile profile = new TrapezoidProfile(constraints);
     private TrapezoidProfile.State goal;
@@ -136,6 +137,10 @@ public class ArmIOReal implements ArmIO {
     @Override
     public void updateInputs(ArmIOInputs inputs) {
         // inputs.angularPosition = getOffsetAngle();
+        ffmodel = new ArmFeedforward(KS.get(), KG.get(), KV.get(), KA.get(), 0.02);
+        controller = new PIDController(KP.get(), KI.get(), KD.get());
+
+
         inputs.angularPosition = getOffsetAngle();
         inputs.angularVelocity = armEncoder.getVelocity();
         inputs.current = armMotor.getOutputCurrent();

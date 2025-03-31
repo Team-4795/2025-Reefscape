@@ -9,15 +9,15 @@ public final class ElevatorConstants{
     // public static final double constraints = 0.2; //figure this out later
     public static final Constraints constraints = new Constraints(4, 5); //change later
 
-    public static final double kD = 0.05; //figure this out later
+    public static final double kD = .3; //figure this out later
     public static final double kI = 0; //figure this out later
-    public static final double kP = 28; //figure this out later
+    public static final double kP = 16; //figure this out later
     public static final int rightDeviceID = 12;
     public static final int leftDeviceID = 13;
-    public static final double ks = 0.1;
+    public static final double ks = 1.4;
     public static final double kg = 0.25;
-    public static final double kv = 8.5;
-    public static final double MAX_ACCELERATION = 10;
+    public static final double kv = 6.5;
+    public static final double MAX_ACCELERATION = 7;
     public static final double MAX_VELOCITY = 1.75;
     public static final double CORAL_L4_SETPOINT = 0.66508191; 
     public static final double CORAL_L3_SETPOINT = 0.098505221;
@@ -26,7 +26,7 @@ public final class ElevatorConstants{
     public static final double ALGEA_SETPOINT = 0.19420458376407623 - Units.inchesToMeters(1);
     public static final double HIGH_ALGAE_SETPOINT = 0.12916289269924164;
     public static final double PROCESSOR_SETPOINT = 0.19420458376407623 - Units.inchesToMeters(2);
-    public static final double NET_SETPOINT = 0.65;
+    public static final double NET_SETPOINT = 0.67;
     public static final double GOAL_TOLERANCE = 0.02;
     public static final double STOW = 0.01;
     

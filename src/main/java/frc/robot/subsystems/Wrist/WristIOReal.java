@@ -27,9 +27,9 @@ public class WristIOReal implements WristIO{
     LoggedTunableNumber KP = new LoggedTunableNumber("Wrist/KP", WristConstants.Coral_kP);
     LoggedTunableNumber KI = new LoggedTunableNumber("Wrist/KI", WristConstants.Coral_kI);
     LoggedTunableNumber KD = new LoggedTunableNumber("Wrist/KD", WristConstants.Coral_kD);    
-    LoggedTunableNumber KV = new LoggedTunableNumber("Wrist/KP", WristConstants.Coral_kV);
-    LoggedTunableNumber KA = new LoggedTunableNumber("Wrist/KI", WristConstants.Coral_KA);
-    LoggedTunableNumber KG = new LoggedTunableNumber("Wrist/KD", WristConstants.Coral_kG);    
+    LoggedTunableNumber KV = new LoggedTunableNumber("Wrist/KV", WristConstants.Coral_kV);
+    LoggedTunableNumber KA = new LoggedTunableNumber("Wrist/KA", WristConstants.Coral_KA);
+    LoggedTunableNumber KG = new LoggedTunableNumber("Wrist/KG", WristConstants.Coral_kG);    
 
     private ProfiledPIDController controller = new ProfiledPIDController(WristConstants.Coral_kP, WristConstants.Coral_kI, WristConstants.Coral_kD, 
     new TrapezoidProfile.Constraints(WristConstants.maxV, WristConstants.maxA));

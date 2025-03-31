@@ -117,7 +117,7 @@ public class RobotContainer {
 
     leds = LEDs.getInstance();
 
-    NamedCommandManager.registerNamedCommands();
+    // NamedCommandManager.registerNamedCommands();
 
     autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser("Driver Forward Straight"));
     configureBindings();
@@ -161,6 +161,10 @@ public class RobotContainer {
       AutoCommands.autoAlgae()
     );
 
+    Constants.OIConstants.driverController.povUp().whileTrue(
+      AutoCommands.alignFeeder()
+    );
+
     // Slow mode
     Constants.OIConstants.driverController.leftTrigger().onTrue(Commands.runOnce(() -> drivetrain.setSlowMode(true)));
     Constants.OIConstants.driverController.leftTrigger().onFalse(Commands.runOnce(() -> drivetrain.setSlowMode(false)));
@@ -174,20 +178,20 @@ public class RobotContainer {
       ).alongWith(Commands.runOnce(() -> intake.outtake())));
     // placeholder wrist
   
-    // Constants.OIConstants.operatorController.povUp().onTrue(
-    //   Commands.runOnce( 
-    //     ()-> wrist.setGoal(WristConstants.VFBAngle), wrist));
+    Constants.OIConstants.operatorController.povUp().onTrue(
+      Commands.runOnce( 
+        ()-> wrist.setGoal(WristConstants.VFBAngle), wrist));
 
-    //   Constants.OIConstants.operatorController.povDown().onTrue(
-    //     Commands.runOnce(
-    //       () -> wrist.setGoal(Units.degreesToRadians(90)), wrist)
-    //   );
+      Constants.OIConstants.operatorController.povDown().onTrue(
+        Commands.runOnce(
+          () -> wrist.setGoal(Units.degreesToRadians(90)), wrist)
+      );
 
     //Coral Setpoints
     Constants.OIConstants.operatorController.povUp().onTrue(
         Commands.either(
             Commands.runOnce(() -> OperationStates.autoScoreMode = State.L4), 
-            stateManager.stateCommand(State.L4), 
+            AutoCommands.raiseL4(), 
             () -> vision.isVisionUpdating()));
 
     // Constants.OIConstants.operatorController.povUp().onTrue(
@@ -245,9 +249,6 @@ public class RobotContainer {
     OIConstants.driverController.x().onTrue(
       Commands.runOnce(() -> vision.toggleShouldUpdate()).andThen(
       new RainbowCommand(() -> 1).withTimeout(2)));
-
-    // Seed arm
-    OIConstants.driverController.povUp().onTrue(Commands.runOnce(() -> Arm.getInstance().seedRelativeEncoder()));
 
     // Vertical stow
     OIConstants.operatorController.b()

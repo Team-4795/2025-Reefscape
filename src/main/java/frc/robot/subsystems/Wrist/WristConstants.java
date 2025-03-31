@@ -36,7 +36,7 @@ public class WristConstants {
 
     public static final double voltageCompensation = 12.0;
 
-    public static final double CORAL_L4_SETPOINT = 0.2096;
+    public static final double CORAL_L4_SETPOINT = 0.1096;
     public static final double CORAL_L3_SETPOINT = 0.2692209;
     public static final double CORAL_L2_SETPOINT = 0.32433;
     public static final double CORAL_L1_SETPOINT = 0;

@@ -18,6 +18,8 @@ public interface ElevatorIO {
         public double goalHeight = 0.0;
         public double setpointVelocity = 0.0;
         public double setpointPosition = 0.0;
+        public double tuningkP = 0.0; 
+        public double PIDVolts = 0.0; 
     }
     
 

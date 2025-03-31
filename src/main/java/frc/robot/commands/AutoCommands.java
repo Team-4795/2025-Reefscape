@@ -37,7 +37,16 @@ public class AutoCommands {
     private static StateManager stateManager = StateManager.getInstance();
     
 
-    private static LoggedTunableNumber maxAccel = new LoggedTunableNumber("AutoAlign/maxAccel", 3.2);
+    private static LoggedTunableNumber transKp = new LoggedTunableNumber("AutoAlign/transKp", 5);
+    private static LoggedTunableNumber transKi = new LoggedTunableNumber("AutoAlign/transKi", 0);
+    private static LoggedTunableNumber transKd = new LoggedTunableNumber("AutoAlign/transKd", 0);
+
+    private static LoggedTunableNumber rotationKp = new LoggedTunableNumber("AutoAlign/rotationKp", 7.5);
+    private static LoggedTunableNumber rotationKi = new LoggedTunableNumber("AutoAlign/rotationKi", 0);
+    private static LoggedTunableNumber rotationKd = new LoggedTunableNumber("AutoAlign/rotationKd", 0);
+
+    private static LoggedTunableNumber maxAccel = new LoggedTunableNumber("AutoAlign/maxAccel", 4.5);
+    private static LoggedTunableNumber maxVel = new LoggedTunableNumber("AutoAlign/feederMaxVel", 3);
 
      //DO NOT MIND THIS FOR NOW   
     public static Command followTrajectory(PathPlannerPath PathName) {
@@ -46,7 +55,6 @@ public class AutoCommands {
 
     public static Command raiseL4() {
         Command command = Commands.sequence(
-        Commands.runOnce(() -> wrist.setGoal(WristConstants.CORAL_L4_SETPOINT)),
         Commands.either(
         Commands.parallel(
         Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.CORAL_L4_SETPOINT)),
@@ -58,7 +66,9 @@ public class AutoCommands {
             
             Commands.sequence(Commands.waitUntil(() -> arm.getAngle() > -Math.PI/4),
             Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.CORAL_L4_SETPOINT)))), 
-        () -> arm.getAngle() > ArmConstants.CORAL_L4));
+        () -> arm.getAngle() > ArmConstants.CORAL_L4), 
+        Commands.runOnce(() -> wrist.setGoal(WristConstants.CORAL_L4_SETPOINT))
+        );
 
         command.addRequirements(GenericRequirement.getInstance());
 
@@ -338,9 +348,17 @@ public class AutoCommands {
 
     public static Command alignReefUntil() {
         return new AutoAlignReef(
-            new ProfiledPIDController(5,
-             0, 0, new Constraints(SwerveConstants.MaxSpeed, maxAccel.get())), 
-            new ProfiledPIDController(7.5, 0, 0, new Constraints(SwerveConstants.MaxAngularRate, 3))
+            new ProfiledPIDController(transKp.get(),
+             transKi.get(), transKd.get(), new Constraints(maxVel.get(), maxAccel.get())), 
+            new ProfiledPIDController(rotationKp.get(), rotationKi.get(), rotationKd.get(), new Constraints(SwerveConstants.MaxAngularRate, 3))
+        ).until(() -> OperationStates.aligned);
+    }
+
+    public static Command alignFeeder() {
+        return new AutoAlignFeeder(
+            new ProfiledPIDController(transKp.get(),
+             transKi.get(), transKd.get(), new Constraints(maxVel.get(), maxAccel.get())), 
+            new ProfiledPIDController(rotationKp.get(), rotationKi.get(), rotationKd.get(), new Constraints(SwerveConstants.MaxAngularRate, 3))
         ).until(() -> OperationStates.aligned);
     }
 

@@ -23,12 +23,6 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "Event Marker Test"
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "Auto Score"
