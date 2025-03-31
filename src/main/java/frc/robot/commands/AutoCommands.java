@@ -324,6 +324,24 @@ public class AutoCommands {
         ).finallyDo(() -> OperationStates.aligned = false);
     }
 
+    public static Command alignProcessor() {
+        return new AutoAlignProcessor(
+            new ProfiledPIDController(transKp.get(),
+             transKi.get(), transKd.get(), new Constraints(maxVel.get(), maxAccel.get())), 
+            new ProfiledPIDController(rotationKp.get(), rotationKi.get(), rotationKd.get(), new Constraints(SwerveConstants.MaxAngularRate, 3))
+        ).until(() -> OperationStates.aligned);    }
+
+    public static Command autoProcessor() {
+        return Commands.parallel(
+            alignProcessor(),
+            Commands.sequence(
+                Commands.deferredProxy(() -> stateManager.stateCommand(State.PROCESSOR)),
+                Commands.waitUntil(() -> OperationStates.inScoringDistance),
+                Commands.runOnce(() -> intake.setIntakeSpeed(0))
+            )
+        );
+    }
+
     public static Command autoBarge() {
         return Commands.sequence(
                 Commands.parallel(

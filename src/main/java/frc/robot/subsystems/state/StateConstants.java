@@ -2,6 +2,7 @@ package frc.robot.subsystems.state;
 
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.elevator.ElevatorConstants;
+import frc.robot.subsystems.intake.IntakeConstants;
 import frc.robot.subsystems.state.State.Setpoint;
 
 public class StateConstants {
@@ -14,4 +15,5 @@ public class StateConstants {
     public static final Setpoint LOW_ALGAE = new Setpoint(ArmConstants.ALGAE_LOW, ElevatorConstants.STOW, 1.0);
     public static final Setpoint VSTOW = new Setpoint(ArmConstants.VSTOW, ElevatorConstants.STOW, 0.0);
     public static final Setpoint STOW = new Setpoint(ArmConstants.STOW, ElevatorConstants.STOW, 0.0);
+    public static final Setpoint PROCESSOR = new Setpoint(ArmConstants.PROCESSOR, ElevatorConstants.PROCESSOR_SETPOINT, IntakeConstants.coralReverse);
 }

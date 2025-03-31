@@ -8,6 +8,7 @@ public enum State {
     STOW(StateConstants.STOW),
     VSTOW(StateConstants.VSTOW),
     LOW_ALGAE(StateConstants.LOW_ALGAE),
+    PROCESSOR(StateConstants.PROCESSOR),
     HIGH_ALGAE(StateConstants.HIGH_ALGAE);
 
     public Setpoint setpoint;
