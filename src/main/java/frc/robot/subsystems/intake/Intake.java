@@ -65,6 +65,10 @@ public class Intake extends SubsystemBase {
     public Command reverseCoral() {
         return startEnd(() -> setIntakeSpeed(IntakeConstants.coralReverse), () -> setIntakeSpeed(0));
     }
+
+    public Command outtakeAlgae() {
+        return startEnd(() -> setIntakeSpeed(-1.0), () -> setIntakeSpeed(0));
+    }
     
     public boolean GamePieceInitial() {
         return IntakeConstants.initialThreshold <= inputs.currentAmps;

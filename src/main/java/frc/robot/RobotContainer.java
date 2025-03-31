@@ -165,6 +165,10 @@ public class RobotContainer {
       AutoCommands.alignFeeder()
     );
 
+    Constants.OIConstants.driverController.povDown().whileTrue(
+      AutoCommands.autoBarge()
+    );
+
     // Slow mode
     Constants.OIConstants.driverController.leftTrigger().onTrue(Commands.runOnce(() -> drivetrain.setSlowMode(true)));
     Constants.OIConstants.driverController.leftTrigger().onFalse(Commands.runOnce(() -> drivetrain.setSlowMode(false)));
@@ -178,14 +182,14 @@ public class RobotContainer {
       ).alongWith(Commands.runOnce(() -> intake.outtake())));
     // placeholder wrist
   
-    Constants.OIConstants.operatorController.povUp().onTrue(
-      Commands.runOnce( 
-        ()-> wrist.setGoal(WristConstants.VFBAngle), wrist));
+    // Constants.OIConstants.operatorController.povUp().onTrue(
+    //   Commands.runOnce( 
+    //     ()-> wrist.setGoal(WristConstants.VFBAngle), wrist));
 
-      Constants.OIConstants.operatorController.povDown().onTrue(
-        Commands.runOnce(
-          () -> wrist.setGoal(Units.degreesToRadians(90)), wrist)
-      );
+    //   Constants.OIConstants.operatorController.povDown().onTrue(
+    //     Commands.runOnce(
+    //       () -> wrist.setGoal(Units.degreesToRadians(90)), wrist)
+    //   );
 
     //Coral Setpoints
     Constants.OIConstants.operatorController.povUp().onTrue(
@@ -193,14 +197,6 @@ public class RobotContainer {
             Commands.runOnce(() -> OperationStates.autoScoreMode = State.L4), 
             AutoCommands.raiseL4(), 
             () -> vision.isVisionUpdating()));
-
-    // Constants.OIConstants.operatorController.povUp().onTrue(
-    //   Commands.runOnce(() -> wrist.setGoal(WristConstants.VFBAngle), wrist)
-    // );
-
-    // Constants.OIConstants.operatorController.povDown().onTrue(
-    //   Commands.runOnce(() -> wrist.setGoal(WristConstants.NET_SETPOINT), wrist)
-    // );
 
     Constants.OIConstants.operatorController.povRight().onTrue(
         Commands.either(

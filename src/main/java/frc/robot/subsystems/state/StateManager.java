@@ -24,6 +24,7 @@ public class StateManager extends SubsystemBase {
         public static boolean isScoringLeft = true;
         public static boolean aligned = false; 
         public static boolean inScoringDistance = false;
+        public static boolean isBargeFowards = true;
         public static boolean isReefTagOnly = true;
         public static State autoScoreMode = State.L4;
         public static State autoAlgaeMode = State.HIGH_ALGAE;
@@ -98,6 +99,8 @@ public class StateManager extends SubsystemBase {
         Logger.recordOutput("StateManager/OperationStates/aligned", OperationStates.aligned);
         Logger.recordOutput("StateManager/OperationStates/inScoringDistance", OperationStates.inScoringDistance);
         Logger.recordOutput("StateManager/OperationStates/isReefTagOnly", OperationStates.isReefTagOnly);
+        Logger.recordOutput("StateManager/OperationStates/autoAlgaeMode", OperationStates.autoAlgaeMode);
+        Logger.recordOutput("StateManager/OperationStates/isBargeFowards", OperationStates.isBargeFowards);
 
         SmartDashboard.putBoolean("Score/isLeftL4", OperationStates.autoScoreMode == State.L4 && OperationStates.isScoringLeft);
         SmartDashboard.putBoolean("Score/isLeftL3", OperationStates.autoScoreMode == State.L3 && OperationStates.isScoringLeft);

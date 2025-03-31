@@ -27,24 +27,25 @@ public class WristIOSim implements WristIO {
     private TrapezoidProfile.State goal = new TrapezoidProfile.State(WristConstants.Sim.INIT_ANGLE, 0);
     private TrapezoidProfile.State setpoint = new TrapezoidProfile.State(WristConstants.Sim.INIT_ANGLE, 0);
     private double voltage = 0;    
+    
     @Override
     public void setVoltage(double voltage){
         wristSim.setInputVoltage(voltage);
         this.voltage = voltage;
     }
 
-     @Override
+    @Override
     public void setGoal(double angle){
         if (angle != goal.position){
-        setpoint = new TrapezoidProfile.State(getPosition(), getVelocity());
-        goal = new TrapezoidProfile.State(MathUtil.clamp(angle, WristConstants.minPosition, WristConstants.maxPosition), WristConstants.maxV);
+            setpoint = new TrapezoidProfile.State(wristSim.getAngleRads(), wristSim.getVelocityRadPerSec());
+            goal = new TrapezoidProfile.State(angle, 0);
         }
     }
  
     @Override
     public void updateMotionProfile(){
         setpoint = profile.calculate(0.02, setpoint, goal);
-        setVoltage(ffmodel.calculate(wristSim.getAngleRads(), setpoint.velocity) + controller.calculate(wristSim.getAngleRads(),setpoint.position));
+        setVoltage(ffmodel.calculate(wristSim.getAngleRads(), setpoint.velocity) + controller.calculate(wristSim.getAngleRads(), setpoint.position));
     }
 
     @Override

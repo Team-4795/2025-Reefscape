@@ -258,32 +258,37 @@ public class AutoCommands {
     //     return map;
     // }
 
-    public static Command scoreNetForward(){
-        return Commands.sequence(
-            Commands.runOnce(()-> elevator.setGoalHeight(ElevatorConstants.NET_SETPOINT)),
-            Commands.runOnce(()-> arm.setGoal(ArmConstants.NET_SETPOINT)),
-            Commands.runOnce(()-> wrist.setGoal(WristConstants.NET_SETPOINT))
-        );
-    }
-
     public static Command yeet(){
         return Commands.parallel(
             Commands.runOnce(()-> wrist.setGoal(WristConstants.VFBAngle)),
             Commands.waitUntil(()-> wrist.atGoal(WristConstants.VFBAngle))
-                .andThen(() -> wrist.setGoal(WristConstants.NET_SETPOINT)),
+                .andThen(() -> wrist.setGoal(WristConstants.FOWARD_NET_SETPOINT)),
             Commands.waitUntil(()-> wrist.getPosition() <= -1.55)
                 .andThen(()-> intake.setIntakeSpeed(IntakeConstants.intake)));
     }
 
     public static Command scoreNetBakwards(){
+        // return Commands.sequence(
+        //     Commands.runOnce(() -> arm.setGoal(ArmConstants.STOW + 0.4)),
+        //     Commands.waitSeconds(0.5),
+        //     Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.NET_SETPOINT)),
+        //     Commands.waitUntil(()-> elevator.atGoal(0.4))
+        //         .andThen(() -> arm.setGoal(ArmConstants.NET_SETPOINT)),
+        //     Commands.waitUntil(() -> arm.atGoal(ArmConstants.NET_SETPOINT - Units.degreesToRadians(5)))
+        //         .andThen(yeet()));
         return Commands.sequence(
-            Commands.runOnce(() -> arm.setGoal(ArmConstants.STOW + 0.4)),
-            Commands.waitSeconds(0.5),
-            Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.NET_SETPOINT)),
-            Commands.waitUntil(()-> elevator.atGoal(0.4))
-                .andThen(() -> arm.setGoal(ArmConstants.NET_SETPOINT)),
-            Commands.waitUntil(() -> arm.atGoal(ArmConstants.NET_SETPOINT - Units.degreesToRadians(5)))
-                .andThen(yeet()));
+            Commands.runOnce(()-> elevator.setGoalHeight(ElevatorConstants.NET_SETPOINT)),
+            Commands.runOnce(()-> arm.setGoal(ArmConstants.NET_SETPOINT)),
+            Commands.runOnce(()-> wrist.setGoal(-WristConstants.BACKWARD_NET_SETPOINT))
+        );
+    }
+
+    public static Command scoreNetForward(){
+        return Commands.sequence(
+            Commands.runOnce(()-> elevator.setGoalHeight(ElevatorConstants.NET_SETPOINT)),
+            Commands.runOnce(()-> arm.setGoal(ArmConstants.NET_SETPOINT)),
+            Commands.runOnce(()-> wrist.setGoal(WristConstants.FOWARD_NET_SETPOINT))
+        );
     }
 
     public static Command autoScore() {
@@ -319,6 +324,24 @@ public class AutoCommands {
         ).finallyDo(() -> OperationStates.aligned = false);
     }
 
+    public static Command autoBarge() {
+        return Commands.sequence(
+                Commands.parallel(
+                    alignBarge(),
+                    Commands.sequence(
+                        vstow(),
+                        Commands.waitUntil(() -> OperationStates.inScoringDistance),
+                        Commands.either(
+                            scoreNetForward(), 
+                            scoreNetBakwards(), 
+                            () -> OperationStates.isBargeFowards
+                        )
+                    )
+                ),
+                scoreAlgae()
+            ).finallyDo(() -> OperationStates.aligned = false);
+    }
+
     public static Command zeroArm() {
         return Commands.parallel(
             Commands.startEnd(
@@ -331,6 +354,10 @@ public class AutoCommands {
 
     public static Command score() {
         return intake.intake().withTimeout(0.2).alongWith(Commands.runOnce(() -> intake.outtake()));
+    }
+
+    public static Command scoreAlgae() {
+        return intake.outtakeAlgae().withTimeout(0.2);
     }
 
 
@@ -356,6 +383,14 @@ public class AutoCommands {
 
     public static Command alignFeeder() {
         return new AutoAlignFeeder(
+            new ProfiledPIDController(transKp.get(),
+             transKi.get(), transKd.get(), new Constraints(maxVel.get(), maxAccel.get())), 
+            new ProfiledPIDController(rotationKp.get(), rotationKi.get(), rotationKd.get(), new Constraints(SwerveConstants.MaxAngularRate, 3))
+        ).until(() -> OperationStates.aligned);
+    }
+
+    public static Command alignBarge() {
+        return new AutoAlignBarge(
             new ProfiledPIDController(transKp.get(),
              transKi.get(), transKd.get(), new Constraints(maxVel.get(), maxAccel.get())), 
             new ProfiledPIDController(rotationKp.get(), rotationKi.get(), rotationKd.get(), new Constraints(SwerveConstants.MaxAngularRate, 3))

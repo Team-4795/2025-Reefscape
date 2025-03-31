@@ -31,7 +31,7 @@ public class WristConstants {
 
     public static final double maxV = 5;
     public static final double maxA = 8;
-    public static final double minPosition = Units.degreesToRadians(-60); //1
+    public static final double minPosition = Units.degreesToRadians(-180); //1
     public static final double maxPosition = Units.degreesToRadians(360); //43
 
     public static final double voltageCompensation = 12.0;
@@ -42,7 +42,8 @@ public class WristConstants {
     public static final double CORAL_L1_SETPOINT = 0;
     public static final double offset = 0;
     public static final double VFBAngle = 0.2468;
-    public static final double NET_SETPOINT = -1.7;
+    public static final double FOWARD_NET_SETPOINT = -1.7;
+    public static final double BACKWARD_NET_SETPOINT = 1.7;
     public static final double intakePosition = 0.24;
     public static final double stowPosition = 1;
 
@@ -57,9 +58,9 @@ public class WristConstants {
         public static final double SIMkP = 1;
         public static final double SIMkI = 0;
         public static final double SIMkD = 0;
-        public static final double SIMkS = 0;
-        public static final double SIMkG = 0;
-        public static final double SIMkV = 0;
+        public static final double SIMkS = 0.5;
+        public static final double SIMkG = 0.5;
+        public static final double SIMkV = 1;
         public static final double SIMKA = 0;
         public static final double INIT_ANGLE = Units.degreesToRadians(1);
     
