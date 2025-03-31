@@ -38,6 +38,7 @@ public class AutoAlignBarge extends Command {
     private Pose2d targetPose;
     private double distance;
     private double rotationError;
+    private Alliance alliance = DriverStation.getAlliance().orElse(null);
 
     private LoggedTunableNumber maxDistance = new LoggedTunableNumber("AutoAlign/maxDistance", 0.3);
 
@@ -50,14 +51,21 @@ public class AutoAlignBarge extends Command {
     }
 
     @Override
-    public void initialize(){
-        DriverStation.getAlliance().ifPresent((alliance) -> {
-            mult = (alliance == Alliance.Red) ? -1.0 : 1.0;
-        });
+    public void initialize() {
         currentPose = Swerve.getInstance().getState().Pose;
-        
-        OperationStates.isBargeFowards = (Math.abs(currentPose.getRotation().getDegrees()) < 90) ? false : true;
-        targetPose = new Pose2d(9.65, MathUtil.clamp(currentPose.getY(), 0.66, 3.5), new Rotation2d(OperationStates.isBargeFowards ? Math.PI : 0));
+
+        if(alliance != null) {
+            mult = (alliance == Alliance.Red) ? -1.0 : 1.0;
+        }
+    
+        if(alliance == Alliance.Red) {
+            OperationStates.isBargeFowards = Math.abs(currentPose.getRotation().getDegrees()) >= 90;
+            targetPose = new Pose2d(9.65, MathUtil.clamp(currentPose.getY(), 0.66, 3.5), new Rotation2d(OperationStates.isBargeFowards ? Math.PI : 0));
+        }
+        else if(alliance == Alliance.Blue){
+            OperationStates.isBargeFowards = Math.abs(currentPose.getRotation().getDegrees()) <= 90;
+            targetPose = new Pose2d(8.03, MathUtil.clamp(currentPose.getY(), 4.36, 7.47), new Rotation2d(OperationStates.isBargeFowards ? 0 : Math.PI));
+        }
         
         double velocity = mult * projection(new Translation2d(Swerve.getInstance().getState().Speeds.vxMetersPerSecond, Swerve.getInstance().getState().Speeds.vyMetersPerSecond), targetPose.getTranslation().minus(currentPose.getTranslation()));
         rotationController.enableContinuousInput(-Math.PI, Math.PI);

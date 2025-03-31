@@ -117,7 +117,7 @@ public class RobotContainer {
 
     leds = LEDs.getInstance();
 
-    // NamedCommandManager.registerNamedCommands();
+    NamedCommandManager.registerNamedCommands();
 
     autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser("Driver Forward Straight"));
     configureBindings();
@@ -267,6 +267,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return AutoCommands.autoProcessor();
+    return AutoCommands.autoBarge();
   }
 }
