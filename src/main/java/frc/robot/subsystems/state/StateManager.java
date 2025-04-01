@@ -11,13 +11,15 @@ import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.state.State.Setpoint;
 import frc.robot.util.Util;
+import frc.robot.subsystems.Wrist.Wrist;
 
 public class StateManager extends SubsystemBase {
     private State state;
-    private Setpoint setpoint = StateConstants.DEFAULT;
+    private Setpoint setpoint = StateConstants.STOW;
     private Intake intake = Intake.getInstance();
     private Arm arm = Arm.getInstance();
     private Elevator elevator = Elevator.getInstance();
+    private Wrist wrist = Wrist.getInstance();
 
     // non-setpoint robot stuff
     public static class OperationStates {
@@ -54,6 +56,7 @@ public class StateManager extends SubsystemBase {
         Util.nullOrDo(state.setpoint.armAngle, (value) -> setpoint.armAngle = value);
         Util.nullOrDo(state.setpoint.elevatorHeight, (value) -> setpoint.elevatorHeight = value);
         Util.nullOrDo(state.setpoint.intakeSpeed, (value) -> setpoint.intakeSpeed = value);
+        Util.nullOrDo(state.setpoint.wristAngle, (value) -> setpoint.wristAngle = value);
     }
 
     public Command stateCommand(State state) {
@@ -74,7 +77,7 @@ public class StateManager extends SubsystemBase {
                 () -> elevator.getPosition() < setpoint.elevatorHeight
             ),
             Commands.runOnce(() -> intake.setIntakeSpeed(setpoint.intakeSpeed))
-        ));
+        )).andThen(() -> wrist.setGoal(setpoint.wristAngle));
 
         command.addRequirements(this);
 

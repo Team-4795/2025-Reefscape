@@ -21,11 +21,13 @@ public enum State {
         public Double armAngle;
         public Double elevatorHeight;
         public Double intakeSpeed;
+        public Double wristAngle;
 
-        public Setpoint(Double armAngle, Double elevatorHeight, Double intakeSpeed) {
+        public Setpoint(Double armAngle, Double elevatorHeight, Double intakeSpeed, Double wristAngle) {
             this.armAngle = armAngle;
             this.elevatorHeight = elevatorHeight;
             this.intakeSpeed = intakeSpeed;
+            this.wristAngle = wristAngle;
         }
     }
 }
