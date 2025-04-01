@@ -21,11 +21,11 @@ public class Wrist extends SubsystemBase {
         this.io = io;
         setDefaultCommand(
           Commands.run(() -> {
-               double change = MathUtil.applyDeadband(OIConstants.operatorController.getLeftY(), OIConstants.OperatorLAxisDeadband);
-               change = .05 * Math.pow(change, 3);
-               if(DriverStation.isTeleopEnabled() && change != 0) {
-                   io.setGoal(inputs.goalPosition + change);
-               }
+            //    double change = MathUtil.applyDeadband(OIConstants.operatorController.getLeftY(), OIConstants.OperatorLAxisDeadband);
+            //    change = .05 * Math.pow(change, 3);
+            //    if(DriverStation.isTeleopEnabled() && change != 0) {
+            //        io.setGoal(inputs.goalPosition + change);
+            //    }
                io.updateMotionProfile();
            }, this)
        );   

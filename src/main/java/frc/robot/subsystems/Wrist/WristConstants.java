@@ -51,8 +51,8 @@ public class WristConstants {
     
     public static class Sim {
         public static final double length = 1;
-        public static final double minAngle = 0;
-        public static final double maxAngle = 0;
+        public static final double minAngle = -Math.PI;
+        public static final double maxAngle = Math.PI;
         public static final boolean gravity = false;
         public static final double initAngle = 0;
         public static final double SIMkP = 1;
@@ -64,5 +64,4 @@ public class WristConstants {
         public static final double SIMKA = 0;
         public static final double INIT_ANGLE = Units.degreesToRadians(1);
     }
-   
 }
