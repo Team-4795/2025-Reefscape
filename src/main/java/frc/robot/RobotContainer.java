@@ -89,7 +89,8 @@ public class RobotContainer {
         drivetrain = Swerve.initialize(new Swerve(TunerConstants.DrivetrainConstants, 50, TunerConstants.FrontLeft, TunerConstants.FrontRight, TunerConstants.BackLeft, TunerConstants.BackRight));
         vision = Vision.initialize(
           new VisionIOReal(0), 
-          new VisionIOReal(1)
+          new VisionIOReal(1),
+          new VisionIOReal(2)
         );
         break;
 
@@ -158,7 +159,7 @@ public class RobotContainer {
 
     // Algae align
     Constants.OIConstants.driverController.rightBumper().whileTrue(
-      AutoCommands.autoAlgae()
+      AutoCommands.alignFeeder()
     );
 
     Constants.OIConstants.driverController.povUp().whileTrue(
@@ -267,6 +268,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return stateManager.stateCommand(State.L4);
+    return autoChooser.get();
   }
 }

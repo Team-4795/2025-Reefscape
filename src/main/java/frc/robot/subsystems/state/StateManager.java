@@ -15,7 +15,7 @@ import frc.robot.subsystems.Wrist.Wrist;
 
 public class StateManager extends SubsystemBase {
     private State state;
-    private Setpoint setpoint = StateConstants.STOW;
+    private Setpoint setpoint = StateConstants.DEFAULT;
     private Intake intake = Intake.getInstance();
     private Arm arm = Arm.getInstance();
     private Elevator elevator = Elevator.getInstance();
@@ -89,7 +89,7 @@ public class StateManager extends SubsystemBase {
     }
 
     public boolean armCanMove() {
-        return elevator.getPosition() < .4;
+        return elevator.getPosition() < .4 || (setpoint.elevatorHeight > .4 && elevator.getPosition() > setpoint.elevatorHeight);
     }
 
     public State getState() {
