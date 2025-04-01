@@ -14,29 +14,16 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N2;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.state.StateManager.OperationStates;
 import frc.robot.subsystems.swerve.Swerve;
-import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.util.LoggedTunableNumber;
 
 
 public class AutoAlignFeeder extends Command{
-    private static LoggedTunableNumber transKp = new LoggedTunableNumber("AutoAlign/transKp", 5);
-    private static LoggedTunableNumber transKi = new LoggedTunableNumber("AutoAlign/transKi", 0);
-    private static LoggedTunableNumber transKd = new LoggedTunableNumber("AutoAlign/transKd", 0);
-
-    private static LoggedTunableNumber rotationKp = new LoggedTunableNumber("AutoAlign/rotationKp", 7.5);
-    private static LoggedTunableNumber rotationKi = new LoggedTunableNumber("AutoAlign/rotationKi", 0);
-    private static LoggedTunableNumber rotationKd = new LoggedTunableNumber("AutoAlign/rotationKd", 0);
-
-    private static LoggedTunableNumber maxAccel = new LoggedTunableNumber("AutoAlign/maxAccel", 4.5);
-    private static LoggedTunableNumber maxVel = new LoggedTunableNumber("AutoAlign/feederMaxVel", 3);
-
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
     private static final Pose2d RED_FEEDER = new Pose2d(10.41, 3.27, new Rotation2d(Units.degreesToRadians(0.9)));
@@ -52,8 +39,8 @@ public class AutoAlignFeeder extends Command{
     private double distance;
     private double rotationError;
 
-    private LoggedTunableNumber maxDistance = new LoggedTunableNumber("AutoAlign/maxDistance", 0.3);
-    private LoggedTunableNumber minDistance = new LoggedTunableNumber("AutoAlign/minDistance", 0);
+    private LoggedTunableNumber maxDistance = new LoggedTunableNumber("AutoAlignFeeder/maxDistance", 1.5);
+    private LoggedTunableNumber minDistance = new LoggedTunableNumber("AutoAlignFeeder/minDistance", 0);
 
     public AutoAlignFeeder(ProfiledPIDController translation, ProfiledPIDController rotation) {
         translationController = translation;
@@ -70,9 +57,6 @@ public class AutoAlignFeeder extends Command{
             targetPose = (alliance == Alliance.Red) ? RED_FEEDER : BLUE_FEEDER;
             mult = (alliance == Alliance.Red) ? -1.0 : 1.0;
         });
-
-        translationController = new ProfiledPIDController(transKp.get(), transKi.get(), transKd.get(), new Constraints(maxVel.get(), maxAccel.get()));
-        rotationController = new ProfiledPIDController(rotationKp.get(), rotationKi.get(), rotationKd.get(), new Constraints(SwerveConstants.MaxAngularRate, 3));
         
         currentPose = Swerve.getInstance().getState().Pose;
         double velocity = mult * projection(new Translation2d(Swerve.getInstance().getState().Speeds.vxMetersPerSecond, Swerve.getInstance().getState().Speeds.vyMetersPerSecond), targetPose.getTranslation().minus(currentPose.getTranslation()));
@@ -131,7 +115,7 @@ public class AutoAlignFeeder extends Command{
     }
 
     public boolean finishedAligning() {
-        return (distance < Units.inchesToMeters(0.5)) && (Math.abs(rotationError) < Units.degreesToRadians(0.5));
+        return (distance < Units.inchesToMeters(1)) && (Math.abs(rotationError) < Units.degreesToRadians(1));
     }
 
     private double projection(Translation2d v1, Translation2d onto){

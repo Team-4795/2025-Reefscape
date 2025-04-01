@@ -66,7 +66,7 @@ public class Intake extends SubsystemBase {
         return startEnd(() -> setIntakeSpeed(IntakeConstants.coralReverse), () -> setIntakeSpeed(0));
     }
 
-    public Command outtakeAlgae() {
+    public Command scorePiece() {
         return startEnd(() -> setIntakeSpeed(-1.0), () -> setIntakeSpeed(0));
     }
     

@@ -37,16 +37,16 @@ public class AutoCommands {
     private static StateManager stateManager = StateManager.getInstance();
     
 
-    private static LoggedTunableNumber transKp = new LoggedTunableNumber("AutoAlign/transKp", 5);
+    private static LoggedTunableNumber transKp = new LoggedTunableNumber("AutoAlign/transKp", 0.0);
     private static LoggedTunableNumber transKi = new LoggedTunableNumber("AutoAlign/transKi", 0);
-    private static LoggedTunableNumber transKd = new LoggedTunableNumber("AutoAlign/transKd", 0);
+    private static LoggedTunableNumber transKd = new LoggedTunableNumber("AutoAlign/transKd", 0.0);
 
-    private static LoggedTunableNumber rotationKp = new LoggedTunableNumber("AutoAlign/rotationKp", 7.5);
+    private static LoggedTunableNumber rotationKp = new LoggedTunableNumber("AutoAlign/rotationKp", 4.5);
     private static LoggedTunableNumber rotationKi = new LoggedTunableNumber("AutoAlign/rotationKi", 0);
     private static LoggedTunableNumber rotationKd = new LoggedTunableNumber("AutoAlign/rotationKd", 0);
 
-    private static LoggedTunableNumber maxAccel = new LoggedTunableNumber("AutoAlign/maxAccel", 4.5);
-    private static LoggedTunableNumber maxVel = new LoggedTunableNumber("AutoAlign/feederMaxVel", 3);
+    private static LoggedTunableNumber maxAccel = new LoggedTunableNumber("AutoAlign/maxAccel", 7);
+    private static LoggedTunableNumber maxVel = new LoggedTunableNumber("AutoAlign/feederMaxVel", 3.5);
 
      //DO NOT MIND THIS FOR NOW   
     public static Command followTrajectory(PathPlannerPath PathName) {
@@ -278,16 +278,14 @@ public class AutoCommands {
         //         .andThen(yeet()));
         return Commands.sequence(
             Commands.runOnce(()-> elevator.setGoalHeight(ElevatorConstants.NET_SETPOINT)),
-            Commands.runOnce(()-> arm.setGoal(ArmConstants.NET_SETPOINT)),
-            Commands.runOnce(()-> wrist.setGoal(-WristConstants.BACKWARD_NET_SETPOINT))
+            Commands.runOnce(()-> arm.setGoal(ArmConstants.NET_SETPOINT))
         );
     }
 
     public static Command scoreNetForward(){
         return Commands.sequence(
             Commands.runOnce(()-> elevator.setGoalHeight(ElevatorConstants.NET_SETPOINT)),
-            Commands.runOnce(()-> arm.setGoal(ArmConstants.NET_SETPOINT)),
-            Commands.runOnce(()-> wrist.setGoal(WristConstants.FOWARD_NET_SETPOINT))
+            Commands.runOnce(()-> arm.setGoal(ArmConstants.NET_SETPOINT))
         );
     }
 
@@ -298,7 +296,7 @@ public class AutoCommands {
                     alignReefUntil(),
                     Commands.deferredProxy(() -> stateManager.stateCommand(OperationStates.autoScoreMode))
                 ),
-                //score(),
+                scorePiece(),
                 Commands.runOnce(() -> OperationStates.aligned = false)
             ),
 
@@ -311,8 +309,8 @@ public class AutoCommands {
                         Commands.deferredProxy(() -> stateManager.stateCommand(OperationStates.autoScoreMode))
                     )
                 ),
-                Commands.waitSeconds(0.6),
-                //score(),
+                Commands.waitSeconds(0.4),
+                scorePiece(),
                 vstow()), 
             () -> OperationStates.autoScoreMode != State.L4).finallyDo(() -> OperationStates.aligned = false);
     }
@@ -347,7 +345,11 @@ public class AutoCommands {
                 Commands.parallel(
                     alignBarge(),
                     Commands.sequence(
-                        vstow(),
+                            vstow(),
+                            Commands.either(
+                                Commands.runOnce(() -> wrist.setGoal(WristConstants.FOWARD_NET_SETPOINT)), 
+                                Commands.runOnce(() -> wrist.setGoal(WristConstants.BACKWARD_NET_SETPOINT)), 
+                                () -> OperationStates.isBargeFowards),
                         Commands.waitUntil(() -> OperationStates.inScoringDistance),
                         Commands.either(
                             scoreNetForward(), 
@@ -356,7 +358,7 @@ public class AutoCommands {
                         )
                     )
                 ),
-                scoreAlgae()
+                scorePiece()
             ).finallyDo(() -> OperationStates.aligned = false);
     }
 
@@ -374,8 +376,8 @@ public class AutoCommands {
         return intake.intake().withTimeout(0.2).alongWith(Commands.runOnce(() -> intake.outtake()));
     }
 
-    public static Command scoreAlgae() {
-        return intake.outtakeAlgae().withTimeout(0.2);
+    public static Command scorePiece() {
+        return intake.scorePiece().withTimeout(0.2);
     }
 
 
@@ -393,24 +395,22 @@ public class AutoCommands {
 
     public static Command alignReefUntil() {
         return new AutoAlignReef(
-            new ProfiledPIDController(transKp.get(),
-             transKi.get(), transKd.get(), new Constraints(maxVel.get(), maxAccel.get())), 
+            new ProfiledPIDController(transKp.get(),transKi.get(), transKd.get(), new Constraints(maxVel.get(), maxAccel.get())), 
             new ProfiledPIDController(rotationKp.get(), rotationKi.get(), rotationKd.get(), new Constraints(SwerveConstants.MaxAngularRate, 3))
         ).until(() -> OperationStates.aligned);
     }
 
     public static Command alignFeeder() {
         return new AutoAlignFeeder(
-            new ProfiledPIDController(transKp.get(),
-             transKi.get(), transKd.get(), new Constraints(maxVel.get(), maxAccel.get())), 
+            new ProfiledPIDController(transKp.get(),transKi.get(), transKd.get(), new Constraints(maxVel.get(), maxAccel.get())), 
             new ProfiledPIDController(rotationKp.get(), rotationKi.get(), rotationKd.get(), new Constraints(SwerveConstants.MaxAngularRate, 3))
         ).until(() -> OperationStates.aligned);
     }
 
     public static Command alignBarge() {
         return new AutoAlignBarge(
-            new ProfiledPIDController(transKp.get(),
-             transKi.get(), transKd.get(), new Constraints(maxVel.get(), maxAccel.get())), 
+            new ProfiledPIDController(2,
+             transKi.get(), transKd.get(), new Constraints(2.5, maxAccel.get())), 
             new ProfiledPIDController(rotationKp.get(), rotationKi.get(), rotationKd.get(), new Constraints(SwerveConstants.MaxAngularRate, 3))
         ).until(() -> OperationStates.aligned);
     }

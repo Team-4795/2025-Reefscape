@@ -46,6 +46,10 @@ public class Wrist extends SubsystemBase {
         io.setGoal(angle);
     }
 
+    public double getGoal() {
+        return io.getGoal();
+    }
+
     public double getPosition() {
         return inputs.position;
     }

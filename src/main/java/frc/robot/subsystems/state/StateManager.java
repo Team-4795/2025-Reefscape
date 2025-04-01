@@ -2,6 +2,7 @@ package frc.robot.subsystems.state;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -15,7 +16,7 @@ import frc.robot.subsystems.Wrist.Wrist;
 
 public class StateManager extends SubsystemBase {
     private State state;
-    private Setpoint setpoint = StateConstants.DEFAULT;
+    private Setpoint setpoint = StateConstants.STOW;
     private Intake intake = Intake.getInstance();
     private Arm arm = Arm.getInstance();
     private Elevator elevator = Elevator.getInstance();
@@ -74,7 +75,7 @@ public class StateManager extends SubsystemBase {
                     Commands.waitUntil(() -> armCanMove())
                         .andThen(() -> arm.setGoal(setpoint.armAngle))
                 ),
-                () -> elevator.getPosition() < setpoint.elevatorHeight
+                () -> (elevator.getPosition() < setpoint.elevatorHeight) && (arm.getAngle() < setpoint.armAngle)
             ),
             Commands.runOnce(() -> intake.setIntakeSpeed(setpoint.intakeSpeed))
         )).andThen(() -> wrist.setGoal(setpoint.wristAngle));
@@ -89,7 +90,7 @@ public class StateManager extends SubsystemBase {
     }
 
     public boolean armCanMove() {
-        return elevator.getPosition() < .4 || (setpoint.elevatorHeight > .4 && elevator.getPosition() > setpoint.elevatorHeight);
+        return MathUtil.isNear(setpoint.elevatorHeight, elevator.getPosition(), 0.03);
     }
 
     public State getState() {

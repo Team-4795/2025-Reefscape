@@ -159,7 +159,7 @@ public class RobotContainer {
 
     // Algae align
     Constants.OIConstants.driverController.rightBumper().whileTrue(
-      AutoCommands.alignFeeder()
+      AutoCommands.autoAlgae()
     );
 
     Constants.OIConstants.driverController.povUp().whileTrue(

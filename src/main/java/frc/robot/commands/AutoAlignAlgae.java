@@ -28,8 +28,8 @@ import frc.robot.subsystems.vision.AprilTag.Vision;
 public class AutoAlignAlgae extends Command{
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
-    private final double maxDistance = 0.6;
-    private final double minDistance = -0.1;
+    private final double maxDistance = 1.5;
+    private final double minDistance = 0;
 
     private ProfiledPIDController translationController;
     private ProfiledPIDController rotationController;

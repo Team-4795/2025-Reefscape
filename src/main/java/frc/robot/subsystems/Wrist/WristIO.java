@@ -27,6 +27,10 @@ public interface WristIO {
         return 0;
     }
 
+    public default double getGoal() {
+        return 0;
+    }
+
     public default void updateInputs(WristIOInputs inputs){
 
     }

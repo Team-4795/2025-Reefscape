@@ -31,7 +31,8 @@ public class AutoAlignReef extends Command {
     private boolean isScoringLeft;
     private double offset = 0.0;
 
-    private final double minDistance = -0.05;
+    private final double minDistance = -0.2;
+    private static LoggedTunableNumber maxDistance = new LoggedTunableNumber("AutoAlign/maxDistance", 1);
 
     private ProfiledPIDController translationController;
     private ProfiledPIDController rotationController;
@@ -43,11 +44,9 @@ public class AutoAlignReef extends Command {
     private double distance;
     private double rotationError;
 
-    private LoggedTunableNumber maxDistance = new LoggedTunableNumber("AutoAlign/maxDistance", 0.3);
-
     public AutoAlignReef(ProfiledPIDController translation, ProfiledPIDController rotation) {
         translationController = translation;
-        translationController.setTolerance(Units.inchesToMeters(0.5));
+        translationController.setTolerance(Units.inchesToMeters(0.75));
         rotationController = rotation;
         rotationController.setTolerance(Units.degreesToRadians(0.5));
         addRequirements(Swerve.getInstance());
@@ -124,6 +123,7 @@ public class AutoAlignReef extends Command {
         Logger.recordOutput("AutoAlign/is Aligned", OperationStates.aligned);
         Logger.recordOutput("AutoAlign/In scoring distance", OperationStates.inScoringDistance);
         Logger.recordOutput("AutoAlign/Rotation error", rotationError);
+        Logger.recordOutput("AutoAlign/velocity", driveSpeed);
 
         Swerve.getInstance().setControl(
             drive.withVelocityX(driveSpeed * direction.getCos())
@@ -143,11 +143,11 @@ public class AutoAlignReef extends Command {
     }
 
     public boolean finishedAligning() {
-        return (distance < Units.inchesToMeters(0.5)) && (Math.abs(rotationError) < Units.degreesToRadians(0.5));
+        return (distance < Units.inchesToMeters(1)) && (Math.abs(rotationError) < Units.degreesToRadians(1));
     }
 
     public boolean inScoringDistance() {
-        return (distance < 1 + Units.inchesToMeters(6));
+        return (distance < 2);
     }
 
     private double projection(Translation2d v1, Translation2d onto){

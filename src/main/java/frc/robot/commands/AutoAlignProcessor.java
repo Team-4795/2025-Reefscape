@@ -29,7 +29,7 @@ public class AutoAlignProcessor extends Command{
     private static final Pose2d RED_PROCESSOR = new Pose2d(10.41, 3.27, new Rotation2d(Units.degreesToRadians(0.9)));
     private static final Pose2d BLUE_PROCESSOR = new Pose2d(16.51, 1.14, new Rotation2d(2.199114857512855));
 
-    private final double minDistance = -0.05;
+    private final double minDistance = 0;
 
     private ProfiledPIDController translationController;
     private ProfiledPIDController rotationController;
@@ -41,7 +41,7 @@ public class AutoAlignProcessor extends Command{
     private double distance;
     private double rotationError;
 
-    private LoggedTunableNumber maxDistance = new LoggedTunableNumber("AutoAlign/maxDistance", 0.3);
+    private LoggedTunableNumber maxDistance = new LoggedTunableNumber("AutoAlignProcessor/maxDistance", 1.5);
 
     public AutoAlignProcessor(ProfiledPIDController translation, ProfiledPIDController rotation) {
         translationController = translation;

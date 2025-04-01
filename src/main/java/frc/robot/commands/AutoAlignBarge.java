@@ -20,6 +20,8 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.Wrist.Wrist;
+import frc.robot.subsystems.Wrist.WristConstants;
 import frc.robot.subsystems.state.StateManager.OperationStates;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.vision.AprilTag.Vision;
@@ -28,7 +30,7 @@ import frc.robot.util.LoggedTunableNumber;
 public class AutoAlignBarge extends Command {
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
-    private final double minDistance = -0.05;
+    private final double minDistance = 0;
 
     private ProfiledPIDController translationController;
     private ProfiledPIDController rotationController;
@@ -40,7 +42,7 @@ public class AutoAlignBarge extends Command {
     private double rotationError;
     private Alliance alliance = DriverStation.getAlliance().orElse(null);
 
-    private LoggedTunableNumber maxDistance = new LoggedTunableNumber("AutoAlign/maxDistance", 0.3);
+    private double maxDistance = 1;
 
     public AutoAlignBarge(ProfiledPIDController translation, ProfiledPIDController rotation) {
         translationController = translation;
@@ -64,7 +66,7 @@ public class AutoAlignBarge extends Command {
         }
         else if(alliance == Alliance.Blue){
             OperationStates.isBargeFowards = Math.abs(currentPose.getRotation().getDegrees()) <= 90;
-            targetPose = new Pose2d(8.03, MathUtil.clamp(currentPose.getY(), 4.36, 7.47), new Rotation2d(OperationStates.isBargeFowards ? 0 : Math.PI));
+            targetPose = new Pose2d(7.972670439618758, MathUtil.clamp(currentPose.getY(), 4.36, 7.47), new Rotation2d(OperationStates.isBargeFowards ? 0 : Math.PI));
         }
         
         double velocity = mult * projection(new Translation2d(Swerve.getInstance().getState().Speeds.vxMetersPerSecond, Swerve.getInstance().getState().Speeds.vyMetersPerSecond), targetPose.getTranslation().minus(currentPose.getTranslation()));
@@ -123,14 +125,14 @@ public class AutoAlignBarge extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        Swerve.getInstance().setControl(
-            drive.withVelocityX(0)
-            .withVelocityY(0)
-            .withRotationalRate(0));
+        // Swerve.getInstance().setControl(
+        //     drive.withVelocityX(0)
+        //     .withVelocityY(0)
+        //     .withRotationalRate(0));
     }
 
     public boolean finishedAligning() {
-        return (distance < Units.inchesToMeters(0.5)) && (Math.abs(rotationError) < Units.degreesToRadians(0.5));
+        return (Math.abs(currentPose.getX() - targetPose.getX()) < Units.inchesToMeters(0.5)) && (Math.abs(rotationError) < Units.degreesToRadians(0.5)) && (Wrist.getInstance().atGoal(Wrist.getInstance().getGoal()));
     }
 
     public boolean inScoringDistance() {
@@ -149,10 +151,10 @@ public class AutoAlignBarge extends Command {
     }
 
     private double scalar(double distance){
-        if(distance > maxDistance.get()){
+        if(distance > maxDistance){
             return 1.0;
-        } else if (minDistance < distance && distance < maxDistance.get()){
-            return MathUtil.clamp((1 / (maxDistance.get() - minDistance)) * (distance - minDistance), 0, 1);
+        } else if (minDistance < distance && distance < maxDistance){
+            return MathUtil.clamp((1 / (maxDistance - minDistance)) * (distance - minDistance), 0, 1);
         } else {
             return 0.0;
         }

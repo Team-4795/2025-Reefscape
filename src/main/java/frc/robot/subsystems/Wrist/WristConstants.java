@@ -37,13 +37,13 @@ public class WristConstants {
     public static final double voltageCompensation = 12.0;
 
     public static final double CORAL_L4_SETPOINT = 0.1096;
-    public static final double CORAL_L3_SETPOINT = 0.2692209;
+    public static final double CORAL_L3_SETPOINT = -0.1798117607831955;
     public static final double CORAL_L2_SETPOINT = 0.32433;
     public static final double CORAL_L1_SETPOINT = 0;
     public static final double offset = 0;
     public static final double VFBAngle = 0.2468;
     public static final double FOWARD_NET_SETPOINT = -1.7;
-    public static final double BACKWARD_NET_SETPOINT = 1.7;
+    public static final double BACKWARD_NET_SETPOINT = -2.97340989112854 + Units.degreesToRadians(3);
     public static final double intakePosition = 0.24;
     public static final double stowPosition = 1;
 

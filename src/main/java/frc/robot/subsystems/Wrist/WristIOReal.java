@@ -95,6 +95,11 @@ public class WristIOReal implements WristIO{
         goal = new TrapezoidProfile.State(angle, 0);
         }
     }
+
+    @Override
+    public double getGoal() {
+        return goal.position;
+    }
 //MathUtil.clamp(angle, WristConstants.minPosition, WristConstants.maxPosition)
     @Override
     public void setVoltage(double voltage) {
