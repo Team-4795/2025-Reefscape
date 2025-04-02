@@ -24,6 +24,7 @@ public class StateManager extends SubsystemBase {
 
     // non-setpoint robot stuff
     public static class OperationStates {
+        public static boolean canAlign = true;
         public static boolean isScoringLeft = true;
         public static boolean aligned = false; 
         public static boolean inScoringDistance = false;
@@ -99,6 +100,7 @@ public class StateManager extends SubsystemBase {
 
     @Override
     public void periodic() {
+        Logger.recordOutput("StateManager/OperationStates/canAlign", OperationStates.canAlign);
         Logger.recordOutput("StateManager/OperationStates/autoScoreMode", OperationStates.autoScoreMode);
         Logger.recordOutput("StateManager/OperationStates/aligned", OperationStates.aligned);
         Logger.recordOutput("StateManager/OperationStates/inScoringDistance", OperationStates.inScoringDistance);

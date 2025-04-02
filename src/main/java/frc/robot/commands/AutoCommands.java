@@ -304,6 +304,7 @@ public class AutoCommands {
                 Commands.parallel(
                     alignReefUntil(),
                     Commands.sequence(
+                        Commands.waitUntil(() -> OperationStates.canAlign),
                         vstow(),
                         Commands.waitUntil(() -> OperationStates.inScoringDistance),
                         Commands.deferredProxy(() -> stateManager.stateCommand(OperationStates.autoScoreMode))
@@ -321,13 +322,6 @@ public class AutoCommands {
             Commands.deferredProxy(() -> stateManager.stateCommand(OperationStates.autoAlgaeMode))
         ).finallyDo(() -> OperationStates.aligned = false);
     }
-
-    public static Command alignProcessor() {
-        return new AutoAlignProcessor(
-            new ProfiledPIDController(transKp.get(),
-             transKi.get(), transKd.get(), new Constraints(maxVel.get(), maxAccel.get())), 
-            new ProfiledPIDController(rotationKp.get(), rotationKi.get(), rotationKd.get(), new Constraints(SwerveConstants.MaxAngularRate, 3))
-        ).until(() -> OperationStates.aligned);    }
 
     public static Command autoProcessor() {
         return Commands.parallel(
@@ -413,6 +407,13 @@ public class AutoCommands {
              transKi.get(), transKd.get(), new Constraints(2.5, maxAccel.get())), 
             new ProfiledPIDController(rotationKp.get(), rotationKi.get(), rotationKd.get(), new Constraints(SwerveConstants.MaxAngularRate, 3))
         ).until(() -> OperationStates.aligned);
+    }
+
+    public static Command alignProcessor() {
+        return new AutoAlignProcessor(
+            new ProfiledPIDController(transKp.get(), transKi.get(), transKd.get(), new Constraints(maxVel.get(), maxAccel.get())), 
+            new ProfiledPIDController(rotationKp.get(), rotationKi.get(), rotationKd.get(), new Constraints(SwerveConstants.MaxAngularRate, 3))
+        ).until(() -> OperationStates.aligned);    
     }
 
     public static Command scoreLeftReef() {
