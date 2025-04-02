@@ -1,0 +1,66 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.4445723684210527,
+        "y": 5.295065789473683
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.482401315789474,
+        "y": 6.324588815789472
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.5875822368421053,
+        "y": 7.267516447368421
+      },
+      "prevControl": {
+        "x": 2.2033717105263158,
+        "y": 6.536266447368421
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "",
+      "waypointRelativePos": 0.37522441651705485,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Stow no intake"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 5.0,
+    "maxAcceleration": 4.6,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0.0,
+    "rotation": -53.53076560994815
+  },
+  "reversed": false,
+  "folder": "Initial Velocity Auto Test",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -57.99461679191649
+  },
+  "useDefaultConstraints": false
+}

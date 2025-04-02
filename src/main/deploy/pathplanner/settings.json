@@ -4,8 +4,9 @@
   "holonomicMode": true,
   "pathFolders": [
     "Mid Auto",
-    "Tush Push",
+    "Initial Velocity Auto Test",
     "Red Vision Align Top 2",
+    "Tush Push",
     "Vision Align Blue Bottom 2",
     "Vision Align Blue Top 2",
     "Vision Align Red Bottom 2"
