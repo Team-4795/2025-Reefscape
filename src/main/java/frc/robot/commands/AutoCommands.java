@@ -41,12 +41,12 @@ public class AutoCommands {
     private static LoggedTunableNumber transKi = new LoggedTunableNumber("AutoAlign/transKi", 0);
     private static LoggedTunableNumber transKd = new LoggedTunableNumber("AutoAlign/transKd", 0.0);
 
-    private static LoggedTunableNumber rotationKp = new LoggedTunableNumber("AutoAlign/rotationKp", 4.5);
+    private static LoggedTunableNumber rotationKp = new LoggedTunableNumber("AutoAlign/rotationKp", 2);
     private static LoggedTunableNumber rotationKi = new LoggedTunableNumber("AutoAlign/rotationKi", 0);
-    private static LoggedTunableNumber rotationKd = new LoggedTunableNumber("AutoAlign/rotationKd", 0);
+    private static LoggedTunableNumber rotationKd = new LoggedTunableNumber("AutoAlign/rotationKd", 0.1);
 
-    private static LoggedTunableNumber maxAccel = new LoggedTunableNumber("AutoAlign/maxAccel", 7);
-    private static LoggedTunableNumber maxVel = new LoggedTunableNumber("AutoAlign/feederMaxVel", 3.5);
+    private static LoggedTunableNumber maxAccel = new LoggedTunableNumber("AutoAlign/maxAccel", 3);
+    private static LoggedTunableNumber maxVel = new LoggedTunableNumber("AutoAlign/feederMaxVel", 3);
 
      //DO NOT MIND THIS FOR NOW   
     public static Command followTrajectory(PathPlannerPath PathName) {

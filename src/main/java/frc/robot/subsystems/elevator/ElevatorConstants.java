@@ -21,7 +21,7 @@ public final class ElevatorConstants{
     public static final double MAX_VELOCITY = 1.75;
     public static final double CORAL_L4_SETPOINT = 0.7097808122634888 + Units.inchesToMeters(1); 
     public static final double CORAL_L3_SETPOINT = (0.098505221 + Units.inchesToMeters(6)) / 2.0;
-    public static final double CORAL_L2_SETPOINT = 0;
+    public static final double CORAL_L2_SETPOINT = 0.207;
     public static final double CORAL_L1_SETPOINT = 0.12958;
     public static final double ALGEA_SETPOINT = 0.19420458376407623 - Units.inchesToMeters(1);
     public static final double HIGH_ALGAE_SETPOINT = 0.12916289269924164;
@@ -33,7 +33,7 @@ public final class ElevatorConstants{
     public static final double conversionFactor = Units.inchesToMeters(1.0/9.0 * Math.PI * 1.751); // gearing * pi * sprocket diameter
 
 
-    public static final int elevatorCurrentLimits = 60; //might need to adjust later
+    public static final int elevatorCurrentLimits = 50; //might need to adjust later
 
 
 

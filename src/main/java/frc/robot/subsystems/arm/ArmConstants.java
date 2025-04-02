@@ -4,11 +4,11 @@ import edu.wpi.first.math.util.Units;
 
 public class ArmConstants {
     public static final int CAN_ID = 14;
-    public static final int CURRENT_LIMIT = 50;
+    public static final int CURRENT_LIMIT = 40;
     public static final double ARM_OFFSET = Math.PI;
 
     public static final double CORAL_L1 = -1.115251;
-    public static final double CORAL_L2 = -0.0612;
+    public static final double CORAL_L2 = -0.5812;
     public static final double CORAL_L3 = 0.4780269; // 
     public static final double CORAL_L4 = 0.5091708580679217; 
     public static final double VSTOW = 1.342;

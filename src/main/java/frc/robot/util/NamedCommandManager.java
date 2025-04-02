@@ -14,7 +14,7 @@ public class NamedCommandManager {
         NamedCommands.registerCommand("Stow no intake", AutoCommands.stow());
         NamedCommands.registerCommand("Raise to L3", AutoCommands.noElevatorRaiseL3());
         NamedCommands.registerCommand("Raise to L2", AutoCommands.raiseL2());
-        NamedCommands.registerCommand("Intake", AutoCommands.intake());
+        NamedCommands.registerCommand("Intake", AutoCommands.intakeCommand());
         NamedCommands.registerCommand("Align Reef", AutoCommands.alignReefUntil());
         NamedCommands.registerCommand("Auto Score", AutoCommands.autoScore());
         NamedCommands.registerCommand("Score", AutoCommands.score());

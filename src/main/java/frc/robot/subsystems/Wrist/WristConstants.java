@@ -38,7 +38,7 @@ public class WristConstants {
 
     public static final double CORAL_L4_SETPOINT = 0.1096;
     public static final double CORAL_L3_SETPOINT = -0.1798117607831955;
-    public static final double CORAL_L2_SETPOINT = 0.32433;
+    public static final double CORAL_L2_SETPOINT = 0;
     public static final double CORAL_L1_SETPOINT = 0;
     public static final double offset = 0;
     public static final double VFBAngle = 0.2468;

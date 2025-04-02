@@ -62,11 +62,11 @@ public class AutoAlignBarge extends Command {
     
         if(alliance == Alliance.Red) {
             OperationStates.isBargeFowards = Math.abs(currentPose.getRotation().getDegrees()) >= 90;
-            targetPose = new Pose2d(9.65, MathUtil.clamp(currentPose.getY(), 0.66, 3.5), new Rotation2d(OperationStates.isBargeFowards ? Math.PI : 0));
+            targetPose = new Pose2d(9.59, MathUtil.clamp(currentPose.getY(), 0.66, 3.5), new Rotation2d(OperationStates.isBargeFowards ? Math.PI : 0));
         }
         else if(alliance == Alliance.Blue){
             OperationStates.isBargeFowards = Math.abs(currentPose.getRotation().getDegrees()) <= 90;
-            targetPose = new Pose2d(7.972670439618758, MathUtil.clamp(currentPose.getY(), 4.36, 7.47), new Rotation2d(OperationStates.isBargeFowards ? 0 : Math.PI));
+            targetPose = new Pose2d(8.032670439618758, MathUtil.clamp(currentPose.getY(), 4.36, 7.47), new Rotation2d(OperationStates.isBargeFowards ? 0 : Math.PI));
         }
         
         double velocity = mult * projection(new Translation2d(Swerve.getInstance().getState().Speeds.vxMetersPerSecond, Swerve.getInstance().getState().Speeds.vyMetersPerSecond), targetPose.getTranslation().minus(currentPose.getTranslation()));
@@ -132,11 +132,11 @@ public class AutoAlignBarge extends Command {
     }
 
     public boolean finishedAligning() {
-        return (Math.abs(currentPose.getX() - targetPose.getX()) < Units.inchesToMeters(0.5)) && (Math.abs(rotationError) < Units.degreesToRadians(0.5)) && (Wrist.getInstance().atGoal(Wrist.getInstance().getGoal()));
+        return (Math.abs(currentPose.getX() - targetPose.getX()) < Units.inchesToMeters(2)) && (Math.abs(rotationError) < Units.degreesToRadians(0.5)) && (Wrist.getInstance().atGoal(Wrist.getInstance().getGoal()));
     }
 
     public boolean inScoringDistance() {
-        return (distance < 1 + Units.inchesToMeters(6));
+        return (distance < 0.5);
     }
 
     private double projection(Translation2d v1, Translation2d onto){

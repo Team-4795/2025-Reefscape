@@ -15,12 +15,13 @@ import frc.robot.subsystems.swerve.Swerve;
 import static frc.robot.subsystems.vision.AprilTag.VisionConstants.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Vision extends SubsystemBase{
     private VisionIO io[];
     private VisionIOInputsAutoLogged inputs[];
-    private boolean[] shouldUpdate = new boolean[] {false, true, true};
+    private boolean[] shouldUpdate = new boolean[] {true, true, true};
 
     public static Vision instance;
 

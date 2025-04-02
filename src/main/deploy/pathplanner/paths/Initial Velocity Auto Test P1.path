@@ -31,7 +31,19 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "",
+      "waypointRelativePos": 0.0929772502472783,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "VStow"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 5.0,
     "maxAcceleration": 4.6,
@@ -45,7 +57,7 @@
     "rotation": -122.12499844038754
   },
   "reversed": false,
-  "folder": "Initial Velocity Auto Test",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": -142.12501634890174
