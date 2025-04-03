@@ -42,7 +42,7 @@ public class AutoAlignBarge extends Command {
     private double rotationError;
     private Alliance alliance = DriverStation.getAlliance().orElse(null);
 
-    private double maxDistance = 0.8;
+    private double maxDistance = 1;
 
     public AutoAlignBarge(ProfiledPIDController translation, ProfiledPIDController rotation) {
         translationController = translation;
@@ -66,7 +66,7 @@ public class AutoAlignBarge extends Command {
         }
         else if(alliance == Alliance.Blue){
             OperationStates.isBargeFowards = Math.abs(currentPose.getRotation().getDegrees()) <= 90;
-            targetPose = new Pose2d(7.99, MathUtil.clamp(currentPose.getY(), 4.36, 7.47), new Rotation2d(OperationStates.isBargeFowards ? 0 : Math.PI));
+            targetPose = new Pose2d(8.14, MathUtil.clamp(currentPose.getY(), 4.36, 6.75), new Rotation2d(OperationStates.isBargeFowards ? 0 : Math.PI));
         }
         
         double velocity = mult * projection(new Translation2d(Swerve.getInstance().getState().Speeds.vxMetersPerSecond, Swerve.getInstance().getState().Speeds.vyMetersPerSecond), targetPose.getTranslation().minus(currentPose.getTranslation()));
@@ -136,7 +136,7 @@ public class AutoAlignBarge extends Command {
     }
 
     public boolean inScoringDistance() {
-        return (distance < 0.75);
+        return (distance < 1);
     }
 
     private double projection(Translation2d v1, Translation2d onto){

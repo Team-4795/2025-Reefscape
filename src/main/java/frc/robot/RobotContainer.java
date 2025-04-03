@@ -207,7 +207,7 @@ public class RobotContainer {
           stateManager.stateCommand(State.L2), 
           () -> vision.isVisionUpdating()));
     
-    Constants.OIConstants.operatorController.povDown().onTrue(stateManager.stateCommand(State.STOW));
+    Constants.OIConstants.operatorController.povDown().onTrue(AutoCommands.stow());
 
      // Algae setpoints
     // I will delete this code when we are a 100% sure we do not need it
@@ -246,7 +246,7 @@ public class RobotContainer {
      .onTrue(AutoCommands.vstow());
 
     //One Coral Away 
-    OIConstants.driverController.y().onTrue(AutoCommands.autoBarge());
+    OIConstants.driverController.y().whileTrue(AutoCommands.autoBarge());
      
     // Drive sysid
     Constants.OIConstants.driverController.povRight().and(Constants.OIConstants.driverController.y())

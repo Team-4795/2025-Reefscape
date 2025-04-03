@@ -79,8 +79,9 @@ public class AutoCommands {
 
     public static Command vstow() {
         Command command = Commands.sequence(
+            Commands.runOnce(() -> wrist.setGoal(0)),
             Commands.runOnce(() -> arm.setGoal(ArmConstants.VSTOW)),
-            Commands.waitUntil( () -> arm.atGoal(ArmConstants.VSTOW)))
+            Commands.waitUntil(() -> arm.atGoal(ArmConstants.VSTOW)))
                 .andThen(Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.STOW)));
 
         command.addRequirements(GenericRequirement.getInstance());
@@ -333,25 +334,27 @@ public class AutoCommands {
                 Commands.parallel(
                     alignBarge(),
                     Commands.sequence(
-                        stateManager.stateCommand(State.VSTOW),
-                            Commands.either(
-                                Commands.runOnce(() -> wrist.setGoal(WristConstants.FOWARD_NET_SETPOINT)), 
-                                Commands.runOnce(() -> wrist.setGoal(WristConstants.BACKWARD_NET_SETPOINT)), 
-                                () -> OperationStates.isBargeFowards),
+                        Commands.runOnce(() -> arm.setGoal(Units.degreesToRadians(70))),
                         Commands.waitUntil(() -> OperationStates.inScoringDistance),
+                        Commands.either(
+                            // Change fowards wrist setpoint
+                            Commands.runOnce(() -> wrist.setGoal(-1.4640896320343018)), 
+                            Commands.runOnce(() -> wrist.setGoal(-1.4640896320343018)), 
+                            () -> OperationStates.isBargeFowards),
                         Commands.either(
                             stateManager.stateCommand(State.FORWARD_NET), 
                             stateManager.stateCommand(State.BACKWARD_NET), 
                             () -> OperationStates.isBargeFowards
                         )
                     )
+                ),
+                Commands.parallel(
+                    Commands.either(
+                        Commands.runOnce(() -> wrist.setGoal(WristConstants.FOWARD_NET_SETPOINT)), 
+                        Commands.runOnce(() -> wrist.setGoal(WristConstants.BACKWARD_NET_SETPOINT)), 
+                        () -> OperationStates.isBargeFowards),
+                    scorePiece()
                 )
-                // ,
-                // Commands.parallel(
-                //     Commands.runOnce(() -> elevator.setGoalHeight(.7)),
-                //     Commands.runOnce(() -> arm.setGoal(Units.degreesToRadians(90))),
-                //     scorePiece()
-                // )
             ).finallyDo(() -> OperationStates.aligned = false);
     }
 

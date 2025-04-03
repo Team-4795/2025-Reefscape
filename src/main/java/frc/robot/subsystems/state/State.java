@@ -8,6 +8,7 @@ public enum State {
     STOW(StateConstants.STOW),
     VSTOW(StateConstants.VSTOW),
     LOW_ALGAE(StateConstants.LOW_ALGAE),
+    VSTOW_ALGAE(StateConstants.VSTOW_ALGAE),
     PROCESSOR(StateConstants.PROCESSOR),
     FORWARD_NET(StateConstants.FORWARD_NET),
     BACKWARD_NET(StateConstants.BACKWARD_NET),

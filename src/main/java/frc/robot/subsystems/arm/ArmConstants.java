@@ -4,7 +4,7 @@ import edu.wpi.first.math.util.Units;
 
 public class ArmConstants {
     public static final int CAN_ID = 14;
-    public static final int CURRENT_LIMIT = 40;
+    public static final int CURRENT_LIMIT = 45;
     public static final double ARM_OFFSET = Math.PI;
 
     public static final double CORAL_L1 = -1.195;
@@ -15,7 +15,7 @@ public class ArmConstants {
     public static final double GOAL_TOLERANCE = 0.03;
     public static final double ALGAE_LOW = 0.3129383325576782 - Units.degreesToRadians(8);
     public static final double ALGAE_HIGH = 0.8301816582679749 - Units.degreesToRadians(6);
-    public static final double NET_SETPOINT = Units.degreesToRadians(85);
+    public static final double NET_SETPOINT = Units.degreesToRadians(90);
     public static final double PROCESSOR = 0.0;
 
     public static final double STOW = -1.87;

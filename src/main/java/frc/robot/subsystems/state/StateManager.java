@@ -58,7 +58,6 @@ public class StateManager extends SubsystemBase {
         this.lastState = this.state;
         this.state = state;
         Logger.recordOutput("state being set", state);
-        
         Logger.recordOutput("state arm angle is", state.setpoint.equals(StateConstants.STOW));
         Util.nullOrDo(state.setpoint.armAngle, (value) -> {setpoint.armAngle = value;});
         Util.nullOrDo(state.setpoint.elevatorHeight, (value) -> setpoint.elevatorHeight = value);
@@ -94,14 +93,16 @@ public class StateManager extends SubsystemBase {
     }
 
     public boolean elevatorCanMove() {
-        return arm.getAngle() > -1.5;
+        return MathUtil.isNear(setpoint.armAngle, arm.getAngle(), 0.05);
     }
 
     public boolean armCanMove() {
         if(state == State.VSTOW && lastState == State.L4) {
+            Logger.recordOutput("L4 to Vstow", true);
             return true;
         } 
         else if(state == State.L4 && lastState == State.VSTOW) {
+            Logger.recordOutput("L4 to Vstow", false);
             return MathUtil.isNear(setpoint.elevatorHeight, elevator.getPosition(), 0.03);
         } 
         else {
@@ -129,6 +130,7 @@ public class StateManager extends SubsystemBase {
         Logger.recordOutput("StateManager/Setpoint/Wrist Angle", setpoint.wristAngle);
 
         Logger.recordOutput("StateManager/State", state);
+        Logger.recordOutput("StateManager/Last State", lastState);
 
         SmartDashboard.putBoolean("Score/isLeftL4", OperationStates.autoScoreMode == State.L4 && OperationStates.isScoringLeft);
         SmartDashboard.putBoolean("Score/isLeftL3", OperationStates.autoScoreMode == State.L3 && OperationStates.isScoringLeft);
