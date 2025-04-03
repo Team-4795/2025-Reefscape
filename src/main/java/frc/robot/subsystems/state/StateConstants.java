@@ -18,7 +18,7 @@ public class StateConstants {
     public static final Setpoint HIGH_ALGAE = new Setpoint(ArmConstants.ALGAE_HIGH, ElevatorConstants.HIGH_ALGAE_SETPOINT, 1.0, WristConstants.CORAL_L4_SETPOINT);
     public static final Setpoint LOW_ALGAE = new Setpoint(ArmConstants.ALGAE_LOW, ElevatorConstants.STOW, 1.0, 0.025);
     public static final Setpoint VSTOW = new Setpoint(ArmConstants.VSTOW, ElevatorConstants.STOW, null, null);
-    public static final Setpoint STOW = new Setpoint(ArmConstants.STOW, ElevatorConstants.STOW, 0.0, WristConstants.stowPosition);
+    public static final Setpoint STOW = new Setpoint(ArmConstants.STOW, ElevatorConstants.STOW, 0.0, 0.0);
     public static final Setpoint PROCESSOR = new Setpoint(ArmConstants.PROCESSOR, ElevatorConstants.PROCESSOR_SETPOINT, IntakeConstants.coralReverse, null);
     public static final Setpoint FORWARD_NET = new Setpoint(ArmConstants.NET_SETPOINT, ElevatorConstants.NET_SETPOINT, 1.0, WristConstants.FOWARD_NET_SETPOINT);
     public static final Setpoint BACKWARD_NET = new Setpoint(ArmConstants.NET_SETPOINT, ElevatorConstants.NET_SETPOINT, 1.0, WristConstants.BACKWARD_NET_SETPOINT);

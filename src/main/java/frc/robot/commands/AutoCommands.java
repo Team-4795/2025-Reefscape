@@ -2,6 +2,8 @@ package frc.robot.commands;
 
 import java.lang.invoke.WrongMethodTypeException;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 
@@ -214,9 +216,7 @@ public class AutoCommands {
                 ),
                 intake.reverseCoral()
             ).until(() ->intake.hasGamepiece()),
-            Commands.runOnce(() -> intake.isStoring()),
-            Commands.runOnce(() -> arm.setGoal(ArmConstants.STOW + 0.2)),
-            Commands.runOnce(() -> wrist.setGoal(WristConstants.VFBAngle))
+            Commands.runOnce(() -> intake.isStoring())
         );  
     }
 
@@ -251,16 +251,6 @@ public class AutoCommands {
             Commands.waitSeconds(0.15),
             intake.reverseCoral().withTimeout(0.12));
     }
-
-    // private static HashMap<Integer, Command> autoScoreMap() {
-    //     HashMap<Integer, Command> map = new HashMap<>();
-
-    //     map.put(2, raiseL2());
-    //     map.put(3, raiseL3());
-    //     map.put(4, raiseL4());
-
-    //     return map;
-    // }
 
     public static Command yeet(){
         return Commands.parallel(
@@ -298,7 +288,7 @@ public class AutoCommands {
             Commands.sequence(
                 Commands.parallel(
                     alignReefUntil(),
-                    Commands.deferredProxy(() -> stateManager.stateCommand(OperationStates.autoScoreMode))
+                    Commands.defer(() -> stateManager.stateCommand(OperationStates.autoScoreMode), stateManager.stateCommand(OperationStates.autoScoreMode).getRequirements())
                 ),
                 scorePiece(),
                 Commands.runOnce(() -> OperationStates.aligned = false)
@@ -309,14 +299,14 @@ public class AutoCommands {
                     alignReefUntil(),
                     Commands.sequence(
                         Commands.waitUntil(() -> OperationStates.canAlign),
-                        vstow(),
+                        stateManager.stateCommand(State.VSTOW),
                         Commands.waitUntil(() -> OperationStates.inScoringDistance),
-                        Commands.deferredProxy(() -> stateManager.stateCommand(OperationStates.autoScoreMode))
+                        Commands.defer(() -> stateManager.stateCommand(OperationStates.autoScoreMode), stateManager.stateCommand(OperationStates.autoScoreMode).getRequirements())
                     )
                 ),
                 Commands.waitSeconds(0.4),
                 scorePiece(),
-                vstow()), 
+                stateManager.stateCommand(State.VSTOW)), 
             () -> OperationStates.autoScoreMode != State.L4).finallyDo(() -> OperationStates.aligned = false);
     }
 
@@ -355,12 +345,13 @@ public class AutoCommands {
                             () -> OperationStates.isBargeFowards
                         )
                     )
-                ),
-                Commands.parallel(
-                    Commands.runOnce(() -> elevator.setGoalHeight(.7)),
-                    Commands.runOnce(() -> arm.setGoal(Units.degreesToRadians(90)), arm),
-                    scorePiece()
                 )
+                // ,
+                // Commands.parallel(
+                //     Commands.runOnce(() -> elevator.setGoalHeight(.7)),
+                //     Commands.runOnce(() -> arm.setGoal(Units.degreesToRadians(90))),
+                //     scorePiece()
+                // )
             ).finallyDo(() -> OperationStates.aligned = false);
     }
 

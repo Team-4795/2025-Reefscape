@@ -16,6 +16,7 @@ import frc.robot.subsystems.Wrist.Wrist;
 
 public class StateManager extends SubsystemBase {
     private State state;
+    private State lastState = State.DYNAMIC;
     private Setpoint setpoint = StateConstants.STOW;
     private Intake intake = Intake.getInstance();
     private Arm arm = Arm.getInstance();
@@ -54,8 +55,12 @@ public class StateManager extends SubsystemBase {
     }
 
     private void setState(State state) {
+        this.lastState = this.state;
         this.state = state;
-        Util.nullOrDo(state.setpoint.armAngle, (value) -> setpoint.armAngle = value);
+        Logger.recordOutput("state being set", state);
+        
+        Logger.recordOutput("state arm angle is", state.setpoint.equals(StateConstants.STOW));
+        Util.nullOrDo(state.setpoint.armAngle, (value) -> {setpoint.armAngle = value;});
         Util.nullOrDo(state.setpoint.elevatorHeight, (value) -> setpoint.elevatorHeight = value);
         Util.nullOrDo(state.setpoint.intakeSpeed, (value) -> setpoint.intakeSpeed = value);
         Util.nullOrDo(state.setpoint.wristAngle, (value) -> setpoint.wristAngle = value);
@@ -67,16 +72,18 @@ public class StateManager extends SubsystemBase {
         Commands.parallel(
             Commands.either(
                 Commands.sequence(
+                    Commands.runOnce(() -> Logger.recordOutput("armFirst?", true)),
                     Commands.runOnce(() -> arm.setGoal(setpoint.armAngle)),
                     Commands.waitUntil(() -> elevatorCanMove())
                         .andThen(() -> elevator.setGoalHeight(setpoint.elevatorHeight))
                 ),
                 Commands.sequence(
+                    Commands.runOnce(() -> Logger.recordOutput("elevatorFirst?", true)),
                     Commands.runOnce(() -> elevator.setGoalHeight(setpoint.elevatorHeight)),
                     Commands.waitUntil(() -> armCanMove())
                         .andThen(() -> arm.setGoal(setpoint.armAngle))
                 ),
-                () -> (elevator.getPosition() < setpoint.elevatorHeight) && (arm.getAngle() < setpoint.armAngle)
+                () -> (elevator.getPosition() < setpoint.elevatorHeight  || OperationStates.aligned) && (arm.getAngle() < setpoint.armAngle)
             ),
             Commands.runOnce(() -> intake.setIntakeSpeed(setpoint.intakeSpeed))
         )).andThen(() -> wrist.setGoal(setpoint.wristAngle));
@@ -91,7 +98,15 @@ public class StateManager extends SubsystemBase {
     }
 
     public boolean armCanMove() {
-        return MathUtil.isNear(setpoint.elevatorHeight, elevator.getPosition(), 0.03);
+        if(state == State.VSTOW && lastState == State.L4) {
+            return true;
+        } 
+        else if(state == State.L4 && lastState == State.VSTOW) {
+            return MathUtil.isNear(setpoint.elevatorHeight, elevator.getPosition(), 0.03);
+        } 
+        else {
+            return elevator.getPosition() < .4;
+        }
     }
 
     public State getState() {
@@ -107,6 +122,13 @@ public class StateManager extends SubsystemBase {
         Logger.recordOutput("StateManager/OperationStates/isReefTagOnly", OperationStates.isReefTagOnly);
         Logger.recordOutput("StateManager/OperationStates/autoAlgaeMode", OperationStates.autoAlgaeMode);
         Logger.recordOutput("StateManager/OperationStates/isBargeFowards", OperationStates.isBargeFowards);
+
+        Logger.recordOutput("StateManager/Setpoint/Arm Angle", setpoint.armAngle);
+        Logger.recordOutput("StateManager/Setpoint/Elevator Height", setpoint.elevatorHeight);
+        Logger.recordOutput("StateManager/Setpoint/Intake speed", setpoint.intakeSpeed);
+        Logger.recordOutput("StateManager/Setpoint/Wrist Angle", setpoint.wristAngle);
+
+        Logger.recordOutput("StateManager/State", state);
 
         SmartDashboard.putBoolean("Score/isLeftL4", OperationStates.autoScoreMode == State.L4 && OperationStates.isScoringLeft);
         SmartDashboard.putBoolean("Score/isLeftL3", OperationStates.autoScoreMode == State.L3 && OperationStates.isScoringLeft);

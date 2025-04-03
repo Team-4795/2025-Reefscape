@@ -151,6 +151,7 @@ public class AutoAlignReef extends Command {
 
     @Override
     public void end(boolean interrupted) {
+        Logger.recordOutput("Auto Score Interrupt", interrupted);
         Swerve.getInstance().setControl(
             drive.withVelocityX(0)
             .withVelocityY(0)

@@ -207,14 +207,12 @@ public class RobotContainer {
           stateManager.stateCommand(State.L2), 
           () -> vision.isVisionUpdating()));
     
-    Constants.OIConstants.operatorController.povDown().onTrue(AutoCommands.stow());
+    Constants.OIConstants.operatorController.povDown().onTrue(stateManager.stateCommand(State.STOW));
 
      // Algae setpoints
     // I will delete this code when we are a 100% sure we do not need it
     // Constants.OIConstants.operatorController.rightTrigger().onTrue(AutoCommands.AlgaeLow());
     // Constants.OIConstants.operatorController.leftTrigger().onTrue(AutoCommands.algaeHigh());
-    Constants.OIConstants.operatorController.rightTrigger().onTrue(AutoCommands.scoreNetForward());
-    Constants.OIConstants.operatorController.leftTrigger().onTrue(AutoCommands.scoreNetBakwards());
 
     Constants.OIConstants.operatorController.x().onTrue((AutoCommands.processor()));
 
