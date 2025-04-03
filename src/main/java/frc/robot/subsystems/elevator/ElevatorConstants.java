@@ -20,13 +20,13 @@ public final class ElevatorConstants{
     public static final double MAX_ACCELERATION = 7;
     public static final double MAX_VELOCITY = 1.75;
     public static final double CORAL_L4_SETPOINT = 0.7097808122634888 + Units.inchesToMeters(1); 
-    public static final double CORAL_L3_SETPOINT = (0.098505221 + Units.inchesToMeters(6)) / 2.0;
-    public static final double CORAL_L2_SETPOINT = 0.207;
-    public static final double CORAL_L1_SETPOINT = 0.12958;
+    public static final double CORAL_L3_SETPOINT = (0.098505221 + Units.inchesToMeters(2)) / 2.0;
+    public static final double CORAL_L2_SETPOINT = 0.207 + Units.inchesToMeters(2);
+    public static final double CORAL_L1_SETPOINT = 0;
     public static final double ALGEA_SETPOINT = 0.19420458376407623 - Units.inchesToMeters(1);
     public static final double HIGH_ALGAE_SETPOINT = 0.12916289269924164;
     public static final double PROCESSOR_SETPOINT = 0.19420458376407623 - Units.inchesToMeters(2);
-    public static final double NET_SETPOINT = 0.67;
+    public static final double NET_SETPOINT = 0.60;
     public static final double GOAL_TOLERANCE = 0.02;
     public static final double STOW = 0.01;
     

@@ -4,6 +4,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.AutoCommands;
+import frc.robot.subsystems.intake.Intake;
 
 public class NamedCommandManager {
     public static void registerNamedCommands() {
@@ -24,5 +25,7 @@ public class NamedCommandManager {
         NamedCommands.registerCommand("Score right reef", AutoCommands.scoreRightReef());
         NamedCommands.registerCommand("Zero Arm", AutoCommands.zeroArm());
         NamedCommands.registerCommand("Set Score L4", AutoCommands.setScoringState());
+        NamedCommands.registerCommand("Wait Intake", AutoCommands.waitIntake());
+        NamedCommands.registerCommand("Reverse", Commands.run(() -> Intake.getInstance().reverseCoral()).until(() -> Intake.getInstance().hasGamepiece()));
     }
 }

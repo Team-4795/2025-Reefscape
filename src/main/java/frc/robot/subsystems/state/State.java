@@ -9,6 +9,8 @@ public enum State {
     VSTOW(StateConstants.VSTOW),
     LOW_ALGAE(StateConstants.LOW_ALGAE),
     PROCESSOR(StateConstants.PROCESSOR),
+    FORWARD_NET(StateConstants.FORWARD_NET),
+    BACKWARD_NET(StateConstants.BACKWARD_NET),
     HIGH_ALGAE(StateConstants.HIGH_ALGAE);
 
     public Setpoint setpoint;

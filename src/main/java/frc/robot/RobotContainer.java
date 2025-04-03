@@ -165,11 +165,7 @@ public class RobotContainer {
     Constants.OIConstants.driverController.povUp().whileTrue(
       AutoCommands.alignFeeder()
     );
-
-    Constants.OIConstants.driverController.povDown().whileTrue(
-      AutoCommands.autoBarge()
-    );
-
+    
     // Slow mode
     Constants.OIConstants.driverController.leftTrigger().onTrue(Commands.runOnce(() -> drivetrain.setSlowMode(true)));
     Constants.OIConstants.driverController.leftTrigger().onFalse(Commands.runOnce(() -> drivetrain.setSlowMode(false)));
@@ -252,7 +248,7 @@ public class RobotContainer {
      .onTrue(AutoCommands.vstow());
 
     //One Coral Away 
-    // OIConstants.driverController.y().onTrue(AutoCommands.oneCoralAway());
+    OIConstants.driverController.y().onTrue(AutoCommands.autoBarge());
      
     // Drive sysid
     Constants.OIConstants.driverController.povRight().and(Constants.OIConstants.driverController.y())

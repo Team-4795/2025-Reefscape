@@ -37,7 +37,7 @@ public class AutoAlignReef extends Command {
 
     private static LoggedTunableNumber minDistance = new LoggedTunableNumber("AutoAlign/minDistance", -0.1);
     private static LoggedTunableNumber maxDistance = new LoggedTunableNumber("AutoAlign/maxDistance", .8);
-    private static LoggedTunableNumber maxAccel = new LoggedTunableNumber("AutoAlign/maxAccel", 3);
+    private static LoggedTunableNumber maxAccel = new LoggedTunableNumber("AutoAlign/maxAccel", 3.75);
     private static LoggedTunableNumber maxVel = new LoggedTunableNumber("AutoAlign/feederMaxVel", 3);
 
     private ProfiledPIDController translationController;
@@ -158,11 +158,11 @@ public class AutoAlignReef extends Command {
     }
 
     public boolean finishedAligning() {
-        return (distance < Units.inchesToMeters(2)) && (Math.abs(rotationError) < Units.degreesToRadians(1.5));
+        return (distance < Units.inchesToMeters(2)) && (Math.abs(rotationError) < Units.degreesToRadians(2));
     }
 
     public boolean inScoringDistance() {
-        return (distance < .5);
+        return (distance < 1);
     }
 
     private double projection(Translation2d v1, Translation2d onto){

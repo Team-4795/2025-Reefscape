@@ -7,7 +7,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Score left reef"
+            "name": "Score right reef"
           }
         },
         {
@@ -64,13 +64,13 @@
         {
           "type": "named",
           "data": {
-            "name": "Intake"
+            "name": "Score left reef"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Score left reef"
+            "name": "Intake"
           }
         },
         {

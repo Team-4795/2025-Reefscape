@@ -45,7 +45,7 @@ public class AutoCommands {
     private static LoggedTunableNumber rotationKi = new LoggedTunableNumber("AutoAlign/rotationKi", 0);
     private static LoggedTunableNumber rotationKd = new LoggedTunableNumber("AutoAlign/rotationKd", 0.1);
 
-    private static LoggedTunableNumber maxAccel = new LoggedTunableNumber("AutoAlign/maxAccel", 3);
+    private static LoggedTunableNumber maxAccel = new LoggedTunableNumber("AutoAlign/maxAccel", 3.5);
     private static LoggedTunableNumber maxVel = new LoggedTunableNumber("AutoAlign/feederMaxVel", 3);
 
      //DO NOT MIND THIS FOR NOW   
@@ -239,6 +239,10 @@ public class AutoCommands {
         return command;
     }
 
+    public static Command waitIntake() {
+        return Commands.waitUntil(() -> intake.hasGamepiece());
+    }
+
     public static Command intake() {
         return Commands.sequence(
             Commands.runOnce(() -> intake.setIntakeSpeed(IntakeConstants.intake)), 
@@ -339,20 +343,24 @@ public class AutoCommands {
                 Commands.parallel(
                     alignBarge(),
                     Commands.sequence(
-                            vstow(),
+                        stateManager.stateCommand(State.VSTOW),
                             Commands.either(
                                 Commands.runOnce(() -> wrist.setGoal(WristConstants.FOWARD_NET_SETPOINT)), 
                                 Commands.runOnce(() -> wrist.setGoal(WristConstants.BACKWARD_NET_SETPOINT)), 
                                 () -> OperationStates.isBargeFowards),
                         Commands.waitUntil(() -> OperationStates.inScoringDistance),
                         Commands.either(
-                            scoreNetForward(), 
-                            scoreNetBakwards(), 
+                            stateManager.stateCommand(State.FORWARD_NET), 
+                            stateManager.stateCommand(State.BACKWARD_NET), 
                             () -> OperationStates.isBargeFowards
                         )
                     )
                 ),
-                scorePiece()
+                Commands.parallel(
+                    Commands.runOnce(() -> elevator.setGoalHeight(.7)),
+                    Commands.runOnce(() -> arm.setGoal(Units.degreesToRadians(90)), arm),
+                    scorePiece()
+                )
             ).finallyDo(() -> OperationStates.aligned = false);
     }
 
