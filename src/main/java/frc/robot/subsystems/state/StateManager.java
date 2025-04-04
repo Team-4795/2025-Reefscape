@@ -93,7 +93,12 @@ public class StateManager extends SubsystemBase {
     }
 
     public boolean elevatorCanMove() {
-        return MathUtil.isNear(setpoint.armAngle, arm.getAngle(), 0.05);
+        if(state == State.BACKWARD_NET) {
+            return true;
+        } 
+        else {
+            return MathUtil.isNear(setpoint.armAngle, arm.getAngle(), 0.05);
+        }
     }
 
     public boolean armCanMove() {

@@ -18,6 +18,7 @@ public class NamedCommandManager {
         NamedCommands.registerCommand("Intake", AutoCommands.intakeCommand());
         NamedCommands.registerCommand("Align Reef", AutoCommands.alignReefUntil());
         NamedCommands.registerCommand("Auto Score", AutoCommands.autoScore());
+        NamedCommands.registerCommand("Autonomous Score", AutoCommands.autonomousScore());
         NamedCommands.registerCommand("Score", AutoCommands.score());
         NamedCommands.registerCommand("VStow", AutoCommands.vstow());
         NamedCommands.registerCommand("SetIntakeSpeed", AutoCommands.setIntakeSpeed());

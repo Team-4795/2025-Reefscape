@@ -62,7 +62,7 @@ public class AutoAlignBarge extends Command {
     
         if(alliance == Alliance.Red) {
             OperationStates.isBargeFowards = Math.abs(currentPose.getRotation().getDegrees()) >= 90;
-            targetPose = new Pose2d(9.63, MathUtil.clamp(currentPose.getY(), 0.66, 3.5), new Rotation2d(OperationStates.isBargeFowards ? Math.PI : 0));
+            targetPose = new Pose2d(9.46, MathUtil.clamp(currentPose.getY(), 0.66, 3.06), new Rotation2d(OperationStates.isBargeFowards ? Math.PI : 0));
         }
         else if(alliance == Alliance.Blue){
             OperationStates.isBargeFowards = Math.abs(currentPose.getRotation().getDegrees()) <= 90;
@@ -132,7 +132,7 @@ public class AutoAlignBarge extends Command {
     }
 
     public boolean finishedAligning() {
-        return (Math.abs(currentPose.getX() - targetPose.getX()) < Units.inchesToMeters(2)) && (Math.abs(rotationError) < Units.degreesToRadians(2)) && (Wrist.getInstance().atGoal(Wrist.getInstance().getGoal()));
+        return (Math.abs(currentPose.getX() - targetPose.getX()) < Units.inchesToMeters(2.5)) && (Math.abs(rotationError) < Units.degreesToRadians(3)) && (Wrist.getInstance().atGoal(Wrist.getInstance().getGoal()));
     }
 
     public boolean inScoringDistance() {

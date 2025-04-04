@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 6.0813461538461535,
-        "y": 6.171666666666666
+        "x": 6.321988636363637,
+        "y": 6.28356534090909
       },
       "prevControl": {
-        "x": 6.495079706477733,
-        "y": 6.441074561403508
+        "x": 6.735722188995216,
+        "y": 6.552973235645932
       },
       "nextControl": null,
       "isLocked": false,
@@ -57,7 +57,7 @@
     "rotation": -122.12499844038754
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Initial Velocity Auto Test",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -142.12501634890174

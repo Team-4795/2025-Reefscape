@@ -15,7 +15,7 @@ public class ArmConstants {
     public static final double GOAL_TOLERANCE = 0.03;
     public static final double ALGAE_LOW = 0.3129383325576782 - Units.degreesToRadians(8);
     public static final double ALGAE_HIGH = 0.8301816582679749 - Units.degreesToRadians(6);
-    public static final double NET_SETPOINT = Units.degreesToRadians(90);
+    public static final double NET_SETPOINT = Units.degreesToRadians(70);
     public static final double PROCESSOR = 0.0;
 
     public static final double STOW = -1.87;

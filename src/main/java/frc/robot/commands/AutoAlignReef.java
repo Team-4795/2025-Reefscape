@@ -24,6 +24,8 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.state.State;
+import frc.robot.subsystems.state.StateManager;
 import frc.robot.subsystems.state.StateManager.OperationStates;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.vision.AprilTag.Vision;
@@ -89,7 +91,7 @@ public class AutoAlignReef extends Command {
         rotationError = currentPose.getRotation().getRadians() - reefScoringPose.getRotation().getRadians();
         rotationController.reset(MathUtil.angleModulus(currentPose.getRotation().getRadians()), Swerve.getInstance().getState().Speeds.omegaRadiansPerSecond);
 
-        OperationStates.canAlign = (currentPose.getTranslation().getDistance(reefScoringPose.getTranslation()) >= 1.5);
+        OperationStates.canAlign = (currentPose.getTranslation().getDistance(reefScoringPose.getTranslation()) >= 1.5 || StateManager.getInstance().getState() == State.L4);
         if(OperationStates.canAlign) {
             targetPose = reefScoringPose;
         }
@@ -105,7 +107,8 @@ public class AutoAlignReef extends Command {
 
         translationController.reset(distance, translationController.getSetpoint().velocity);
 
-        rotationError = currentPose.getRotation().getRadians() - targetPose.getRotation().getRadians();
+        rotationError = MathUtil.angleModulus(currentPose.getRotation().getRadians() - targetPose.getRotation().getRadians());
+
         double rotationPIDOutput = rotationController.calculate(MathUtil.angleModulus(currentPose.getRotation().getRadians()), targetPose.getRotation().getRadians());
         double omega = rotationController.getSetpoint().velocity + rotationPIDOutput;
         

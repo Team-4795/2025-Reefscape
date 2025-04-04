@@ -291,8 +291,7 @@ public class AutoCommands {
                     alignReefUntil(),
                     Commands.defer(() -> stateManager.stateCommand(OperationStates.autoScoreMode), stateManager.stateCommand(OperationStates.autoScoreMode).getRequirements())
                 ),
-                scorePiece(),
-                Commands.runOnce(() -> OperationStates.aligned = false)
+                scorePiece()
             ),
 
             Commands.sequence(
@@ -308,6 +307,32 @@ public class AutoCommands {
                 Commands.waitSeconds(0.4),
                 scorePiece(),
                 stateManager.stateCommand(State.VSTOW)), 
+            () -> OperationStates.autoScoreMode != State.L4).finallyDo(() -> OperationStates.aligned = false);
+    }
+
+    public static Command autonomousScore() {
+        return Commands.either(
+            Commands.sequence(
+                Commands.parallel(
+                    alignReefUntil(),
+                    Commands.defer(() -> stateManager.stateCommand(OperationStates.autoScoreMode), stateManager.stateCommand(OperationStates.autoScoreMode).getRequirements())
+                ),
+                scorePiece(),
+                Commands.runOnce(() -> OperationStates.aligned = false)
+            ),
+
+            Commands.sequence(
+                Commands.parallel(
+                    alignReefUntil(),
+                    Commands.sequence(
+                        Commands.waitUntil(() -> OperationStates.canAlign),
+                        stateManager.stateCommand(State.VSTOW),
+                        Commands.waitUntil(() -> OperationStates.inScoringDistance),
+                        Commands.defer(() -> stateManager.stateCommand(OperationStates.autoScoreMode), stateManager.stateCommand(OperationStates.autoScoreMode).getRequirements())
+                    )
+                ),
+                Commands.waitSeconds(0.4),
+                scorePiece()), 
             () -> OperationStates.autoScoreMode != State.L4).finallyDo(() -> OperationStates.aligned = false);
     }
 
@@ -353,9 +378,17 @@ public class AutoCommands {
                         Commands.runOnce(() -> wrist.setGoal(WristConstants.FOWARD_NET_SETPOINT)), 
                         Commands.runOnce(() -> wrist.setGoal(WristConstants.BACKWARD_NET_SETPOINT)), 
                         () -> OperationStates.isBargeFowards),
-                    scorePiece()
+                    Commands.runOnce(() -> arm.setGoal(Math.PI / 2)),
+                    Commands.sequence(
+                        Commands.waitUntil(() -> arm.getAngle() > Units.degreesToRadians(80)),
+                        scorePiece()
+                    )
                 )
-            ).finallyDo(() -> OperationStates.aligned = false);
+            ).finallyDo(() -> {
+                OperationStates.aligned = false;
+
+            }
+            );
     }
 
     public static Command zeroArm() {

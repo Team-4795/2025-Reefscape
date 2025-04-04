@@ -28,8 +28,8 @@ import frc.robot.subsystems.vision.AprilTag.Vision;
 public class AutoAlignAlgae extends Command{
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
-    private final double maxDistance = 1.5;
-    private final double minDistance = 0;
+    private final double maxDistance = 1;
+    private final double minDistance = -0.05;
 
     private ProfiledPIDController translationController;
     private ProfiledPIDController rotationController;
@@ -69,7 +69,7 @@ public class AutoAlignAlgae extends Command{
         }
 
         reefPose = Vision.getInstance().getBestReefPose();
-        targetPose = reefPose.transformBy(new Transform2d(0.16, 0 , new Rotation2d()));
+        targetPose = reefPose.transformBy(new Transform2d(0.37, 0 , new Rotation2d()));
 
         currentPose = Swerve.getInstance().getState().Pose;
         double velocity = mult * projection(new Translation2d(Swerve.getInstance().getState().Speeds.vxMetersPerSecond, Swerve.getInstance().getState().Speeds.vyMetersPerSecond), targetPose.getTranslation().minus(currentPose.getTranslation()));
@@ -86,8 +86,6 @@ public class AutoAlignAlgae extends Command{
 
     @Override
     public void execute() {
-        targetPose = reefPose.transformBy(new Transform2d(0.16, 0 , new Rotation2d()));
-
         currentPose = Swerve.getInstance().getState().Pose;
         distance = currentPose.getTranslation().getDistance(targetPose.getTranslation());
 

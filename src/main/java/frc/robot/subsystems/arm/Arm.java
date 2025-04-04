@@ -61,7 +61,7 @@ public class Arm extends SubsystemBase {
     }
 
     public double getAngle() {
-        return inputs.relativeEncoderPosition;
+        return inputs.angularPosition;
     }
 
     public double getGoalAngle() {
@@ -101,6 +101,10 @@ public class Arm extends SubsystemBase {
 
     public void manualVoltage(double voltage) {
         io.setVoltage(voltage);
+    }
+
+    public void setFFValues(double ks, double kg, double kv, double ka) {
+        io.setFFValues(ks, kg, kv, ka);
     }
 
     public Pose3d getArmPose(){
