@@ -108,6 +108,7 @@ public class Vision extends SubsystemBase{
 
                 List<Pose3d> tagPoses = new ArrayList<>();
                 
+                // Exclude tags on other alliance. Keep reef tags
                 if(OperationStates.isReefTagOnly) {
                     for (int tag : inputs[i].tags) {
                         if(DriverStation.getAlliance().get().equals(Alliance.Red)) {
@@ -117,6 +118,24 @@ public class Vision extends SubsystemBase{
                         }
                         else if (DriverStation.getAlliance().get().equals(Alliance.Blue)) {
                             if(tag != 1 && tag != 2 && tag != 3 && tag != 4 && tag != 5 && tag != 6 && tag != 7 && tag != 8 && tag != 9 && tag != 10 && tag != 11 && tag != 12 && tag != 13 && tag != 14 && tag != 15 && tag != 16) {
+                                VisionConstants.aprilTagFieldLayout.getTagPose(tag).ifPresent(tagPoses::add);
+                            }
+                        }
+                        else {
+                            continue;
+                        }
+                    }
+                }
+                // Exclude tags on other alliance. Keep reef and feeder tags
+                else {
+                    for (int tag : inputs[i].tags) {
+                        if(DriverStation.getAlliance().get().equals(Alliance.Red)) {
+                            if(tag != 3 && tag != 4 && tag != 5 && tag != 12 && tag != 13 && tag != 14 && tag != 15 && tag != 16 && tag != 17 && tag != 18 && tag != 19 && tag != 20 && tag != 21) {
+                                VisionConstants.aprilTagFieldLayout.getTagPose(tag).ifPresent(tagPoses::add);
+                            }
+                        }
+                        else if (DriverStation.getAlliance().get().equals(Alliance.Blue)) {
+                            if(tag != 1 && tag != 2 && tag != 3 && tag != 4 && tag != 5 && tag != 6 && tag != 7 && tag != 8 && tag != 9 && tag != 10 && tag != 11  && tag != 14 && tag != 15 && tag != 16) {
                                 VisionConstants.aprilTagFieldLayout.getTagPose(tag).ifPresent(tagPoses::add);
                             }
                         }

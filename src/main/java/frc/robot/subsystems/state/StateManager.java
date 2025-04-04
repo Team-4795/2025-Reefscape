@@ -30,7 +30,7 @@ public class StateManager extends SubsystemBase {
         public static boolean aligned = false; 
         public static boolean inScoringDistance = false;
         public static boolean isBargeFowards = true;
-        public static boolean isReefTagOnly = true;
+        public static boolean isReefTagOnly = false;
         public static State autoScoreMode = State.L4;
         public static State autoAlgaeMode = State.HIGH_ALGAE;
     }

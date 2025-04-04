@@ -67,6 +67,8 @@ public class AutoAlignReef extends Command {
 
     @Override
     public void initialize(){
+        OperationStates.isReefTagOnly = true;
+
         DriverStation.getAlliance().ifPresent((alliance) -> {
             mult = (alliance == Alliance.Red) ? -1.0 : 1.0;
         });
@@ -155,6 +157,9 @@ public class AutoAlignReef extends Command {
     @Override
     public void end(boolean interrupted) {
         Logger.recordOutput("Auto Score Interrupt", interrupted);
+
+        OperationStates.isReefTagOnly = false;
+        
         Swerve.getInstance().setControl(
             drive.withVelocityX(0)
             .withVelocityY(0)
