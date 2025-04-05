@@ -29,7 +29,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Blue Top 2 P2"
+                  "pathName": "Blue Bottom 2 P2"
                 }
               },
               {
@@ -85,7 +85,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Blue Top 2 P4"
+                  "pathName": "Blue Bottom 2 P4"
                 }
               },
               {
@@ -101,7 +101,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.4
+                        "waitTime": 0.5
                       }
                     },
                     {

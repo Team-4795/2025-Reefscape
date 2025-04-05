@@ -17,6 +17,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Autonomous Score"
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -39,7 +45,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.4
+                        "waitTime": 0.5
                       }
                     },
                     {
@@ -52,12 +58,6 @@
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Autonomous Score"
           }
         },
         {
@@ -101,7 +101,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.4
+                        "waitTime": 0.5
                       }
                     },
                     {
