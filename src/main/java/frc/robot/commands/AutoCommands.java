@@ -283,7 +283,6 @@ public class AutoCommands {
             Commands.runOnce(()-> arm.setGoal(ArmConstants.NET_SETPOINT))
         );
     }
-
     public static Command autoScore() {
         return Commands.either(
             Commands.sequence(

@@ -167,8 +167,8 @@ public class RobotContainer {
     );
     
     // Slow mode
-    Constants.OIConstants.driverController.leftTrigger().onTrue(Commands.runOnce(() -> drivetrain.setSlowMode(true)));
-    Constants.OIConstants.driverController.leftTrigger().onFalse(Commands.runOnce(() -> drivetrain.setSlowMode(false)));
+    // Constants.OIConstants.driverController.leftTrigger().onTrue(Commands.runOnce(() -> drivetrain.setSlowMode(true)));
+    // Constants.OIConstants.driverController.leftTrigger().onFalse(Commands.runOnce(() -> drivetrain.setSlowMode(false)));
 
     // Outtake
     Constants.OIConstants.driverController.rightTrigger().whileTrue(
@@ -177,7 +177,11 @@ public class RobotContainer {
         () -> intake.setIntakeSpeed(0), 
         intake
       ).alongWith(Commands.runOnce(() -> intake.outtake())));
+
+      Constants.OIConstants.driverController.leftTrigger().whileTrue(Commands.startEnd(() -> intake.setIntakeSpeed(0.7), () -> intake.setIntakeSpeed(0), intake));
     // placeholder wrist
+
+    Constants.OIConstants.operatorController.leftTrigger().onTrue(stateManager.stateCommand(State.L1));
   
     // Constants.OIConstants.operatorController.povUp().onTrue(
     //   Commands.runOnce( 

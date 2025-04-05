@@ -5,6 +5,7 @@ public enum State {
     L4(StateConstants.L4),
     L3(StateConstants.L3),
     L2(StateConstants.L2),
+    L1(StateConstants.L1),
     STOW(StateConstants.STOW),
     VSTOW(StateConstants.VSTOW),
     LOW_ALGAE(StateConstants.LOW_ALGAE),
@@ -13,6 +14,7 @@ public enum State {
     FORWARD_NET(StateConstants.FORWARD_NET),
     BACKWARD_NET(StateConstants.BACKWARD_NET),
     HIGH_ALGAE(StateConstants.HIGH_ALGAE);
+    
 
     public Setpoint setpoint;
 

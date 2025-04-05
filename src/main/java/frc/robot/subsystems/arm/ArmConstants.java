@@ -7,9 +7,9 @@ public class ArmConstants {
     public static final int CURRENT_LIMIT = 45;
     public static final double ARM_OFFSET = Math.PI;
 
-    public static final double CORAL_L1 = -1.195;
+    public static final double CORAL_L1 = -1.085;
     public static final double CORAL_L2 = -0.5812;
-    public static final double CORAL_L3 = 0.4780269; // 
+    public static final double CORAL_L3 = 0.607; //0.4780269;  
     public static final double CORAL_L4 = 0.5091708580679217; 
     public static final double VSTOW = 1.342;
     public static final double GOAL_TOLERANCE = 0.03;
