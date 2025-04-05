@@ -15,6 +15,7 @@ import frc.robot.subsystems.state.State;
 import frc.robot.subsystems.state.StateManager;
 import frc.robot.subsystems.state.StateManager.OperationStates;
 import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.vision.AprilTag.Vision;
 
 public class LEDs extends SubsystemBase {
 
@@ -272,7 +273,7 @@ public class LEDs extends SubsystemBase {
     @Override
     public void periodic() {
     // updates LEDs to show state of intake
-    if(Swerve.getInstance().isSlowMode()) {
+    if(!Vision.getInstance().isVisionUpdating()) {
         color1 = Color.kBlack;
         color2 = Color.kBlack;
     } else if (StateManager.OperationStates.aligned) {
