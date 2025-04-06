@@ -132,7 +132,7 @@ public class AutoAlignBarge extends Command {
     }
 
     public boolean finishedAligning() {
-        return (Math.abs(currentPose.getX() - targetPose.getX()) < Units.inchesToMeters(2.5)) && (Math.abs(rotationError) < Units.degreesToRadians(3)) && (Wrist.getInstance().atGoal(Wrist.getInstance().getGoal()));
+        return (Math.abs(currentPose.getX() - targetPose.getX()) < Units.inchesToMeters(3)) && (Math.abs(rotationError) < Units.degreesToRadians(4)) && (Wrist.getInstance().atGoal(Wrist.getInstance().getGoal()));
     }
 
     public boolean inScoringDistance() {
