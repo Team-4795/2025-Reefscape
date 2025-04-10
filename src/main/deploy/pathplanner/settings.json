@@ -3,8 +3,9 @@
   "robotLength": 0.914,
   "holonomicMode": true,
   "pathFolders": [
-    "Mid Auto",
     "Initial Velocity Auto Test",
+    "Mid Auto",
+    "Mid Algae",
     "Red Vision Align Top 2",
     "Tush Push",
     "Vision Align Blue Bottom 2",

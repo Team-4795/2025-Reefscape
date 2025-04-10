@@ -1,0 +1,79 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Set Score L4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score left reef"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Auto Score"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Algae Auto P1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Auto Algae"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Algae Auto P2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Auto Net"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Algae Auto P3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Auto Algae"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Algae Auto P4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Auto Net"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}
