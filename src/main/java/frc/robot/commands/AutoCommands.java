@@ -372,12 +372,12 @@ public class AutoCommands {
                     alignBarge(),
                     Commands.sequence(
                         Commands.runOnce(() -> arm.setGoal(Units.degreesToRadians(70))),
-                        Commands.waitUntil(() -> OperationStates.inScoringDistance),
                         Commands.either(
                             // Change fowards wrist setpoint
-                            Commands.runOnce(() -> wrist.setGoal(-1.4640896320343018)), 
-                            Commands.runOnce(() -> wrist.setGoal(-1.4640896320343018)), 
+                            Commands.runOnce(() -> wrist.setGoal(WristConstants.BACKWARD_NET_SETPOINT)), 
+                            Commands.runOnce(() -> wrist.setGoal(WristConstants.FOWARD_NET_SETPOINT)), 
                             () -> OperationStates.isBargeFowards),
+                        Commands.waitUntil(() -> OperationStates.inScoringDistance),
                         Commands.either(
                             stateManager.stateCommand(State.FORWARD_NET), 
                             stateManager.stateCommand(State.BACKWARD_NET), 
