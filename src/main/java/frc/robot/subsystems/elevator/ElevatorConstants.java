@@ -8,7 +8,6 @@ public final class ElevatorConstants{
     public static final double minDistance = 0.0;
     // public static final double constraints = 0.2; //figure this out later
     public static final Constraints constraints = new Constraints(4, 5); //change later
-
     public static final double kD = .3; //figure this out later
     public static final double kI = 0; //figure this out later
     public static final double kP = 16; //figure this out later
@@ -23,6 +22,7 @@ public final class ElevatorConstants{
     public static final double CORAL_L3_SETPOINT = (0.098505221 + Units.inchesToMeters(2)) / 2.0;
     public static final double CORAL_L2_SETPOINT = 0.207 + Units.inchesToMeters(2);
     public static final double CORAL_L1_SETPOINT = 0;
+    public static final double ONE_CORAL_AWAY = 0.6761819124221802;
     public static final double ALGEA_SETPOINT = 0.19420458376407623 - Units.inchesToMeters(1);
     public static final double HIGH_ALGAE_SETPOINT = 0.12916289269924164;
     public static final double PROCESSOR_SETPOINT = 0.19420458376407623 - Units.inchesToMeters(2);

@@ -8,10 +8,11 @@ public class ArmConstants {
     public static final double ARM_OFFSET = Math.PI;
 
     public static final double CORAL_L1 = -1.085;
-    public static final double CORAL_L2 = -0.5812;  // (newer setpoint that didnt really work) -0.416;
-    public static final double CORAL_L3 = 0.607; //0.4780269;  
+    public static final double CORAL_L2 = -0.5812;  
+    public static final double CORAL_L3 = 0.607; 
     public static final double CORAL_L4 = 0.5091708580679217; 
-    public static final double VSTOW = 1.145;//1.342;
+    public static final double ONE_CORAL_AWAY = 0.876012921333313;
+    public static final double VSTOW = 1.145;
     public static final double GOAL_TOLERANCE = 0.03;
     public static final double ALGAE_LOW = 0.3129383325576782 - Units.degreesToRadians(8);
     public static final double ALGAE_HIGH = 0.8301816582679749 - Units.degreesToRadians(6);

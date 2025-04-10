@@ -188,6 +188,19 @@ public class AutoCommands {
         return command;
     }
 
+    public static Command oneCoralAway() {
+        Command command = Commands.sequence(
+                Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.ONE_CORAL_AWAY)), 
+                Commands.runOnce(() -> arm.setGoal(ArmConstants.ONE_CORAL_AWAY)), 
+                Commands.waitUntil(() -> arm.atGoal(ArmConstants.ONE_CORAL_AWAY) && elevator.atGoal(ElevatorConstants.ONE_CORAL_AWAY)),
+                score(),
+                vstow()
+        );
+
+        command.addRequirements(GenericRequirement.getInstance());
+        return command;
+    }
+
     
     public static Command autoStow() {
         return Commands.parallel(
