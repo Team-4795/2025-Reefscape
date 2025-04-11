@@ -297,6 +297,30 @@ public class AutoCommands {
         );
     }
     public static Command autoScore() {
+        // return Commands.either(
+        //     Commands.sequence(
+        //         Commands.parallel(
+        //             alignReefUntil(),
+        //             Commands.defer(() -> stateManager.stateCommand(OperationStates.autoScoreMode), stateManager.stateCommand(OperationStates.autoScoreMode).getRequirements())
+        //         ),
+        //         scorePiece()
+        //     ),
+
+        //     Commands.sequence(
+        //         Commands.parallel(
+        //             alignReefUntil(),
+        //             Commands.sequence(
+        //                 Commands.waitUntil(() -> OperationStates.canAlign),
+        //                 stateManager.stateCommand(State.VSTOW),
+        //                 Commands.waitUntil(() -> OperationStates.inScoringDistance),
+        //                 Commands.defer(() -> stateManager.stateCommand(OperationStates.autoScoreMode), stateManager.stateCommand(OperationStates.autoScoreMode).getRequirements())
+        //             )
+        //         ),
+        //         Commands.waitSeconds(0.4),
+        //         scorePiece(),
+        //         stateManager.stateCommand(State.VSTOW)), 
+        //     () -> OperationStates.autoScoreMode != State.L4).finallyDo(() -> OperationStates.aligned = false);
+
         return Commands.either(
             Commands.sequence(
                 Commands.parallel(
@@ -311,7 +335,6 @@ public class AutoCommands {
                     alignReefUntil(),
                     Commands.sequence(
                         Commands.waitUntil(() -> OperationStates.canAlign),
-                        stateManager.stateCommand(State.VSTOW),
                         Commands.waitUntil(() -> OperationStates.inScoringDistance),
                         Commands.defer(() -> stateManager.stateCommand(OperationStates.autoScoreMode), stateManager.stateCommand(OperationStates.autoScoreMode).getRequirements())
                     )

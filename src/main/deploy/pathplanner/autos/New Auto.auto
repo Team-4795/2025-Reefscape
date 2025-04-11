@@ -47,9 +47,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Algae Auto P3"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Algae Auto P3"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "VStow"
+                }
+              }
+            ]
           }
         },
         {
@@ -68,6 +81,12 @@
           "type": "named",
           "data": {
             "name": "Auto Net"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "VStow"
           }
         }
       ]

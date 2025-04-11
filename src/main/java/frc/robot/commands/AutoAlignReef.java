@@ -91,7 +91,7 @@ public class AutoAlignReef extends Command {
         rotationError = currentPose.getRotation().getRadians() - reefScoringPose.getRotation().getRadians();
         rotationController.reset(MathUtil.angleModulus(currentPose.getRotation().getRadians()), Swerve.getInstance().getState().Speeds.omegaRadiansPerSecond);
 
-        OperationStates.canAlign = (currentPose.getTranslation().getDistance(reefScoringPose.getTranslation()) >= 1.5 || StateManager.getInstance().getState() == State.L4);
+        OperationStates.canAlign = (currentPose.getTranslation().getDistance(reefScoringPose.getTranslation()) >= 1.1 || StateManager.getInstance().getState() == State.L4);
         if(OperationStates.canAlign) {
             targetPose = reefScoringPose;
         }
@@ -154,7 +154,6 @@ public class AutoAlignReef extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        Logger.recordOutput("Auto Score Interrupt", interrupted);
         Swerve.getInstance().setControl(
             drive.withVelocityX(0)
             .withVelocityY(0)
@@ -166,7 +165,7 @@ public class AutoAlignReef extends Command {
     }
 
     public boolean inScoringDistance() {
-        return (distance < 0.4);
+        return (distance < 0.5);
     }
 
     private double projection(Translation2d v1, Translation2d onto){
