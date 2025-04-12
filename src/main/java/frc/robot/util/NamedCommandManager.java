@@ -18,7 +18,7 @@ public class NamedCommandManager {
         NamedCommands.registerCommand("Intake", AutoCommands.intakeCommand());
         NamedCommands.registerCommand("Align Reef", AutoCommands.alignReefUntil());
         NamedCommands.registerCommand("Auto Score", AutoCommands.autoScore());
-        NamedCommands.registerCommand("Autonomous Score", AutoCommands.autonomousScore());
+        NamedCommands.registerCommand("Autonomous Score", AutoCommands.autoScore());
         NamedCommands.registerCommand("Score", AutoCommands.score());
         NamedCommands.registerCommand("VStow", AutoCommands.vstow());
         NamedCommands.registerCommand("SetIntakeSpeed", AutoCommands.setIntakeSpeed());
@@ -28,7 +28,7 @@ public class NamedCommandManager {
         NamedCommands.registerCommand("Set Score L4", AutoCommands.setScoringState());
         NamedCommands.registerCommand("Wait Intake", AutoCommands.waitIntake());
         NamedCommands.registerCommand("Reverse", Commands.run(() -> Intake.getInstance().reverseCoral()).until(() -> Intake.getInstance().hasGamepiece()));
-        NamedCommands.registerCommand("Auto Algae", AutoCommands.autoAlgae());
+        NamedCommands.registerCommand("Auto Algae", AutoCommands.autoAlgae().until(()-> Intake.getInstance().GamePieceInitial()));
         NamedCommands.registerCommand("Auto Net", AutoCommands.autoBarge());
 
     }

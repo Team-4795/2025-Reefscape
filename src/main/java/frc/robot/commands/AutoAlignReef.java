@@ -37,8 +37,8 @@ public class AutoAlignReef extends Command {
     private boolean isScoringLeft;
     private double offset = 0.0;
 
-    private static LoggedTunableNumber minDistance = new LoggedTunableNumber("AutoAlign/minDistance", -0.1);
-    private static LoggedTunableNumber maxDistance = new LoggedTunableNumber("AutoAlign/maxDistance", .3);
+    private static LoggedTunableNumber minDistance = new LoggedTunableNumber("AutoAlign/minDistance", -0.05);
+    private static LoggedTunableNumber maxDistance = new LoggedTunableNumber("AutoAlign/maxDistance", .5);
     private static LoggedTunableNumber maxAccel = new LoggedTunableNumber("AutoAlign/maxAccel", 3.75);
     private static LoggedTunableNumber maxVel = new LoggedTunableNumber("AutoAlign/feederMaxVel", 3);
 

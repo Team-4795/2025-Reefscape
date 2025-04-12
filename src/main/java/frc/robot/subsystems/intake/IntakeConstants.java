@@ -17,6 +17,6 @@ public final class IntakeConstants {
     public static final int currentLimit = 70; 
     public static final double currentThreshold = 40; //change later based on akit numbers for gamepiece
 
-    public static final double initialThreshold = 40;
+    public static final double initialThreshold = 50;
 }
 

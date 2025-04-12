@@ -99,6 +99,9 @@ public class StateManager extends SubsystemBase {
         // else if(state = State.L2) {
         //     return arm.getAngle() > -(Math.PI / 2.0);
         // }
+        else if(state == State.L4) {
+            return arm.getAngle() > -Math.PI/2;
+        }
         else {
             return MathUtil.isNear(setpoint.armAngle, arm.getAngle(), 0.05);
         }

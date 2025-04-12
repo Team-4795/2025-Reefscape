@@ -35,6 +35,12 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.2
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Algae Auto P2"
@@ -69,6 +75,12 @@
           "type": "named",
           "data": {
             "name": "Auto Algae"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.2
           }
         },
         {

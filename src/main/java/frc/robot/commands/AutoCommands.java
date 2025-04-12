@@ -39,7 +39,7 @@ public class AutoCommands {
     private static StateManager stateManager = StateManager.getInstance();
     
 
-    private static LoggedTunableNumber transKp = new LoggedTunableNumber("AutoAlign/transKp", 0.0);
+    private static LoggedTunableNumber transKp = new LoggedTunableNumber("AutoAlign/transKp", 1);
     private static LoggedTunableNumber transKi = new LoggedTunableNumber("AutoAlign/transKi", 0);
     private static LoggedTunableNumber transKd = new LoggedTunableNumber("AutoAlign/transKd", 0.0);
 
@@ -335,7 +335,6 @@ public class AutoCommands {
                     alignReefUntil(),
                     Commands.sequence(
                         Commands.waitUntil(() -> OperationStates.canAlign),
-                        Commands.waitUntil(() -> OperationStates.inScoringDistance),
                         Commands.defer(() -> stateManager.stateCommand(OperationStates.autoScoreMode), stateManager.stateCommand(OperationStates.autoScoreMode).getRequirements())
                     )
                 ),

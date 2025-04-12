@@ -40,6 +40,7 @@ public class AutoAlignAlgae extends Command{
     private Pose2d reefPose;
     private Pose2d targetPose;
     private double distance;
+    private double xTransform;
 
     public AutoAlignAlgae(ProfiledPIDController translation, ProfiledPIDController rotation) {
         translationController = translation;
@@ -60,16 +61,19 @@ public class AutoAlignAlgae extends Command{
 
         if(reefTag == 7 || reefTag == 9 || reefTag == 11 || reefTag == 18 || reefTag == 20 || reefTag == 22) {
             OperationStates.autoAlgaeMode = State.HIGH_ALGAE;
+            xTransform = 0.4;
         }
         else if(reefTag == 6 || reefTag == 8 || reefTag == 10 || reefTag == 17 || reefTag == 19 || reefTag == 21) {
             OperationStates.autoAlgaeMode = State.LOW_ALGAE;
+            xTransform = 0.45;
         }
         else {
             OperationStates.autoAlgaeMode = State.DYNAMIC;
+            xTransform = 0.4;
         }
 
         reefPose = Vision.getInstance().getBestReefPose();
-        targetPose = reefPose.transformBy(new Transform2d(0.37, 0 , new Rotation2d()));
+        targetPose = reefPose.transformBy(new Transform2d(0, 0 , new Rotation2d()));
 
         currentPose = Swerve.getInstance().getState().Pose;
         double velocity = mult * projection(new Translation2d(Swerve.getInstance().getState().Speeds.vxMetersPerSecond, Swerve.getInstance().getState().Speeds.vyMetersPerSecond), targetPose.getTranslation().minus(currentPose.getTranslation()));
