@@ -25,7 +25,7 @@ public class VisionConstants {
     public static final double xyStdDevSingleTag = 0.08;
     public static final double xyStdDevMultiTag = 0.04;
 
-    private static LoggedTunableNumber targetPoseXOffset = new LoggedTunableNumber("AutoAlign/targetPoseXOffset", .5254);
+    private static LoggedTunableNumber targetPoseXOffset = new LoggedTunableNumber("AutoAlign/targetPoseXOffset", .50);
 
     public static final String[] cameraIds =
     new String[] {
@@ -87,7 +87,7 @@ public class VisionConstants {
 
     static {
         try {
-            aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2025ReefscapeAndyMark.m_resourceFile);
+            aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2025ReefscapeWelded.m_resourceFile);
             aprilTagFieldLayout.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
         } catch (IOException e) {
             e.printStackTrace();

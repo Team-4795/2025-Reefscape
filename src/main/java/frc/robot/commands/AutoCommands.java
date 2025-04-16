@@ -338,7 +338,7 @@ public class AutoCommands {
                         Commands.defer(() -> stateManager.stateCommand(OperationStates.autoScoreMode), stateManager.stateCommand(OperationStates.autoScoreMode).getRequirements())
                     )
                 ),
-                Commands.waitSeconds(0.4),
+                Commands.waitSeconds(0.2),
                 scorePiece(),
                 stateManager.stateCommand(State.VSTOW)), 
             () -> OperationStates.autoScoreMode != State.L4).finallyDo(() -> OperationStates.aligned = false);
@@ -365,7 +365,7 @@ public class AutoCommands {
                         Commands.defer(() -> stateManager.stateCommand(OperationStates.autoScoreMode), stateManager.stateCommand(OperationStates.autoScoreMode).getRequirements())
                     )
                 ),
-                Commands.waitSeconds(0.4),
+                Commands.waitSeconds(0.2),
                 scorePiece()), 
             () -> OperationStates.autoScoreMode != State.L4).finallyDo(() -> OperationStates.aligned = false);
     }

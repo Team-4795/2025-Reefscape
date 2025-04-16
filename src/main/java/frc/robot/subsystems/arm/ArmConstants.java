@@ -8,7 +8,7 @@ public class ArmConstants {
     public static final double ARM_OFFSET = Math.PI;
 
     public static final double CORAL_L1 = -1.085;
-    public static final double CORAL_L2 = -1.15876;
+    public static final double CORAL_L2 = -1.2260;
     public static final double CORAL_L3 = 0.8218594471639911;
     // 0.89662981796; 
     public static final double CORAL_L4 = 1.0455072; 
