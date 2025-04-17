@@ -89,8 +89,7 @@ public class RobotContainer {
         drivetrain = Swerve.initialize(new Swerve(TunerConstants.DrivetrainConstants, 50, TunerConstants.FrontLeft, TunerConstants.FrontRight, TunerConstants.BackLeft, TunerConstants.BackRight));
         vision = Vision.initialize(
           new VisionIOReal(0), 
-          new VisionIOReal(1),
-          new VisionIOReal(2)
+          new VisionIOReal(1)
         );
         break;
 
@@ -178,7 +177,7 @@ public class RobotContainer {
         intake
       ).alongWith(Commands.runOnce(() -> intake.outtake())));
 
-      Constants.OIConstants.driverController.leftTrigger().whileTrue(Commands.startEnd(() -> intake.setIntakeSpeed(0.7), () -> intake.setIntakeSpeed(0), intake));
+      Constants.OIConstants.driverController.leftTrigger().whileTrue(Commands.startEnd(() -> intake.setIntakeSpeed(0.63), () -> intake.setIntakeSpeed(0), intake));
     // placeholder wrist
 
     Constants.OIConstants.operatorController.leftTrigger().onTrue(stateManager.stateCommand(State.L1));
@@ -196,7 +195,7 @@ public class RobotContainer {
     Constants.OIConstants.operatorController.povUp().onTrue(
         Commands.either(
             Commands.runOnce(() -> OperationStates.autoScoreMode = State.L4), 
-            AutoCommands.raiseL4(), 
+            stateManager.stateCommand(State.L4), 
             () -> vision.isVisionUpdating()));
 
     Constants.OIConstants.operatorController.povRight().onTrue(

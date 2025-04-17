@@ -28,5 +28,7 @@ public class NamedCommandManager {
         NamedCommands.registerCommand("Set Score L4", AutoCommands.setScoringState());
         NamedCommands.registerCommand("Wait Intake", AutoCommands.waitIntake());
         NamedCommands.registerCommand("Reverse", Commands.run(() -> Intake.getInstance().reverseCoral()).until(() -> Intake.getInstance().hasGamepiece()));
+        NamedCommands.registerCommand("Auto Net", AutoCommands.autoBarge());
+        NamedCommands.registerCommand("Auto Algae", AutoCommands.autoAlgae());
     }
 }

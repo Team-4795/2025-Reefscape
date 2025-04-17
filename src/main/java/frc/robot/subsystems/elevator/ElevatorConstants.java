@@ -28,7 +28,7 @@ public final class ElevatorConstants{
     public static final double PROCESSOR_SETPOINT = 0.19420458376407623 - Units.inchesToMeters(2);
     public static final double NET_SETPOINT = 0.70;
     public static final double GOAL_TOLERANCE = 0.02;
-    public static final double STOW = 0.01;
+    public static final double STOW = 0.005;
     
     public static final double conversionFactor = Units.inchesToMeters(1.0/9.0 * Math.PI * 1.751); // gearing * pi * sprocket diameter
 

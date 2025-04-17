@@ -43,7 +43,7 @@ public class AutoCommands {
     private static LoggedTunableNumber transKi = new LoggedTunableNumber("AutoAlign/transKi", 0);
     private static LoggedTunableNumber transKd = new LoggedTunableNumber("AutoAlign/transKd", 0.0);
 
-    private static LoggedTunableNumber rotationKp = new LoggedTunableNumber("AutoAlign/rotationKp", 2);
+    private static LoggedTunableNumber rotationKp = new LoggedTunableNumber("AutoAlign/rotationKp", 3);
     private static LoggedTunableNumber rotationKi = new LoggedTunableNumber("AutoAlign/rotationKi", 0);
     private static LoggedTunableNumber rotationKd = new LoggedTunableNumber("AutoAlign/rotationKd", 0.1);
 
@@ -298,8 +298,6 @@ public class AutoCommands {
                     alignReefUntil(),
                     Commands.sequence(
                         Commands.waitUntil(() -> OperationStates.canAlign),
-                        stateManager.stateCommand(State.VSTOW),
-                        Commands.waitUntil(() -> OperationStates.inScoringDistance),
                         Commands.defer(() -> stateManager.stateCommand(OperationStates.autoScoreMode), stateManager.stateCommand(OperationStates.autoScoreMode).getRequirements())
                     )
                 ),
@@ -325,8 +323,6 @@ public class AutoCommands {
                     alignReefUntil(),
                     Commands.sequence(
                         Commands.waitUntil(() -> OperationStates.canAlign),
-                        stateManager.stateCommand(State.VSTOW),
-                        Commands.waitUntil(() -> OperationStates.inScoringDistance),
                         Commands.defer(() -> stateManager.stateCommand(OperationStates.autoScoreMode), stateManager.stateCommand(OperationStates.autoScoreMode).getRequirements())
                     )
                 ),

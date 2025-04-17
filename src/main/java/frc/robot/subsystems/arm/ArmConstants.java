@@ -18,7 +18,7 @@ public class ArmConstants {
     public static final double NET_SETPOINT = Units.degreesToRadians(70);
     public static final double PROCESSOR = 0.0;
 
-    public static final double STOW = -1.87;
+    public static final double STOW = -1.87 - Units.degreesToRadians(2);
     
 
     public static final double MAX_VELOCITY = 6;
