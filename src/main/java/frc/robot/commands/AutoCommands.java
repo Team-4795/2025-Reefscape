@@ -133,22 +133,11 @@ public class AutoCommands {
     }
 
     public static Command AlgaeLow() {
-        Command command = Commands.either(
-            Commands.sequence(
-                Commands.runOnce(() -> arm.setGoal(ArmConstants.ALGAE_LOW)),
-                Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.STOW))
-            ),
-            Commands.sequence(
-                Commands.runOnce( ()-> elevator.setGoalHeight(ElevatorConstants.STOW)),
-                Commands.runOnce(() -> arm.setGoal(ArmConstants.ALGAE_LOW))),
-            () -> ElevatorConstants.STOW <= elevator.getPosition()
-        ).andThen(Commands.runOnce(
-            () -> intake.setIntakeSpeed(1)
-        ));
+        return Commands.runOnce(() -> StateManager.getInstance().stateCommand(State.LOW_ALGAE));
+    }
 
-        command.addRequirements(GenericRequirement.getInstance());
-
-        return command;
+    public static Command AlgaeHigh() {
+        return Commands.runOnce(() -> StateManager.getInstance().stateCommand(State.HIGH_ALGAE));
     }
 
     public static Command processor() {
