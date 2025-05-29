@@ -40,8 +40,8 @@ public void moveElevator(double speed) {
 
 @Override
 public void updateMotionProfile() {
-    setVoltage(ffmodel.calculate(setpoint.velocity) + controller.calculate(elevatorSim.getPositionMeters(), setpoint.position));
     setpoint = profile.calculate(0.02, setpoint, goal);
+    setVoltage(ffmodel.calculate(setpoint.velocity) + controller.calculate(elevatorSim.getPositionMeters(), setpoint.position));
 }
 
 @Override
@@ -65,4 +65,4 @@ public void setGoal(double height) {
         
 }
 
-    }
+}

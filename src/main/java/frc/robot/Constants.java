@@ -7,9 +7,9 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.vision.AprilTag.VisionConstants;
 
 public class Constants {
-    public static final boolean tuningMode = false;
+    public static final boolean tuningMode = true;
     public static final Mode currentMode = Robot.isReal() ? Mode.REAL : Mode.SIM;
-    public static final boolean visonSimEnabled = true;
+    public static final boolean visonSimEnabled = false;
 
     public static final class driveConstants {
         public static double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
@@ -27,11 +27,6 @@ public class Constants {
         public static final CommandXboxController operatorController = new CommandXboxController(1);
         public static final double KAxisDeadband = 0.1;  
         public static final double OperatorLAxisDeadband = 0.3;
-        public static boolean isScoringLeft = true;
-        public static boolean aligned = false; 
-        public static boolean inScoringDistance = false;
-        public static boolean isReefTagOnly = true;
-        public static int autoScoreMode = 4;
     }
 
     public static enum Gamepiece {
@@ -45,4 +40,5 @@ public class Constants {
         public static final double fieldLength = VisionConstants.aprilTagFieldLayout.getFieldLength();
         public static final double fieldWidth = VisionConstants.aprilTagFieldLayout.getFieldWidth();
     }
+ 
 }

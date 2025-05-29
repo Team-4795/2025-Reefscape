@@ -1,0 +1,50 @@
+package frc.robot.subsystems.Wrist;
+
+import org.littletonrobotics.junction.AutoLog;
+
+import com.revrobotics.spark.SparkAbsoluteEncoder;
+
+public interface WristIO {
+    @AutoLog
+    public static class WristIOInputs{
+        public double voltage = 0;
+        public double position = 0;
+        public double velocity = 0;
+        public double current = 0;
+        public double goalPosition = 0;
+        public double setPointVelocity = 0;
+    }
+
+    public default void setVoltage(double voltage){
+
+    }
+
+    public default double getPosition(){
+        return 0;
+    }
+
+    public default double getVelocity(){
+        return 0;
+    }
+
+    public default double getGoal() {
+        return 0;
+    }
+
+    public default void updateInputs(WristIOInputs inputs){
+
+    }
+
+    public default void setGoal(double angle){
+
+    }
+
+    public default void updateMotionProfile(){
+
+    }
+
+    public default SparkAbsoluteEncoder getArmAbsoluteEncoder(){
+        return null;
+    }
+
+}

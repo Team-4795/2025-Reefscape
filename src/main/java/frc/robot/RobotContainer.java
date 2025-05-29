@@ -9,6 +9,13 @@ import java.io.IOException;
 import org.json.simple.parser.ParseException;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.subsystems.Wrist.Wrist;
+import frc.robot.subsystems.Wrist.WristConstants;
+import frc.robot.subsystems.Wrist.WristIOReal;
+import frc.robot.subsystems.Wrist.WristIOSim;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -24,6 +31,7 @@ import frc.robot.commands.RainbowCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.GenericRequirement;
 import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmIOReal;
 import frc.robot.subsystems.arm.ArmIOSim;
 import frc.robot.subsystems.elevator.Elevator;
@@ -33,6 +41,9 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIORealVortex;
 import frc.robot.subsystems.intake.IntakeIOSim;
 import frc.robot.subsystems.leds.LEDs;
+import frc.robot.subsystems.state.State;
+import frc.robot.subsystems.state.StateManager;
+import frc.robot.subsystems.state.StateManager.OperationStates;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.vision.AprilTag.Vision;
@@ -56,18 +67,22 @@ public class RobotContainer {
 
   public final Telemetry logger = new Telemetry(SwerveConstants.MaxSpeed);
 
+  private StateManager stateManager;
+
   public final Swerve drivetrain;
 
   public int autoScoreMode = 1;
 
   private Elevator elevator;
   private Intake intake;
+  private Wrist wrist; 
   LoggedDashboardChooser<Command> autoChooser;
 
   public RobotContainer() throws IOException, ParseException {
     GenericRequirement.initialize();
     switch (Constants.currentMode) {
       case REAL:
+        wrist = Wrist.initialize(new WristIOReal());
         elevator = Elevator.initialize(new ElevatorIOReal());
         intake = Intake.initialize(new IntakeIORealVortex());
         Arm.initialize(new ArmIOReal());
@@ -75,7 +90,7 @@ public class RobotContainer {
         vision = Vision.initialize(
           new VisionIOReal(0), 
           new VisionIOReal(1)
-        );  
+        );
         break;
 
       case SIM:
@@ -84,9 +99,8 @@ public class RobotContainer {
         Arm.initialize(new ArmIOSim());
         drivetrain = Swerve.initialize(TunerConstants.createDrivetrain());
         visualizer = new RobotVisualizer();
-        if(Constants.visonSimEnabled) {
-          vision = Vision.initialize(new VisionIOSim());
-        }
+        vision = Vision.initialize(new VisionIOSim());
+        wrist = Wrist.initialize(new WristIOSim());
         break;
 
       default:
@@ -94,16 +108,19 @@ public class RobotContainer {
         intake = Intake.initialize(new IntakeIOSim());
         drivetrain = Swerve.initialize(TunerConstants.createDrivetrain());
         Arm.initialize(new ArmIOSim());
+        wrist = Wrist.initialize(new WristIOSim());
         break;
+  
     }
+
+    stateManager = StateManager.initalize();
+
     leds = LEDs.getInstance();
 
     NamedCommandManager.registerNamedCommands();
 
     autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser("Driver Forward Straight"));
-    autoChooser.addOption("BottomBarge C BB BF", AutoBuilder.buildAuto("BottomBarge C BB BF"));
     configureBindings();
-    
   }
 
   public void zeroArm() {
@@ -141,12 +158,16 @@ public class RobotContainer {
 
     // Algae align
     Constants.OIConstants.driverController.rightBumper().whileTrue(
-      AutoCommands.alignAlgae()
+      AutoCommands.autoAlgae()
     );
 
+    Constants.OIConstants.driverController.povUp().whileTrue(
+      AutoCommands.alignFeeder()
+    );
+    
     // Slow mode
-    Constants.OIConstants.driverController.leftTrigger().onTrue(Commands.runOnce(() -> drivetrain.setSlowMode(true)));
-    Constants.OIConstants.driverController.leftTrigger().onFalse(Commands.runOnce(() -> drivetrain.setSlowMode(false)));
+    // Constants.OIConstants.driverController.leftTrigger().onTrue(Commands.runOnce(() -> drivetrain.setSlowMode(true)));
+    // Constants.OIConstants.driverController.leftTrigger().onFalse(Commands.runOnce(() -> drivetrain.setSlowMode(false)));
 
     // Outtake
     Constants.OIConstants.driverController.rightTrigger().whileTrue(
@@ -154,30 +175,48 @@ public class RobotContainer {
         () -> intake.setIntakeSpeed(-1),
         () -> intake.setIntakeSpeed(0), 
         intake
-      ).alongWith(Commands.runOnce(() -> intake.outtake())));           
+      ).alongWith(Commands.runOnce(() -> intake.outtake())));
 
-    // Coral Setpoints
+      Constants.OIConstants.driverController.leftTrigger().whileTrue(Commands.startEnd(() -> intake.setIntakeSpeed(0.63), () -> intake.setIntakeSpeed(0), intake));
+    // placeholder wrist
+
+    Constants.OIConstants.operatorController.leftTrigger().onTrue(stateManager.stateCommand(State.L1));
+  
+    // Constants.OIConstants.operatorController.povUp().onTrue(
+    //   Commands.runOnce( 
+    //     ()-> wrist.setGoal(WristConstants.VFBAngle), wrist));
+
+    //   Constants.OIConstants.operatorController.povDown().onTrue(
+    //     Commands.runOnce(
+    //       () -> wrist.setGoal(Units.degreesToRadians(90)), wrist)
+    //   );
+
+    //Coral Setpoints
     Constants.OIConstants.operatorController.povUp().onTrue(
         Commands.either(
-            Commands.runOnce(() -> OIConstants.autoScoreMode = 4), 
-            AutoCommands.raiseL4(), 
+            Commands.runOnce(() -> OperationStates.autoScoreMode = State.L4), 
+            stateManager.stateCommand(State.L4), 
             () -> vision.isVisionUpdating()));
+
     Constants.OIConstants.operatorController.povRight().onTrue(
         Commands.either(
-            Commands.runOnce(() -> OIConstants.autoScoreMode = 3), 
-            AutoCommands.raiseL3(), 
+            Commands.runOnce(() -> OperationStates.autoScoreMode = State.L3), 
+            stateManager.stateCommand(State.L3), 
             () -> vision.isVisionUpdating()));
+      
     Constants.OIConstants.operatorController.povLeft().onTrue(
       Commands.either(
-          Commands.runOnce(() -> OIConstants.autoScoreMode = 2), 
-          AutoCommands.raiseL2(), 
+          Commands.runOnce(() -> OperationStates.autoScoreMode = State.L2), 
+          stateManager.stateCommand(State.L2), 
           () -> vision.isVisionUpdating()));
     
     Constants.OIConstants.operatorController.povDown().onTrue(AutoCommands.stow());
 
-    // Algae setpoints
-    Constants.OIConstants.operatorController.rightTrigger().onTrue(AutoCommands.AlgaeLow());
-    Constants.OIConstants.operatorController.leftTrigger().onTrue(AutoCommands.algaeHigh());
+     // Algae setpoints
+    // I will delete this code when we are a 100% sure we do not need it
+    // Constants.OIConstants.operatorController.rightTrigger().onTrue(AutoCommands.AlgaeLow());
+    // Constants.OIConstants.operatorController.leftTrigger().onTrue(AutoCommands.algaeHigh());
+
     Constants.OIConstants.operatorController.x().onTrue((AutoCommands.processor()));
 
     // Reverse intake
@@ -189,8 +228,9 @@ public class RobotContainer {
       ));
 
     // Intake
-    OIConstants.operatorController.a().onTrue(intake.intakeCommand());
-      
+    OIConstants.operatorController.a().onTrue(
+    AutoCommands.intakeCommand());
+
     // Change reef scoring stem
     OIConstants.operatorController.leftBumper().onTrue(
         Commands.runOnce(() -> drivetrain.setScoringLeft()
@@ -204,15 +244,12 @@ public class RobotContainer {
       Commands.runOnce(() -> vision.toggleShouldUpdate()).andThen(
       new RainbowCommand(() -> 1).withTimeout(2)));
 
-    // Seed arm
-    OIConstants.driverController.povUp().onTrue(Commands.runOnce(() -> Arm.getInstance().seedRelativeEncoder()));
-
     // Vertical stow
     OIConstants.operatorController.b()
      .onTrue(AutoCommands.vstow());
 
-     //One Coral Away 
-     OIConstants.driverController.y().onTrue(AutoCommands.oneCoralAway());
+    //One Coral Away 
+    OIConstants.driverController.y().whileTrue(AutoCommands.autoBarge());
      
     // Drive sysid
     Constants.OIConstants.driverController.povRight().and(Constants.OIConstants.driverController.y())
@@ -228,15 +265,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-     return autoChooser.get();
-  }
-
-  public void periodic() {
-    Logger.recordOutput("Score/isLeftL4", OIConstants.autoScoreMode == 4 && OIConstants.isScoringLeft);
-    Logger.recordOutput("Score/isLeftL3", OIConstants.autoScoreMode == 3 && OIConstants.isScoringLeft);
-    Logger.recordOutput("Score/isLeftL2", OIConstants.autoScoreMode == 2 && OIConstants.isScoringLeft);
-    Logger.recordOutput("Score/isRightL4", OIConstants.autoScoreMode == 4 && !OIConstants.isScoringLeft);
-    Logger.recordOutput("Score/isRightL3", OIConstants.autoScoreMode == 3 && !OIConstants.isScoringLeft);
-    Logger.recordOutput("Score/isRightL2", OIConstants.autoScoreMode == 2 && !OIConstants.isScoringLeft);
+    return autoChooser.get();
   }
 }

@@ -7,7 +7,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Score left reef"
+            "name": "Score right reef"
           }
         },
         {
@@ -17,16 +17,9 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Auto Score"
-                }
-              }
-            ]
+            "name": "Autonomous Score"
           }
         },
         {
@@ -44,9 +37,15 @@
                 "data": {
                   "commands": [
                     {
+                      "type": "named",
+                      "data": {
+                        "name": "VStow"
+                      }
+                    },
+                    {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.5
+                        "waitTime": 0.3
                       }
                     },
                     {
@@ -64,26 +63,19 @@
         {
           "type": "named",
           "data": {
+            "name": "Score left reef"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "Intake"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Score left reef"
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Auto Score"
-                }
-              }
-            ]
+            "name": "Autonomous Score"
           }
         },
         {
@@ -101,9 +93,15 @@
                 "data": {
                   "commands": [
                     {
+                      "type": "named",
+                      "data": {
+                        "name": "VStow"
+                      }
+                    },
+                    {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.5
+                        "waitTime": 0.1
                       }
                     },
                     {
@@ -131,16 +129,9 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Auto Score"
-                }
-              }
-            ]
+            "name": "Autonomous Score"
           }
         }
       ]

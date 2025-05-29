@@ -13,6 +13,7 @@ public interface VisionIO {
         int[] tags = new int[] {};
 
         Pose2d reefPose = new Pose2d();
+        int reefTag = 0;
         double poseAmbiguity = 0.0;
 
         int pipelineIndex = 10;

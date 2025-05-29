@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.1987704918032787,
-        "y": 1.1299692622950817
+        "x": 1.726229508196721,
+        "y": 0.8542520491803282
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.803270491803279,
-        "y": 1.5004692622950813
+        "x": 2.330729508196722,
+        "y": 1.2247520491803279
       },
       "isLocked": false,
       "linkedName": "Blue Bottom 2 Feeder"
@@ -55,7 +55,7 @@
   ],
   "globalConstraints": {
     "maxVelocity": 5.0,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -66,7 +66,7 @@
     "rotation": 55.619655276155086
   },
   "reversed": false,
-  "folder": "Vision Align Blue Bottom 2",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0.0,
     "rotation": 53.5

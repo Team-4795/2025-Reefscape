@@ -4,6 +4,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.AutoCommands;
+import frc.robot.subsystems.intake.Intake;
 
 public class NamedCommandManager {
     public static void registerNamedCommands() {
@@ -14,9 +15,10 @@ public class NamedCommandManager {
         NamedCommands.registerCommand("Stow no intake", AutoCommands.stow());
         NamedCommands.registerCommand("Raise to L3", AutoCommands.noElevatorRaiseL3());
         NamedCommands.registerCommand("Raise to L2", AutoCommands.raiseL2());
-        NamedCommands.registerCommand("Intake", AutoCommands.intake());
+        NamedCommands.registerCommand("Intake", AutoCommands.intakeCommand());
         NamedCommands.registerCommand("Align Reef", AutoCommands.alignReefUntil());
         NamedCommands.registerCommand("Auto Score", AutoCommands.autoScore());
+        NamedCommands.registerCommand("Autonomous Score", AutoCommands.autonomousScore().withTimeout(2));
         NamedCommands.registerCommand("Score", AutoCommands.score());
         NamedCommands.registerCommand("VStow", AutoCommands.vstow());
         NamedCommands.registerCommand("SetIntakeSpeed", AutoCommands.setIntakeSpeed());
@@ -24,5 +26,11 @@ public class NamedCommandManager {
         NamedCommands.registerCommand("Score right reef", AutoCommands.scoreRightReef());
         NamedCommands.registerCommand("Zero Arm", AutoCommands.zeroArm());
         NamedCommands.registerCommand("Set Score L4", AutoCommands.setScoringState());
+        NamedCommands.registerCommand("Wait Intake", AutoCommands.waitIntake());
+        NamedCommands.registerCommand("Reverse", Commands.run(() -> Intake.getInstance().reverseCoral()).until(() -> Intake.getInstance().hasGamepiece()));
+        NamedCommands.registerCommand("Auto Net", AutoCommands.autoBarge());
+        NamedCommands.registerCommand("Auto Algae", AutoCommands.autoAlgae().withTimeout(2));
+        NamedCommands.registerCommand("Low Algae", AutoCommands.AlgaeLow());
+        NamedCommands.registerCommand("High Algae", AutoCommands.AlgaeHigh());
     }
 }

@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.4505122950819673,
-        "y": 6.991956967213114
+        "x": 1.5816025641025637,
+        "y": 6.98698717948718
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.3471959013885284,
-        "y": 6.619209336698534
+        "x": 2.478286170409125,
+        "y": 6.614239548972599
       },
       "isLocked": false,
       "linkedName": "Top 2 Feeder"
@@ -45,7 +45,7 @@
     "rotation": -59.588918732874774
   },
   "reversed": false,
-  "folder": "Vision Align Blue Top 2",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": -54.0

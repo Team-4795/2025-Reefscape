@@ -1,7 +1,8 @@
 
 package frc.robot.commands;
 
-import frc.robot.Constants;
+
+import javax.naming.OperationNotSupportedException;
 
 import org.littletonrobotics.junction.Logger;
 
@@ -16,13 +17,16 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N2;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.OIConstants;
-import frc.robot.subsystems.arm.ArmConstants;
+import frc.robot.subsystems.state.State;
+import frc.robot.subsystems.state.StateManager;
+import frc.robot.subsystems.state.StateManager.OperationStates;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.vision.AprilTag.Vision;
 import frc.robot.util.LoggedTunableNumber;
@@ -33,7 +37,10 @@ public class AutoAlignReef extends Command {
     private boolean isScoringLeft;
     private double offset = 0.0;
 
-    private final double minDistance = -0.1;
+    private static LoggedTunableNumber minDistance = new LoggedTunableNumber("AutoAlign/minDistance", -0.1);
+    private static LoggedTunableNumber maxDistance = new LoggedTunableNumber("AutoAlign/maxDistance", .8);
+    private static LoggedTunableNumber maxAccel = new LoggedTunableNumber("AutoAlign/maxAccel", 3.75);
+    private static LoggedTunableNumber maxVel = new LoggedTunableNumber("AutoAlign/feederMaxVel", 3);
 
     private ProfiledPIDController translationController;
     private ProfiledPIDController rotationController;
@@ -43,14 +50,13 @@ public class AutoAlignReef extends Command {
     private Pose2d reefScoringPose;
     private Pose2d targetPose;
     private double distance;
-
-    private LoggedTunableNumber maxDistance = new LoggedTunableNumber("AutoAlign/maxDistance", 0.3);
+    private double rotationError;
 
     public AutoAlignReef(ProfiledPIDController translation, ProfiledPIDController rotation) {
         translationController = translation;
-        translationController.setTolerance(Units.inchesToMeters(1));
+        translationController.setTolerance(Units.inchesToMeters(0.75));
         rotationController = rotation;
-        rotationController.setTolerance(Units.degreesToRadians(1));
+        rotationController.setTolerance(Units.degreesToRadians(0.5));
         addRequirements(Swerve.getInstance());
     }
 
@@ -65,37 +71,43 @@ public class AutoAlignReef extends Command {
             mult = (alliance == Alliance.Red) ? -1.0 : 1.0;
         });
 
-        isScoringLeft = OIConstants.isScoringLeft;
-        reefScoringPose = Vision.getInstance().getBestReefPose();
-        
+        translationController.setConstraints(new Constraints(maxVel.get(), maxAccel.get()));
+
+        isScoringLeft = OperationStates.isScoringLeft;
         offset = getScoringPositionOffset(isScoringLeft);
-        targetPose = reefScoringPose.plus(new Transform2d(0, offset, new Rotation2d(0)));
+        reefScoringPose = Vision.getInstance().getBestReefPose().plus(new Transform2d(0, offset, new Rotation2d(0)));
         
         currentPose = Swerve.getInstance().getState().Pose;
-        double velocity = mult * projection(new Translation2d(Swerve.getInstance().getState().Speeds.vxMetersPerSecond, Swerve.getInstance().getState().Speeds.vyMetersPerSecond), targetPose.getTranslation().minus(currentPose.getTranslation()));
+        double velocity = mult * projection(new Translation2d(Swerve.getInstance().getState().Speeds.vxMetersPerSecond, Swerve.getInstance().getState().Speeds.vyMetersPerSecond), reefScoringPose.getTranslation().minus(currentPose.getTranslation()));
         rotationController.enableContinuousInput(-Math.PI, Math.PI);
 
         Logger.recordOutput("AutoAlign/Robot velocity", new Translation2d(Swerve.getInstance().getState().Speeds.vxMetersPerSecond, Swerve.getInstance().getState().Speeds.vyMetersPerSecond));
-        Logger.recordOutput("AutoAlign/Translation", targetPose.getTranslation().minus(currentPose.getTranslation()));
+        Logger.recordOutput("AutoAlign/Translation", reefScoringPose.getTranslation().minus(currentPose.getTranslation()));
         Logger.recordOutput("AutoAlign/velocity", velocity);
 
-        distance = currentPose.getTranslation().getDistance(targetPose.getTranslation());
+        distance = currentPose.getTranslation().getDistance(reefScoringPose.getTranslation());
         translationController.reset(distance, velocity);
+
+        rotationError = currentPose.getRotation().getRadians() - reefScoringPose.getRotation().getRadians();
         rotationController.reset(MathUtil.angleModulus(currentPose.getRotation().getRadians()), Swerve.getInstance().getState().Speeds.omegaRadiansPerSecond);
+
+        OperationStates.canAlign = (currentPose.getTranslation().getDistance(reefScoringPose.getTranslation()) >= 0.5 || StateManager.getInstance().getState() == State.L4);
+        if(OperationStates.canAlign) {
+            targetPose = reefScoringPose;
+        }
+        else if(!OperationStates.canAlign) {
+            targetPose = reefScoringPose.plus(new Transform2d(-0.55, offset, new Rotation2d(0)));
+        }
     }
 
     @Override
     public void execute() {
-        isScoringLeft = Constants.OIConstants.isScoringLeft;
-        reefScoringPose = Vision.getInstance().getBestReefPose();
-        
-        offset = getScoringPositionOffset(isScoringLeft);
-        targetPose = reefScoringPose.plus(new Transform2d(0, offset, new Rotation2d(0)));
-
         currentPose = Swerve.getInstance().getState().Pose;
         distance = currentPose.getTranslation().getDistance(targetPose.getTranslation());
 
         translationController.reset(distance, translationController.getSetpoint().velocity);
+
+        rotationError = MathUtil.angleModulus(currentPose.getRotation().getRadians() - targetPose.getRotation().getRadians());
 
         double rotationPIDOutput = rotationController.calculate(MathUtil.angleModulus(currentPose.getRotation().getRadians()), targetPose.getRotation().getRadians());
         double omega = rotationController.getSetpoint().velocity + rotationPIDOutput;
@@ -119,19 +131,30 @@ public class AutoAlignReef extends Command {
         Logger.recordOutput("AutoAlign/Distance", currentPose.getTranslation().getDistance(targetPose.getTranslation()));
         Logger.recordOutput("AutoAlign/Distance at goal", translationController.atGoal());
         Logger.recordOutput("AutoAlign/PID input", drivePIDOutput);
-        Logger.recordOutput("AutoAlign/is Aligned", OIConstants.aligned);
+        Logger.recordOutput("AutoAlign/is Aligned", OperationStates.aligned);
+        Logger.recordOutput("AutoAlign/In scoring distance", OperationStates.inScoringDistance);
+        Logger.recordOutput("AutoAlign/Rotation error", rotationError);
+        Logger.recordOutput("AutoAlign/velocity", Math.hypot(Swerve.getInstance().getState().Speeds.vxMetersPerSecond, Swerve.getInstance().getState().Speeds.vxMetersPerSecond));
+        Logger.recordOutput("AutoAlign/RotationalRate", Swerve.getInstance().getState().Speeds.omegaRadiansPerSecond);
+        Logger.recordOutput("AutoAlign/Distance to Reef", currentPose.getTranslation().getDistance(reefScoringPose.getTranslation()));
 
         Swerve.getInstance().setControl(
             drive.withVelocityX(driveSpeed * direction.getCos())
             .withVelocityY(driveSpeed * direction.getSin())
             .withRotationalRate(omega));
         
-        OIConstants.aligned = finishedAligning();
-        OIConstants.inScoringDistance = inScoringDistance();
+        if(currentPose.getTranslation().getDistance(reefScoringPose.getTranslation()) >= 0.5 && !OperationStates.canAlign) {
+            targetPose = reefScoringPose;
+            OperationStates.canAlign = true;
+        }
+
+        OperationStates.aligned = finishedAligning() && OperationStates.canAlign;
+        OperationStates.inScoringDistance = inScoringDistance() && OperationStates.canAlign;
     }
 
     @Override
     public void end(boolean interrupted) {
+        Logger.recordOutput("Auto Score Interrupt", interrupted);
         Swerve.getInstance().setControl(
             drive.withVelocityX(0)
             .withVelocityY(0)
@@ -139,11 +162,11 @@ public class AutoAlignReef extends Command {
     }
 
     public boolean finishedAligning() {
-        return (distance < Units.inchesToMeters(1.5));
+        return (distance < Units.inchesToMeters(1.5)) && (Math.abs(rotationError) < Units.degreesToRadians(2.5));
     }
 
     public boolean inScoringDistance() {
-        return (distance < 1 + Units.inchesToMeters(6));
+        return (distance < 0.4);
     }
 
     private double projection(Translation2d v1, Translation2d onto){
@@ -160,8 +183,8 @@ public class AutoAlignReef extends Command {
     private double scalar(double distance){
         if(distance > maxDistance.get()){
             return 1.0;
-        } else if (minDistance < distance && distance < maxDistance.get()){
-            return MathUtil.clamp((1 / (maxDistance.get() - minDistance)) * (distance - minDistance), 0, 1);
+        } else if (minDistance.get() < distance && distance < maxDistance.get()){
+            return MathUtil.clamp((1 / (maxDistance.get() - minDistance.get())) * (distance - minDistance.get()), 0, 1);
         } else {
             return 0.0;
         }

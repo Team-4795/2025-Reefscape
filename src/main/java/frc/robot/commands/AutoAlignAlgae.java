@@ -12,12 +12,15 @@ import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N2;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.state.State;
+import frc.robot.subsystems.state.StateManager.OperationStates;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.vision.AprilTag.Vision;
 
@@ -25,14 +28,16 @@ import frc.robot.subsystems.vision.AprilTag.Vision;
 public class AutoAlignAlgae extends Command{
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
-    private final double maxDistance = 0.6;
-    private final double minDistance = -0.1;
+    private final double maxDistance = 1;
+    private final double minDistance = -0.05;
 
     private ProfiledPIDController translationController;
     private ProfiledPIDController rotationController;
 
+    private int reefTag;
     private double mult;
     private Pose2d currentPose;
+    private Pose2d reefPose;
     private Pose2d targetPose;
     private double distance;
 
@@ -46,17 +51,25 @@ public class AutoAlignAlgae extends Command{
 
 
     @Override
-    public void initialize(){
-        // Vision.getInstance().toggleShouldUpdate(0);
-        // Vision.getInstance().toggleShouldUpdate(2);
-        // Vision.getInstance().toggleShouldUpdate(3);
-        // Vision.getInstance().toggleIsReefAligning();
-
+    public void initialize() {
         DriverStation.getAlliance().ifPresent((alliance) -> {
             mult = (alliance == Alliance.Red) ? -1.0 : 1.0;
         });
+        
+        reefTag = Vision.getInstance().getReefTag();
 
-        targetPose = Vision.getInstance().getBestReefPose();
+        if(reefTag == 7 || reefTag == 9 || reefTag == 11 || reefTag == 18 || reefTag == 20 || reefTag == 22) {
+            OperationStates.autoAlgaeMode = State.HIGH_ALGAE;
+        }
+        else if(reefTag == 6 || reefTag == 8 || reefTag == 10 || reefTag == 17 || reefTag == 19 || reefTag == 21) {
+            OperationStates.autoAlgaeMode = State.LOW_ALGAE;
+        }
+        else {
+            OperationStates.autoAlgaeMode = State.DYNAMIC;
+        }
+
+        reefPose = Vision.getInstance().getBestReefPose();
+        targetPose = reefPose.transformBy(new Transform2d(0.37, 0 , new Rotation2d()));
 
         currentPose = Swerve.getInstance().getState().Pose;
         double velocity = mult * projection(new Translation2d(Swerve.getInstance().getState().Speeds.vxMetersPerSecond, Swerve.getInstance().getState().Speeds.vyMetersPerSecond), targetPose.getTranslation().minus(currentPose.getTranslation()));
@@ -73,8 +86,6 @@ public class AutoAlignAlgae extends Command{
 
     @Override
     public void execute() {
-        targetPose = Vision.getInstance().getBestReefPose();
-
         currentPose = Swerve.getInstance().getState().Pose;
         distance = currentPose.getTranslation().getDistance(targetPose.getTranslation());
 
@@ -107,15 +118,20 @@ public class AutoAlignAlgae extends Command{
             .withVelocityY(driveSpeed * direction.getSin())
             .withRotationalRate(omega));
         
+
+        OperationStates.aligned = finishedAligning();
     }
 
     @Override
     public void end(boolean interrupted) {
-
+        Swerve.getInstance().setControl(
+            drive.withVelocityX(0)
+            .withVelocityY(0)
+            .withRotationalRate(0));
     }
 
     public boolean finishedAligning() {
-        return (translationController.atGoal() && rotationController.atGoal());
+        return (distance < Units.inchesToMeters(1.5));
     }
 
     private double projection(Translation2d v1, Translation2d onto){

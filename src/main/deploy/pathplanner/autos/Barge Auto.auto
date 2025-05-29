@@ -1,0 +1,109 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Set Score L4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score right reef"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Autonomous Score"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Vstow"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Barge Auto P1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Auto Algae"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Barge Auto P2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Auto Net"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.2
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "VStow"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Barge Auto P3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Auto Algae"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Barge Auto P4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Auto Net"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.2
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stow no intake"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

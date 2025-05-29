@@ -2,6 +2,8 @@ package frc.robot.subsystems.intake;
 
 import org.littletonrobotics.junction.AutoLog;
 
+import com.revrobotics.spark.SparkAbsoluteEncoder;
+
 public interface IntakeIO {
     @AutoLog
     public static class IntakeIOInputs {
@@ -17,7 +19,16 @@ public interface IntakeIO {
     public default void setMotorSpeed(double speed) {
     }
 
+    public default SparkAbsoluteEncoder getArmAbsoluteEncoder() {
+        return null;
+    }
+
     public default boolean hasGamepiece() {
         return false;
     }
+
+    public default double voltage() {
+        return 0.0;
+    }
 }
+

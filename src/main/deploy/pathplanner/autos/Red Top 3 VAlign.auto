@@ -17,16 +17,9 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Auto Score"
-                }
-              }
-            ]
+            "name": "Auto Score"
           }
         },
         {
@@ -68,16 +61,9 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Auto Score"
-                }
-              }
-            ]
+            "name": "Auto Score"
           }
         },
         {
@@ -125,16 +111,9 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Auto Score"
-                }
-              }
-            ]
+            "name": "Auto Score"
           }
         }
       ]

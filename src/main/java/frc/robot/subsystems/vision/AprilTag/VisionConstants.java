@@ -25,14 +25,14 @@ public class VisionConstants {
     public static final double xyStdDevSingleTag = 0.08;
     public static final double xyStdDevMultiTag = 0.04;
 
-    private static LoggedTunableNumber targetPoseXOffset = new LoggedTunableNumber("AutoAlign/targetPoseXOffset", .48);
+    private static LoggedTunableNumber targetPoseXOffset = new LoggedTunableNumber("AutoAlign/targetPoseXOffset", .48 + .16);
 
     public static final String[] cameraIds =
     new String[] {
         "Jermaine Coral",
         "Cod Wave",
-        "Kendrick LaBarge",
-        "Chief Reef"
+        "Chief Reef",
+        "Kendrick LaBarge"
       };
 
     // Based on sim. Change once actually mounted
@@ -42,41 +42,42 @@ public class VisionConstants {
         new Transform3d(
             new Translation3d(
                 Units.inchesToMeters(10.5),
-                Units.inchesToMeters(-3.5),
-                Units.inchesToMeters(8.5)), 
+                Units.inchesToMeters(-3.625),
+                Units.inchesToMeters(7.25)), 
             new Rotation3d(
                 Units.degreesToRadians(0), 
                 Units.degreesToRadians(-20), 
                 Units.degreesToRadians(-20))),
 
+
         // Front Camera Left
         new Transform3d(
             new Translation3d(
                 Units.inchesToMeters(10.5),
-                Units.inchesToMeters(3.5),
-                Units.inchesToMeters(8.5)), 
+                Units.inchesToMeters(3),
+                Units.inchesToMeters(7.25)), 
             new Rotation3d(
                 Units.degreesToRadians(0), 
                 Units.degreesToRadians(-20), 
                 Units.degreesToRadians(20))),
 
-        // Left Camera
+        // Back Camera
         new Transform3d(
             new Translation3d(
-                Units.inchesToMeters(-3),
-                Units.inchesToMeters(13),
-                Units.inchesToMeters(39.5)), 
+                Units.inchesToMeters(-4.25 - 0.125),
+                Units.inchesToMeters(0),
+                Units.inchesToMeters(40.5)), 
             new Rotation3d(
                 0, 
                 Units.degreesToRadians(0), 
-                Units.degreesToRadians(135))),
+                Units.degreesToRadians(180))),
 
         // Right Camera
         new Transform3d(
             new Translation3d(
                 Units.inchesToMeters(-3),
                 -Units.inchesToMeters(13),
-                Units.inchesToMeters(39.5)), 
+                Units.inchesToMeters(39)), 
             new Rotation3d(
                 0, 
                 Units.degreesToRadians(0), 
@@ -110,17 +111,6 @@ public class VisionConstants {
         aprilTagFieldLayout.getTagPose(11).get().toPose2d()
     };
 
-
-    public static final Pose2d[] redReefScoringPoses =
-    new Pose2d[] {
-        redReefTag[0].plus(new Transform2d(targetPoseXOffset.get(), 0, new Rotation2d(Math.PI))),
-        redReefTag[1].plus(new Transform2d(targetPoseXOffset.get(), 0, new Rotation2d(Math.PI))),
-        redReefTag[2].plus(new Transform2d(targetPoseXOffset.get(), 0, new Rotation2d(Math.PI))),
-        redReefTag[3].plus(new Transform2d(targetPoseXOffset.get(), 0, new Rotation2d(Math.PI))),
-        redReefTag[4].plus(new Transform2d(targetPoseXOffset.get(), 0, new Rotation2d(Math.PI))),
-        redReefTag[5].plus(new Transform2d(targetPoseXOffset.get(), 0, new Rotation2d(Math.PI))),
-    };
-
     private static final Pose2d[] blueReefTag =
     new Pose2d[] {
         aprilTagFieldLayout.getTagPose(17).get().toPose2d(),
@@ -131,6 +121,15 @@ public class VisionConstants {
         aprilTagFieldLayout.getTagPose(22).get().toPose2d()
     };
 
+    public static final Pose2d[] redReefScoringPoses =
+    new Pose2d[] {
+        redReefTag[0].plus(new Transform2d(targetPoseXOffset.get(), 0, new Rotation2d(Math.PI))),
+        redReefTag[1].plus(new Transform2d(targetPoseXOffset.get(), 0, new Rotation2d(Math.PI))),
+        redReefTag[2].plus(new Transform2d(targetPoseXOffset.get(), 0, new Rotation2d(Math.PI))),
+        redReefTag[3].plus(new Transform2d(targetPoseXOffset.get(), 0, new Rotation2d(Math.PI))),
+        redReefTag[4].plus(new Transform2d(targetPoseXOffset.get(), 0, new Rotation2d(Math.PI))),
+        redReefTag[5].plus(new Transform2d(targetPoseXOffset.get(), 0, new Rotation2d(Math.PI)))
+    };
     
     public static final Pose2d[] blueReefScoringPoses =
     new Pose2d[] {
@@ -139,11 +138,6 @@ public class VisionConstants {
         blueReefTag[2].plus(new Transform2d(targetPoseXOffset.get(), 0, new Rotation2d(Math.PI))),
         blueReefTag[3].plus(new Transform2d(targetPoseXOffset.get(), 0, new Rotation2d(Math.PI))),
         blueReefTag[4].plus(new Transform2d(targetPoseXOffset.get(), 0, new Rotation2d(Math.PI))),
-        blueReefTag[5].plus(new Transform2d(targetPoseXOffset.get(), 0, new Rotation2d(Math.PI))),
+        blueReefTag[5].plus(new Transform2d(targetPoseXOffset.get(), 0, new Rotation2d(Math.PI)))
     };
-
-    public static final double areaCutoff = 11;
-    public static final double timeDelay = 0.5;
-    public static final double intakeCamOffset = 0.3;
-    public static final double degreeTolerance = 6.5;
 }

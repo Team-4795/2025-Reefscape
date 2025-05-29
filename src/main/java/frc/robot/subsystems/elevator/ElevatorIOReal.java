@@ -7,7 +7,7 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
-
+import frc.robot.util.LoggedTunableNumber;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -23,12 +23,22 @@ public class ElevatorIOReal implements ElevatorIO {
 
     // private AbsoluteEncoder leftAbsoluteEncoder = leftElevatorMotor.getAbsoluteEncoder();
 
-    private final ElevatorFeedforward ffmodel = new ElevatorFeedforward(ElevatorConstants.ks, ElevatorConstants.kg, ElevatorConstants.kv);
+    LoggedTunableNumber KP = new LoggedTunableNumber("Elevator/KP", ElevatorConstants.kP);
+    LoggedTunableNumber KI = new LoggedTunableNumber("Elevator/KI", ElevatorConstants.kI);
+    LoggedTunableNumber KD = new LoggedTunableNumber("Elevator/KD", ElevatorConstants.kD); 
+    
+    LoggedTunableNumber KG = new LoggedTunableNumber("Elevator/Kg", ElevatorConstants.kg);
+    LoggedTunableNumber KV = new LoggedTunableNumber("Elevator/Kv", ElevatorConstants.kv);
+    LoggedTunableNumber KS = new LoggedTunableNumber("Elevator/Ks", ElevatorConstants.ks);
+
+    private ElevatorFeedforward ffmodel = new ElevatorFeedforward(KS.get(), KG.get(), KV.get());
     private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(ElevatorConstants.MAX_VELOCITY, ElevatorConstants.MAX_ACCELERATION);
-    private final PIDController controller = new PIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD);
+    private PIDController controller = new PIDController(KP.get(), KI.get(), KD.get());
     private final TrapezoidProfile profile = new TrapezoidProfile(constraints);
     private TrapezoidProfile.State setpoint = new TrapezoidProfile.State();
     private TrapezoidProfile.State goal = new TrapezoidProfile.State();
+    public double pidVolts; 
+    public double feedForwardVolts; 
 
     private SparkFlexConfig config = new SparkFlexConfig();
 
@@ -82,10 +92,13 @@ public class ElevatorIOReal implements ElevatorIO {
     @Override
     public void updateMotionProfile() {
         // double prevVelocity = setpoint.velocity;
+
         setpoint = profile.calculate(0.02, setpoint, goal);
         // double acceleration = (setpoint.velocity - prevVelocity) / 0.02;
         double ffvolts = ffmodel.calculate(setpoint.velocity);
+        feedForwardVolts = ffvolts;
         double pidvolts = controller.calculate(rightEncoder.getPosition(), setpoint.position);
+        pidVolts = pidvolts;
         setVoltage(ffvolts + pidvolts);
     }
 
@@ -97,6 +110,9 @@ public class ElevatorIOReal implements ElevatorIO {
 
     @Override
     public void updateInputs(ElevatorIOInputs inputs) {
+        ffmodel = new ElevatorFeedforward(KS.get(), KG.get(), KV.get());
+        controller = new PIDController(KP.get(), KI.get(), KD.get());
+
         inputs.elevatorRightCurrent = rightElevatorMotor.getOutputCurrent();
         inputs.elevatorRightAppliedVolts = rightElevatorMotor.getAppliedOutput() * rightElevatorMotor.getBusVoltage();
         inputs.elevatorRightPositionMeters = rightEncoder.getPosition();
@@ -110,6 +126,8 @@ public class ElevatorIOReal implements ElevatorIO {
         inputs.setpointVelocity = setpoint.velocity;
         inputs.goalHeight = goal.position;
         inputs.setpointPosition = setpoint.position;
+        inputs.tuningkP = feedForwardVolts;
+        inputs.PIDVolts = pidVolts; 
     }
 
     @Override

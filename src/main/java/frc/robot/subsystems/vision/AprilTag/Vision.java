@@ -7,22 +7,22 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.util.Units;
-
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.FieldConstants;
-import frc.robot.Constants.OIConstants;
+import frc.robot.subsystems.state.StateManager.OperationStates;
 import frc.robot.subsystems.swerve.Swerve;
-import frc.robot.Constants;
-
 import static frc.robot.subsystems.vision.AprilTag.VisionConstants.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Vision extends SubsystemBase{
     private VisionIO io[];
     private VisionIOInputsAutoLogged inputs[];
-    private boolean[] shouldUpdate = new boolean[] {true, true};
+    private boolean[] shouldUpdate = new boolean[] {true, true, true};
 
     public static Vision instance;
 
@@ -63,23 +63,28 @@ public class Vision extends SubsystemBase{
     }
 
     public void toggleReefTag() {
-        OIConstants.isReefTagOnly = !OIConstants.isReefTagOnly;
+        OperationStates.isReefTagOnly = !OperationStates.isReefTagOnly;
     }
 
 
     public Pose2d getBestReefPose() {
-        if(Constants.currentMode == Constants.Mode.SIM)
-        {
-            return VisionConstants.redReefScoringPoses[0];
-        }
-        
         for(int i = 0; i < io.length; i++) {
             if(inputs[i].reefPose != new Pose2d())
             {
                 return inputs[i].reefPose;
             }
         }
-        return new Pose2d();
+        return new Pose2d();   
+    }
+
+    public int getReefTag() {
+        for(int i = 0; i < io.length; i++) {
+            if(inputs[i].reefTag != 0)
+            {
+                return inputs[i].reefTag;
+            }
+        }
+        return 0;  
     }
 
     public void periodic() {
@@ -103,15 +108,22 @@ public class Vision extends SubsystemBase{
 
                 List<Pose3d> tagPoses = new ArrayList<>();
                 
-                if(OIConstants.isReefTagOnly) {
+                if(OperationStates.isReefTagOnly) {
                     for (int tag : inputs[i].tags) {
-                        if(tag != 1 && tag != 2 && tag != 3 && tag != 4 && tag != 5 && tag != 12 && tag != 13 && tag != 14 && tag != 15 && tag != 16) {
-                            VisionConstants.aprilTagFieldLayout.getTagPose(tag).ifPresent(tagPoses::add);
+                        if(DriverStation.getAlliance().get().equals(Alliance.Red)) {
+                            if(tag != 1 && tag != 2 && tag != 3 && tag != 4 && tag != 5 && tag != 12 && tag != 13 && tag != 14 && tag != 15 && tag != 16 && tag != 17 && tag != 18 && tag != 19 && tag != 20 && tag != 21) {
+                                VisionConstants.aprilTagFieldLayout.getTagPose(tag).ifPresent(tagPoses::add);
+                            }
+                        }
+                        else if (DriverStation.getAlliance().get().equals(Alliance.Blue)) {
+                            if(tag != 1 && tag != 2 && tag != 3 && tag != 4 && tag != 5 && tag != 6 && tag != 7 && tag != 8 && tag != 9 && tag != 10 && tag != 11 && tag != 12 && tag != 13 && tag != 14 && tag != 15 && tag != 16) {
+                                VisionConstants.aprilTagFieldLayout.getTagPose(tag).ifPresent(tagPoses::add);
+                            }
                         }
                         else {
                             continue;
                         }
-                    }
+                            }
                 }
 
                 if (tagPoses.isEmpty()) continue;
