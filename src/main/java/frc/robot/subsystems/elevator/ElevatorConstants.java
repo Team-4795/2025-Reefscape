@@ -17,7 +17,7 @@ public final class ElevatorConstants{
     public static final double ks = 1.4;
     public static final double kg = 0.25;
     public static final double kv = 6.5;
-    public static final double MAX_ACCELERATION = 7;
+    public static final double MAX_ACCELERATION = 5;
     public static final double MAX_VELOCITY = 1.75;
     public static final double CORAL_L4_SETPOINT = 0.7097808122634888 + Units.inchesToMeters(1); 
     public static final double CORAL_L3_SETPOINT = (0.098505221 + Units.inchesToMeters(2)) / 2.0;
