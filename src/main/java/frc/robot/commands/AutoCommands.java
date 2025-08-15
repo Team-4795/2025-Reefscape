@@ -1,18 +1,25 @@
 package frc.robot.commands;
 
 import java.lang.invoke.WrongMethodTypeException;
+import java.util.Set;
+import java.util.function.BooleanSupplier;
 
 import org.littletonrobotics.junction.Logger;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.GenericRequirement;
 import frc.robot.subsystems.Wrist.Wrist;
@@ -28,6 +35,8 @@ import frc.robot.subsystems.state.StateManager;
 import frc.robot.subsystems.state.StateManager.OperationStates;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
+import frc.robot.subsystems.vision.AprilTag.Vision;
+import frc.robot.subsystems.vision.AprilTag.VisionConstants;
 import frc.robot.util.LoggedTunableNumber;
 
 public class AutoCommands {
@@ -294,6 +303,27 @@ public class AutoCommands {
                 scorePiece(),
                 stateManager.stateCommand(State.VSTOW)), 
             () -> OperationStates.autoScoreMode != State.L4).finallyDo(() -> OperationStates.aligned = false);
+    }
+
+    public static Command ppAutoAlign() {
+        PathConstraints constraints = new PathConstraints(
+            3.0, 5.0,
+            3, Units.degreesToRadians(360));
+        
+        Command pathPlanCommand = Commands.defer(
+            () -> AutoBuilder.pathfindToPose(
+                Vision.getInstance().getBestReefPose(),
+                constraints,
+                3.0),
+            Set.of(drive)
+        );
+
+        return Commands.sequence(
+            pathPlanCommand.until(
+                () -> drive.getState().Pose.getTranslation().getDistance(
+                Vision.getInstance().getBestReefPose().getTranslation()) < 0.7),
+            alignReefUntil()
+        );
     }
 
     public static Command autonomousScore() {

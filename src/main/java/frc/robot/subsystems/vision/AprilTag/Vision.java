@@ -74,7 +74,7 @@ public class Vision extends SubsystemBase{
                 return inputs[i].reefPose;
             }
         }
-        return new Pose2d();   
+        return new Pose2d();
     }
 
     public int getReefTag() {

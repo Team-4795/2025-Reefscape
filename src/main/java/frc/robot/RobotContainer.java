@@ -141,7 +141,7 @@ public class RobotContainer {
     // Reef/Feeder align
     Constants.OIConstants.driverController.leftBumper().whileTrue(
       Commands.either(
-        AutoCommands.autoScore(),
+        AutoCommands.ppAutoAlign(),
         Commands.startEnd(
           () -> {
               OIConstants.driverController.setRumble(RumbleType.kBothRumble, 0.6);

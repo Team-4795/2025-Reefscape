@@ -15,8 +15,6 @@ public class Wrist extends SubsystemBase {
     private WristIOInputsAutoLogged inputs = new WristIOInputsAutoLogged();
     private static Wrist instance;
     
-
-
     public Wrist(WristIO io) {
         this.io = io;
         setDefaultCommand(
