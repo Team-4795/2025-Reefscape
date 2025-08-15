@@ -86,6 +86,10 @@ public class Intake extends SubsystemBase {
         return io.hasGamepiece();
     }
 
+    public boolean velocitySensing(double velocityThreshold) {
+        return io.velocitySensing(velocityThreshold);
+    }
+
     public void isStoring() {
         isStoring = true; 
     }

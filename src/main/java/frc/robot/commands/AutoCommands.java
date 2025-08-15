@@ -210,6 +210,29 @@ public class AutoCommands {
         );  
     }
 
+    
+    public static Command velocityIntake() {
+        return Commands.sequence(
+            Commands.runOnce(() -> intake.setIntakeSpeed(IntakeConstants.intake)), 
+            Commands.waitUntil(() -> intake.velocitySensing(IntakeConstants.intakeVelocity)),
+            Commands.waitUntil(() -> intake.velocitySensing(IntakeConstants.velocityThreshold)),
+            Commands.parallel(
+                Commands.startEnd(
+                    () -> {
+                        OIConstants.driverController.setRumble(RumbleType.kBothRumble, 0.6);
+                        OIConstants.operatorController.setRumble(RumbleType.kBothRumble, 0.6);
+                    },
+                    () -> {
+                        OIConstants.driverController.setRumble(RumbleType.kBothRumble, 0);
+                        OIConstants.operatorController.setRumble(RumbleType.kBothRumble, 0);
+                    }
+                ),
+                intake.reverseCoral()
+            ).until(() -> intake.velocitySensing(IntakeConstants.reverseThreshold)),
+            Commands.runOnce(() -> intake.isStoring())
+        );  
+    }
+
     public static Command setIntakeSpeed() {
         return Commands.runOnce(() -> intake.setIntakeSpeed(IntakeConstants.intake));
     }

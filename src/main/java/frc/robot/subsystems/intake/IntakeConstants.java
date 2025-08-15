@@ -18,5 +18,10 @@ public final class IntakeConstants {
     public static final double currentThreshold = 40; //change later based on akit numbers for gamepiece
 
     public static final double initialThreshold = 40;
+
+    public static double velocityThreshold = 0.0; //change this to intake drop in speed
+    public static double intakeVelocity = 0.0; //change this to speed we want on intake to actually be able to intake a coral
+    public static double reverseThreshold = 0.0;  //when you reverse the coral 
+
 }
 

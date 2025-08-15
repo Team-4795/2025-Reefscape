@@ -64,6 +64,12 @@ public class IntakeIORealTalon implements IntakeIO {
     }
 
     @Override
+    public boolean velocitySensing(double RPM) {
+        return velocity.getValueAsDouble() < RPM; 
+    }
+
+
+    @Override
     public void setMotorSpeed(double speed) {
         intakeMotor.set(-speed);
     }

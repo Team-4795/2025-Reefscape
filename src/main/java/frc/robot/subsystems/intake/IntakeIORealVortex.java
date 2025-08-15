@@ -43,6 +43,11 @@ public class IntakeIORealVortex implements IntakeIO {
         return intakeMotor.getAbsoluteEncoder();
     }  
 
+    @Override
+    public boolean velocitySensing(double RPM) {
+        return encoder.getVelocity() < RPM; 
+    }
+
     // @Override
     // public double voltage() {
     //     return coralSensor.getVoltage();

@@ -4,6 +4,8 @@ import org.littletonrobotics.junction.AutoLog;
 
 import com.revrobotics.spark.SparkAbsoluteEncoder;
 
+import edu.wpi.first.units.measure.Velocity;
+
 public interface IntakeIO {
     @AutoLog
     public static class IntakeIOInputs {
@@ -30,5 +32,11 @@ public interface IntakeIO {
     public default double voltage() {
         return 0.0;
     }
+
+    public default boolean velocitySensing(double RPM) {
+        return false; 
+    }
+
+    
 }
 
