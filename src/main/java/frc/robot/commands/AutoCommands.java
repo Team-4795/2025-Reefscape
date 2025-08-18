@@ -1,13 +1,17 @@
 package frc.robot.commands;
 
 import java.lang.invoke.WrongMethodTypeException;
+import java.util.Set;
 
 import org.littletonrobotics.junction.Logger;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
@@ -28,6 +32,7 @@ import frc.robot.subsystems.state.StateManager;
 import frc.robot.subsystems.state.StateManager.OperationStates;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
+import frc.robot.subsystems.vision.AprilTag.Vision;
 import frc.robot.util.LoggedTunableNumber;
 
 public class AutoCommands {
@@ -319,8 +324,6 @@ public class AutoCommands {
             () -> OperationStates.autoScoreMode != State.L4).finallyDo(() -> OperationStates.aligned = false);
     }
 
-<<<<<<< Updated upstream
-=======
     public static Command ppAutoAlign() {
         PathConstraints constraints = new PathConstraints(
             3.0, 3.75,
@@ -340,7 +343,6 @@ public class AutoCommands {
         );
     }
 
->>>>>>> Stashed changes
     public static Command autonomousScore() {
         return Commands.either(
             Commands.sequence(
