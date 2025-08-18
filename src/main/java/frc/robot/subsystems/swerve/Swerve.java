@@ -232,7 +232,7 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
                     // PID constants for translation
                     new PIDConstants(10, 0, 0),
                     // PID constants for rotation
-                    new PIDConstants(7, 0, 0)
+                    new PIDConstants(10, 0, 0) //started at 7
                 ),
                 config,
                 // Assume the path needs to be flipped for Red vs Blue, this is normally the case
@@ -285,6 +285,24 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
         Logger.recordOutput("Swerve/Module0TurnSetpoint", getState().ModuleTargets[0].angle.getRadians());
         Logger.recordOutput("Swerve/Module0DrivePosition", getState().ModuleStates[0].speedMetersPerSecond);
         Logger.recordOutput("Swerve/Module0DriveSetpoint", getState().ModuleTargets[0].speedMetersPerSecond);
+
+        Logger.recordOutput("Swerve/Module1TurnPosition", getState().ModulePositions[1].angle.getRadians());
+        Logger.recordOutput("Swerve/Module1TurnSetpoint", getState().ModuleTargets[1].angle.getRadians());
+        Logger.recordOutput("Swerve/Module1DrivePosition", getState().ModuleStates[1].speedMetersPerSecond);
+        Logger.recordOutput("Swerve/Module1DriveSetpoint", getState().ModuleTargets[1].speedMetersPerSecond);
+
+
+        Logger.recordOutput("Swerve/Module2TurnPosition", getState().ModulePositions[2].angle.getRadians());
+        Logger.recordOutput("Swerve/Module2TurnSetpoint", getState().ModuleTargets[2].angle.getRadians());
+        Logger.recordOutput("Swerve/Module2DrivePosition", getState().ModuleStates[2].speedMetersPerSecond);
+        Logger.recordOutput("Swerve/Module2DriveSetpoint", getState().ModuleTargets[2].speedMetersPerSecond);
+
+
+        Logger.recordOutput("Swerve/Module3TurnPosition", getState().ModulePositions[3].angle.getRadians());
+        Logger.recordOutput("Swerve/Module3TurnSetpoint", getState().ModuleTargets[3].angle.getRadians());
+        Logger.recordOutput("Swerve/Module3DrivePosition", getState().ModuleStates[3].speedMetersPerSecond);
+        Logger.recordOutput("Swerve/Module3DriveSetpoint", getState().ModuleTargets[3].speedMetersPerSecond);
+
 
         
         /*

@@ -319,6 +319,28 @@ public class AutoCommands {
             () -> OperationStates.autoScoreMode != State.L4).finallyDo(() -> OperationStates.aligned = false);
     }
 
+<<<<<<< Updated upstream
+=======
+    public static Command ppAutoAlign() {
+        PathConstraints constraints = new PathConstraints(
+            3.0, 3.75,
+            3, Units.degreesToRadians(360));
+        
+        Command pathPlanCommand = Commands.defer(
+            () -> AutoBuilder.pathfindToPose(
+                Vision.getInstance().getBestReefPose().plus(new Transform2d(-0.5, 0, new Rotation2d())),
+                constraints,
+                3.0),
+            Set.of(drive)
+        );
+
+        return Commands.sequence(
+            pathPlanCommand,
+            alignReefUntil()
+        );
+    }
+
+>>>>>>> Stashed changes
     public static Command autonomousScore() {
         return Commands.either(
             Commands.sequence(

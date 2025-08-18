@@ -115,7 +115,7 @@ public class RobotContainer {
 
     stateManager = StateManager.initalize();
 
-    leds = LEDs.getInstance();
+    // leds = LEDs.getInstance();
 
     NamedCommandManager.registerNamedCommands();
 

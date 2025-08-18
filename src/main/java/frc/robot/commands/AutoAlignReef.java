@@ -91,7 +91,7 @@ public class AutoAlignReef extends Command {
         rotationError = currentPose.getRotation().getRadians() - reefScoringPose.getRotation().getRadians();
         rotationController.reset(MathUtil.angleModulus(currentPose.getRotation().getRadians()), Swerve.getInstance().getState().Speeds.omegaRadiansPerSecond);
 
-        OperationStates.canAlign = (currentPose.getTranslation().getDistance(reefScoringPose.getTranslation()) >= 0.5 || StateManager.getInstance().getState() == State.L4);
+        OperationStates.canAlign = (currentPose.getTranslation().getDistance(reefScoringPose.getTranslation()) >= 0 || StateManager.getInstance().getState() == State.L4);
         if(OperationStates.canAlign) {
             targetPose = reefScoringPose;
         }
@@ -143,7 +143,7 @@ public class AutoAlignReef extends Command {
             .withVelocityY(driveSpeed * direction.getSin())
             .withRotationalRate(omega));
         
-        if(currentPose.getTranslation().getDistance(reefScoringPose.getTranslation()) >= 0.5 && !OperationStates.canAlign) {
+        if(currentPose.getTranslation().getDistance(reefScoringPose.getTranslation()) >= 0 && !OperationStates.canAlign) {
             targetPose = reefScoringPose;
             OperationStates.canAlign = true;
         }
