@@ -209,8 +209,7 @@ public class RobotContainer {
           stateManager.stateCommand(State.L2), 
           () -> vision.isVisionUpdating()));
     
-    Constants.OIConstants.driverController.a().onTrue(stateManager.stateCommand(State.L1));
-
+    //Constants.OIConstants.driverController.a().onTrue(stateManager.stateCommand(State.L1));
     
     Constants.OIConstants.driverController.rightBumper().onTrue(AutoCommands.stow());
 
@@ -219,7 +218,7 @@ public class RobotContainer {
     // Constants.OIConstants.operatorController.rightTrigger().onTrue(AutoCommands.AlgaeLow());
     // Constants.OIConstants.operatorController.leftTrigger().onTrue(AutoCommands.algaeHigh());
 
-    // Constants.OIConstants.operatorController.x().onTrue((AutoCommands.processor()));
+    //Constants.OIConstants.operatorController.x().onTrue((AutoCommands.processor()));
 
     // Reverse intake
     Constants.OIConstants.driverController.leftTrigger().whileTrue(
@@ -228,6 +227,19 @@ public class RobotContainer {
         () ->  intake.setIntakeSpeed(0), 
         intake
       ));
+
+    //writing sequence for basketball shooting
+    Constants.OIConstants.operatorController.a().whileTrue(
+      Commands.sequence(
+       Commands.runOnce(() -> intake.setIntakeSpeed(0.75)),
+       Commands.runOnce(() -> ElevatorConstants.HIGH_ALGAE_SETPOINT),
+       Commands.runOnce(() -> wrist.setGoal(WristConstants.BACKWARD_NET_SETPOINT))
+      Commands.parallel(
+      Commands.runOnce(() -> arm.setGoal(ArmConstants.NET_SETPOINT),
+      Commands.waitSeconds(1),
+      Commands.runOnce(() -> intake.setIntakeSpeed(-0.75)  
+       )
+       ))));
 
     // Intake
     OIConstants.operatorController.a().onTrue(
