@@ -231,15 +231,14 @@ public class RobotContainer {
     //writing sequence for basketball shooting
     Constants.OIConstants.operatorController.a().whileTrue(
       Commands.sequence(
-       Commands.runOnce(() -> intake.setIntakeSpeed(0.75)),
-       Commands.runOnce(() -> ElevatorConstants.HIGH_ALGAE_SETPOINT),
-       Commands.runOnce(() -> wrist.setGoal(WristConstants.BACKWARD_NET_SETPOINT))
+      Commands.runOnce(() -> intake.setIntakeSpeed(0.75)),
+      Commands.runOnce(() -> ElevatorConstants.HIGH_ALGAE_SETPOINT),
+      Commands.runOnce(() -> wrist.setGoal(WristConstants.BACKWARD_NET_SETPOINT))
       Commands.parallel(
       Commands.runOnce(() -> arm.setGoal(ArmConstants.NET_SETPOINT),
       Commands.waitSeconds(1),
       Commands.runOnce(() -> intake.setIntakeSpeed(-0.75)  
-       )
-       ))));
+       )))));
 
     // Intake
     OIConstants.operatorController.a().onTrue(
