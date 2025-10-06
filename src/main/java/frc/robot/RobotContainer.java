@@ -53,29 +53,25 @@ import frc.robot.util.NamedCommandManager;
 
 public class RobotContainer {
   private RobotVisualizer visualizer;
-  private Vision vision;
   private LEDs leds; 
 
-  // private final Vision vision;
   /* Setting up bindings for necessary control of the swerve drive platform */
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
   .withDeadband(SwerveConstants.MaxSpeed * 0.04).withRotationalDeadband(SwerveConstants.MaxAngularRate * 0.04) // Add a 10% deadband
   .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
 
-  private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-  private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-
   public final Telemetry logger = new Telemetry(SwerveConstants.MaxSpeed);
 
   private StateManager stateManager;
-
-  public final Swerve drivetrain;
-
   public int autoScoreMode = 1;
 
+  private Wrist wrist; 
   private Elevator elevator;
   private Intake intake;
-  private Wrist wrist; 
+  private Arm arm;
+  public final Swerve drivetrain;
+  private Vision vision;
+
   LoggedDashboardChooser<Command> autoChooser;
 
   public RobotContainer() throws IOException, ParseException {
@@ -85,7 +81,7 @@ public class RobotContainer {
         wrist = Wrist.initialize(new WristIOReal());
         elevator = Elevator.initialize(new ElevatorIOReal());
         intake = Intake.initialize(new IntakeIORealVortex());
-        Arm.initialize(new ArmIOReal());
+        arm = Arm.initialize(new ArmIOReal());
         drivetrain = Swerve.initialize(new Swerve(TunerConstants.DrivetrainConstants, 50, TunerConstants.FrontLeft, TunerConstants.FrontRight, TunerConstants.BackLeft, TunerConstants.BackRight));
         vision = Vision.initialize(
           new VisionIOReal(0), 
@@ -110,13 +106,9 @@ public class RobotContainer {
         Arm.initialize(new ArmIOSim());
         wrist = Wrist.initialize(new WristIOSim());
         break;
-  
     }
 
     stateManager = StateManager.initalize();
-
-    // leds = LEDs.getInstance();
-
     NamedCommandManager.registerNamedCommands();
 
     autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser("Driver Forward Straight"));
@@ -138,130 +130,19 @@ public class RobotContainer {
     // Zero heading
     Constants.OIConstants.driverController.b().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-    // Reef/Feeder align
-    Constants.OIConstants.driverController.leftBumper().whileTrue(
-      Commands.either(
-        AutoCommands.autoScore(),
-        Commands.startEnd(
-          () -> {
-              OIConstants.driverController.setRumble(RumbleType.kBothRumble, 0.6);
-              OIConstants.operatorController.setRumble(RumbleType.kBothRumble, 0.6);
-          },
-          () -> {
-              OIConstants.driverController.setRumble(RumbleType.kBothRumble, 0);
-              OIConstants.operatorController.setRumble(RumbleType.kBothRumble, 0);
-          }
-        ),
-        () -> Vision.getInstance().isVisionUpdating()
-      )
-    );
+    // Set new goal of the arm
 
-    // Algae align
-    Constants.OIConstants.driverController.rightBumper().whileTrue(
-      AutoCommands.autoAlgae()
-    );
+    // Send voltage to make arm move up
 
-    Constants.OIConstants.driverController.povUp().whileTrue(
-      AutoCommands.alignFeeder()
-    );
-    
-    // Slow mode
-    // Constants.OIConstants.driverController.leftTrigger().onTrue(Commands.runOnce(() -> drivetrain.setSlowMode(true)));
-    // Constants.OIConstants.driverController.leftTrigger().onFalse(Commands.runOnce(() -> drivetrain.setSlowMode(false)));
+    // Send voltage to make arm move down
 
-    // Outtake
-    Constants.OIConstants.driverController.rightTrigger().whileTrue(
-      Commands.startEnd(
-        () -> intake.setIntakeSpeed(-1),
-        () -> intake.setIntakeSpeed(0), 
-        intake
-      ).alongWith(Commands.runOnce(() -> intake.outtake())));
+    // Send voltage to make elevator move up
 
-      Constants.OIConstants.driverController.leftTrigger().whileTrue(Commands.startEnd(() -> intake.setIntakeSpeed(0.63), () -> intake.setIntakeSpeed(0), intake));
-    // placeholder wrist
+    // Send voltage to make elevator move down
 
-    Constants.OIConstants.operatorController.leftTrigger().onTrue(stateManager.stateCommand(State.L1));
-  
-    // Constants.OIConstants.operatorController.povUp().onTrue(
-    //   Commands.runOnce( 
-    //     ()-> wrist.setGoal(WristConstants.VFBAngle), wrist));
+    // Intake gamepiece at half speed
 
-    //   Constants.OIConstants.operatorController.povDown().onTrue(
-    //     Commands.runOnce(
-    //       () -> wrist.setGoal(Units.degreesToRadians(90)), wrist)
-    //   );
-
-    //Coral Setpoints
-    Constants.OIConstants.operatorController.povUp().onTrue(
-        Commands.either(
-            Commands.runOnce(() -> OperationStates.autoScoreMode = State.L4), 
-            stateManager.stateCommand(State.L4), 
-            () -> vision.isVisionUpdating()));
-
-    Constants.OIConstants.operatorController.povRight().onTrue(
-        Commands.either(
-            Commands.runOnce(() -> OperationStates.autoScoreMode = State.L3), 
-            stateManager.stateCommand(State.L3), 
-            () -> vision.isVisionUpdating()));
-      
-    Constants.OIConstants.operatorController.povLeft().onTrue(
-      Commands.either(
-          Commands.runOnce(() -> OperationStates.autoScoreMode = State.L2), 
-          stateManager.stateCommand(State.L2), 
-          () -> vision.isVisionUpdating()));
-    
-    Constants.OIConstants.operatorController.povDown().onTrue(AutoCommands.stow());
-
-     // Algae setpoints
-    // I will delete this code when we are a 100% sure we do not need it
-    // Constants.OIConstants.operatorController.rightTrigger().onTrue(AutoCommands.AlgaeLow());
-    // Constants.OIConstants.operatorController.leftTrigger().onTrue(AutoCommands.algaeHigh());
-
-    Constants.OIConstants.operatorController.x().onTrue((AutoCommands.processor()));
-
-    // Reverse intake
-    Constants.OIConstants.operatorController.y().whileTrue(
-      Commands.startEnd(
-        () -> intake.setIntakeSpeed(1),
-        () ->  intake.setIntakeSpeed(0), 
-        intake
-      ));
-
-    // Intake
-    OIConstants.operatorController.a().onTrue(
-    AutoCommands.intakeCommand());
-
-    // Change reef scoring stem
-    OIConstants.operatorController.leftBumper().onTrue(
-        Commands.runOnce(() -> drivetrain.setScoringLeft()
-      ));
-    OIConstants.operatorController.rightBumper().onTrue(
-        Commands.runOnce(() -> drivetrain.setScoringRight()
-      ));
-
-    // No vision toggle
-    OIConstants.driverController.x().onTrue(
-      Commands.runOnce(() -> vision.toggleShouldUpdate()).andThen(
-      new RainbowCommand(() -> 1).withTimeout(2)));
-
-    // Vertical stow
-    OIConstants.operatorController.b()
-     .onTrue(AutoCommands.vstow());
-
-    //One Coral Away 
-    OIConstants.driverController.y().whileTrue(AutoCommands.autoBarge());
-     
-    // Drive sysid
-    Constants.OIConstants.driverController.povRight().and(Constants.OIConstants.driverController.y())
-      .whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-    Constants.OIConstants.driverController.povRight().and(Constants.OIConstants.driverController.x())
-      .whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-    Constants.OIConstants.driverController.povLeft().and(Constants.OIConstants.driverController.y())
-      .whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-    Constants.OIConstants.driverController.povLeft().and(Constants.OIConstants.driverController.x())
-      .whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
-
-    drivetrain.registerTelemetry(logger::telemeterize);
+    // Outtake gamepiece at half speed
   }
 
   public Command getAutonomousCommand() {

@@ -22,25 +22,14 @@ import frc.robot.Constants;
 import frc.robot.Constants.Gamepiece;
 import frc.robot.Constants.Mode;
 import frc.robot.Constants.OIConstants;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeIO;
 
 public class Arm extends SubsystemBase {
     private ArmIOInputsAutoLogged inputs = new ArmIOInputsAutoLogged();
     
     private ArmIO io;
     private static Arm instance;
-
-    private SysIdRoutine sysIdRoutine = new SysIdRoutine(
-        new SysIdRoutine.Config(),
-        new SysIdRoutine.Mechanism(volts -> {
-            manualVoltage(volts.magnitude());
-        }, 
-        log -> {
-            log.motor("arm motor")
-                .voltage(Voltage.ofBaseUnits(inputs.voltage, Volts))
-                .angularPosition(Angle.ofBaseUnits(inputs.relativeEncoderPosition, Radians))
-                .angularVelocity(AngularVelocity.ofBaseUnits(inputs.relativeEncoderVelocity, RadiansPerSecond));
-        }, this)
-    );
 
     private Arm(ArmIO io) {
         this.io = io;
@@ -54,9 +43,6 @@ public class Arm extends SubsystemBase {
                 io.updateMotionProfile();
             }, this)
         );
-        // setDefaultCommand(
-        //     Commands.runOnce(() -> io.setGoal(getAngle()), this).andThen(Commands.run(() -> io.hold(), this))
-        // );
         setFFMode(Constants.currentMode == Mode.SIM ? Gamepiece.SIM: Gamepiece.NONE);
     }
 
@@ -68,8 +54,11 @@ public class Arm extends SubsystemBase {
         return inputs.goalAngle;
     }
 
-    public static void initialize(ArmIO io) {
-        instance = new Arm(io);
+    public static Arm initialize(ArmIO io) {
+        if(instance == null){
+            instance = new Arm(io);
+        }
+        return instance;
     }
 
     public static Arm getInstance() {
@@ -93,10 +82,6 @@ public class Arm extends SubsystemBase {
         io.resetEncoder();
         
         io.setGoal(-ArmConstants.ARM_OFFSET);
-    }
-
-    public SysIdRoutine sysIDRoutine() {
-        return sysIdRoutine;
     }
 
     public void manualVoltage(double voltage) {
@@ -134,9 +119,8 @@ public class Arm extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // io.updateMotionProfile();
-        Logger.recordOutput(getName() + "/Pose", getArmPose());
         io.updateInputs(inputs);
+        Logger.recordOutput(getName() + "/Pose", getArmPose());
         Logger.processInputs(getName(), inputs);
         Logger.recordOutput("At Goal", atGoal(inputs.goalAngle));
     }

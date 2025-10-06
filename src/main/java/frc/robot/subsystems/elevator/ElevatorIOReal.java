@@ -19,10 +19,6 @@ public class ElevatorIOReal implements ElevatorIO {
     private RelativeEncoder leftEncoder = leftElevatorMotor.getEncoder();
     private RelativeEncoder rightEncoder = rightElevatorMotor.getEncoder();
 
-    // private SparkClosedLoopController controller = rightElevatorMotor.getClosedLoopController();
-
-    // private AbsoluteEncoder leftAbsoluteEncoder = leftElevatorMotor.getAbsoluteEncoder();
-
     LoggedTunableNumber KP = new LoggedTunableNumber("Elevator/KP", ElevatorConstants.kP);
     LoggedTunableNumber KI = new LoggedTunableNumber("Elevator/KI", ElevatorConstants.kI);
     LoggedTunableNumber KD = new LoggedTunableNumber("Elevator/KD", ElevatorConstants.kD); 
@@ -48,22 +44,12 @@ public class ElevatorIOReal implements ElevatorIO {
         rightEncoder.setPosition(0);
     }
     
-    
     public ElevatorIOReal(){
         leftElevatorMotor.clearFaults();
         rightElevatorMotor.clearFaults();
         config.encoder.positionConversionFactor(ElevatorConstants.conversionFactor);
         config.encoder.velocityConversionFactor(ElevatorConstants.conversionFactor / 60);    
         config.encoder.quadratureMeasurementPeriod(20);
-
-        // config.softLimit.forwardSoftLimitEnabled(true);
-        // config.softLimit.reverseSoftLimitEnabled(true);
-        // config.softLimit.forwardSoftLimit(ElevatorConstants.maxDistance);
-        // config.softLimit.reverseSoftLimit(ElevatorConstants.minDistance);
-
-        // config.closedLoop.p(10);
-        // config.closedLoop.i(0);
-        // config.closedLoop.d(0);
 
         config.smartCurrentLimit(ElevatorConstants.elevatorCurrentLimits);
         config.voltageCompensation(12);
@@ -76,25 +62,21 @@ public class ElevatorIOReal implements ElevatorIO {
         leftElevatorMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
+    // Write method that sends voltage to the elevator
     @Override
     public void setVoltage(double voltage) {
-        rightElevatorMotor.setVoltage(voltage);
+
     }
 
+    // Write method that sets elevator goal and sets the setpoint to the current position/velocity
     @Override
     public void setGoal(double height) {
-        if(height != goal.position) {
-            setpoint = new TrapezoidProfile.State(rightEncoder.getPosition(), rightEncoder.getVelocity());
-            goal = new TrapezoidProfile.State(height, 0);
-        }
+
     }
 
     @Override
     public void updateMotionProfile() {
-        // double prevVelocity = setpoint.velocity;
-
         setpoint = profile.calculate(0.02, setpoint, goal);
-        // double acceleration = (setpoint.velocity - prevVelocity) / 0.02;
         double ffvolts = ffmodel.calculate(setpoint.velocity);
         feedForwardVolts = ffvolts;
         double pidvolts = controller.calculate(rightEncoder.getPosition(), setpoint.position);

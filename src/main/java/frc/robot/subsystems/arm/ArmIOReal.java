@@ -2,25 +2,20 @@ package frc.robot.subsystems.arm;
 
 import org.littletonrobotics.junction.Logger;
 
-import com.revrobotics.spark.SparkAbsoluteEncoder;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkFlex;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.revrobotics.spark.config.SparkFlexConfig;
+import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import frc.robot.subsystems.Wrist.Wrist;
 import frc.robot.util.LoggedTunableNumber;
-// 
+
 public class ArmIOReal implements ArmIO {
-    private final SparkFlex armMotor = new SparkFlex(ArmConstants.CAN_ID, MotorType.kBrushless);
-    private SparkFlexConfig config = new SparkFlexConfig();
-    private SparkAbsoluteEncoder armEncoder;
+    private final TalonFX armMotor = new TalonFX(ArmConstants.CAN_ID);
+    private TalonFXConfiguration config = new TalonFXConfiguration();
 
     LoggedTunableNumber KP = new LoggedTunableNumber("Arm/KP", ArmConstants.kP);
     LoggedTunableNumber KI = new LoggedTunableNumber("Arm/KI", ArmConstants.kI);
@@ -32,7 +27,6 @@ public class ArmIOReal implements ArmIO {
     LoggedTunableNumber KA = new LoggedTunableNumber("Arm/KA", ArmConstants.DEFAULTkA);  
 
     private ArmFeedforward ffmodel = new ArmFeedforward(ArmConstants.DEFAULTkS, ArmConstants.DEFAULTkG, ArmConstants.DEFAULTkV, ArmConstants.DEFAULTkA, 0.02);
-    // private final SparkClosedLoopController onboardController = armMotor.getClosedLoopController();
     private PIDController controller = new PIDController(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD);
     private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(ArmConstants.MAX_VELOCITY, ArmConstants.MAX_ACCELERATION);
     private final TrapezoidProfile profile = new TrapezoidProfile(constraints);
@@ -40,46 +34,40 @@ public class ArmIOReal implements ArmIO {
     private TrapezoidProfile.State setpoint;
 
     public ArmIOReal(){
-        config.smartCurrentLimit(ArmConstants.CURRENT_LIMIT);
-        config.idleMode(IdleMode.kBrake);
+        config.CurrentLimits.StatorCurrentLimitEnable = true;
+        config.CurrentLimits.StatorCurrentLimit = ArmConstants.CURRENT_LIMIT;
+        config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
-        config.encoder.positionConversionFactor(2 * Math.PI / ArmConstants.Sim.GEARING);
-        config.encoder.velocityConversionFactor(2 * Math.PI / ArmConstants.Sim.GEARING / 60);
-        config.encoder.quadratureMeasurementPeriod(20);
+        config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+        config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = ArmConstants.Sim.MAX_ANGLE;
 
-
-        config.softLimit.forwardSoftLimitEnabled(true);
-        config.softLimit.reverseSoftLimitEnabled(false);
-        config.softLimit.forwardSoftLimit(ArmConstants.Sim.MAX_ANGLE);
-        config.softLimit.reverseSoftLimit(ArmConstants.Sim.MIN_ANGLE);
-
-        // config.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
-        // config.closedLoop.p(0);
-        // config.closedLoop.i(0.0);
-        // config.closedLoop.d(0.0);
-
-        config.voltageCompensation(12.0);
-        config.inverted(false);
-
-        armMotor.clearFaults();
-        armMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
-
-        armEncoder = Wrist.getInstance().getArmAbsoluteEncoder();
-        armMotor.getEncoder().setPosition(getOffsetAngle());
+        armMotor.clearStickyFault_BootDuringEnable();
 
         goal = new TrapezoidProfile.State(getOffsetAngle(), 0);
         setpoint = new TrapezoidProfile.State(getOffsetAngle(), 0);
         
         Logger.recordOutput("arm offset angle", getOffsetAngle());
+
+        StatusCode response = armMotor.getConfigurator().apply(config);
+        if (!response.isOK()) {
+            System.out.println(
+                    "Talon ID "
+                            + armMotor.getDeviceID()
+                            + " failed config with error "
+                            + response.toString());
+        }
     }
 
+    // Write method that sets arm goal and sets the setpoint to the current position/velocity
     @Override
     public void setGoal(double angle) {
-        if(angle != goal.position) {
-            setpoint = new TrapezoidProfile.State(getOffsetAngle(), armEncoder.getVelocity());
-            goal = new TrapezoidProfile.State(angle, 0);
-        }
+
+    }
+
+    // Write method that sends voltage to the arm
+    @Override
+    public void setVoltage(double voltage) {
+        
     }
 
     @Override
@@ -96,21 +84,14 @@ public class ArmIOReal implements ArmIO {
     
     @Override
     public void updateMotionProfile() {
-        // double prevVelocity = setpoint.velocity;
-        // double acceleration = (setpoint.velocity - prevVelocity) / 0.02;
-        // double ffvolts = ffmodel.calculate(armMotor.getEncoder().getPosition(), setpoint.velocity, acceleration);
         setpoint = profile.calculate(0.02, setpoint, goal);
         double ffvolts = ffmodel.calculate(getOffsetAngle(), setpoint.velocity);
         double pidvolts = controller.calculate(getOffsetAngle(), setpoint.position);
   
         setVoltage(ffvolts + pidvolts);
-        // onboardController.setReference(setpoint.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, ffvolts);
-        // onboardController.setReference(setpoint.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, 0);
 
         Logger.recordOutput("Arm/ffvolts", ffvolts);
         Logger.recordOutput("Arm/pidvolts", pidvolts);
-        // Logger.recordOutput("Arm/prev velocity", prevVelocity);
-        // Logger.recordOutput("Arm/acceleration", acceleration);
     }
 
     @Override
@@ -118,39 +99,21 @@ public class ArmIOReal implements ArmIO {
         ffmodel = new ArmFeedforward(kS, kG, kV);
     }
 
-
-    @Override
-    public void resetEncoder() {
-        armMotor.getEncoder().setPosition(-ArmConstants.ARM_OFFSET);
-    }
-
-    @Override
-    public void setVoltage(double voltage) {
-        armMotor.setVoltage(voltage);
-        // onboardController.setReference(voltage, ControlType.kVoltage);
-    }
-
     public double getOffsetAngle() {
-        return armEncoder.getPosition() - ArmConstants.ARM_OFFSET;
+        return armMotor.getPosition().getValueAsDouble() - ArmConstants.ARM_OFFSET;
     }
 
     @Override
     public void updateInputs(ArmIOInputs inputs) {
-        // inputs.angularPosition = getOffsetAngle();
         ffmodel = new ArmFeedforward(KS.get(), KG.get(), KV.get(), KA.get(), 0.02);
         controller = new PIDController(KP.get(), KI.get(), KD.get());
 
-
         inputs.angularPosition = getOffsetAngle();
-        inputs.angularVelocity = armEncoder.getVelocity();
-        inputs.current = armMotor.getOutputCurrent();
-        inputs.voltage = armMotor.getAppliedOutput() * armMotor.getBusVoltage();
+        inputs.angularVelocity = armMotor.getVelocity().getValueAsDouble();
+        inputs.current = armMotor.getStatorCurrent().getValueAsDouble();
+        inputs.voltage = armMotor.getMotorVoltage().getValueAsDouble();
         inputs.setpointVelocity = setpoint.velocity;
         inputs.goalAngle = goal.position;
-        inputs.busVoltage = armMotor.getBusVoltage();
-        inputs.appliedOutput = armMotor.getAppliedOutput();
-        inputs.relativeEncoderPosition = armMotor.getEncoder().getPosition();
-        inputs.relativeEncoderVelocity = armMotor.getEncoder().getVelocity();
         inputs.setpointPosition = setpoint.position;
         inputs.angularPositionDegrees = Units.radiansToDegrees(getOffsetAngle());
     }
