@@ -35,6 +35,7 @@ import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmIOReal;
 import frc.robot.subsystems.arm.ArmIOSim;
 import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorIOReal;
 import frc.robot.subsystems.elevator.ElevatorIOSim;
 import frc.robot.subsystems.intake.Intake;
@@ -231,18 +232,18 @@ public class RobotContainer {
     //writing sequence for basketball shooting
     Constants.OIConstants.operatorController.a().whileTrue(
       Commands.sequence(
-      Commands.runOnce(() -> intake.setIntakeSpeed(0.75)),
-      Commands.runOnce(() -> ElevatorConstants.HIGH_ALGAE_SETPOINT),
-      Commands.runOnce(() -> wrist.setGoal(WristConstants.BACKWARD_NET_SETPOINT))
+      Commands.runOnce(() -> intake.setIntakeSpeed(0.75), intake),
+      Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.HIGH_ALGAE_SETPOINT), elevator),
+      Commands.runOnce(() -> wrist.setGoal(WristConstants.BACKWARD_NET_SETPOINT), wrist),
       Commands.parallel(
-      Commands.runOnce(() -> arm.setGoal(ArmConstants.NET_SETPOINT),
+      Commands.runOnce(() -> Arm.getInstance().setGoal(ArmConstants.NET_SETPOINT), Arm.getInstance()),
       Commands.waitSeconds(1),
       Commands.runOnce(() -> intake.setIntakeSpeed(-0.75)  
-       )))));
+  ))));
 
     // Intake
-    OIConstants.operatorController.a().onTrue(
-    AutoCommands.intakeCommand());
+    //OIConstants.operatorController.a().onTrue(
+   // AutoCommands.intakeCommand());
 
     // Change reef scoring stem
     // OIConstants.operatorController.leftBumper().onTrue(
