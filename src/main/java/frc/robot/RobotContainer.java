@@ -136,6 +136,8 @@ public class RobotContainer {
 
     // Send voltage to make arm move down
 
+    // Set new goal of elevator
+
     // Send voltage to make elevator move up
 
     // Send voltage to make elevator move down
