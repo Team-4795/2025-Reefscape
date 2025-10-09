@@ -65,13 +65,14 @@ public class ElevatorIOReal implements ElevatorIO {
     // Write method that sends voltage to the elevator
     @Override
     public void setVoltage(double voltage) {
-
+        rightElevatorMotor.setVoltage(voltage);
     }
 
     // Write method that sets elevator goal and sets the setpoint to the current position/velocity
     @Override
     public void setGoal(double height) {
-
+        goal = new TrapezoidProfile.State(height, 0);
+        updateMotionProfile();
     }
 
     @Override
