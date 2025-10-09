@@ -29,6 +29,11 @@ public class Intake extends SubsystemBase {
         return instance;
     }
 
+    public Command intake() {//make intake thingy
+        return Commands.none();
+    }
+
+
     private Intake(IntakeIO io) {
         this.io = io;
         io.updateInputs(inputs);
@@ -49,10 +54,6 @@ public class Intake extends SubsystemBase {
         return startEnd(() -> setIntakeSpeed(IntakeSetpoints.intake), () -> setIntakeSpeed(0)).until(() -> GamePieceInitial());
     }
     */
-
-    public Command intake() {
-        return startEnd(() -> setIntakeSpeed(IntakeConstants.intake), () -> setIntakeSpeed(0));
-    }
 
     public Command intakeSlow() {
         return startEnd(() -> setIntakeSpeed(IntakeConstants.slow), () -> setIntakeSpeed(0));
