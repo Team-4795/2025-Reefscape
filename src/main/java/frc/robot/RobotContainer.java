@@ -33,6 +33,7 @@ import frc.robot.subsystems.GenericRequirement;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmIOReal;
+import frc.robot.subsystems.arm.ArmIORealTalon;
 import frc.robot.subsystems.arm.ArmIOSim;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorIOReal;
@@ -85,7 +86,7 @@ public class RobotContainer {
         wrist = Wrist.initialize(new WristIOReal());
         elevator = Elevator.initialize(new ElevatorIOReal());
         intake = Intake.initialize(new IntakeIORealVortex());
-        Arm.initialize(new ArmIOReal());
+        Arm.initialize(new ArmIORealTalon());
         drivetrain = Swerve.initialize(new Swerve(TunerConstants.DrivetrainConstants, 50, TunerConstants.FrontLeft, TunerConstants.FrontRight, TunerConstants.BackLeft, TunerConstants.BackRight));
         vision = Vision.initialize(
           new VisionIOReal(0), 

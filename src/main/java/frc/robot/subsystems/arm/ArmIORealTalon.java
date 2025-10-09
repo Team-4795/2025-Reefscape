@@ -22,7 +22,7 @@ import frc.robot.util.LoggedTunableNumber;
 public class ArmIORealTalon implements ArmIO {
     private final TalonFX armMotor = new TalonFX(ArmConstants.CAN_ID);
     private TalonFXConfiguration config = new TalonFXConfiguration();
-    private SparkAbsoluteEncoder encoder;
+    private SparkAbsoluteEncoder encoder = Wrist.getInstance().getArmAbsoluteEncoder();;
     private AbsoluteEncoderConfig encoderConfig = new AbsoluteEncoderConfig();
 
     LoggedTunableNumber KP = new LoggedTunableNumber("Arm/kP", ArmConstants.kP);
@@ -54,10 +54,11 @@ public class ArmIORealTalon implements ArmIO {
         encoderConfig.velocityConversionFactor(2 * Math.PI / ArmConstants.Sim.GEARING / 60);
         
         BaseStatusSignal.setUpdateFrequencyForAll(50, position, velocity, voltage, current);
-        
 
+        goal = new TrapezoidProfile.State(getOffsetAngle(), 0);
+        setpoint = new TrapezoidProfile.State(getOffsetAngle(), 0);
+        
         // need to finish encoder
-        encoder = Wrist.getInstance().getArmAbsoluteEncoder();
 
         StatusCode response = armMotor.getConfigurator().apply(config);
         if (!response.isOK()) {
@@ -71,7 +72,11 @@ public class ArmIORealTalon implements ArmIO {
 
     @Override
     public void updateMotionProfile(){
-
+        setpoint = profile.calculate(0.02, setpoint, goal);
+        double ffvolts = ffModel.calculate(getOffsetAngle(), setpoint.velocity);
+        double pidvolts = controller.calculate(getOffsetAngle(), setpoint.position);
+  
+        setVoltage(ffvolts + pidvolts);
     }
 
     @Override
@@ -81,7 +86,7 @@ public class ArmIORealTalon implements ArmIO {
 
     @Override
     public void setVoltage(double voltage){
-
+        armMotor.setVoltage(voltage);
     }
 
     @Override
@@ -96,7 +101,10 @@ public class ArmIORealTalon implements ArmIO {
 
     @Override
     public void setGoal(double angle){
-
+        if(angle != goal.position) {
+            setpoint = new TrapezoidProfile.State(getOffsetAngle(), encoder.getVelocity());
+            goal = new TrapezoidProfile.State(angle, 0);
+        }
     }
 
     @Override
@@ -104,11 +112,18 @@ public class ArmIORealTalon implements ArmIO {
         return 0;
     }
 
+    public double getOffsetAngle() {
+        return encoder.getPosition() - ArmConstants.ARM_OFFSET;
+    }
+
     @Override
     public void updateInputs(ArmIOInputs inputs){ // not done
         BaseStatusSignal.refreshAll(position, velocity, voltage, current);
+        ffModel = new ArmFeedforward(KS.get(), KG.get(), KV.get(), KA.get(), 0.02);
+        controller = new PIDController(KP.get(), KI.get(), KD.get());
+
         inputs.voltage = voltage.getValueAsDouble();
-        inputs.angularPosition = encoder.getPosition();
+        inputs.angularPosition = getOffsetAngle();
         inputs.angularVelocity = encoder.getVelocity();
         inputs.current = current.getValueAsDouble();
         inputs.goalAngle = 0.0;
