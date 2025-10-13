@@ -142,8 +142,9 @@ public class RobotContainer {
     // Send voltage to make elevator move down
 
     // Intake gamepiece at half speed
-
+    Constants.OIConstants.operatorController.x().whileTrue(Commands.startEnd(()-> intake.setIntakeSpeed(0.5), ()-> intake.setIntakeSpeed(0), intake));
     // Outtake gamepiece at half speed
+    Constants.OIConstants.operatorController.y().whileTrue(Commands.startEnd(()-> intake.setIntakeSpeed(-0.5), ()-> intake.setIntakeSpeed(0), intake));
   }
 
   public Command getAutonomousCommand() {

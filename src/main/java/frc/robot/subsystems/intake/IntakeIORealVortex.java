@@ -39,7 +39,7 @@ public class IntakeIORealVortex implements IntakeIO {
     // Write method that spins intake (parameter should be between -1 and 1)
     @Override
     public void setMotorSpeed(double speed) {
-        
+        intakeMotor.set(speed);
     }
 
     @Override
