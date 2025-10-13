@@ -130,7 +130,11 @@ public class RobotContainer {
     // Zero heading
     Constants.OIConstants.driverController.b().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
     // Set new goal of the arm
-    Constants.OIConstants.driverController.a().onTrue(arm.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L4)));
+    Constants.OIConstants.operatorController.povUp().onTrue(arm.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L4)));
+    Constants.OIConstants.operatorController.povLeft().onTrue(arm.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L2)));
+    Constants.OIConstants.operatorController.povRight().onTrue(arm.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L3)));
+    Constants.OIConstants.operatorController.povDown().onTrue(arm.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L1)));
+
     // Set new goal of elevator
 
     // Send voltage to make elevator move up
