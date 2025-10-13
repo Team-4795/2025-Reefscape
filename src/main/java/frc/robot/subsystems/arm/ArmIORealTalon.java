@@ -126,9 +126,9 @@ public class ArmIORealTalon implements ArmIO {
         inputs.angularPosition = getOffsetAngle();
         inputs.angularVelocity = encoder.getVelocity();
         inputs.current = current.getValueAsDouble();
-        inputs.goalAngle = 0.0;
-        inputs.setpointPosition = 0.0;
-        inputs.setpointVelocity = 0.0;
+        inputs.goalAngle = goal.position;
+        inputs.setpointPosition = setpoint.position;
+        inputs.setpointVelocity = setpoint.velocity;
         inputs.appliedOutput = 0.0; 
         inputs.busVoltage = 0.0;
         inputs.relativeEncoderPosition = position.getValueAsDouble();
