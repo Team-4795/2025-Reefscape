@@ -61,13 +61,13 @@ public class ArmIOReal implements ArmIO {
     // Write method that sets arm goal and sets the setpoint to the current position/velocity
     @Override
     public void setGoal(double angle) {
-
+        goal = new TrapezoidProfile.State(angle, 0);
     }
 
     // Write method that sends voltage to the arm
     @Override
     public void setVoltage(double voltage) {
-        
+        armMotor.setVoltage(voltage);
     }
 
     @Override
