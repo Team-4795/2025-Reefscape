@@ -149,6 +149,9 @@ public class RobotContainer {
     Constants.OIConstants.operatorController.x().whileTrue(Commands.startEnd(()-> intake.setIntakeSpeed(0.5), ()-> intake.setIntakeSpeed(0), intake));
     // Outtake gamepiece at half speed
     Constants.OIConstants.operatorController.y().whileTrue(Commands.startEnd(()-> intake.setIntakeSpeed(-0.5), ()-> intake.setIntakeSpeed(0), intake));
+    //move wrist in either direction
+    // Constants.OIConstants.operatorController.povUp().whileTrue(Commands.runOnce(()-> Wrist.setGoal(), wrist));
+    // Constants.OIConstants.operatorController.().whileTrue(Commands.runOnce(()-> Wrist.setGoal(), wrist));
   }
 
   public Command getAutonomousCommand() {
