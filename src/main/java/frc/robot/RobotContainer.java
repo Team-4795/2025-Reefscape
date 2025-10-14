@@ -35,6 +35,7 @@ import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmIOReal;
 import frc.robot.subsystems.arm.ArmIOSim;
 import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorIOReal;
 import frc.robot.subsystems.elevator.ElevatorIOSim;
 import frc.robot.subsystems.intake.Intake;
@@ -136,11 +137,14 @@ public class RobotContainer {
     Constants.OIConstants.operatorController.povDown().onTrue(arm.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L1)));
 
     // Set new goal of elevator
-
+    Constants.OIConstants.operatorController.povUp().onTrue(Commands.runOnce(() -> elevator.setGoal(ElevatorConstants.CORAL_L4_SETPOINT)));
+    Constants.OIConstants.operatorController.povLeft().onTrue(Commands.runOnce(() -> elevator.setGoal(ElevatorConstants.CORAL_L2_SETPOINT)));
+    Constants.OIConstants.operatorController.povRight().onTrue(Commands.runOnce(() -> elevator.setGoal(ElevatorConstants.CORAL_L3_SETPOINT)));
+    Constants.OIConstants.operatorController.povDown().onTrue(Commands.runOnce(() -> elevator.setGoal(ElevatorConstants.CORAL_L1_SETPOINT)));
     // Send voltage to make elevator move up
-
+    Constants.OIConstants.operatorController.a().whileTrue();
     // Send voltage to make elevator move down
-
+    Constants.OIConstants.operatorController.b().whileTrue(Commands.runOnce(() -> elevator.setGoal(ElevatorConstants.STOW)));
     // Intake gamepiece at half speed
     Constants.OIConstants.operatorController.x().whileTrue(Commands.startEnd(()-> intake.setIntakeSpeed(0.5), ()-> intake.setIntakeSpeed(0), intake));
     // Outtake gamepiece at half speed
