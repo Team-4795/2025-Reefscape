@@ -22,7 +22,7 @@ import java.util.List;
 public class Vision extends SubsystemBase{
     private VisionIO io[];
     private VisionIOInputsAutoLogged inputs[];
-    private boolean[] shouldUpdate = new boolean[] {false, false, false};
+    private boolean[] shouldUpdate = new boolean[] {true, true, true};
 
     public static Vision instance;
 
