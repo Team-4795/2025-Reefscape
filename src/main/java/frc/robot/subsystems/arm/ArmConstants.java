@@ -18,7 +18,7 @@ public class ArmConstants {
     public static final double NET_SETPOINT = Units.degreesToRadians(70);
     public static final double PROCESSOR = 0.0;
 
-    public static final double STOW = -1.87 - Units.degreesToRadians(2);
+    public static final double STOW = -1.81;
     
 
     public static final double MAX_VELOCITY = 6;
@@ -31,14 +31,14 @@ public class ArmConstants {
     public static final double SIMkS = 0.001;
 
     // Default FF
-    public static final double DEFAULTkG = 0.5;
-    public static final double DEFAULTkV = 1;
-    public static final double DEFAULTkA = 0;
-    public static final double DEFAULTkS = 1;
+    public static final double DEFAULTkG = 0.35;
+    public static final double DEFAULTkV = 1.21;
+     public static final double DEFAULTkA = 0.03;
+    public static final double DEFAULTkS = 0.25;
 
-    public static final double kP = 0.0;
+    public static final double kP = 0.5;
     public static final double kI = 0.0;
-    public static final double kD = 0.0;
+    public static final double kD = 0.12;
 
     // Algae FF
     public static final double ALGAEkG = 1.02;

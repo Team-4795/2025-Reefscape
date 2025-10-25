@@ -234,10 +234,10 @@ public class RobotContainer {
 
     // Change reef scoring stem
     OIConstants.operatorController.leftBumper().onTrue(
-        Commands.runOnce(() -> Arm.getInstance().setGoal(0)
+        Commands.runOnce(() -> OperationStates.isScoringLeft = true
       ));
     OIConstants.operatorController.rightBumper().onTrue(
-        Commands.runOnce(() -> Arm.getInstance().setGoal(-Math.PI/2)
+        Commands.runOnce(() -> OperationStates.isScoringLeft = false
       ));
 
     // No vision toggle

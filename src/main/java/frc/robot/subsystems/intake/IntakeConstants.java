@@ -4,10 +4,10 @@ public final class IntakeConstants {
     //PLACEHOLDERS
     public static final int canID = 18;
 
-    public static final double intake = -1;
+    public static final double intake = -0.7;
     public static final double slow = -0.3;
     public static final double reverse = 0.7;
-    public static final double coralReverse = 0.5; 
+    public static final double coralReverse = 0.3; 
     public static final int sensorChannel = 9;
 
     public static final double simGearRatio = 0;

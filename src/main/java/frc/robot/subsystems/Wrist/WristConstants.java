@@ -44,7 +44,7 @@ public class WristConstants {
     public static final double VFBAngle = 0.2468;
     public static final double FOWARD_NET_SETPOINT = -1.7;
     public static final double BACKWARD_NET_SETPOINT = -2.97340989112854 + Units.degreesToRadians(3);
-    public static final double intakePosition = 0.24;
+    public static final double intakePosition = 0.4;
     public static final double stowPosition = 1;
 
     public static double GOAL_TOLERANCE = 0.1; //change later

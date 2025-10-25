@@ -49,9 +49,10 @@ public class ArmIORealTalon implements ArmIO {
         config.CurrentLimits.StatorCurrentLimitEnable = true;
         config.CurrentLimits.StatorCurrentLimit = ArmConstants.CURRENT_LIMIT;
         config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        
 
         encoderConfig.positionConversionFactor(2 * Math.PI / ArmConstants.Sim.GEARING);
-        encoderConfig.velocityConversionFactor(2 * Math.PI / ArmConstants.Sim.GEARING / 60);
+        encoderConfig.velocityConversionFactor(2 * Math.PI / ArmConstants.Sim.GEARING / 60.0);
         
         BaseStatusSignal.setUpdateFrequencyForAll(50, position, velocity, voltage, current);
 
@@ -59,7 +60,7 @@ public class ArmIORealTalon implements ArmIO {
         setpoint = new TrapezoidProfile.State(getOffsetAngle(), 0);
         
         // need to finish encoder
-
+        
         StatusCode response = armMotor.getConfigurator().apply(config);
         if (!response.isOK()) {
             System.out.println(
@@ -113,6 +114,7 @@ public class ArmIORealTalon implements ArmIO {
     }
 
     public double getOffsetAngle() {
+        // return armMotor.getPosition().getValueAsDouble()/60.0 - ArmConstants.ARM_OFFSET;
         return encoder.getPosition() - ArmConstants.ARM_OFFSET;
     }
 

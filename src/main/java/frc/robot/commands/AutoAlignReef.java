@@ -39,7 +39,7 @@ public class AutoAlignReef extends Command {
 
     private static LoggedTunableNumber minDistance = new LoggedTunableNumber("AutoAlign/minDistance", -0.1);
     private static LoggedTunableNumber maxDistance = new LoggedTunableNumber("AutoAlign/maxDistance", .8);
-    private static LoggedTunableNumber maxAccel = new LoggedTunableNumber("AutoAlign/maxAccel", 3.75);
+    private static LoggedTunableNumber maxAccel = new LoggedTunableNumber("AutoAlign/maxAccel", 3);
     private static LoggedTunableNumber maxVel = new LoggedTunableNumber("AutoAlign/feederMaxVel", 3);
 
     private ProfiledPIDController translationController;
@@ -54,9 +54,9 @@ public class AutoAlignReef extends Command {
 
     public AutoAlignReef(ProfiledPIDController translation, ProfiledPIDController rotation) {
         translationController = translation;
-        translationController.setTolerance(Units.inchesToMeters(0.75));
+        translationController.setTolerance(Units.inchesToMeters(0.6));
         rotationController = rotation;
-        rotationController.setTolerance(Units.degreesToRadians(0.5));
+        rotationController.setTolerance(Units.degreesToRadians(0.75));
         addRequirements(Swerve.getInstance());
     }
 

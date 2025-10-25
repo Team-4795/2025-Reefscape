@@ -437,7 +437,7 @@ public class AutoCommands {
     }
 
     public static Command scorePiece() {
-        return intake.scorePiece().withTimeout(0.2);
+        return intake.scorePiece().withTimeout(0.3);
     }
 
 
