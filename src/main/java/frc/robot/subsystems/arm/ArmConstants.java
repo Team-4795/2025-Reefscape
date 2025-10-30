@@ -21,8 +21,8 @@ public class ArmConstants {
     public static final double STOW = -1.81;
     
 
-    public static final double MAX_VELOCITY = 6;
-    public static final double MAX_ACCELERATION = 8;
+    public static final double MAX_VELOCITY = 8;
+    public static final double MAX_ACCELERATION = 10;
 
     // Simulation FF
     public static final double SIMkG = 1.3;
@@ -32,13 +32,13 @@ public class ArmConstants {
 
     // Default FF
     public static final double DEFAULTkG = 0.35;
-    public static final double DEFAULTkV = 1.21;
-     public static final double DEFAULTkA = 0.03;
-    public static final double DEFAULTkS = 0.25;
+    public static final double DEFAULTkV = 1.15;
+     public static final double DEFAULTkA = 0.01;
+    public static final double DEFAULTkS = 0.45;
 
-    public static final double kP = 0.5;
+    public static final double kP = 0.1;
     public static final double kI = 0.0;
-    public static final double kD = 0.12;
+    public static final double kD = 0.05;
 
     // Algae FF
     public static final double ALGAEkG = 1.02;
