@@ -130,17 +130,18 @@ public class RobotContainer {
 
     // Zero heading
     Constants.OIConstants.driverController.b().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
-    // Set new goal of the arm
-    Constants.OIConstants.operatorController.povUp().onTrue(arm.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L4)));
-    Constants.OIConstants.operatorController.povLeft().onTrue(arm.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L2)));
-    Constants.OIConstants.operatorController.povRight().onTrue(arm.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L3)));
-    Constants.OIConstants.operatorController.povDown().onTrue(arm.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L1)));
+    
+    // Bindings to score coral
+    Constants.OIConstants.operatorController.povUp().onTrue(AutoCommands.scoreCoralL4());
+    Constants.OIConstants.operatorController.povLeft().onTrue(AutoCommands.scoreCoralL2());
+    Constants.OIConstants.operatorController.povRight().onTrue(AutoCommands.scoreCoralL3());
 
     // Set new goal of elevator
     Constants.OIConstants.operatorController.povUp().onTrue(Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.CORAL_L4_SETPOINT)));
     Constants.OIConstants.operatorController.povLeft().onTrue(Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.CORAL_L2_SETPOINT)));
     Constants.OIConstants.operatorController.povRight().onTrue(Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.CORAL_L3_SETPOINT)));
     Constants.OIConstants.operatorController.povDown().onTrue(Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.CORAL_L1_SETPOINT)));
+    // Set new goal of elevator>
     // Send voltage to make elevator move up
     // Send voltage to make elevator move down
     Constants.OIConstants.operatorController.b().whileTrue(Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.STOW)));
@@ -149,6 +150,7 @@ public class RobotContainer {
     // Outtake gamepiece at half speed
     Constants.OIConstants.operatorController.y().whileTrue(Commands.startEnd(()-> intake.setIntakeSpeed(-0.5), ()-> intake.setIntakeSpeed(0), intake));
     //move set wrist goal
+    //move wrist in either direction
 
   }
 
