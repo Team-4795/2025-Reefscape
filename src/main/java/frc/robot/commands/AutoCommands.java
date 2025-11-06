@@ -490,36 +490,34 @@ public class AutoCommands {
         return Commands.runOnce(() -> Swerve.getInstance().setScoringRight());
     }
 
-    public static Command scoreCoralL4() {
-        Commands.sequence(
-            Commands.parallel(
-                Commands.runOnce(() -> wrist.setGoal(WristConstants.CORAL_L4_SETPOINT)),
-                Commands.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L4)),
-                Commands.runOnce(() -> elevator.setGoal(ElevatorConstants.CORAL_L4_SETPOINT))
-            ),
-            Commands.runOnce(intake().score())
-        );
-   }
+//     public static Command scoreCoralL4() {
+//         Commands.sequence(
+//             Commands.parallel(
+//                 Commands.runOnce(() -> wrist.setGoal(WristConstants.CORAL_L4_SETPOINT)),
+//                 Commands.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L4)),
+//                 Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.CORAL_L4_SETPOINT))
+//             ),
+//         );
+//    }
 
-   public static Command scoreCoralL3() {
-    Commands.sequence(
-        Commands.parallel(
-            Commands.runOnce(() -> wrist.setGoal(WristConstants.CORAL_L3_SETPOINT)),
-            Commands.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L3)),
-            Commands.runOnce(() -> elevator.setGoal(ElevatorConstants.CORAL_L3_SETPOINT))
-        ),
-        Commands.runOnce(intake().score())
-    );
-    }
+//    public static Command scoreCoralL3() {
+//     Commands.sequence(
+//         Commands.parallel(
+//             Commands.runOnce(() -> wrist.setGoal(WristConstants.CORAL_L3_SETPOINT)),
+//             Commands.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L3)),
+//             Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.CORAL_L3_SETPOINT))
+//         )
+//     );
+//    }
 
-    public static Command scoreCoralL2() {
-        Commands.sequence(
-            Commands.parallel(
-                Commands.runOnce(() -> wrist.setGoal(WristConstants.CORAL_L2_SETPOINT)),
-                Commands.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L2)),
-                Commands.runOnce(() -> elevator.setGoal(ElevatorConstants.CORAL_L2_SETPOINT))
-            ),
-            Commands.runOnce(intake().score())
-        );
-   }
+//     public static Command scoreCoralL2() {
+//         return Commands.sequence(
+//             Commands.parallel(
+//                 Commands.runOnce(() -> wrist.setGoal(WristConstants.CORAL_L2_SETPOINT)),
+//                 Commands.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L2)),
+//                 Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.CORAL_L2_SETPOINT))
+//             )
+//         );
+
+// }
 }

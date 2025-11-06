@@ -33,6 +33,7 @@ import frc.robot.subsystems.GenericRequirement;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmIOReal;
+import frc.robot.subsystems.arm.ArmIORealTalon;
 import frc.robot.subsystems.arm.ArmIOSim;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorConstants;
@@ -82,7 +83,7 @@ public class RobotContainer {
         wrist = Wrist.initialize(new WristIOReal());
         elevator = Elevator.initialize(new ElevatorIOReal());
         intake = Intake.initialize(new IntakeIORealVortex());
-        arm = Arm.initialize(new ArmIOReal());
+        arm = Arm.initialize(new ArmIORealTalon());
         drivetrain = Swerve.initialize(new Swerve(TunerConstants.DrivetrainConstants, 50, TunerConstants.FrontLeft, TunerConstants.FrontRight, TunerConstants.BackLeft, TunerConstants.BackRight));
         vision = Vision.initialize(
           new VisionIOReal(0), 
@@ -132,9 +133,15 @@ public class RobotContainer {
     Constants.OIConstants.driverController.b().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
     
     // Bindings to score coral
-    Constants.OIConstants.operatorController.povUp().onTrue(AutoCommands.scoreCoralL4());
-    Constants.OIConstants.operatorController.povLeft().onTrue(AutoCommands.scoreCoralL2());
-    Constants.OIConstants.operatorController.povRight().onTrue(AutoCommands.scoreCoralL3());
+    // Constants.OIConstants.operatorController.povUp().onTrue(AutoCommands.scoreCoralL4());
+    // Constants.OIConstants.operatorController.povLeft().onTrue(AutoCommands.scoreCoralL2());
+    // Constants.OIConstants.operatorController.povRight().onTrue(AutoCommands.scoreCoralL3());
+    Constants.OIConstants.operatorController.povUp().onTrue(Commands.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L4)));
+    Constants.OIConstants.operatorController.povRight().onTrue(Commands.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L3)));
+    Constants.OIConstants.operatorController.povLeft().onTrue(Commands.runOnce(() -> arm.setGoal(ArmConstants.CORAL_L2)));
+    Constants.OIConstants.operatorController.povLeft().onTrue(Commands.runOnce(() -> arm.setGoal(ArmConstants.STOW)));
+
+
 
     // Set new goal of elevator
     Constants.OIConstants.operatorController.povUp().onTrue(Commands.runOnce(() -> elevator.setGoalHeight(ElevatorConstants.CORAL_L4_SETPOINT)));
