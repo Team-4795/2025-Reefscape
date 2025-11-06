@@ -157,6 +157,10 @@ public class RobotContainer {
     // Outtake gamepiece at half speed
     Constants.OIConstants.operatorController.y().whileTrue(Commands.startEnd(()-> intake.setIntakeSpeed(-0.5), ()-> intake.setIntakeSpeed(0), intake));
     //move set wrist goal
+    Constants.OIConstants.operatorController.povUp().onTrue(Commands.runOnce(() -> wrist.setGoal(WristConstants.CORAL_L4_SETPOINT)));
+    Constants.OIConstants.operatorController.povLeft().onTrue(Commands.runOnce(() -> wrist.setGoal(WristConstants.CORAL_L2_SETPOINT)));
+    Constants.OIConstants.operatorController.povRight().onTrue(Commands.runOnce(() -> wrist.setGoal(WristConstants.CORAL_L3_SETPOINT)));
+    Constants.OIConstants.operatorController.povDown().onTrue(Commands.runOnce(() -> wrist.setGoal(WristConstants.CORAL_L1_SETPOINT)));
     //move wrist in either direction
 
   }
