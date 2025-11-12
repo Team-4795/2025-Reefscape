@@ -32,12 +32,12 @@ public class ArmConstants {
 
     // Default FF
     public static final double DEFAULTkG = 0.3; //0.8
-    public static final double DEFAULTkV = 1.25; //2
-     public static final double DEFAULTkA = 0.0; //0.1
-    public static final double DEFAULTkS = 0.3; //0.8
+    public static final double DEFAULTkV = 1.2; //2
+     public static final double DEFAULTkA = 0.1; //0.1
+    public static final double DEFAULTkS = 0.35; //0.8
 
-    public static final double kP = 0;
-    public static final double kI = 0.0;
+    public static final double kP = 1;
+    public static final double kI = 0;
     public static final double kD = 0;
 
     // Algae FF

@@ -40,7 +40,8 @@ public class AutoAlignBarge extends Command {
     private Pose2d targetPose;
     private double distance;
     private double rotationError;
-    private Alliance alliance = DriverStation.getAlliance().orElse(null);
+    //private Alliance alliance = DriverStation.getAlliance().orElse(null);
+    private Alliance alliance;
 
     private double maxDistance = 1;
 
@@ -55,6 +56,7 @@ public class AutoAlignBarge extends Command {
     @Override
     public void initialize() {
         currentPose = Swerve.getInstance().getState().Pose;
+        alliance = DriverStation.getAlliance().orElse(null);
 
         if(alliance != null) {
             mult = (alliance == Alliance.Red) ? -1.0 : 1.0;
