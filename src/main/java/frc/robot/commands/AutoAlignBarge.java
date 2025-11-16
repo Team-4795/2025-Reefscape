@@ -2,6 +2,8 @@
 package frc.robot.commands;
 
 
+import java.util.Optional;
+
 import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
@@ -41,6 +43,7 @@ public class AutoAlignBarge extends Command {
     private double distance;
     private double rotationError;
     private Alliance alliance = DriverStation.getAlliance().orElse(null);
+    private Optional<Alliance> ally;
 
     private double maxDistance = 1;
 
@@ -55,19 +58,22 @@ public class AutoAlignBarge extends Command {
     @Override
     public void initialize() {
         currentPose = Swerve.getInstance().getState().Pose;
+        ally = DriverStation.getAlliance();
 
-        if(alliance != null) {
-            mult = (alliance == Alliance.Red) ? -1.0 : 1.0;
+        if(ally.isPresent()) {
+            mult = (ally.get() == Alliance.Red) ? -1.0 : 1.0;
         }
     
-        if(alliance == Alliance.Red) {
+        if(ally.isPresent()) {
+        if(ally.get() == Alliance.Red) {
             OperationStates.isBargeFowards = Math.abs(currentPose.getRotation().getDegrees()) >= 90;
             targetPose = new Pose2d(9.46, MathUtil.clamp(currentPose.getY(), 0.66, 3.06), new Rotation2d(OperationStates.isBargeFowards ? Math.PI : 0));
         }
-        else if(alliance == Alliance.Blue){
+        else if(ally.get() == Alliance.Blue){
             OperationStates.isBargeFowards = Math.abs(currentPose.getRotation().getDegrees()) <= 90;
             targetPose = new Pose2d(8.14, MathUtil.clamp(currentPose.getY(), 4.36, 6.75), new Rotation2d(OperationStates.isBargeFowards ? 0 : Math.PI));
-        }
+        } 
+    }
         
         double velocity = mult * projection(new Translation2d(Swerve.getInstance().getState().Speeds.vxMetersPerSecond, Swerve.getInstance().getState().Speeds.vyMetersPerSecond), targetPose.getTranslation().minus(currentPose.getTranslation()));
         rotationController.enableContinuousInput(-Math.PI, Math.PI);
@@ -75,6 +81,7 @@ public class AutoAlignBarge extends Command {
         Logger.recordOutput("AutoAlign/Robot velocity", new Translation2d(Swerve.getInstance().getState().Speeds.vxMetersPerSecond, Swerve.getInstance().getState().Speeds.vyMetersPerSecond));
         Logger.recordOutput("AutoAlign/Translation", targetPose.getTranslation().minus(currentPose.getTranslation()));
         Logger.recordOutput("AutoAlign/velocity", velocity);
+
 
         distance = currentPose.getTranslation().getDistance(targetPose.getTranslation());
         translationController.reset(distance, velocity);
